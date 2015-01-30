@@ -22,6 +22,8 @@ def ros_preinstall():
     if os.path.isfile(ros_src_list):
         return
 
+    #These commands follow the ROS Instalation guide for Ubuntu as closely as possible.
+    #See: http://wiki.ros.org/indigo/Installation/Ubuntu
     print('Adding ROS to apt-get sources list...')
     subprocess.call("sudo sh -c 'echo \"%s\" > %s'" % (ros_deb_url, ros_src_list), shell=True)
     subprocess.call('wget %s -O - | sudo apt-key add -' % ros_key_url, shell=True)
@@ -29,7 +31,7 @@ def ros_preinstall():
 
 def ros_postinstall():
     #Rosdep will create this directory when it is initialized.
-    #If it's there, we can skip this step.
+    #If it's already there, we can skip this step.
     if os.path.isdir('/etc/ros/rosdep/'):
         return
 

@@ -1,13 +1,16 @@
+import argparse
 import os.path
 import subprocess
 import sys
 
 def main():
-    if len(sys.argv) != 2:
-        print '\tUsage: python make_eclipse_project.py PROJECT_PATH'
-        return
-    
-    bin_dir = sys.argv[1]
+    #We use argparse to get the directory, as well as display help/usage information.
+    parser = argparse.ArgumentParser(
+        description='Generates Eclipse project files in the specified directory.')
+    parser.add_argument(
+        'directory', metavar='<directory>', help='path to the new project directory')
+    bin_dir = parser.parse_args().directory
+
     if not os.path.isdir(bin_dir):
         print '\t' + bin_dir + ' is not a valid directory.'
         return
