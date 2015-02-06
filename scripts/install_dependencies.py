@@ -4,7 +4,6 @@ import subprocess
 
 APT_GET_LIST = ['ros-indigo-desktop',
                 'doxygen',
-                'libarmadillo-dev',
                 'python-pip']
 
 PIP_LIST = []
