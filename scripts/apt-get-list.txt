@@ -1,0 +1,3 @@
+ros-indigo-desktop
+doxygen
+python-pip
