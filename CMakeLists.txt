@@ -9,10 +9,10 @@ set(CMAKE_MODULE_PATH ${RAM_TOP_DIR}/cmake)
 
 #Set default values for CATKIN_DEVEL_PREFIX and CMAKE_INSTALL_PREFIX
 if(NOT DEFINED CATKIN_DEVEL_PREFIX)
-    set(CATKIN_DEVEL_PREFIX ${RAM_BIN_DIR}/devel)
+    set(CATKIN_DEVEL_PREFIX ${RAM_TOP_DIR}/devel)
 endif()
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-    set(CMAKE_INSTALL_PREFIX ${RAM_BIN_DIR}/install)
+    set(CMAKE_INSTALL_PREFIX ${RAM_TOP_DIR}/install)
 endif()
 
 #Quick fix for building without sourcing devel/setup.bash
