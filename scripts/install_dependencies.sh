@@ -3,6 +3,8 @@
 # This shell script very closely follows the instructions from:
 #       http://wiki.ros.org/indigo/Installation/Ubuntu
 
+# We get the directory of this script.
+SCRIPT_DIR=$(dirname $0)
 # We get the "codename" for this Ubuntu release (lucid, trusty, etc.).
 UBUNTU_CODENAME=`lsb_release -sc`
 # We then use the codename to create the URL for the ROS sources list.
@@ -18,10 +20,10 @@ wget 'https://raw.githubusercontent.com/ros/rosdistro/master/ros.key' -O - | sud
 
 # Finally, we update our package lists and then install all the packages in apt-get-list.txt.
 sudo apt-get update
-xargs sudo apt-get install -y < apt-get-list.txt
+xargs sudo apt-get install -y < $SCRIPT_DIR/apt-get-list.txt
 
 # For any Python packages, we use pip, which reads from the requirements.txt file.
-sudo pip install -r requirements.txt
+sudo pip install -r $SCRIPT_DIR/requirements.txt
 
 # Lastly, we initialize rosdep if we have not already done so.
 if [ ! -d /etc/ros/rosdep/ ]; then
