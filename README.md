@@ -8,7 +8,7 @@ Project QUBO currently only supports Ubuntu 14.04.  Any other platforms may not 
 
 First of all, install all the dependencies in the project by running the handy installation script:
 ```sh
-sh scripts/install_dependencies.sh
+bash scripts/install_dependencies.bash
 ```
 
 Then, compile the code using:
