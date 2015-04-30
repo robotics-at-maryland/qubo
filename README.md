@@ -1,4 +1,4 @@
-# Project QUBO
+# qubo
 
 ## Setup Instructions
 
