@@ -24,6 +24,9 @@ if [ ! -d /opt/ros/indigo/ ]; then
     sudo apt-get install ros-indigo-desktop
 fi
 
+# Installing additional packages.
+sudo apt-get install doxygen
+
 # Setup environment variables for ROS.
 source /opt/ros/indigo/setup.bash
 
