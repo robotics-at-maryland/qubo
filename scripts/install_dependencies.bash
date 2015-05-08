@@ -25,7 +25,9 @@ if [ ! -d /opt/ros/indigo/ ]; then
 fi
 
 # Installing additional packages.
-sudo apt-get install doxygen
+sudo apt-get install doxygen ros-indigo-uwsim #if we change ros-indigo-desktop to ros-indigo-desktop-full we can remove the uwsim bit
+
+
 
 # Setup environment variables for ROS.
 source /opt/ros/indigo/setup.bash
@@ -38,3 +40,5 @@ fi
 
 # Finally, run rosdep to install all the dependencies for our packages.
 sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../packages
+
+
