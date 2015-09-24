@@ -25,6 +25,11 @@ cmake ..
 make
 ```
 
+Alternatively just call the build script which does all the above for you
+```sh
+./build.sh
+```
+
 ### Optional Steps
 
 ##### To run all the unit/integration tests:
