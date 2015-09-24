@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <name>qubo_sim</name>
+  <version>0.1.0</version>
+  <description>Nodes which will pretend to be various components which UW sim does not provide </description>
+  <author email="software@ram.umd.edu">Robotics @ Maryland</author>
+  <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
+
+  <license>GPL</license>
+
+  <url>http://ram.umd.edu</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
