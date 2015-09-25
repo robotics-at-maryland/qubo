@@ -31,16 +31,12 @@ set(TEST_FILES
     )
 
 ##############################
-# Library ####################
+# Add Executables ############
 ##############################
 
-add_library(${PROJECT_NAME} ${SRC_FILES})
+add_executable(qubo_sim src/bad_dvl.cpp)
+target_link_libraries(qubo_sim ${catkin_LIBRARIES})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-
-target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
-)
 
 ##############################
 # Unit Tests #################
@@ -59,11 +55,13 @@ target_link_libraries(${PROJECT_NAME}
 # Installable Targets ########
 ##############################
 
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+
+#SG: Not too sure what stephen had these doing, but they break the build so they got to go
+#install(TARGETS ${PROJECT_NAME}
+#  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

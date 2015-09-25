@@ -31,21 +31,21 @@ set(TEST_FILES
  
     )
 
+
 ##############################
-# Library ####################
+# Add Executables ############
 ##############################
 
-add_library(${PROJECT_NAME} ${SRC_FILES})
-
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-
-target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
-)
+add_executable(vehicle_layer src/vehicle_layer.cpp)
+target_link_libraries(vehicle_layer ${catkin_LIBRARIES})
+  
 
 ##############################
 # Unit Tests #################
 ##############################
+
+
+##SG: PLEASE ADD THESE WHEN YOU MAKE SOMETHING FOR REAL
 
 #catkin_add_gtest(${PROJECT_NAME}_tests ${TEST_FILES})
 
@@ -60,11 +60,11 @@ target_link_libraries(${PROJECT_NAME}
 # Installable Targets ########
 ##############################
 
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+
+#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in 
+#install(TARGETS ${PROJECT_NAME}
+#  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
