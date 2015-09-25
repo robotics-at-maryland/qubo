@@ -53,10 +53,11 @@ python scripts/make_eclipse_project.py <new directory>
 NOTE: The new directory should be OUTSIDE the top level directory (Eclipse does not like out-of-source project files in the source directory).
 
 
-#### To setup the embedded tool chain
+## To setup the embedded tool chain
+You can skip everything below if you're going to write embedded code 
 This page will go through the steps needed to compile and deploy code to run on the EK-TM4C123GXL devboard.
 
-## Through the Commandline
+### Through the Commandline
 
 
 You only need to run this line if you HAVEN'T run install_dependencies.bash from above
@@ -67,7 +68,7 @@ I am writing this for Ubuntu 14.04, but it should be modifiable for other platfo
 
 It is possible to get a functional toolchain through the official TI software packages. The major difficulty in getting this approach to work is the lack of a config file for our device. This can be worked around by using the config file file at https://raw.githubusercontent.com/yuvadm/tiva-c/master/boards/dk-tm4c123g/can/ccs/target_config.ccxml . However, using their software is somewhat of a confusing, undocumented mess, so I will instead focus on using the toolchain at https://github.com/yuvadm/tiva-c
 
-## Installing the toolchain  
+### Installing the toolchain  
 I will assume that we are installing the toolchain to the directory TOOLCHAIN_ROOT
 first download and install the toolchain itself 
 
@@ -114,7 +115,7 @@ lm4flash blinky.bin
 
 If all goes well, your LED should begin flashing green.
 
-## Using gdb
+### Using gdb
 
 In the lm4tools repository downloaded earlier, there is a tool called "lmicdi". I will assume that you have compiled this tool and added it to your path. To run gdb, do
 
