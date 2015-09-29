@@ -6,15 +6,17 @@ project(qubo_sim)
 ##############################
 
 find_package(catkin 
-   # REQUIRED COMPONENTS
+    REQUIRED COMPONENTS
    # qubo_vehicle_layer
+   roscpp
 )
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS 
+    CATKIN_DEPENDS roscpp
 )
+
 
 ##############################
 # File List ##################
@@ -23,7 +25,7 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
-    src/bad_dvl.cpp
+    src/depth_sensor_sim.cpp
     )
     
 set(TEST_FILES
@@ -34,7 +36,7 @@ set(TEST_FILES
 # Add Executables ############
 ##############################
 
-add_executable(qubo_sim src/bad_dvl.cpp)
+add_executable(qubo_sim src/depth_sensor_sim.cpp)
 target_link_libraries(qubo_sim ${catkin_LIBRARIES})
 
 
