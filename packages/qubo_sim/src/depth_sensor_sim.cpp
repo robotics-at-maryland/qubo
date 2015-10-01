@@ -1,6 +1,5 @@
 #include "depth_sensor_sim.h"
 
-
 /**
  * This tutorial demonstrates simple receipt of messages over the ROS system.
  */
