@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>kevin_wittmer</name>
+  <version>0.1.0</version>
+  <description>Test package for pull requests that does nothing.</description>
+  <author email="wittmerkevinr@gmail.com">Kevin Wittmer</author>
+  <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
+
+  <license>GPL</license>
+
+  <url>http://ram.umd.edu</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+ <!-- <build_depend>ram_msgs</build_depend> -->
+  <build_depend>roscpp</build_depend>
+  
+  
+ <!-- <run_depend>ram_msgs</run_depend> -->
+  <run_depend>roscpp</run_depend>
+
+</package>
