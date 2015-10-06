@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   /**
    * Adds a callback to add the incoming data to the EKF
    */
-  ros::Subscriber sub = n.subscribe("ahrs_data_in", 1000, add_reading);
+  //ros::Subscriber sub = n.subscribe("ahrs_data_in", 1000, add_reading);
 
   /**
    * ros::spin() will enter a loop, pumping callbacks.  With this version, all
@@ -37,9 +37,4 @@ int main(int argc, char **argv)
   ros::spin();
 
   return 0;
-}
-
-void add_reading(const boost::shared_ptr<Message const>&)
-{
-   ROS_DEBUG("Got a reading")
 }
