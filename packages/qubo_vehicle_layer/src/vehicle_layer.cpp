@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv){
   
+
   // You must call one of the versions of ros::init() before doing anything else
   
   ros::init(argc, argv, "talker");
