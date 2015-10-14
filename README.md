@@ -54,7 +54,7 @@ NOTE: The new directory should be OUTSIDE the top level directory (Eclipse does 
 
 
 ## To setup the embedded tool chain
-You can skip everything below if you're going to write embedded code 
+You can skip everything below if you're not going to write embedded code 
 This page will go through the steps needed to compile and deploy code to run on the EK-TM4C123GXL devboard.
 
 ### Through the Commandline
