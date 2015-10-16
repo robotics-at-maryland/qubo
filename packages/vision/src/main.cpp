@@ -2,7 +2,7 @@
 #include "ros/package.h"
 #include "cv.h"
 #include "highgui.h"
-#include <string>
+#include <vector>
 
 using namespace cv;
 
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
   }
 
   // various stages of images used in processing
-  Mat raw_image, edge_image, dst, thresh_image, thresh_color;
+  Mat raw_image, edge_image, dst, thresh_image, thresh_color, gray_image;
 
   // process frames at 15hz
   ros::Rate loop_rate(15);
@@ -31,6 +31,10 @@ int main(int argc, char **argv) {
       blur_number = 6,
       hue_max     = 50,
       hue_min     = 20;
+
+  ORB orb;
+
+
 
   // create the GUI
   namedWindow("edge image", 2);
@@ -72,6 +76,15 @@ int main(int argc, char **argv) {
     inRange(thresh_image, Scalar(hue_min, 0, 0), Scalar(hue_max, 255, 255), thresh_image);
     thresh_color = Scalar::all(0);
     raw_image.copyTo(thresh_color, thresh_image);
+
+    // orb features
+    cvtColor(raw_image, gray_image, CV_BGR2GRAY);
+    std::vector<KeyPoint> key_points;
+
+    orb(gray_image, gray_image, key_points, noArray());
+    drawKeypoints(raw_image, key_points, raw_image, Scalar(0, 0, 255));
+
+
 
     // display images is seperate windows
     imshow("edge image", dst);
