@@ -115,21 +115,21 @@ int readIMUData(int fd, RawIMUData* imu)
 /* Some code from cutecom, which in turn may have come from minicom */
 int openIMU(const char* devName)
 {
+   printf("Opening IMU sensor at %s.\n", devName);
    int fd = open(devName, O_RDWR, O_ASYNC);
    int mcs=0;
    unsigned int _baud=B115200;
    struct termios newtio;
 
    if(fd == -1){
-      printf("Device not found.");
+      printf("IMU %s not found.\n", devName);
       return -1;
    }
    if (tcgetattr(fd, &newtio)!=0)
-      printf("\nFirst stuff failed\n");
+      printf("Attribute check on fd %d failed.\n", fd);
 
    cfsetospeed(&newtio, _baud);
    cfsetispeed(&newtio, _baud);
-
 
    newtio.c_cflag = (newtio.c_cflag & ~CSIZE) | CS8;
    newtio.c_cflag |= CLOCAL | CREAD;
