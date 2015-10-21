@@ -2,14 +2,11 @@
 #include "ros/package.h"
 #include "cv.h"
 #include "highgui.h"
-#include <opencv2/contrib/contrib.hpp>
-#include <opencv2/core/core.hpp>
-#include <vector>
 
 using namespace cv;
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "main_vision_node");
+  ros::init(argc, argv, "adaptive_threshold_example");
   ros::NodeHandle n;
 
   // open up the video
@@ -22,26 +19,17 @@ int main(int argc, char **argv) {
   }
 
   // various stages of images used in processing
-  Mat raw_image, edge_image, dst, thresh_image, thresh_color, gray_image, keypoint_image;
+  Mat raw_image, thresh_image, thresh_color;
 
   // process frames at 15hz
   ros::Rate loop_rate(15);
 
   // variables
   int frame_count = 0,  // a frame count is needed to loop the video
-      canny_low   = 90, // the rest are parameters to the algorithms...
-      canny_high  = 133,
-      blur_number = 6,
+      blur_number = 6,  // the rest are parameters to the algorithms...
       hue_max     = 50,
       hue_min     = 20;
 
-  ORB orb;
-
-  // create the GUI
-  namedWindow("edge image", 2);
-  createTrackbar("canny low", "edge image", &canny_low, 200);
-  createTrackbar("canny high", "edge image", &canny_high, 200);
-  createTrackbar("blur size", "edge image", &blur_number, 50);
 
   namedWindow("raw image", 2);
   namedWindow("HSV threshold", 2);
@@ -65,27 +53,13 @@ int main(int argc, char **argv) {
       return -1;
     }
 
-    // Canny edge detection
-    cvtColor(raw_image, edge_image, CV_BGR2GRAY);
-    blur(edge_image, edge_image, Size(blur_number, blur_number));
-    Canny(edge_image, edge_image, canny_low, canny_high, 3);
-    dst = Scalar::all(0);
-    raw_image.copyTo(dst, edge_image);
-
     // HSV thresholding
     cvtColor(raw_image, thresh_image, CV_BGR2HSV);
     inRange(thresh_image, Scalar(hue_min, 0, 0), Scalar(hue_max, 255, 255), thresh_image);
     thresh_color = Scalar::all(0);
     raw_image.copyTo(thresh_color, thresh_image);
 
-    // orb features
-    cvtColor(raw_image, gray_image, CV_BGR2GRAY);
-    std::vector<KeyPoint> orb_key_points;
-    orb(gray_image, gray_image, orb_key_points, noArray());
-    drawKeypoints(raw_image, orb_key_points, raw_image, Scalar(0, 0, 255));
-
     // display images is seperate windows
-    imshow("edge image", dst);
     imshow("raw image", raw_image);
     imshow("HSV threshold", thresh_color);
 
