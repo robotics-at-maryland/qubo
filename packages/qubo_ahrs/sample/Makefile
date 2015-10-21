@@ -1,6 +1,6 @@
 CC = gcc
 
-_PHONY: clean
+.PHONY: clean test
 
 clean:
 	rm -rf test imuapi.o test.out
@@ -10,5 +10,5 @@ imuapi.o: imuapi.c imuapi.h
 
 test: test.c imuapi.o
 	$(CC) -o test test.c imuapi.o
-	./test
+	sudo ./test
 

@@ -7,7 +7,6 @@ int main(){
    RawIMUData data; 
    if (imu == -1)
       return -1;
-   printf("Connected with file descriptor %d",imu);
    while (1){
       printf("READING\n");
       readIMUData(imu,&data);
