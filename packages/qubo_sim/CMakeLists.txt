@@ -9,12 +9,14 @@ find_package(catkin
     REQUIRED COMPONENTS
    # qubo_vehicle_layer
    roscpp
+   ram_msgs
+   message_generation
 )
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS roscpp
+    CATKIN_DEPENDS roscpp message_runtime
 )
 
 
