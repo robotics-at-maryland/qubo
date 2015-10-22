@@ -7,7 +7,7 @@ project(ram_msgs)
 
 find_package(
     catkin REQUIRED COMPONENTS 
-    message_generation 
+    message_generation
 )
 
 ##############################

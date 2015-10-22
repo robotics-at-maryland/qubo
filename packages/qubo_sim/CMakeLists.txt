@@ -6,7 +6,7 @@ project(qubo_sim)
 ##############################
 
 find_package(catkin 
-    REQUIRED COMPONENTS
+   REQUIRED COMPONENTS
    # qubo_vehicle_layer
    roscpp
    ram_msgs
@@ -28,6 +28,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
     src/depth_sensor_sim.cpp
+    src/battery_sensor_sim.cpp
     )
     
 set(TEST_FILES
@@ -38,9 +39,11 @@ set(TEST_FILES
 # Add Executables ############
 ##############################
 
-add_executable(qubo_sim src/depth_sensor_sim.cpp)
-target_link_libraries(qubo_sim ${catkin_LIBRARIES})
+add_executable(depth_sensor_sim src/depth_sensor_sim.cpp)
+target_link_libraries(depth_sensor_sim ${catkin_LIBRARIES})
 
+add_executable(battery_sensor_sim src/battery_sensor_sim.cpp)
+target_link_libraries(battery_sensor_sim ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
