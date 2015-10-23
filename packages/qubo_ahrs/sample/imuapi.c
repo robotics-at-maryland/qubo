@@ -118,7 +118,7 @@ int openIMU(const char* devName)
    printf("Opening IMU sensor at %s.\n", devName);
    int fd = open(devName, O_RDWR, O_ASYNC);
    int mcs=0;
-   unsigned int _baud=B115200;
+   unsigned int _baud=B38400;
    struct termios newtio;
 
    if(fd == -1){
