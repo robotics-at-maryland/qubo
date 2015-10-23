@@ -27,7 +27,6 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
-    src/depth_sensor_sim.cpp
     src/battery_sensor_sim.cpp
     )
     
@@ -38,9 +37,6 @@ set(TEST_FILES
 ##############################
 # Add Executables ############
 ##############################
-
-add_executable(depth_sensor_sim src/depth_sensor_sim.cpp)
-target_link_libraries(depth_sensor_sim ${catkin_LIBRARIES})
 
 add_executable(battery_sensor_sim src/battery_sensor_sim.cpp)
 target_link_libraries(battery_sensor_sim ${catkin_LIBRARIES})

@@ -23,7 +23,8 @@ add_message_files(
     Vector2.msg
     Vector3.msg
     Vector4.msg
-    Sim_Battery.msg	
+
+    Sim_Power_Source.msg
 )
 
 generate_messages()
