@@ -10,5 +10,4 @@ imuapi.o: imuapi.c imuapi.h
 
 test: test.c imuapi.o
 	$(CC) -o test test.c imuapi.o
-	sudo ./test
 
