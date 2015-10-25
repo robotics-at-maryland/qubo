@@ -19,6 +19,7 @@
 
 // UNIX Serial includes
 #include <termios.h>
+#include <unistd.h>
 
 // Error handling
 #include <errno.h>
@@ -53,7 +54,57 @@ class IMU
        */
       int openDevice()
       {
-         //TODO
+         struct termios termcfg;
+
+         /* Open the serial port and store into a file descriptor.
+          * O_RDWR allows for bi-directional I/O
+          * O_ASYNC generates signals when data is transmitted
+          * allowing for I/O blocking to be resolved.
+          */
+         _deviceFD = open(_deviceFile, O_RDWR, O_ASYNC);
+         if (fd != -1)
+         {
+            // Device exists, we can configure the interface.
+            tcgetattr(_deviceFD, &termcfg);
+
+            // Set the baudrate for the terminal
+            cfsetospeed(&termcfg, _termBaud);
+            cfsetispeed(&termcfg, _termBaud);
+
+            // Configure the control modes for the terminal.
+            // Replace the existing char size config to be 8 bits.
+            termcfg.c_cflag = (termcfg.c_cflag & ~CSIZE) | CS8;
+            // Ignore modem control lines, and enable the reciever.
+            termcfg.c_cflag |= CLOCAL | CREAD;
+            // Disable parity generation/checking
+            termcfg.c_cflag &= ~(PARENB | PARODD);
+            // Disable hardware flow control
+            termcfg.c_cflag &= ~CRTSCTS;
+            // Send one stop bit only.
+            termcfg.c_cflag &= ~CSTOPB;
+
+            // Configure the input modes for the terminal.
+            // Ignore break condition on input. 
+            termcfg.c_iflag = IGNBRK;
+            // Disable X control flow, only START char restarts output.
+            termcfg.c_iflag &= ~(IXON|IXOFF|IXANY);
+
+            // Configure the local modes for the terminal.
+            termcfg.c_lflag = 0;
+
+            // Configure the output modes for the terminal.
+            termcfg.c_oflag = 0;
+            
+            // Configure the read timeout (deciseconds)
+            termcfg.c_cc[VTIME] = 1;
+
+            // Configure the minimum number of chars for read.
+            termcfg.c_cc[VMIN] = 60;
+
+            // Push the configuration to the terminal NOW.
+            tcsetattr(_deviceFD, TCSANOW, &termcfg);
+
+         }
       }
 
       /**
@@ -118,7 +169,7 @@ class IMU
 
       int writeCommand(IMUFrame frame, char* payload)
       {
-         
+
       }
       int readDatagram()
       {

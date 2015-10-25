@@ -149,8 +149,5 @@ typedef struct _FIRTaps_ThirtyTwo {
    double[32] taps;
 } FIRTaps_ThirtyTwo;
 
-
-
-
 #pragma pack(pop)
 #endif
