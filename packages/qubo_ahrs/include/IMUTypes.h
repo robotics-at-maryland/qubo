@@ -19,47 +19,33 @@
 #pragma pack(push,1)
 
 /**
- * USER-DEFINED-TYPES:
- * These types can be manipulated as to change the behavior of data flow.
- * Integrity and book-keeping are paramount, as many data payloads need a certain
- * format in order to be interpreted correctly.
+ * PROTOCOL TYPES
+ * These are types used in the actual protocol definition
+ * Used for clarity in low-level code.
  */
 
-/**
- * Struct of data being sent/retrieved from the IMU
- * VERY IMPORTANT: each major field must be one of the types defined
- * in the PNI AHRS spec, and must be preceded by a garbage char var.
- * This is in order to read in the data directly, and discard the data IDs.
- * Additionally, there is one garbage idCount at the beginning.
- * ALSO: make sure to update IMU_RAW_N_FIELDS to the number of major fields.
- */
-#define RAW_DATA_N_FIELDS 10
-typedef struct _RawData {
-   char idCount;
-   char qID;
-   float[4] quaternion;
-   char gxID;
-   float gyroX;
-   char gyID;
-   float gyroY;
-   char gzID;
-   float gyroZ;
-   char axID;
-   float accelX;
-   char ayID;
-   float accelY;
-   char azID;
-   float accelZ;
-   char mxID;
-   float magX;
-   char myID;
-   float magY;
-   char mzID;
-   float magZ;
-} RawData;
+typedef uint16_t bytecount_t;
+
+typedef uint16_t checksum_t;
+
+typedef uint8_t frameid_t;
+
+typedef uint8_t config_id_t;
+
+typedef uint8_t data_id_t;
 
 /**
- * NON-USER-DEFINED-TYPES:
+ * ABSTRACTION TYPES
+ * Data type storing static protocol information about the different packet types.
+ */
+typedef struct _Command
+{
+   frameid_t id;
+   bytecount_t payload_size;
+} Command;
+
+/**
+ * HARDCODED PAYLOAD TYPES:
  * Please dont change any of these unless the spec changes, or there is a bug.
  * These should be exactly out of the specification file.
  */
@@ -68,28 +54,26 @@ typedef struct _RawData {
 
 typedef struct _ModInfo {
    char[4] type;
-   char[4] rev;
+   uint8_t[4] rev;
 } ModInfo;
 
-typedef uint8_t ConfigID;
-
 typedef struct _ConfigBoolean {
-   ConfigID id;
+   config_id_t id;
    bool value;
 } ConfigBoolean;
 
 typedef struct _ConfigFloat32 {
-   ConfigID id;
+   config_id_t id;
    float value;
 } ConfigFloat32;
 
 typedef struct _ConfigUInt8 {
-   ConfigID id;
+   config_id_t id;
    uint8_t value;
 } ConfigUInt8;
 
 typedef struct _ConfigUInt32 {
-   ConfigID id;
+   config_id_t id;
    uint32_t value;
 } ConfigUInt32;
 
