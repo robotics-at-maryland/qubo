@@ -27,6 +27,7 @@ set(SRC_FILES
     src/vehicle_layer.cpp
     src/device.cpp
     src/device.h
+    src/example_device.cpp
     )
     
 set(TEST_FILES
@@ -39,6 +40,8 @@ set(TEST_FILES
 ##############################
 
 add_executable(vehicle_layer src/vehicle_layer.cpp) 
+add_executable(example_device src/example_device.cpp)
+target_link_libraries(example_device ${catkin_LIBRARIES})
 target_link_libraries(vehicle_layer ${catkin_LIBRARIES})
   
 
