@@ -25,6 +25,7 @@ add_message_files(
     Vector4.msg
 
     Sim_Power_Source.msg
+    Sim_Temperature.msg
 )
 
 generate_messages()
