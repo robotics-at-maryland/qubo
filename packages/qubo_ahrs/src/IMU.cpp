@@ -153,37 +153,53 @@ class IMU
          readConfig();
          // If we havent changed anything, dont send anything.
          if (_stagedConfig != _liveConfig){
-            //Some of these could be reordered to make more sense.
-            sendCommand(kSetAcqParams,                &(_liveConfig.acqParams), 
+            ConfigFloat32 float32;
+            ConfigUInt32 uint32;
+            ConfigUInt8 uint8;
+            ConfigBoolean boolean;
+            
+            // Struct parameters can be sent directly.
+            sendCommand(kSetAcqParams,                &(_stagedConfig.acqParams), 
                         kSetAcqParamsDone,            NULL);
-            sendCommand(kSetFIRFilters,               &(_stagedConfig.filters),
-                        kSetFIRFiltersDone,           NULL;
-            sendCommand(kGetMagTruthMethod,           NULL,
-                        kGetMagTruthMethodResp,       &(_liveConfig.magTruthMethod));
-            sendCommand(kGetFunctionalMode,           NULL,
-                        kGetFunctionalModeResp,       &(_liveConfig.mode));
-            sendCommand(kGetConfigFloat32,            &kDeclination,
-                        kGetConfigRespFloat32,        &(_liveConfig.declination));
-            sendCommand(kGetConfigUInt32,             &kUserCalNumPoints,
-                        kGetConfigRespUInt32,         &(_liveConfig.userCalNumPoints));
-            sendCommand(kGetConfigUInt32,             &kMagCoeffSet,
-                        kGetConfigRespUInt32,         &(_liveConfig.magCoeffSet));
-            sendCommand(kGetConfigUInt32,             &kAccelCoeffSet,
-                        kGetConfigRespUInt32,         &(_liveConfig.accelCoeffSet));
-            sendCommand(kGetConfigUInt8,              &kMountingRef,
-                        kGetConfigRespUInt8,          &(_liveConfig.mountingRef));
-            sendCommand(kGetConfigUInt8,              &kBaudRate,
-                        kGetConfigRespUInt8,          &(_liveConfig.baudRate));
-            sendCommand(kGetConfigBoolean,            &kTrueNorth,
-                        kGetConfigRespBoolean,        &(_liveConfig.trueNorth));
-            sendCommand(kGetConfigBoolean,            &kBigEndian,
-                        kGetConfigRespBoolean,        &(_liveConfig.bigEndian));
-            sendCommand(kGetConfigBoolean,            &kUserCalAutoSampling,
-                        kGetConfigRespBoolean,        &(_liveConfig.userCalAutoSampling));
-            sendCommand(kGetConfigBoolean,            &kMilOut,
-                        kGetConfigRespBoolean,        &(_liveConfig.milOut));
-            sendCommand(kGetConfigBoolean,            &kHPRDuringCal,
-                        kGetConfigRespBoolean,        &(_liveConfig.hprDuringCal));
+            sendCommand(kSetFIRFiltersThirtyTwo,      &(_stagedConfig.filters),
+                        kSetFIRFiltersDone,           NULL);
+            sendCommand(kSetMagTruthMethod,           &(_stagedConfig.magTruthMethod);
+                        kSetMagTruthMethodDone,       NULL);
+            sendCommand(kSetFunctionalMode,           &(_stagedConfig.mode),
+                        kSetFunctionalModeDone,       NULL);
+            // Primitive 
+            float32.id = kDeclination,       float32.value = _stagedConfig.declination; 
+            sendCommand(kSetConfigFloat32,   &float32,   kSetConfigRespFloat32,  NULL);
+
+            uint32.id = kUserCalNumPoints,   uint32.value = _stagedConfig.userCalNumPoints;
+            sendCommand(kSetConfigUInt32,    &uint32,    kSetConfigRespUInt32,   NULL);
+
+            uint32.id = kMagCoeffSet,        uint32.value = _stagedConfig.magCoeffSet
+            sendCommand(kSetConfigUInt32,    &uint32,    kSetConfigRespUInt32,   NULL);
+
+            uint32.id = kAccelCoeffSet,      uint32.value = _stagedConfig.accelCoeffSet;
+            sendCommand(kSetConfigUInt32,    &uint32,    kSetConfigRespUInt32,   NULL);
+
+            uint8.id = kMountingRef,         uint8.value = _stagedConfig.mountingRef;
+            sendCommand(kSetConfigUInt8,     &uint8,     kSetConfigRespUInt8,    NULL);
+
+            uint8.id = kBaudRate,            uint8.value = _stagedConfig.baudRate;
+            sendCommand(kSetConfigUInt8,     &uint8,     kSetConfigRespUInt8,    NULL);
+
+            boolean.id = kTrueNorth,         boolean.value = _stagedConfig.trueNorth;
+            sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigRespBoolean,  NULL);
+
+            boolean.id = kBigEndian,         boolean.value = _stagedConfig.bigEndian;
+            sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigRespBoolean,  NULL);
+
+            boolean.id = kUserCalAutoSample, boolean.value = _stagedConfig.userCalAutoSampling;
+            sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigRespBoolean,  NULL);
+
+            boolean.id = kMilOut,            boolean.value = _stagedConfig.milOut;
+            sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigRespBoolean,  NULL);
+
+            boolean.id = kHPRDuringCal,      boolean.value = _stagedConfig.hprDuringCal;
+            sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigRespBoolean,  NULL);
          }
          // If the new config matches the old one, success!
          return (stagedConfig != readConfig());
@@ -261,7 +277,7 @@ class IMU
          _lastReading.magX = data.magX;
          _lastReading.magY = data.magY;
          _lastReading.magZ = data.magZ;
-         return lastReading;
+         return _lastReading;
       }
    private:
       /** 

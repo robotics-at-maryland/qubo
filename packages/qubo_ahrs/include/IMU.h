@@ -18,7 +18,7 @@
 // Unix includes (open, read, write, etc...)
 #include <unistd.h>
 
-#include "IMUTypes.h"
+#include "TRAXTypes.h"
 
 /**
  * USER-DEFINED-TYPES:
@@ -165,7 +165,7 @@ class IMU
       static Command kSetConfigFloat32          = {0x06, sizeof(ConfigFloat32)      };
       static Command kSetConfigUInt8            = {0x06, sizeof(ConfigUInt8)        };
       static Command kSetConfigUInt32           = {0x06, sizeof(ConfigUInt32)       };
-      static Command kGetConfig                 = {0x07, sizeof(config_id_t)           };
+      static Command kGetConfig                 = {0x07, sizeof(config_id_t)        };
       static Command kGetConfigRespBoolean      = {0x08, sizeof(ConfigBoolean)      };
       static Command kGetConfigRespFloat32      = {0x08, sizeof(ConfigFloat32)      };
       static Command kGetConfigRespUInt8        = {0x08, sizeof(ConfigUInt8)        };
@@ -240,5 +240,7 @@ class IMU
       static data_id_t kGyroX                   = 0x4a;
       static data_id_t kGyroY                   = 0x4b;
       static data_id_t kGyroZ                   = 0x4c;
+
+      static FIRFilter kFilterID                = {3,1};
 
 #endif
