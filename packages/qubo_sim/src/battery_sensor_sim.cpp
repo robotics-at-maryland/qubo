@@ -8,11 +8,6 @@
 #define DEFAULT_CURRENT 9001.0
 
 int main(int argc, char **argv) {
-    /*
-     * curr_voltage and curr_current will store the current battery state 
-     */
-    double curr_voltage = DEFAULT_VOLTAGE;
-    double curr_current = DEFAULT_CURRENT;
     /* 
      * ros::init(argc, argv, "<NAME OF NODE>");
      * 
@@ -61,14 +56,31 @@ int main(int argc, char **argv) {
          * Creates the message objects for you to stuff full of data.
          */
         ram_msgs::Sim_Power_Source msg;
-
+        
+        /*
+         * Temp variables to hold onto current parameter data.
+         */
         int source;
         bool enabled;
-
+        double curr_voltage;
+        double curr_current;
+        
+        /*
+         * Checks parameter server for new paramters to set.
+         */
         n.param("/qubo/power_source",source, DEFAULT_SOURCE);
         n.param("/qubo/power_enabled",enabled, true);
         n.param("/qubo/voltage",curr_voltage, DEFAULT_VOLTAGE);
         n.param("/qubo/current",curr_current, DEFAULT_CURRENT);
+        
+        /*
+         * Sets the message contents to the variables above.
+         */
+        msg.source = source;
+        msg.enabled = enabled;
+        msg.voltage = curr_voltage;
+        msg.current = curr_current;
+        
         /*
          * This actually posts the message object to the topic. Note how it's
          * using the Publisher object initialized before hand.
