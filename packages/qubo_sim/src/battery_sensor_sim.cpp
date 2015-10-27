@@ -3,8 +3,9 @@
 
 #include <sstream>
 
-#define DEFAULT_VOLTAGE 24
-#define DEFAULT_CURRENT 9001
+#define DEFAULT_SOURCE 0
+#define DEFAULT_VOLTAGE 24.0
+#define DEFAULT_CURRENT 9001.0
 
 int main(int argc, char **argv) {
     /*
@@ -44,6 +45,15 @@ int main(int argc, char **argv) {
     ros::Rate loop_rate(100);
     
     /*
+     * Initializes a source_source param for the parameter server to allow
+     * live modifications to default values.
+     */
+    n.setParam("/qubo/power_source", DEFAULT_SOURCE);
+    n.setParam("/qubo/power_enabled", true);
+    n.setParam("/qubo/voltage", DEFAULT_VOLTAGE);
+    n.setParam("/qubo/current", DEFAULT_CURRENT);
+
+    /*
      * While ros is A OK this loop will keep rollin'
      */
     while(ros::ok()) {
@@ -51,11 +61,14 @@ int main(int argc, char **argv) {
          * Creates the message objects for you to stuff full of data.
          */
         ram_msgs::Sim_Power_Source msg;
-        msg.source = 0;
-        msg.enabled = 1;
-        msg.voltage = curr_voltage;
-        msg.current = curr_current; 
-        
+
+        int source;
+        bool enabled;
+
+        n.param("/qubo/power_source",source, DEFAULT_SOURCE);
+        n.param("/qubo/power_enabled",enabled, true);
+        n.param("/qubo/voltage",curr_voltage, DEFAULT_VOLTAGE);
+        n.param("/qubo/current",curr_current, DEFAULT_CURRENT);
         /*
          * This actually posts the message object to the topic. Note how it's
          * using the Publisher object initialized before hand.
