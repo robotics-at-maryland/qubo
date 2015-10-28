@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
     /*
      * Initialize a ROS parameter server param to the default temperature (approx. room temp)
      */
-    n.setParam("/simulated_temperature_sensor/mean_temperature",DEFAULT_MEAN_TEMP);
+    n.setParam("/qubo/mean_temperature",DEFAULT_MEAN_TEMP);
 
     /*
      * Set up a RNG that will be used to add varience to the published temperatures.
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
          * cannot be found, DEFAULT_MEAN_TEMP is used instead.
          */
         double mean_temperature;
-        n.param("/simulated_temperature_sensor/mean_temperature",mean_temperature,DEFAULT_MEAN_TEMP);
+        n.param("/qubo/mean_temperature",mean_temperature,DEFAULT_MEAN_TEMP);
 
         /*
          * The temperature published in the message is the mean_temperature adjusted with
