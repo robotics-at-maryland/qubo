@@ -29,6 +29,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 set(SRC_FILES
     src/battery_sensor_sim.cpp
     src/temperature_sensor_sim.cpp
+    src/led_status_sensor.cpp
     )
     
 set(TEST_FILES
@@ -44,6 +45,10 @@ target_link_libraries(battery_sensor_sim ${catkin_LIBRARIES})
 
 add_executable(temperature_sensor_sim src/temperature_sensor_sim.cpp)
 target_link_libraries(temperature_sensor_sim ${catkin_LIBRARIES})
+
+add_executable(led_status_sensor src/led_status_sensor.cpp)
+target_link_libraries(led_status_sensor ${catkin_LIBRARIES})
+
 
 ##############################
 # Unit Tests #################

@@ -26,6 +26,7 @@ add_message_files(
 
     Sim_Power_Source.msg
     Sim_Temperature.msg
+    Sim_Led.msg
 )
 
 generate_messages()
