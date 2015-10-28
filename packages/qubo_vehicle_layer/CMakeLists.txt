@@ -26,7 +26,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 set(SRC_FILES
     src/vehicle_layer.cpp
     src/device.cpp
-    src/device.h
     src/example_device.cpp
     )
     

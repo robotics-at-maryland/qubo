@@ -1,33 +1,48 @@
-#include "device.h"
+#include "vehicle_layer.h"
+#include "QuboNode.cpp"
+#include "ram_msgs/Vector2.h"
 
-class ExampleDevice : public Device {
+class ExampleDevice : public QuboNode {
 
-	ros::Publisher publisher = 
-		n.advertise<ram_msg::msg::Vector2>("example", 1000);
-	ros::Rate loop_rate(10);
+protected:
+	
 
 public:
 	
+	ExampleDevice(){
+		ExampleDevice::publisher = pub_node.advertise<ram_msgs::Vector2>("example", 1000);
+		ExampleDevice::rate = ros::Rate(10);
+	}
+
+	~ExampleDevice(){
+		//nothing here
+	}
+
 	void publish(){
-		ram_msg::msg::Vector2 v;
+		ram_msgs::Vector2 v;
 		v.x = 5.0;
 		publisher.publish(v);
 		ros::spinOnce();
-		loop_rate.sleep();
+		rate.sleep();
 	}
 
 	void subscribe(){
-
+		//nothing
 	}
 
-	int main(int argc, int **argv){
-		ros::init(argc, argv, "ExampleDevice");
-		ros::NodeHandle n;
-
-		while(ros::ok){
-			publish();
-		}
-		return 0;
+	void sendAction(){
+		//nothing
 	}
 
 };
+
+int main(int argc, char **argv){
+		ExampleDevice* ED = new ExampleDevice();
+		ros::init(argc, argv, "ExampleDevice");
+
+		while(ros::ok){
+			(*ED).publish();
+		}
+
+		return 0;
+	}
