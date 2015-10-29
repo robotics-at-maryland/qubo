@@ -1,5 +1,10 @@
+#This file is changed by Peter Peng
+#Peter000000
+#on github
+
 cmake_minimum_required(VERSION 2.8.3)
 project("qubo")
+# Adding some new lines
 
 #Initialize various variables with path locations.
 set(RAM_TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
