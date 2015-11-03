@@ -30,6 +30,7 @@ set(SRC_FILES
     src/battery_sensor_sim.cpp
     src/temperature_sensor_sim.cpp
     src/led_status_sensor.cpp
+    src/hull_sensor_sim.cpp
     )
     
 set(TEST_FILES
@@ -49,6 +50,8 @@ target_link_libraries(temperature_sensor_sim ${catkin_LIBRARIES})
 add_executable(led_status_sensor src/led_status_sensor.cpp)
 target_link_libraries(led_status_sensor ${catkin_LIBRARIES})
 
+add_executable(hull_sensor_sim src/hull_sensor_sim.cpp)
+target_link_libraries(hull_sensor_sim ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
