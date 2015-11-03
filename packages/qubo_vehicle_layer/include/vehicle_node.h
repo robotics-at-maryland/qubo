@@ -1,3 +1,5 @@
+#include "ros/ros.h"
+
 class QuboNode {
  public:
   QuboNode(); //Constructor, you should really never call this directly
