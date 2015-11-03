@@ -3,15 +3,11 @@
 
 #include <sstream>
 
-#define DEFAULT_VOLTAGE 24
-#define DEFAULT_CURRENT 9001
+#define DEFAULT_SOURCE 0
+#define DEFAULT_VOLTAGE 24.0
+#define DEFAULT_CURRENT 9001.0
 
 int main(int argc, char **argv) {
-    /*
-     * curr_voltage and curr_current will store the current battery state 
-     */
-    double curr_voltage = DEFAULT_VOLTAGE;
-    double curr_current = DEFAULT_CURRENT;
     /* 
      * ros::init(argc, argv, "<NAME OF NODE>");
      * 
@@ -31,7 +27,7 @@ int main(int argc, char **argv) {
      * ros what you want to publish to a specific topic name.
      * This function will also return a Publisher object which allows you to post messages to the
      * specified topic.
-     * Second parameter of the advertise() function is the size of the message queue that will be used
+     * Second paramter of the advertise() function is the size of the message queue that will be used
      * for publishing messages. If messages are published faster than we can send them, the number here
      * Specified how many messages to buffer.
      */
@@ -44,6 +40,15 @@ int main(int argc, char **argv) {
     ros::Rate loop_rate(100);
     
     /*
+     * Initializes a source_source param for the parameter server to allow
+     * live modifications to default values.
+     */
+    n.setParam("/qubo/power_source", DEFAULT_SOURCE);
+    n.setParam("/qubo/power_enabled", true);
+    n.setParam("/qubo/voltage", DEFAULT_VOLTAGE);
+    n.setParam("/qubo/current", DEFAULT_CURRENT);
+
+    /*
      * While ros is A OK this loop will keep rollin'
      */
     while(ros::ok()) {
@@ -51,10 +56,30 @@ int main(int argc, char **argv) {
          * Creates the message objects for you to stuff full of data.
          */
         ram_msgs::Sim_Power_Source msg;
-        msg.source = 0;
-        msg.enabled = 1;
+        
+        /*
+         * Temp variables to hold onto current parameter data.
+         */
+        int source;
+        bool enabled;
+        double curr_voltage;
+        double curr_current;
+        
+        /*
+         * Checks parameter server for new paramters to set.
+         */
+        n.param("/qubo/power_source",source, DEFAULT_SOURCE);
+        n.param("/qubo/power_enabled",enabled, true);
+        n.param("/qubo/voltage",curr_voltage, DEFAULT_VOLTAGE);
+        n.param("/qubo/current",curr_current, DEFAULT_CURRENT);
+        
+        /*
+         * Sets the message contents to the variables above.
+         */
+        msg.source = source;
+        msg.enabled = enabled;
         msg.voltage = curr_voltage;
-        msg.current = curr_current; 
+        msg.current = curr_current;
         
         /*
          * This actually posts the message object to the topic. Note how it's
