@@ -26,7 +26,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 set(SRC_FILES
     src/vehicle_layer.cpp
     src/device.cpp
-    src/example_device.cpp
+    src/depth_sensor_sim.cpp
     )
     
 set(TEST_FILES
@@ -38,9 +38,8 @@ set(TEST_FILES
 # Add Executables ############
 ##############################
 
-add_executable(vehicle_layer src/vehicle_layer.cpp) 
-add_executable(example_device src/example_device.cpp)
-target_link_libraries(example_device ${catkin_LIBRARIES})
+
+add_executable(vehicle_layer src/main.cpp) 
 target_link_libraries(vehicle_layer ${catkin_LIBRARIES})
   
 
