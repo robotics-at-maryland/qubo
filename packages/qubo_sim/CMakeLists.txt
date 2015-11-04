@@ -44,6 +44,9 @@ set(TEST_FILES
 add_executable(battery_sensor_sim src/battery_sensor_sim.cpp)
 target_link_libraries(battery_sensor_sim ${catkin_LIBRARIES})
 
+add_executable(ahrs_sensor_sim src/ahrs_sensor_sim.cpp)
+target_link_libraries(ahrs_sensor_sim ${catkin_LIBRARIES})
+
 add_executable(temperature_sensor_sim src/temperature_sensor_sim.cpp)
 target_link_libraries(temperature_sensor_sim ${catkin_LIBRARIES})
 
