@@ -26,7 +26,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 set(SRC_FILES
     src/vehicle_layer.cpp
     src/device.cpp
-    src/depth_sensor_sim.cpp
+    #src/depth_sensor_sim.cpp
     )
     
 set(TEST_FILES

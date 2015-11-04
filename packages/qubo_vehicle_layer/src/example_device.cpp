@@ -1,5 +1,5 @@
 #include "vehicle_layer.h"
-#include "QuboNode.cpp"
+#include "vehicle_node.h"
 #include "ram_msgs/Vector2.h"
 
 class ExampleDevice : public QuboNode {
@@ -11,10 +11,11 @@ public:
 	
 	ExampleDevice(){
 		ExampleDevice::publisher = pub_node.advertise<ram_msgs::Vector2>("example", 1000);
-		ExampleDevice::rate = ros::Rate(10);
+		//ExampleDevice::rate = ros::Rate(10);
 	}
 
 	~ExampleDevice(){
+		printf("hello world");
 		//nothing here
 	}
 
@@ -23,7 +24,7 @@ public:
 		v.x = 5.0;
 		publisher.publish(v);
 		ros::spinOnce();
-		rate.sleep();
+		//rate.sleep();
 	}
 
 	void subscribe(){
@@ -36,13 +37,3 @@ public:
 
 };
 
-int main(int argc, char **argv){
-		ExampleDevice* ED = new ExampleDevice();
-		ros::init(argc, argv, "ExampleDevice");
-
-		while(ros::ok){
-			(*ED).publish();
-		}
-
-		return 0;
-	}
