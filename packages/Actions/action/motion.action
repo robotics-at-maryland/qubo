@@ -1,0 +1,8 @@
+#Goal Action server must accomplish
+int64 power
+---
+#result Action server returns something
+int64 setDistance
+---
+#feedback 
+int64 actualDistance 
