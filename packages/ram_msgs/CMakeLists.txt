@@ -7,6 +7,8 @@ project(ram_msgs)
 
 find_package(
     catkin REQUIRED COMPONENTS 
+    std_msgs
+    sensor_msgs
     message_generation
 )
 
@@ -27,9 +29,14 @@ add_message_files(
     Sim_Power_Source.msg
     Sim_Temperature.msg
     Sim_Led.msg
+    Sim_AHRS.msg
 )
 
-generate_messages()
+generate_messages(
+    DEPENDENCIES
+    std_msgs
+    sensor_msgs
+)
 
 ##############################
 # Catkin Setup ###############
