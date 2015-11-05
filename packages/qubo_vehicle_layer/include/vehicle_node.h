@@ -1,3 +1,6 @@
+#ifndef QUBONODE_HEADER
+#define QUBONODE_HEADER
+
 #include "ros/ros.h"
 
 class QuboNode {
@@ -7,7 +10,7 @@ class QuboNode {
 
   virtual void subscribe() = 0;
   virtual void publish() = 0;
-  void sendAction(){};  //this isn't a pure function because sub classes won't necessarily use it. 
+  //void sendAction(){};  //this isn't a pure function because sub classes won't necessarily use it. 
 
 
   //We'll probably need a few more things 
@@ -17,3 +20,6 @@ class QuboNode {
   //ros::Rate rate;
   
 };
+
+
+#endif
