@@ -1,0 +1,8 @@
+#Goal Action server must accomplish the goal of traveling this set distance 
+int64 setDistance
+---
+#result Action server returns a set of points that the robot has traveled based on set distance value
+int64[] coordinateStates
+--- 
+#feedback 
+int64 actualDistance 
