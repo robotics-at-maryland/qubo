@@ -10,6 +10,7 @@ find_package(catkin
    # qubo_vehicle_layer
    roscpp
    ram_msgs
+   sensor_msgs
    message_generation
 )
 
@@ -31,6 +32,7 @@ set(SRC_FILES
     src/temperature_sensor_sim.cpp
     src/led_status_sensor.cpp
     src/hull_sensor_sim.cpp
+    src/ahrs_sensor_sim.cpp
     )
     
 set(TEST_FILES

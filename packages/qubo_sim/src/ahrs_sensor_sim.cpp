@@ -1,10 +1,11 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ram_msgs/Sim_AHRS.h"
+#include "sensor_msgs/Imu.h"
 
 #include <sstream>
 
-void data_callback(const ram_msgs::Sim_AHRS::ConstPtr &msg) {
+void data_callback(const sensor_msgs::Imu::ConstPtr &msg) {
     ROS_INFO("I heard: [%f]", msg->orientation.x);
 }
 
