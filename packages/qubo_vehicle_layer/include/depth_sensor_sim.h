@@ -4,14 +4,14 @@
 class QuboDepthSensorSim : QuboNode {
 
  public:
-  QuboDepthSensorSim(){};
-  ~QuboDepthSensorSim(){};
-
+  QuboDepthSensorSim();
+  ~QuboDepthSensorSim();
+  
   void subscribe();
   void publish();
- 
+  
  protected:
-
+  
   ros::NodeHandle sub_node;
   ros::Subscriber subscriber;
   

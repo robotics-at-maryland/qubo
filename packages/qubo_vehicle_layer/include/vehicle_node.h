@@ -2,6 +2,10 @@
 #define QUBONODE_HEADER
 
 #include "ros/ros.h"
+#include <iostream>
+#include "std_msgs/String.h"
+#include <sstream>
+
 
 class QuboNode {
  public:

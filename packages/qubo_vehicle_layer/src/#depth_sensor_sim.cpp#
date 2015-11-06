@@ -1,5 +1,4 @@
-//#include "vehicle_node.h"
-#include "depth_sensor_sim.h"
+3#include "depth_sensor_sim.h"
 
 QuboDepthSensorSim::QuboDepthSensorSim(){
   printf("I've been implemented!\n");
@@ -7,6 +6,7 @@ QuboDepthSensorSim::QuboDepthSensorSim(){
 QuboDepthSensorSim::~QuboDepthSensorSim(){};
 
 void QuboDepthSensorSim::subscribe(){
+  ros::init(argc, argv, "depth_sensor_node");
   this->subscriber = this->sub_node.subscribe("/g500/pressure", 1000, depthCallBack);
 }
 
