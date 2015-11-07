@@ -248,6 +248,15 @@ void IMU::sendIMUDataFormat()
    writeCommand(kSetDataComponents, &dataConfig);
 }
 
+#define ENDIAN32(A) (((A>>24)&0xff) | ((A<<8)&0xff0000) | ((A>>8)&0xff00) | ((A<<24)&0xff000000))
+
+float endianFloat32(float in)
+{
+   long raw = * (long *) &in;
+   raw = ENDIAN32(raw);
+   return * (float *) &raw;
+}
+
 /**
  * Reads the data from the hardware IMU
  * @return Error code
@@ -260,19 +269,19 @@ IMUData IMU::pollIMUData()
    // Poll the IMU for a data message.
    sendCommand(kGetData, NULL, kGetDataResp, &data);
    // Copy all the data to the actual IMU storage.
-   _lastReading.quaternion[0] = data.quaternion[0];
-   _lastReading.quaternion[1] = data.quaternion[1];
-   _lastReading.quaternion[2] = data.quaternion[2];
-   _lastReading.quaternion[3] = data.quaternion[3];
-   _lastReading.gyroX = data.gyroX;
-   _lastReading.gyroY = data.gyroY;
-   _lastReading.gyroZ = data.gyroZ;
-   _lastReading.accelX = data.accelX;
-   _lastReading.accelY = data.accelY;
-   _lastReading.accelZ = data.accelZ;
-   _lastReading.magX = data.magX;
-   _lastReading.magY = data.magY;
-   _lastReading.magZ = data.magZ;
+   _lastReading.quaternion[0] = endianFloat32(data.quaternion[0]);
+   _lastReading.quaternion[1] = endianFloat32(data.quaternion[1]);
+   _lastReading.quaternion[2] = endianFloat32(data.quaternion[2]);
+   _lastReading.quaternion[3] = endianFloat32(data.quaternion[3]);
+   _lastReading.gyroX = endianFloat32(data.gyroX);
+   _lastReading.gyroY = endianFloat32(data.gyroY);
+   _lastReading.gyroZ = endianFloat32(data.gyroZ);
+   _lastReading.accelX = endianFloat32(data.accelX);
+   _lastReading.accelY = endianFloat32(data.accelY);
+   _lastReading.accelZ = endianFloat32(data.accelZ);
+   _lastReading.magX = endianFloat32(data.magX);
+   _lastReading.magY = endianFloat32(data.magY);
+   _lastReading.magZ = endianFloat32(data.magZ);
    return _lastReading;
 }
 
