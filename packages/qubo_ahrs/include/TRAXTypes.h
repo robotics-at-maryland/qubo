@@ -53,8 +53,8 @@ typedef struct _Command
 #define EMPTY 0
 
 typedef struct _ModInfo {
-   char[4] type;
-   uint8_t[4] rev;
+   char type[4];
+   uint8_t rev[4];
 } ModInfo;
 
 typedef struct _ConfigBoolean {
@@ -115,22 +115,22 @@ typedef struct _FIRTaps_Zero {
 
 typedef struct _FIRTaps_Four {
    FIRTaps_Zero FIRTaps;
-   double[4] taps;
+   double taps[4];
 } FIRTaps_Four;
 
 typedef struct _FIRTaps_Eight {
    FIRTaps_Zero FIRTaps;
-   double[8] taps;
+   double taps[8];
 } FIRTaps_Eight;
 
 typedef struct _FIRTaps_Sixteen {
    FIRTaps_Zero FIRTaps;
-   double[16] taps;
+   double taps[16];
 } FIRTaps_Sixteen;
 
 typedef struct _FIRTaps_ThirtyTwo {
    FIRTaps_Zero FIRTaps;
-   double[32] taps;
+   double taps[32];
 } FIRTaps_ThirtyTwo;
 
 #pragma pack(pop)
