@@ -16,9 +16,9 @@
 #include <string>
 #include <string.h>
 #include <stdint.h>
-#include <termios.h>
 
-// Unix includes (open, read, write, etc...)
+// Unix includes
+#include <termios.h>
 #include <unistd.h>
 
 // Error handling
@@ -149,6 +149,7 @@ class IMUException : public std::runtime_error
 class IMU
 {
    public:
+      // Front facing API function calls.
       /**
        * Constructor for a new IMU interface.
        * @param (std::string) unix device name
@@ -196,6 +197,7 @@ class IMU
        */
       IMUData pollIMUData();
    private:
+      // Internal functionality.
       /** Unix file name to connect to */
       std::string _deviceFile;
       /** Serial port for I/O with the AHRS */
@@ -217,7 +219,7 @@ class IMU
       void writeCommand(Command cmd, const void* payload);
       void readCommand(Command cmd, void* target);
       void sendCommand(Command cmd, const void* payload, Command resp, void* target);
-
+   private:
       /** Library of static protocol frame definitions to categorize frames. */
       static const Command kGetModInfo;
       static const Command kGetModInfoResp;

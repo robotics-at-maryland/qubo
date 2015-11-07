@@ -3,15 +3,19 @@
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 
 int main()
 {
    IMU *imu = new IMU("/dev/ttyUSB0");
    IMUData data;
+   clock_t curr, last;
+   double hz;
    printf("Opening Device\n");
    imu->openDevice();
    printf("Device %s\n", (imu->getInfo()).c_str());
    imu->sendIMUDataFormat();
+   last = clock();
    while (imu->isOpen()) {
       // Poll data
       data = imu->pollIMUData();
@@ -24,8 +28,10 @@ int main()
             data.accelX, data.accelY, data.accelZ);
       printf("M: (%.3f,%.3f,%.3f)\n",
             data.magX, data.magY, data.magZ);
-      // Sleep to fill out 30hz.
-      usleep(100000);
+      curr = clock();
+      hz = CLOCKS_PER_SEC / ((double)(curr-last))/10;
+      printf("Poll took %.6f seconds (%.2f Hz)\n", 1/hz, hz);
+      last = curr;
    }
    imu->closeDevice();
 }

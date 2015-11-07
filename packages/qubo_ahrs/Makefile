@@ -3,11 +3,15 @@ CXXFLAGS = -std=c++11 -Wall -pedantic
 
 .PHONY: all debug test clean
 
-all: bin/IMU.o
+release: CXXFLAGS += -O3
+
+release: all
 
 debug: CXXFLAGS += -DDEBUG
 
 debug: all
+
+all: bin/IMU.o
 
 test: test/run
 	rm -rf test/run.log

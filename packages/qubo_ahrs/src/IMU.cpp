@@ -18,8 +18,6 @@
 #endif
 
 // UNIX Serial includes
-#include <termios.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
@@ -30,13 +28,9 @@
 
    IMU::IMU(std::string deviceFile) 
 : _deviceFile(deviceFile), _deviceFD(-1), _termBaud(k38400.baud) 
-{
-}
+{ }
 
-IMU::~IMU()
-{
-   closeDevice();
-}
+IMU::~IMU() { closeDevice(); }
 
 void IMU::openDevice()
 {
@@ -145,7 +139,7 @@ void IMU::sendConfig()
 {
    // Read in the live configuration data
    readConfig();
-   // If we havent changed anything, dont send anything.
+   
    ConfigFloat32 float32;
    ConfigUInt32 uint32;
    ConfigUInt8 uint8;
@@ -245,16 +239,12 @@ IMUConfig IMU::readConfig()
  */
 void IMU::sendIMUDataFormat()
 {
+   // Tell the IMU that we want little-endian data out so we dont have to convert.
+   ConfigBoolean boolean = {kBigEndian, 0};
+   // Send the command and wait for a response.
+   sendCommand(kSetConfigBoolean,      &boolean,   kSetConfigDone,  NULL);
+   // Now upload the output data configuration, without any success confirmation.
    writeCommand(kSetDataComponents, &dataConfig);
-}
-
-#define ENDIAN32(A) (((A>>24)&0xff) | ((A<<8)&0xff0000) | ((A>>8)&0xff00) | ((A<<24)&0xff000000))
-
-float endianFloat32(float in)
-{
-   long raw = * (long *) &in;
-   raw = ENDIAN32(raw);
-   return * (float *) &raw;
 }
 
 /**
@@ -269,19 +259,19 @@ IMUData IMU::pollIMUData()
    // Poll the IMU for a data message.
    sendCommand(kGetData, NULL, kGetDataResp, &data);
    // Copy all the data to the actual IMU storage.
-   _lastReading.quaternion[0] = endianFloat32(data.quaternion[0]);
-   _lastReading.quaternion[1] = endianFloat32(data.quaternion[1]);
-   _lastReading.quaternion[2] = endianFloat32(data.quaternion[2]);
-   _lastReading.quaternion[3] = endianFloat32(data.quaternion[3]);
-   _lastReading.gyroX = endianFloat32(data.gyroX);
-   _lastReading.gyroY = endianFloat32(data.gyroY);
-   _lastReading.gyroZ = endianFloat32(data.gyroZ);
-   _lastReading.accelX = endianFloat32(data.accelX);
-   _lastReading.accelY = endianFloat32(data.accelY);
-   _lastReading.accelZ = endianFloat32(data.accelZ);
-   _lastReading.magX = endianFloat32(data.magX);
-   _lastReading.magY = endianFloat32(data.magY);
-   _lastReading.magZ = endianFloat32(data.magZ);
+   _lastReading.quaternion[0] = data.quaternion[0];
+   _lastReading.quaternion[1] = data.quaternion[1];
+   _lastReading.quaternion[2] = data.quaternion[2];
+   _lastReading.quaternion[3] = data.quaternion[3];
+   _lastReading.gyroX = data.gyroX;
+   _lastReading.gyroY = data.gyroY;
+   _lastReading.gyroZ = data.gyroZ;
+   _lastReading.accelX = data.accelX;
+   _lastReading.accelY = data.accelY;
+   _lastReading.accelZ = data.accelZ;
+   _lastReading.magX = data.magX;
+   _lastReading.magY = data.magY;
+   _lastReading.magZ = data.magZ;
    return _lastReading;
 }
 
@@ -291,7 +281,8 @@ void printRaw(uint8_t* blob, uint16_t bytes)
    int i;
    for (i = 0; i < bytes; i++)
    {
-      printf("%x ",blob[i]);
+      if (i!=0) printf(":");
+      printf("%x",blob[i]);
    }
    printf("\n");
 }
@@ -305,9 +296,6 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
 {
    // Keep track of the number of bytes read
    int bytes_read = 0, current_read = 0;
-#ifdef DEBUG
-   printf("Reading %d bytes\n", bytes_to_read);
-#endif
    // If we need to read something, attempt to.
    while (bytes_read < bytes_to_read && current_read >= 0) {
       // Advance the pointer, and reduce the read size in each iteration.
@@ -319,7 +307,7 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
       // Keep reading until we've run out of data, or an error occurred.
    }
 #ifdef DEBUG
-   printf("Read %d bytes\n", bytes_read);
+   printf("Read %d bytes: ", bytes_read);
    printRaw(blob, bytes_read);
 #endif
    // Return the number of bytes we actually managed to read.
@@ -334,7 +322,7 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
 {
    int bytes_written = 0, current_write = 0;
 #ifdef DEBUG
-   printf("Writing %d bytes\n", bytes_to_write);
+   printf("Writing %d bytes :", bytes_to_write);
    printRaw(blob, bytes_to_write);
 #endif
    while ((bytes_written < bytes_to_write) && (current_write >= 0)){
@@ -346,9 +334,6 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
       bytes_written += current_write;
       // Keep reading until we've written everything, or an error occured.
    }
-#ifdef DEBUG
-   printf("Wrote %d bytes\n", bytes_to_write);
-#endif
    //Return the number of bytes not written.
    return bytes_to_write - bytes_written;
 }
@@ -380,7 +365,7 @@ checksum_t crc16(uint8_t* data, bytecount_t bytes){
  */
 void IMU::sendCommand(Command send, const void* payload, Command resp, void* target)
 {
-   if (memset(target, 0, resp.payload_size) == NULL)
+   if ((target != NULL) && memset(target, 0, resp.payload_size) == NULL)
       throw IMUException("Unable to clear command response target memory.");
    writeCommand(send, payload);
    readCommand(resp, target);
@@ -404,7 +389,7 @@ void IMU::writeCommand(Command cmd, const void* payload)
    bytecount_t checksum_size = data_offset + cmd.payload_size;
    bytecount_t total_size = checksum_size + sizeof(checksum_t);
 
-   // Copy the total datagram size to the datagram.
+   // Copy the total datagram size to the datagram. (big-endian conversion)
    *bytecount = ENDIAN16(total_size);
    // Copy the frameid from the given Command into the datagram.
    *frame = cmd.id;
@@ -412,6 +397,7 @@ void IMU::writeCommand(Command cmd, const void* payload)
    memcpy(data, payload, cmd.payload_size);
    // Compute the checksum
    *checksum = crc16(datagram, checksum_size);
+   // Convert from little-endian to big-endian
    *checksum = ENDIAN16(*checksum);
 
    // Attempt to write the datagram to the serial port.
@@ -435,6 +421,7 @@ void IMU::readCommand(Command cmd, void* target)
       throw IMUException("Unable to read bytecount of incoming packet.");
    // Calculate the number of bytes to read from the header.
    total_size = *((bytecount_t*) datagram);
+   // Convert from big-endian to little-endian.
    total_size = ENDIAN16(total_size);
    // Do not include the checksum in the checksum
    checksum_size = total_size - sizeof(checksum_t);
@@ -446,6 +433,7 @@ void IMU::readCommand(Command cmd, void* target)
       throw IMUException("Unable to read body of incoming packet");
    // Pull out the sent checksum
    checksum = *((checksum_t*)(frame + frame_size));
+   // Convert from big-endian to little-endian.
    checksum = ENDIAN16(checksum);
 
    // Validate the existing checksum
