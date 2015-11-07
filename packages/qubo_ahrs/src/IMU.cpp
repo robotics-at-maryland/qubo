@@ -25,135 +25,123 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 
-// Error handling
-#include <errno.h>
-
 // Header include
 #include "../include/IMU.h"
 
-/**
- * Constructs a new IMU object.
- * @param deviceFile The unix serial port of the IMU hardware.
- */
-IMU::IMU(std::string deviceFile)
-   : _deviceFile(deviceFile),
-     _deviceFD(-1),
-     _termBaud(k38400.baud)
+   IMU::IMU(std::string deviceFile) 
+: _deviceFile(deviceFile), _deviceFD(-1), _termBaud(k38400.baud) 
 {
 }
 
-/**
- * Deconstructs the IMU, cleans up.
- */
 IMU::~IMU()
 {
    closeDevice();
-};
+}
 
-/**
- * Opens the serial port to communicate with the IMU
- * @return Error code
- */
-int IMU::openDevice()
+void IMU::openDevice()
 {
    struct termios termcfg;
-   int modemcfg = 0;
+   int modemcfg = 0, fd = -1;
    /* Open the serial port and store into a file descriptor.
     * O_RDWR allows for bi-directional I/O
     * O_ASYNC generates signals when data is transmitted
     * allowing for I/O blocking to be resolved.
     */
-   _deviceFD = open(_deviceFile.c_str(), O_RDWR, O_ASYNC);
-   if (_deviceFD != -1)
-   {
-      // Device exists, we can configure the interface.
-      if(tcgetattr(_deviceFD, &termcfg)) return 1;
+   fd = open(_deviceFile.c_str(), O_RDWR, O_ASYNC);
+   // Check to see if the device exists.
+   if (fd == -1)
+      throw IMUException("Unix device '"+_deviceFile+"' not found.");
+   // Read the config of the interface.
+   if(tcgetattr(fd, &termcfg)) 
+      throw IMUException("Unable to read terminal configuration.");
 
-      // Set the baudrate for the terminal
-      if(cfsetospeed(&termcfg, _termBaud)) return 2;
-      if(cfsetispeed(&termcfg, _termBaud)) return 3;
+   // Set the baudrate for the terminal
+   if(cfsetospeed(&termcfg, _termBaud))
+      throw IMUException("Unable to set terminal output speed.");
+   if(cfsetispeed(&termcfg, _termBaud))
+      throw IMUException("Unable to set terminal intput speed.");
 
-      // Configure the control modes for the terminal.
-      // Replace the existing char size config to be 8 bits.
-      termcfg.c_cflag = (termcfg.c_cflag & ~CSIZE) | CS8;
-      // Ignore modem control lines, and enable the reciever.
-      termcfg.c_cflag |= CLOCAL | CREAD;
-      // Disable parity generation/checking
-      termcfg.c_cflag &= ~(PARENB | PARODD);
-      // Disable hardware flow control
-      termcfg.c_cflag &= ~CRTSCTS;
-      // Send one stop bit only.
-      termcfg.c_cflag &= ~CSTOPB;
+   // Configure the control modes for the terminal.
+   // Replace the existing char size config to be 8 bits.
+   termcfg.c_cflag = (termcfg.c_cflag & ~CSIZE) | CS8;
+   // Ignore modem control lines, and enable the reciever.
+   termcfg.c_cflag |= CLOCAL | CREAD;
+   // Disable parity generation/checking
+   termcfg.c_cflag &= ~(PARENB | PARODD);
+   // Disable hardware flow control
+   termcfg.c_cflag &= ~CRTSCTS;
+   // Send one stop bit only.
+   termcfg.c_cflag &= ~CSTOPB;
 
-      // Configure the input modes for the terminal.
-      // Ignore break condition on input. 
-      termcfg.c_iflag = IGNBRK;
-      // Disable X control flow, only START char restarts output.
-      termcfg.c_iflag &= ~(IXON|IXOFF|IXANY);
+   // Configure the input modes for the terminal.
+   // Ignore break condition on input. 
+   termcfg.c_iflag = IGNBRK;
+   // Disable X control flow, only START char restarts output.
+   termcfg.c_iflag &= ~(IXON|IXOFF|IXANY);
 
-      // Configure the local modes for the terminal.
-      termcfg.c_lflag = 0;
+   // Configure the local modes for the terminal.
+   termcfg.c_lflag = 0;
 
-      // Configure the output modes for the terminal.
-      termcfg.c_oflag = 0;
+   // Configure the output modes for the terminal.
+   termcfg.c_oflag = 0;
 
-      // Configure the read timeout (deciseconds)
-      termcfg.c_cc[VTIME] = 1;
-      // Configure the minimum number of chars for read.
-      termcfg.c_cc[VMIN] = 60;
+   // Configure the read timeout (deciseconds)
+   termcfg.c_cc[VTIME] = 1;
+   // Configure the minimum number of chars for read.
+   termcfg.c_cc[VMIN] = 60;
 
-      // Push the configuration to the terminal NOW.
-      if(tcsetattr(_deviceFD, TCSANOW, &termcfg)) return 4;
+   // Push the configuration to the terminal NOW.
+   if(tcsetattr(fd, TCSANOW, &termcfg))
+      throw IMUException("Unable to set terminal configuration.");
 
-      // Pull in the modem configuration
-      if(ioctl(_deviceFD, TIOCMGET, &modemcfg)) return 5;
-      // Enable Request to Send
-      modemcfg |= TIOCM_RTS;
-      // Push the modem config back to the modem.
-      if(ioctl(_deviceFD, TIOCMSET, &modemcfg)) return 6;
+   // Pull in the modem configuration
+   if(ioctl(fd, TIOCMGET, &modemcfg))
+      throw IMUException("Unable to read modem configuration.");
+   // Enable Request to Send
+   modemcfg |= TIOCM_RTS;
+   // Push the modem config back to the modem.
+   if(ioctl(fd, TIOCMSET, &modemcfg))
+      throw IMUException("Unable to set modem configuration.");
 
-      // Pull the term config (again).
-      if(tcgetattr(_deviceFD, &termcfg)) return 7;
-      // Disable hardware flow control (again).
-      termcfg.c_cflag &= ~CRTSCTS;
-      // Push the config back to the terminal (again).
-      if (tcsetattr(_deviceFD, TCSANOW, &termcfg)) return 8;
+   // Pull the term config (again).
+   if(tcgetattr(fd, &termcfg))
+      throw IMUException("Unable to re-read terminal configuration.");
+   // Disable hardware flow control (again).
+   termcfg.c_cflag &= ~CRTSCTS;
+   // Push the config back to the terminal (again).
+   if (tcsetattr(fd, TCSANOW, &termcfg))
+      throw IMUException("Unable to re-set terminal configuration.");
 
-      // Successful execution!
-      return 0;
-   }
-
-   // Couldnt open the device
-   return -1;
+   // Successful execution!
+   _deviceFD = fd;
 }
 
-/**
- * Checks if the device is currently open.
- * @return true if the device is active.
- */
 bool IMU::isOpen() {return _deviceFD >= 0;}
 
-/**
- * Closes the serial port if it is currently connected.
- */
 void IMU::closeDevice()
 {
    // Attempt to close the device from the file descriptor.
-   if (!close(_deviceFD)) {
-      _deviceFD = -1;
-   }
+   close(_deviceFD);
+   // Clear the file descriptor 
+   _deviceFD = -1;
 }
-      
-int IMU::getInfo(char * info)
+
+std::string IMU::getInfo()
 {
-   return sendCommand(kGetModInfo, NULL, kGetModInfoResp, info);
+   // Create some temporary storage for the query.
+   ModInfo info;
+   // Ensure the device is open and avaliable.
+   if (!isOpen()) return "";
+   // Get the device name/info
+   sendCommand(kGetModInfo, NULL, kGetModInfoResp, &info);
+   // Build a string to return
+   return std::string(((char*) &info), sizeof(ModInfo));
 }
 
 /**
  * Sends the configuration data to the IMU hardware.
- * @return Error code
  */
-int IMU::sendConfig()
+void IMU::sendConfig()
 {
    // Read in the live configuration data
    readConfig();
@@ -165,45 +153,44 @@ int IMU::sendConfig()
 
    // Struct parameters can be sent directly.
    sendCommand(kSetAcqParams,                &(_stagedConfig.acqParams), 
-               kSetAcqParamsDone,            NULL);
+         kSetAcqParamsDone,            NULL);
    sendCommand(kSetFIRFiltersThirtyTwo,      &(_stagedConfig.filters),
-               kSetFIRFiltersDone,           NULL);
-   writeCommand(kSetMagTruthMethod,           &(_stagedConfig.magTruthMethod));
-   writeCommand(kSetFunctionalMode,           &(_stagedConfig.mode));
+         kSetFIRFiltersDone,           NULL);
+   writeCommand(kSetMagTruthMethod,          &(_stagedConfig.magTruthMethod));
+   writeCommand(kSetFunctionalMode,          &(_stagedConfig.mode));
    // Primitive 
-   float32.id = kDeclination,       float32.value = _stagedConfig.declination; 
-   sendCommand(kSetConfigFloat32,   &float32,   kSetConfigDone,  NULL);
+   float32.id = kDeclination,          float32.value = _stagedConfig.declination; 
+   sendCommand(kSetConfigFloat32,      &float32,   kSetConfigDone,  NULL);
 
-   uint32.id = kUserCalNumPoints,   uint32.value = _stagedConfig.userCalNumPoints;
-   sendCommand(kSetConfigUInt32,    &uint32,    kSetConfigDone,   NULL);
+   uint32.id = kUserCalNumPoints,      uint32.value = _stagedConfig.userCalNumPoints;
+   sendCommand(kSetConfigUInt32,       &uint32,    kSetConfigDone,   NULL);
 
-   uint32.id = kMagCoeffSet,        uint32.value = _stagedConfig.magCoeffSet;
-   sendCommand(kSetConfigUInt32,    &uint32,    kSetConfigDone,   NULL);
+   uint32.id = kMagCoeffSet,           uint32.value = _stagedConfig.magCoeffSet;
+   sendCommand(kSetConfigUInt32,       &uint32,    kSetConfigDone,   NULL);
 
-   uint32.id = kAccelCoeffSet,      uint32.value = _stagedConfig.accelCoeffSet;
-   sendCommand(kSetConfigUInt32,    &uint32,    kSetConfigDone,   NULL);
+   uint32.id = kAccelCoeffSet,         uint32.value = _stagedConfig.accelCoeffSet;
+   sendCommand(kSetConfigUInt32,       &uint32,    kSetConfigDone,   NULL);
 
-   uint8.id = kMountingRef,         uint8.value = _stagedConfig.mountingRef;
-   sendCommand(kSetConfigUInt8,     &uint8,     kSetConfigDone,    NULL);
+   uint8.id = kMountingRef,            uint8.value = _stagedConfig.mountingRef;
+   sendCommand(kSetConfigUInt8,        &uint8,     kSetConfigDone,    NULL);
 
-   uint8.id = kBaudRate,            uint8.value = _stagedConfig.baudRate;
-   sendCommand(kSetConfigUInt8,     &uint8,     kSetConfigDone,    NULL);
+   uint8.id = kBaudRate,               uint8.value = _stagedConfig.baudRate;
+   sendCommand(kSetConfigUInt8,        &uint8,     kSetConfigDone,    NULL);
 
-   boolean.id = kTrueNorth,         boolean.value = _stagedConfig.trueNorth;
-   sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigDone,  NULL);
+   boolean.id = kTrueNorth,            boolean.value = _stagedConfig.trueNorth;
+   sendCommand(kSetConfigBoolean,      &boolean,   kSetConfigDone,  NULL);
 
-   boolean.id = kBigEndian,         boolean.value = _stagedConfig.bigEndian;
-   sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigDone,  NULL);
+   boolean.id = kBigEndian,            boolean.value = _stagedConfig.bigEndian;
+   sendCommand(kSetConfigBoolean,      &boolean,   kSetConfigDone,  NULL);
 
-   boolean.id = kUserCalAutoSampling, boolean.value = _stagedConfig.userCalAutoSampling;
-   sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigDone,  NULL);
+   boolean.id = kUserCalAutoSampling,  boolean.value = _stagedConfig.userCalAutoSampling;
+   sendCommand(kSetConfigBoolean,      &boolean,   kSetConfigDone,  NULL);
 
-   boolean.id = kMilOut,            boolean.value = _stagedConfig.milOut;
-   sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigDone,  NULL);
+   boolean.id = kMilOut,               boolean.value = _stagedConfig.milOut;
+   sendCommand(kSetConfigBoolean,      &boolean,   kSetConfigDone,  NULL);
 
-   boolean.id = kHPRDuringCal,      boolean.value = _stagedConfig.hprDuringCal;
-   sendCommand(kSetConfigBoolean,   &boolean,   kSetConfigDone,  NULL);
-   return 0; 
+   boolean.id = kHPRDuringCal,         boolean.value = _stagedConfig.hprDuringCal;
+   sendCommand(kSetConfigBoolean,      &boolean,   kSetConfigDone,  NULL);
 }
 
 /**
@@ -212,43 +199,51 @@ int IMU::sendConfig()
  */
 IMUConfig IMU::readConfig()
 {
+   // Ensure the device is open and avaliable.
+   if (!isOpen())
+      throw IMUException("Device is closed");
+
+   // Read in all config data one-by-one
    sendCommand(kGetAcqParams,                NULL, 
-               kGetAcqParamsResp,            &(_liveConfig.acqParams));
+         kGetAcqParamsResp,            &(_liveConfig.acqParams));
    sendCommand(kGetFIRFilters,               &(_liveConfig.filters), 
-               kGetFIRFiltersRespThirtyTwo,  &(_liveConfig.filters));
+         kGetFIRFiltersRespThirtyTwo,  &(_liveConfig.filters));
    sendCommand(kGetMagTruthMethod,           NULL,
-               kGetMagTruthMethodResp,       &(_liveConfig.magTruthMethod));
+         kGetMagTruthMethodResp,       &(_liveConfig.magTruthMethod));
    sendCommand(kGetFunctionalMode,           NULL,
-               kGetFunctionalModeResp,       &(_liveConfig.mode));
+         kGetFunctionalModeResp,       &(_liveConfig.mode));
    sendCommand(kGetConfig,                   &kDeclination,
-               kGetConfigRespFloat32,        &(_liveConfig.declination));
+         kGetConfigRespFloat32,        &(_liveConfig.declination));
    sendCommand(kGetConfig,                   &kUserCalNumPoints,
-               kGetConfigRespUInt32,         &(_liveConfig.userCalNumPoints));
+         kGetConfigRespUInt32,         &(_liveConfig.userCalNumPoints));
    sendCommand(kGetConfig,                   &kMagCoeffSet,
-               kGetConfigRespUInt32,         &(_liveConfig.magCoeffSet));
+         kGetConfigRespUInt32,         &(_liveConfig.magCoeffSet));
    sendCommand(kGetConfig,                   &kAccelCoeffSet,
-               kGetConfigRespUInt32,         &(_liveConfig.accelCoeffSet));
+         kGetConfigRespUInt32,         &(_liveConfig.accelCoeffSet));
    sendCommand(kGetConfig,                   &kMountingRef,
-               kGetConfigRespUInt8,          &(_liveConfig.mountingRef));
+         kGetConfigRespUInt8,          &(_liveConfig.mountingRef));
    sendCommand(kGetConfig,                   &kBaudRate,
-               kGetConfigRespUInt8,          &(_liveConfig.baudRate));
+         kGetConfigRespUInt8,          &(_liveConfig.baudRate));
    sendCommand(kGetConfig,                   &kTrueNorth,
-               kGetConfigRespBoolean,        &(_liveConfig.trueNorth));
+         kGetConfigRespBoolean,        &(_liveConfig.trueNorth));
    sendCommand(kGetConfig,                   &kBigEndian,
-               kGetConfigRespBoolean,        &(_liveConfig.bigEndian));
+         kGetConfigRespBoolean,        &(_liveConfig.bigEndian));
    sendCommand(kGetConfig,                   &kUserCalAutoSampling,
-               kGetConfigRespBoolean,        &(_liveConfig.userCalAutoSampling));
+         kGetConfigRespBoolean,        &(_liveConfig.userCalAutoSampling));
    sendCommand(kGetConfig,                   &kMilOut,
-               kGetConfigRespBoolean,        &(_liveConfig.milOut));
+         kGetConfigRespBoolean,        &(_liveConfig.milOut));
    sendCommand(kGetConfig,                   &kHPRDuringCal,
-               kGetConfigRespBoolean,        &(_liveConfig.hprDuringCal));
+         kGetConfigRespBoolean,        &(_liveConfig.hprDuringCal));
+
+   // Return the configuration we just read in.
+   return _liveConfig;
 }
 
 /**
  * Sends the current data format to the TRAX so we can ensure typesafety.
  * This must be done before the first pollIMUData or the data may be corrupted.
  */
-int IMU::sendIMUDataFormat()
+void IMU::sendIMUDataFormat()
 {
    writeCommand(kSetDataComponents, &dataConfig);
 }
@@ -280,54 +275,73 @@ IMUData IMU::pollIMUData()
    _lastReading.magZ = data.magZ;
    return _lastReading;
 }
+
+#ifdef DEBUG
+void printRaw(uint8_t* blob, uint16_t bytes)
+{
+   int i;
+   for (i = 0; i < bytes; i++)
+   {
+      printf("%x ",blob[i]);
+   }
+   printf("\n");
+}
+#endif
+
 /** 
  * Reads raw data from the serial port.
- * @return The number of bytes read in.
+ * @return number of bytes not read
  */
 int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
 {
    // Keep track of the number of bytes read
    int bytes_read = 0, current_read = 0;
+#ifdef DEBUG
+   printf("Reading %d bytes\n", bytes_to_read);
+#endif
    // If we need to read something, attempt to.
-   if (bytes_to_read > 0) {
-      do {
-         // Advance the pointer, and reduce the read size in each iteration.
-         current_read = read(_deviceFD, 
-               (blob + bytes_read), 
-               (bytes_to_read - bytes_read)
-               );
-         // Keep reading until we've run out of data, or an error occurred.
-      } while (bytes_read < bytes_to_read && current_read >= 0);
+   while (bytes_read < bytes_to_read && current_read >= 0) {
+      // Advance the pointer, and reduce the read size in each iteration.
+      current_read = read(_deviceFD, 
+            (blob + bytes_read), 
+            (bytes_to_read - bytes_read)
+            );
+      bytes_read += current_read;
+      // Keep reading until we've run out of data, or an error occurred.
    }
+#ifdef DEBUG
+   printf("Read %d bytes\n", bytes_read);
+   printRaw(blob, bytes_read);
+#endif
    // Return the number of bytes we actually managed to read.
-   return bytes_read;
+   return bytes_to_read - bytes_read;
 }
 
 /**
  * Write raw data to the serial port.
- * @return the number of bytes written.
+ * @return number of bytes not written.
  */
 int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
 {
-   uint16_t bytes_written, current_write = 0;
+   int bytes_written = 0, current_write = 0;
 #ifdef DEBUG
-   printf("Writing %d bytes", bytes_to_write);
+   printf("Writing %d bytes\n", bytes_to_write);
+   printRaw(blob, bytes_to_write);
 #endif
-   if (bytes_to_write > 0) {
-      do {
-         // Advance the pointer, and reduce the write size in each iteration.
-         current_write = write(_deviceFD,
-               (blob + bytes_written),
-               (bytes_to_write - bytes_written)
-               );
-         // Keep reading until we've written everything, or an error occured.
-      } while (bytes_written < bytes_to_write & current_write >= 0);
+   while ((bytes_written < bytes_to_write) && (current_write >= 0)){
+      // Advance the pointer, and reduce the write size in each iteration.
+      current_write = write(_deviceFD,
+            (blob + bytes_written),
+            (bytes_to_write - bytes_written)
+            );
+      bytes_written += current_write;
+      // Keep reading until we've written everything, or an error occured.
    }
 #ifdef DEBUG
-   printf("Wrote %d bytes", bytes_written);
+   printf("Wrote %d bytes\n", bytes_to_write);
 #endif
-   //Return the number of bytes ultimately written.
-   return bytes_written;
+   //Return the number of bytes not written.
+   return bytes_to_write - bytes_written;
 }
 
 uint16_t crc_xmodem_update (uint16_t crc, uint8_t data)
@@ -352,48 +366,51 @@ checksum_t crc16(uint8_t* data, bytecount_t bytes){
    return (checksum_t) crc;
 }
 
-int IMU::writeCommand(Command cmd, const void* payload)
+/**
+ * Sends a command to the device and waits for the response.
+ */
+void IMU::sendCommand(Command send, const void* payload, Command resp, void* target)
+{
+   if (memset(target, 0, resp.payload_size) == NULL)
+      throw IMUException("Unable to clear command response target memory.");
+   writeCommand(send, payload);
+   readCommand(resp, target);
+}
+
+#define ENDIAN16(A) ((A << 8) | (A >> 8))
+
+void IMU::writeCommand(Command cmd, const void* payload)
 {
    // Temporary storage to assemble the data packet.
    uint8_t datagram[4096];
+
    // Pointers to specific parts of the datagram.
    bytecount_t* bytecount = (bytecount_t*) datagram;
    uint8_t* frame = datagram + sizeof(bytecount_t);
    uint8_t* data = frame + sizeof(frameid_t);
    checksum_t* checksum = (checksum_t*) (data + cmd.payload_size);
+
    // Various sizes of the parts of the datagram.
    bytecount_t data_offset = sizeof(bytecount_t) + sizeof(frameid_t);
    bytecount_t checksum_size = data_offset + cmd.payload_size;
    bytecount_t total_size = checksum_size + sizeof(checksum_t);
 
    // Copy the total datagram size to the datagram.
-   *bytecount = total_size;
+   *bytecount = ENDIAN16(total_size);
    // Copy the frameid from the given Command into the datagram.
    *frame = cmd.id;
    // Copy the payload to the datagram.
    memcpy(data, payload, cmd.payload_size);
    // Compute the checksum
    *checksum = crc16(datagram, checksum_size);
+   *checksum = ENDIAN16(*checksum);
 
    // Attempt to write the datagram to the serial port.
-   if (writeRaw(datagram, total_size) != total_size) return 1;
-
-   // Writing the command went well, return success.
-   return 0;
+   if (writeRaw(datagram, total_size))
+      throw IMUException("Unable to write command.");
 }
 
-/**
- * Sends a command to the device and waits for the response.
- */
-int IMU::sendCommand(Command send, const void* payload, Command resp, void* target)
-{
-   if (memset(target, 0, resp.payload_size) == NULL) return 1;
-   if (writeCommand(send, payload)) return 2;
-   if (readCommand(resp, target)) return 3;
-   return 0;
-}
-
-int IMU::readCommand(Command cmd, void* target)
+void IMU::readCommand(Command cmd, void* target)
 {
    // Temporary storage for the data read from the datagram.
    uint8_t datagram[4096];
@@ -405,29 +422,35 @@ int IMU::readCommand(Command cmd, void* target)
    checksum_t checksum;
 
    // Read in the header of the datagram packet: UInt16.
-   if (readRaw(datagram, sizeof(bytecount_t))) return 1;
+   if (readRaw(datagram, sizeof(bytecount_t)))
+      throw IMUException("Unable to read bytecount of incoming packet.");
    // Calculate the number of bytes to read from the header.
    total_size = *((bytecount_t*) datagram);
+   total_size = ENDIAN16(total_size);
    // Do not include the checksum in the checksum
    checksum_size = total_size - sizeof(checksum_t);
    // Do not include the bytecount in the frame.
    frame_size = checksum_size - sizeof(bytecount_t);
 
    // Read in the actual data frame + checksum
-   if (readRaw(frame, frame_size + sizeof(checksum_t))) return 2;
+   if (readRaw(frame, frame_size + sizeof(checksum_t)))
+      throw IMUException("Unable to read body of incoming packet");
    // Pull out the sent checksum
    checksum = *((checksum_t*)(frame + frame_size));
+   checksum = ENDIAN16(checksum);
 
    // Validate the existing checksum
-   if (crc16(datagram, checksum_size) == checksum) return 3;
+   if (crc16(datagram, checksum_size) != checksum)
+      throw IMUException("Incoming packet checksum invalid.");
    //Identify that the message recieved matches what was expected.
-   if (*frame != cmd.id) return 4;
+   if (*frame != cmd.id)
+      throw IMUException("Incoming packet frameid unexpected.");
 
    // Copy the data into the given buffer.
-   memcpy(target, frame, cmd.payload_size);
-   // Successful datagram read.
-   return 0;
+   memcpy(target, frame + sizeof(frameid_t), cmd.payload_size);
 }
+
+#undef ENDIAN16
 
 /******************************************************************************
  * Below is all hardcoded data from the protocol spec'd for the TRAX.

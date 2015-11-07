@@ -21,6 +21,9 @@
 // Unix includes (open, read, write, etc...)
 #include <unistd.h>
 
+// Error handling
+#include <stdexcept>
+
 #include "TRAXTypes.h"
 
 /**
@@ -51,7 +54,7 @@ typedef struct _RawDataFields {
 /**
  * Struct of data being sent/retrieved from the IMU
  * VERY IMPORTANT: each major field must be one of the types defined
- * in the PNI AHRS spec, and must be preceded by a garbage uint8_t var.
+ * in the PNI AHRS spec, and must be preceded by a garbage data_id_t var.
  * This is in order to read in the data directly, and discard the data IDs.
  * Additionally, there is one garbage idCount at the beginning.
  * ALSO: make sure to update IMU_RAW_N_FIELDS to the number of major fields.
@@ -81,6 +84,7 @@ typedef struct _RawData {
    float magZ;
 } RawData;
 #pragma pack(pop)
+
 /**
  * Data type storing formatted IMU data to be passed around
  */
@@ -100,6 +104,10 @@ typedef struct _IMUData
    float magZ;
 } IMUData;
 
+/**
+ * IMU Configuration data structure.
+ * Stores all data associated with the hardware configuration.
+ */
 typedef struct _IMUConfig
 {
    // Struct configs
@@ -122,64 +130,95 @@ typedef struct _IMUConfig
    bool hprDuringCal;
 } IMUConfig;
 
-typedef struct _IMUSpeed
+/**
+ * Exception class for handling IO/Data integrity errors.
+ */
+class IMUException : public std::runtime_error
 {
-   uint8_t id;
-   speed_t baud;
-} IMUSpeed;
+   public:
+      IMUException(std::string message)
+         : runtime_error(message) {}
+};
 
-
+/**
+ * IMU API class
+ * Contains all the low-level I/O abstraction, and allows the user to communicate
+ * with the IMU hardware at a high level. Connects to a unix serial/usb terminal
+ * and speaks the PNI Binary protocol to send and recieve packets of data.
+ */
 class IMU
 {
    public:
-      IMU(std::string deviceFile);
-      ~IMU();
       /**
-       * Front-facing API functions
+       * Constructor for a new IMU interface.
+       * @param (std::string) unix device name
        */
-      int openDevice();
+      IMU(std::string deviceFile);
+
+      /** Destructor that cleans up and closes the device. */
+      ~IMU();
+
+      /** 
+       * Opens the device and configures the I/O terminal. 
+       */
+      void openDevice();
+
+      /** 
+       * Checks if the IMU is currently open and avaiable 
+       * @return (bool) whether the IMU is avaliable for other API operations.
+       */
       bool isOpen();
+
+      /** Disconnectes from the device and closes the teriminal. */
       void closeDevice();
-      int getInfo(char * info);
-      int sendConfig();
+
+      /** 
+       * Reads the hardware info from the IMU unit. 
+       * @return (std::string) Hardware info
+       */
+      std::string getInfo();
+
+      /** 
+       * Reads the current configuration from the IMU.
+       * @return an IMUConfig struct with the live config data inside.
+       */
       IMUConfig readConfig();
-      int sendIMUDataFormat();
+
+      /** Sends the staged config to the hardware. */
+      void sendConfig();
+
+      /** Send the data poll format to the IMU. */
+      void sendIMUDataFormat();
+
+      /** 
+       * Polls the IMU for position information.
+       * @return an IMUData struct of formatted IMU data.
+       */
       IMUData pollIMUData();
    private:
+      /** Unix file name to connect to */
       std::string _deviceFile;
-      /**
-       * Serial port for I/O with the AHRS
-       */
+      /** Serial port for I/O with the AHRS */
       int _deviceFD;
-      /**
-       * Data rate to communicate with
-       */
+      /** Data rate to communicate with */
       speed_t _termBaud;
-      /**
-       * Storage for readings from the IMU for caching purposes.
-       */
+      /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
-      /**
-       * Staged and live configurations for the IMU.
-       */
+      /** Configuration for the IMU that is staged-to-send */
       IMUConfig _stagedConfig;
+      /** Configuration read directly from the IMU. */
       IMUConfig _liveConfig;
 
-      /**
-       * Low-level internal I/O functions
-       */
+      /** Low-level internal I/O functions */
       int readRaw(uint8_t* blob, uint16_t bytes_to_read);
       int writeRaw(uint8_t* blob, uint16_t bytes_to_write);
-      /**
-       * Mid-level I/O functionality using the protocol definitions.
-       */
-      int writeCommand(Command cmd, const void* payload);
-      int readCommand(Command cmd, void* target);
-      int sendCommand(Command cmd, const void* payload, Command resp, void* target);
 
-      /**
-       * Library of static protocol frame definitions to categorize frames.
-       */
+      /** Mid-level I/O functionality using the protocol definitions. */
+      void writeCommand(Command cmd, const void* payload);
+      void readCommand(Command cmd, void* target);
+      void sendCommand(Command cmd, const void* payload, Command resp, void* target);
+
+      /** Library of static protocol frame definitions to categorize frames. */
       static const Command kGetModInfo;
       static const Command kGetModInfoResp;
       static const Command kSetDataComponents;
@@ -264,7 +303,7 @@ class IMU
       static const data_id_t kGyroX;
       static const data_id_t kGyroY;
       static const data_id_t kGyroZ;
-      
+
       static const IMUSpeed k2400;
       //static const IMUSpeed k3600;
       static const IMUSpeed k4800;

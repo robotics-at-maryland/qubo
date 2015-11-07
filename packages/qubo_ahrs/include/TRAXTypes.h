@@ -10,7 +10,10 @@
  * 
  */
 
+// uintX_t types and such
 #include <stdint.h>
+// speed_t type
+#include <termios.h>
 
 /**
  * All of the following types will be assembled as-is, with no padding. 
@@ -43,6 +46,12 @@ typedef struct _Command
    frameid_t id;
    bytecount_t payload_size;
 } Command;
+
+typedef struct _IMUSpeed
+{
+   uint8_t id;
+   speed_t baud;
+} IMUSpeed;
 
 /**
  * HARDCODED PAYLOAD TYPES:
