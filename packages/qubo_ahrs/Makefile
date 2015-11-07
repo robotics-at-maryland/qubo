@@ -11,7 +11,7 @@ debug: CXXFLAGS += -DDEBUG
 
 debug: all
 
-all: bin/IMU.o
+all: bin/IMU.o bin/config
 
 test: test/run
 	rm -rf test/run.log
@@ -20,7 +20,10 @@ test: test/run
 bin/IMU.o: src/IMU.cpp include/IMU.h include/TRAXTypes.h
 	$(CXX) $(CXXFLAGS) -c src/IMU.cpp -o bin/IMU.o 
 
-test/run: src/test.cpp include/test.h bin/IMU.o
+bin/config: src/config.cpp bin/IMU.o
+	$(CXX) $(CXXFLAGS) src/config.cpp bin/IMU.o -o bin/config
+
+test/run: src/test.cpp bin/IMU.o
 	$(CXX) $(CXXFLAGS) src/test.cpp bin/IMU.o -o test/run
 
 clean:

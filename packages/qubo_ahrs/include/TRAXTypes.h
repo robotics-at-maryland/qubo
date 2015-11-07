@@ -91,7 +91,7 @@ typedef uint8_t MagTruthMethod;
 typedef uint16_t SaveError;
 
 typedef struct _AcqParams {
-   uint8_t aqusition_mode;
+   uint8_t aquisition_mode;
    uint8_t flush_filter;
    float pni_reserved;
    float sample_delay;

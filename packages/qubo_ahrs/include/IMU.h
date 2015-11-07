@@ -116,18 +116,18 @@ typedef struct _IMUConfig
    // Simple configs
    MagTruthMethod magTruthMethod;
    FunctionalMode mode;
-   // Primitive configs
-   float declination;
-   int userCalNumPoints;
-   int magCoeffSet;
-   int accelCoeffSet;
-   uint8_t mountingRef;
-   uint8_t baudRate;
-   bool trueNorth;
-   bool bigEndian;
-   bool userCalAutoSampling;
-   bool milOut;
-   bool hprDuringCal;
+   // SetConfig configurations.
+   ConfigFloat32 declination;
+   ConfigUInt32 userCalNumPoints;
+   ConfigUInt32 magCoeffSet;
+   ConfigUInt32 accelCoeffSet;
+   ConfigUInt8 mountingRef;
+   ConfigUInt8 baudRate;
+   ConfigBoolean trueNorth;
+   ConfigBoolean bigEndian;
+   ConfigBoolean userCalAutoSampling;
+   ConfigBoolean milOut;
+   ConfigBoolean hprDuringCal;
 } IMUConfig;
 
 /**
