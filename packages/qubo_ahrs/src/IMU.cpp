@@ -26,14 +26,17 @@
 // Header include
 #include "../include/IMU.h"
 
-   IMU::IMU(std::string deviceFile) 
-: _deviceFile(deviceFile), _deviceFD(-1), _termBaud(k38400.baud) 
+   IMU::IMU(std::string deviceFile, IMUSpeed speed) 
+: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1) 
 { }
 
 IMU::~IMU() { closeDevice(); }
 
 void IMU::openDevice()
 {
+#ifdef DEBUG
+   printf("IMU::openDevice()\n");
+#endif
    struct termios termcfg;
    int modemcfg = 0, fd = -1;
    /* Open the serial port and store into a file descriptor.
@@ -114,10 +117,29 @@ bool IMU::isOpen() {return _deviceFD >= 0;}
 
 void IMU::closeDevice()
 {
+#ifdef DEBUG
+   printf("IMU::closeDevice()\n");
+#endif
    // Attempt to close the device from the file descriptor.
    close(_deviceFD);
    // Clear the file descriptor 
    _deviceFD = -1;
+}
+
+bool IMU::changeSpeed(IMUSpeed speed)
+{
+   // Create the baudrate payload.
+   ConfigUInt8 baudRate = {kBaudRate, speed.id};
+   // Place to store the save error code
+   SaveError err;
+   // Check to make sure the IMU is connected first.
+   if (!isOpen())
+      throw IMUException("IMU must be connected to change baudrate.");
+   // Tell the IMU the new baudrate to expect.
+   sendCommand(kSetConfigUInt8, &baudRate, kSetConfigDone, NULL);
+   // Save the configuration change.
+   sendCommand(kSave, NULL, kSaveDone, &err);
+   return !err;
 }
 
 std::string IMU::getInfo()
@@ -139,16 +161,16 @@ void IMU::sendConfig()
 {
    // Read in the live configuration data
    readConfig();
-   
+
    // Struct parameters can be sent directly.
    sendCommand(kSetAcqParams, &(_stagedConfig.acqParams), 
          kSetAcqParamsDone, NULL);
    sendCommand(kSetFIRFiltersThirtyTwo, &(_stagedConfig.filters), 
          kSetFIRFiltersDone, NULL);
-   
+
    writeCommand(kSetMagTruthMethod, &(_stagedConfig.magTruthMethod));
    writeCommand(kSetFunctionalMode, &(_stagedConfig.mode));
-   
+
    sendCommand(kSetConfigFloat32, &(_stagedConfig.declination), 
          kSetConfigDone, NULL);
    sendCommand(kSetConfigUInt32, &(_stagedConfig), 
@@ -308,7 +330,7 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
 {
    int bytes_written = 0, current_write = 0;
 #ifdef DEBUG
-   printf("Writing %d bytes :", bytes_to_write);
+   printf("Writing %d bytes: ", bytes_to_write);
    printRaw(blob, bytes_to_write);
 #endif
    while ((bytes_written < bytes_to_write) && (current_write >= 0)){
@@ -351,9 +373,6 @@ checksum_t crc16(uint8_t* data, bytecount_t bytes){
  */
 void IMU::sendCommand(Command send, const void* payload, Command resp, void* target)
 {
-#ifdef DEBUG
-   printf("Sending command %d, expecting %d\n", send.id, resp.id);
-#endif
    if ((target != NULL) && memset(target, 0, resp.payload_size) == NULL)
       throw IMUException("Unable to clear command response target memory.");
    writeCommand(send, payload);
@@ -364,6 +383,11 @@ void IMU::sendCommand(Command send, const void* payload, Command resp, void* tar
 
 void IMU::writeCommand(Command cmd, const void* payload)
 {
+#ifdef DEBUG
+   printf("Writing command ");
+   printCommand(cmd);
+   printf("\n");
+#endif
    // Temporary storage to assemble the data packet.
    uint8_t datagram[4096];
 
@@ -396,6 +420,11 @@ void IMU::writeCommand(Command cmd, const void* payload)
 
 void IMU::readCommand(Command cmd, void* target)
 {
+#ifdef DEBUG
+   printf("Reading command ");
+   printCommand(cmd);
+   printf("\n");
+#endif
    // Temporary storage for the data read from the datagram.
    uint8_t datagram[4096];
    // Pointer to the start of the frame
@@ -437,6 +466,94 @@ void IMU::readCommand(Command cmd, void* target)
 }
 
 #undef ENDIAN16
+
+void IMU::printCommand(Command cmd)
+{
+   switch(cmd.id) {
+      case 0x01:
+         printf("kGetModInfo"); break;
+      case 0x02:
+         printf("kGetModInfoResp"); break;
+      case 0x03:
+         printf("kSetDataComponents"); break;
+      case 0x04:
+         printf("kGetData"); break;
+      case 0x05:
+         printf("kGetDataResp"); break;
+      case 0x06:
+         printf("kSetConfig"); break;
+      case 0x07:
+         printf("kGetConfig"); break;
+      case 0x08:
+         printf("kGetConfigResp"); break;
+      case 0x09:
+         printf("kSave"); break;
+      case 0x0a:
+         printf("kStartCal"); break;
+      case 0x0b:
+         printf("kStopCal"); break;
+      case 0x0c:
+         printf("kSetFIRFilters"); break;
+      case 0x0d:
+         printf("kGetFIRFilters"); break;
+      case 0x0e:
+         printf("kGetFIRFiltersResp"); break;
+      case 0x0f:
+         printf("kPowerDown"); break;
+      case 0x10:
+         printf("kSaveDone"); break;
+      case 0x11:
+         printf("kUserCalSampleCount"); break;
+      case 0x12:
+         printf("kUserCalScore"); break;
+      case 0x13:
+         printf("kSetConfigDone"); break;
+      case 0x14:
+         printf("kSetFIRFiltersDone"); break;
+      case 0x15:
+         printf("kStartContinuousMode"); break;
+      case 0x16:
+         printf("kStopContinousMode"); break;
+      case 0x17:
+         printf("kPowerUpDone"); break;
+      case 0x18:
+         printf("kSetAcqParams"); break;
+      case 0x19:
+         printf("kGetAcqParams"); break;
+      case 0x1a:
+         printf("kSetAcqParamsDone"); break;
+      case 0x1b:
+         printf("kGetAcqParamsResp"); break;
+      case 0x1c:
+         printf("kPowerDownDone"); break;
+      case 0x1d:
+         printf("kFactoryMagCoeff"); break;
+      case 0x1e:
+         printf("kFactoryMagCoeffDone"); break;
+      case 0x1f:
+         printf("kTakeUserCalSample"); break;
+      case 0x24:
+         printf("kFactoryAccelCoeff"); break;
+      case 0x25:
+         printf("kFactoryAccelCoeffDone"); break;
+      case 0x4f:
+         printf("kSetFunctionalMode"); break;
+      case 0x50:
+         printf("kGetFunctionalMode"); break;
+      case 0x51:
+         printf("kGetFunctionalModeResp"); break;
+      case 0x6e:
+         printf("kSetResetRef"); break;
+      case 0x77:
+         printf("kSetMagTruthMethod"); break;
+      case 0x78:
+         printf("kGetMagTruthMethod"); break;
+      case 0x79:
+         printf("kGetMagTruthMethodResp"); break;
+      default:
+         printf("kINVALID");
+   }
+}
 
 /******************************************************************************
  * Below is all hardcoded data from the protocol spec'd for the TRAX.
@@ -526,6 +643,7 @@ const data_id_t IMU::kGyroX                     = 0x4a;
 const data_id_t IMU::kGyroY                     = 0x4b;
 const data_id_t IMU::kGyroZ                     = 0x4c;
 
+const IMUSpeed IMU::k0                          = {0,    B0};
 const IMUSpeed IMU::k2400                       = {4,    B2400};
 /*const IMUSpeed IMU::k3600                       = {5,    B3600};*/
 const IMUSpeed IMU::k4800                       = {6,    B4800};

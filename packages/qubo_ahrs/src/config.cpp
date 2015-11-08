@@ -1,19 +1,20 @@
 
-#include "../include/IMU.h"
+#include "../include/util.h"
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
 
 int main(int argc, char *argv[])
 {
-   if (argc == 2) {
-      IMU *imu = new IMU(std::string(argv[1]));
-      IMUConfig config;
-      int i;
+   if (argc == 3) {
       try {
-         printf("Connecting to device...\n");
+         IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
+         IMUConfig config;
+         int i;
+
          imu->openDevice();
-         printf("Device %s found.\n", (imu->getInfo()).c_str());
+         printf("Connected to %s.\n", (imu->getInfo()).c_str());
+         
          imu->sendIMUDataFormat();
          config = imu->readConfig();
 
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
                config.filters.FIRTaps.filter_id.byte_2);
          printf("# filters:         %d\n", config.filters.FIRTaps.count);
          for (i=0; i< config.filters.FIRTaps.count; i++)
-         printf("Filter       #%.2d:  %f\n", i, config.filters.taps[i]);
+            printf("Filter       #%.2d:  %f\n", i, config.filters.taps[i]);
 
          printf("Mag Truth Method:  %d\n", config.magTruthMethod);
          printf("Functional mode:   %d\n", config.mode);
@@ -44,15 +45,10 @@ int main(int argc, char *argv[])
          printf("HPR During Cal?    %d\n", config.hprDuringCal.value);
          imu->closeDevice();
       }
-      catch (IMUException& e)
-      {
-         fprintf(stderr, "IMU Error occured: %s\n", e.what());
-      }
       catch (std::exception& e)
       {
-         fprintf(stderr, "Unknown error occured: %s\n", e.what());
+         printError(e);
       }
-   } else {
-      printf("Usage: config <imu-device-name>\n");
-   }
+   } 
+   printUsage();
 }

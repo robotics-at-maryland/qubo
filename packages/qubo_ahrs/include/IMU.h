@@ -154,7 +154,7 @@ class IMU
        * Constructor for a new IMU interface.
        * @param (std::string) unix device name
        */
-      IMU(std::string deviceFile);
+      IMU(std::string deviceFile, IMUSpeed speed);
 
       /** Destructor that cleans up and closes the device. */
       ~IMU();
@@ -172,6 +172,9 @@ class IMU
 
       /** Disconnectes from the device and closes the teriminal. */
       void closeDevice();
+
+      /** Changes the IMU baudrate may require a hardware restart. */
+      bool changeSpeed(IMUSpeed speed);
 
       /** 
        * Reads the hardware info from the IMU unit. 
@@ -200,10 +203,10 @@ class IMU
       // Internal functionality.
       /** Unix file name to connect to */
       std::string _deviceFile;
-      /** Serial port for I/O with the AHRS */
-      int _deviceFD;
       /** Data rate to communicate with */
       speed_t _termBaud;
+      /** Serial port for I/O with the AHRS */
+      int _deviceFD;
       /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
       /** Configuration for the IMU that is staged-to-send */
@@ -219,6 +222,7 @@ class IMU
       void writeCommand(Command cmd, const void* payload);
       void readCommand(Command cmd, void* target);
       void sendCommand(Command cmd, const void* payload, Command resp, void* target);
+      void printCommand(Command cmd);
    private:
       /** Library of static protocol frame definitions to categorize frames. */
       static const Command kGetModInfo;
@@ -305,7 +309,8 @@ class IMU
       static const data_id_t kGyroX;
       static const data_id_t kGyroY;
       static const data_id_t kGyroZ;
-
+   public:
+      static const IMUSpeed k0;
       static const IMUSpeed k2400;
       //static const IMUSpeed k3600;
       static const IMUSpeed k4800;
@@ -317,7 +322,7 @@ class IMU
       static const IMUSpeed k38400;
       static const IMUSpeed k57600;
       static const IMUSpeed k115200;
-
+   private:
       static const FIRFilter kFilterID;
       static const RawDataFields dataConfig;
 
