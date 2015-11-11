@@ -4,18 +4,20 @@
 #include "depth_sensor_sim.h"
 
 int main(int argc, char **argv){
-  
+  ros::init(argc, argv, "depth_sensor_node");
   bool simulated = true;
   
   //if(simulated){
-  QuboDepthSensorSim *node = new QuboDepthSensorSim();
+  QuboDepthSensorSim *node = new QuboDepthSensorSim(argc, argv);
   // }
   //ExampleDevice *node = new ExampleDevice();
-  
-  
-  ros::init(argc, argv, "depth_sensor_node");
-  ros::NodeHandle n;
+
   node->subscribe();
+  node->publish();
+
+ 
+ 
+
   ros::spin();
   
 }

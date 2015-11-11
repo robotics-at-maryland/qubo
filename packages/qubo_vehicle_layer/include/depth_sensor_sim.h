@@ -4,16 +4,19 @@
 class QuboDepthSensorSim : QuboNode {
 
  public:
-  QuboDepthSensorSim();
+  QuboDepthSensorSim(int,char**);
   ~QuboDepthSensorSim();
   
   void subscribe();
   void publish();
+  void depthCallBack(const underwater_sensor_msgs::Pressure msg);
   
  protected:
-  
-  ros::NodeHandle sub_node;
+
+  int depth;
   ros::Subscriber subscriber;
+  ros::Publisher  publisher;
+ 
   
 };
 
