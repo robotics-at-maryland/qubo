@@ -23,11 +23,13 @@ catkin_package(
 # File List ##################
 ##############################
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include 
+  ${catkin_INCLUDE_DIRS}
+  depth_sensor/include)
 
-set(SRC_FILES
-  src/main.cpp
-  src/depth_sensor_sim.cpp
+set(DEPTH_SRC_FILES
+  depth_sensor/src/main.cpp
+  depth_sensor/src/depth_sensor_sim.cpp
   )
     
 set(TEST_FILES
@@ -39,8 +41,8 @@ set(TEST_FILES
 ##############################
 
 
-add_executable(vehicle_layer ${SRC_FILES}) 
-target_link_libraries(vehicle_layer ${catkin_LIBRARIES})
+add_executable(depth_node ${DEPTH_SRC_FILES}) 
+target_link_libraries(depth_node ${catkin_LIBRARIES})
   
 
 ##############################
