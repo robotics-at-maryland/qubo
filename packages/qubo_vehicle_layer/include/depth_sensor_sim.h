@@ -1,24 +1,22 @@
-#include "vehicle_node.h"
+#include "qubo_node.h"
 #include "underwater_sensor_msgs/Pressure.h"
 
-class QuboDepthSensorSim : QuboNode {
+class DepthSimNode : QuboNode {
 
  public:
-  QuboDepthSensorSim(int,char**);
-  ~QuboDepthSensorSim();
+  DepthSimNode(int,char**,int);
+  ~DepthSimNode();
   
-  void subscribe();
+  void update();
   void publish();
   void depthCallBack(const underwater_sensor_msgs::Pressure msg);
   
  protected:
 
-  int depth;
+  underwater_sensor_msgs::Pressure msg;
   ros::Subscriber subscriber;
-  ros::Publisher  publisher;
  
   
 };
 
-void depthCallBack(const underwater_sensor_msgs::Pressure);
 

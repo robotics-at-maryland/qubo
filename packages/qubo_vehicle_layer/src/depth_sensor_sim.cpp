@@ -1,37 +1,26 @@
 #include "depth_sensor_sim.h"
 
-QuboDepthSensorSim::QuboDepthSensorSim(int argc, char **argv){
-
-  ros::Rate  loop_rate(10)
-; //hard coded cuz I bad
+DepthSimNode::DepthSimNode(int argc, char **argv, int rate){
+  ros::Rate  loop_rate(rate);
+  subscriber = n.subscribe("/g500/pressure", 1000, &DepthSimNode::depthCallBack,this);
+  publisher = n.advertise< underwater_sensor_msgs::Pressure>("qubo/depth", 1000);
   
 };
 
-QuboDepthSensorSim::~QuboDepthSensorSim(){};
+DepthSimNode::~DepthSimNode(){};
 
 
-void QuboDepthSensorSim::subscribe(){
-  subscriber = n.subscribe("/g500/pressure", 1000, &QuboDepthSensorSim::depthCallBack,this);
+void DepthSimNode::update(){
+  ros::spinOnce(); //the only thing we care about is depth here which updated whenever we get a depth call back, on a real node we mayneed to do something else.
 }
 
-void QuboDepthSensorSim::publish(){
-  publisher = n.advertise< underwater_sensor_msgs::Pressure>("depth", 1000);
-  
-  while (ros::ok()){
-  
-    underwater_sensor_msgs::Pressure msg;
-    msg.pressure = depth;
-    publisher.publish(msg);
-    
-    ros::spinOnce();
-    
-  }
+void DepthSimNode::publish(){ //We might be able to get rid of this and always just call publisher.publish 
+  publisher.publish(msg);
 }
 
 
-void QuboDepthSensorSim::depthCallBack(const underwater_sensor_msgs::Pressure msg)
+void DepthSimNode::depthCallBack(const underwater_sensor_msgs::Pressure sim_msg)
 {
-  ROS_INFO("I heard: [%f]", msg.pressure);
-  this->depth = msg.pressure;
+  msg.pressure = sim_msg.pressure;
 }
 

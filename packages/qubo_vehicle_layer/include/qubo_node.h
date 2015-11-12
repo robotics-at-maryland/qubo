@@ -13,7 +13,7 @@ class QuboNode {
   ~QuboNode(){}; //Destructor 
 
  
-  virtual void subscribe() = 0;
+  virtual void update() = 0;
   virtual void publish() = 0;
   //void sendAction(){};  //this isn't a pure function because sub classes won't necessarily use it. 
 
@@ -22,7 +22,6 @@ class QuboNode {
  protected:
   ros::NodeHandle n; //the handle for the whole node
   ros::Publisher publisher; //simulated or real, we'll need a subscriber either way. 
-  //ros::Rate rate;
   
 };
 

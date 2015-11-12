@@ -1,23 +1,18 @@
-//#include "vehicle_node.h" 
-//#include "ros/ros.h"
-//#include "example_device.h"
 #include "depth_sensor_sim.h"
 
 int main(int argc, char **argv){
-  ros::init(argc, argv, "depth_sensor_node");
-  bool simulated = true;
-  
+
+  ros::init(argc, argv, "depth_sensor_node"); //basically always needs to be called first
+  bool simulated = true; //We'll have to pass this one in eventually 
+
+
   //if(simulated){
-  QuboDepthSensorSim *node = new QuboDepthSensorSim(argc, argv);
+  DepthSimNode *node = new DepthSimNode(argc, argv, 10); //10 (the rate) is completely arbitary
   // }
-  //ExampleDevice *node = new ExampleDevice();
-
-  node->subscribe();
-  node->publish();
-
- 
- 
-
-  ros::spin();
   
+  while (ros::ok()){
+    node->update();
+    node->publish();
+  }
+
 }
