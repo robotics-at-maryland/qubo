@@ -1,11 +1,12 @@
 #include "ros/ros.h"
 #include "ram_msgs/Sim_Power_Source.h"
 
-#include <sstream>
+// #include <sstream>
 
 #define DEFAULT_SOURCE 0
 #define DEFAULT_VOLTAGE 24.0
 #define DEFAULT_CURRENT 9001.0
+#define DEFAULT_LIFE 3600
 
 int main(int argc, char **argv) {
     /* 
@@ -45,8 +46,31 @@ int main(int argc, char **argv) {
      */
     n.setParam("/qubo/power_source", DEFAULT_SOURCE);
     n.setParam("/qubo/power_enabled", true);
-    n.setParam("/qubo/voltage", DEFAULT_VOLTAGE);
-    n.setParam("/qubo/current", DEFAULT_CURRENT);
+
+    /*
+     * These value are not changed by users; rather, they aproach 0 at a linear
+     * rate
+     */
+    double curr_voltage = DEFAULT_VOLTAGE;
+    double curr_current = DEFAULT_CURRENT;
+
+    /*
+     * This file, while constant, should not be changed at runtime so it is not on the
+     * parameter server.
+     */
+    int battery_life_seconds = DEFAULT_LIFE;
+
+    /*
+     * Calculate how much voltage and current will decrease by each second. 
+     */
+    double voltage_drain_rate = curr_voltage / battery_life_seconds;
+    double current_drain_rate = curr_current / battery_life_seconds;
+
+
+    /*
+     * Record start time. This is used in calculating the voltage drain.
+     */
+    std::time_t prev_time = std::time(nullptr);
 
     /*
      * While ros is A OK this loop will keep rollin'
@@ -62,17 +86,28 @@ int main(int argc, char **argv) {
          */
         int source;
         bool enabled;
-        double curr_voltage;
-        double curr_current;
         
         /*
          * Checks parameter server for new paramters to set.
          */
         n.param("/qubo/power_source",source, DEFAULT_SOURCE);
         n.param("/qubo/power_enabled",enabled, true);
-        n.param("/qubo/voltage",curr_voltage, DEFAULT_VOLTAGE);
-        n.param("/qubo/current",curr_current, DEFAULT_CURRENT);
         
+        /*
+         * calculate time since last update to be used in calculating
+         * voltage and current drain.
+         */
+        std::time_t curr_time = std::time(nullptr);
+        double delta_time = std::difftime(curr_time,prev_time);
+        prev_time = curr_time;
+
+        /*
+         * Calculate current and voltage drain since last update.
+         */
+        curr_voltage -= delta_time * voltage_drain_rate;
+        curr_current -= delta_time * current_drain_rate;
+
+
         /*
          * Sets the message contents to the variables above.
          */
