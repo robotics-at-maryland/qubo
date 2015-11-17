@@ -9,8 +9,9 @@ int main(int argc, char *argv[])
 {
    if (argc == 3)
    {
+      IMU *imu;
       try {
-         IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
+         imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
          IMUData data;
          clock_t curr, last;
          double hz;
@@ -37,7 +38,9 @@ int main(int argc, char *argv[])
          }
          imu->closeDevice();
       } catch (std::exception& e) {
+         delete imu;
          printError(e);
+         return IMU_ERR;
       }
    }
    printUsage();

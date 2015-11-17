@@ -19,6 +19,9 @@ all: bin/IMU.o bin/config bin/baudrate
 test: bin/test
 	./bin/test /dev/ttyUSB0 38400
 
+valgrind: bin/test
+	valgrind --leak-check=yes ./bin/test /dev/ttyUSB0 38400
+
 bin/IMU.o: src/IMU.cpp include/IMU.h include/TRAXTypes.h
 	$(CXX) $(CXXFLAGS) -o $@ $< -c 
 

@@ -37,6 +37,5 @@ IMUSpeed getBaudrate(const char* arg)
 
 void printError(std::exception& e)
 {
-   fprintf(stderr, "Error occured: %s\n", e.what());
-   exit(IMU_ERR);
+   printf("Error occured: %s\n", e.what());
 }
