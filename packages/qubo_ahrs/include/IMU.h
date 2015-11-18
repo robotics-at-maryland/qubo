@@ -207,8 +207,8 @@ class IMU
       speed_t _termBaud;
       /** Serial port for I/O with the AHRS */
       int _deviceFD;
-      /** */
-      int _timeout;
+      /** Timeout and number of retries to attempt. */
+      int _timeout, _retries;
       /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
       /** Configuration for the IMU that is staged-to-send */

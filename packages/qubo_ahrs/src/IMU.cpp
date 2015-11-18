@@ -27,7 +27,7 @@
 #include "../include/IMU.h"
 
    IMU::IMU(std::string deviceFile, IMUSpeed speed) 
-: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout(200000)
+: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout(1), _retries(10)
 { }
 
 IMU::~IMU() { closeDevice(); }
@@ -303,44 +303,46 @@ void printRaw(uint8_t* blob, uint16_t bytes)
 int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
 {
    // Keep track of the number of bytes read, and the select status.
-   int bytes_read = 0, select_status = 1;
+   int bytes_read = 0, status = 1;
    // Sets of file descriptors for use with select(2).
    fd_set read_fds, write_fds, except_fds;
    // Timeout info struct for use with select(2).
    struct timeval timeout;
-   timeout.tv_sec = 0;
-   timeout.tv_usec = _timeout; 
+   timeout.tv_sec = _timeout;
+   timeout.tv_usec = 0; 
    // If we need to read something, attempt to.
    // Keep reading until we've run out of data, or an error occurred.
-   while (bytes_read < bytes_to_read && select_status > 0) {
+   while (bytes_read < bytes_to_read && status > 0) {
       FD_ZERO(&read_fds);
       FD_ZERO(&write_fds);
       FD_ZERO(&except_fds);
       FD_SET(_deviceFD, &read_fds);
-      select_status = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
-      if (select_status == 1) {
+      status = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
+      if (status == 1) {
          // The filedescriptor is ready to read.
-         bytes_read += read(_deviceFD, 
+#ifdef DEBUG
+         printf("Timeout remaining: %ld \n", timeout.tv_usec);
+#endif
+         bytes_read += status = read(_deviceFD, 
                (blob + bytes_read), 
                (bytes_to_read - bytes_read)
                );
-#ifdef DEBUG
-      printf("Timeout remaining: %ld \n", timeout.tv_usec);
-#endif
       } else {
          // Read timed out and we couldnt resolve the block.
 #ifdef DEBUG
-         if (select_status)
+         if (status)
             printf("Read Error after %d bytes.\n", bytes_read);
          else
             printf("Read Timeout after %d bytes.\n", bytes_read);
 #endif
       }
    }
+   if (bytes_read) {
 #ifdef DEBUG
-   printf("Read %d bytes: ", bytes_read);
-   printRaw(blob, bytes_read);
+      printf("Read %d bytes: ", bytes_read);
+      printRaw(blob, bytes_read);
 #endif
+   }
    // Return the number of bytes we actually managed to read.
    return bytes_to_read - bytes_read;
 }
@@ -352,38 +354,38 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
 int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
 {
    // Keep track of the number of bytes read, and the select status.
-   int bytes_written = 0, select_status = 1;
+   int bytes_written = 0, status = 1;
    // Sets of file descriptors for use with select(2).
    fd_set read_fds, write_fds, except_fds;
    // Timeout info struct for use with select(2).
    struct timeval timeout;
-   timeout.tv_sec = 1;
-   timeout.tv_usec = _timeout; 
+   timeout.tv_sec = _timeout;
+   timeout.tv_usec = 0; 
 #ifdef DEBUG
    printf("Writing %d bytes: ", bytes_to_write);
    printRaw(blob, bytes_to_write);
 #endif
    // If we need to read something, attempt to.
    // Keep reading until we've run out of data, or an error occurred.
-   while (bytes_written < bytes_to_write && select_status > 0) {
+   while (bytes_written < bytes_to_write && status > 0) {
       FD_ZERO(&read_fds);
       FD_ZERO(&write_fds);
       FD_ZERO(&except_fds);
       FD_SET(_deviceFD, &write_fds);
-      select_status = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
-      if (select_status == 1) {
+      status = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
+      if (status == 1) {
          // The filedescriptor is ready to read.
-         bytes_written += write(_deviceFD, 
+#ifdef DEBUG
+         printf("Timeout remaining: %ld \n", timeout.tv_usec);
+#endif
+         bytes_written += status = write(_deviceFD, 
                (blob + bytes_written), 
                (bytes_to_write - bytes_written)
                );
-#ifdef DEBUG
-      printf("Timeout remaining: %ld \n", timeout.tv_usec);
-#endif
       } else {
          // Read timed out and we couldnt resolve the block.
 #ifdef DEBUG
-         if (select_status)
+         if (status)
             printf("Write Error after %d bytes.\n", bytes_written);
          else
             printf("Write Timeout after %d bytes.\n", bytes_written);
@@ -424,10 +426,10 @@ void IMU::sendCommand(Command send, const void* payload, Command resp, void* tar
    int fail = 1;
    if ((target != NULL) && memset(target, 0, resp.payload_size) == NULL)
       throw IMUException("Unable to clear command response target memory.");
+   // Send the command, if this fails then just exit.
+   writeCommand(send, payload);
    while (fail) {
       try {
-         if (fail%10 == 1)
-            writeCommand(send, payload);
          readCommand(resp, target);
          fail = 0;
       } catch (IMUException& e) {
@@ -436,7 +438,7 @@ void IMU::sendCommand(Command send, const void* payload, Command resp, void* tar
 #endif
          fail++; 
       }
-      if (fail > 100)
+      if (fail > _retries)
          throw IMUException("Failed to send command too many times.");
    }
 }
