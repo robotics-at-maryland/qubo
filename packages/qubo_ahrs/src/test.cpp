@@ -20,21 +20,26 @@ int main(int argc, char *argv[])
          imu->sendIMUDataFormat();
          last = clock();
          while (imu->isOpen()) {
-            // Poll data
-            data = imu->pollIMUData();
-            // Print the data formatted.
-            printf("Q: (%5.0f,%5.0f,%5.0f,%5.0f)\n",
-                  data.quaternion[0], data.quaternion[1], data.quaternion[2], data.quaternion[3]);
-            printf("G: (%.3f,%.3f,%.3f)\n",
-                  data.gyroX, data.gyroY, data.gyroZ);
-            printf("A: (%.3f,%.3f,%.3f)\n",
-                  data.accelX, data.accelY, data.accelZ);
-            printf("M: (%.3f,%.3f,%.3f)\n",
-                  data.magX, data.magY, data.magZ);
-            curr = clock();
-            hz = CLOCKS_PER_SEC / ((double)(curr-last))/10;
-            printf("Poll took %.6f seconds (%.2f Hz)\n", 1/hz, hz);
-            last = curr;
+            try {
+               // Poll data
+               data = imu->pollIMUData();
+               // Print the data formatted.
+               printf("Q: (%5.0f,%5.0f,%5.0f,%5.0f)\n",
+                     data.quaternion[0], data.quaternion[1], data.quaternion[2], data.quaternion[3]);
+               printf("G: (%.3f,%.3f,%.3f)\n",
+                     data.gyroX, data.gyroY, data.gyroZ);
+               printf("A: (%.3f,%.3f,%.3f)\n",
+                     data.accelX, data.accelY, data.accelZ);
+               printf("M: (%.3f,%.3f,%.3f)\n",
+                     data.magX, data.magY, data.magZ);
+               curr = clock();
+               hz = CLOCKS_PER_SEC / ((double)(curr-last))/10;
+               printf("Poll took %.6f seconds (%.2f Hz)\n", 1/hz, hz);
+               last = curr;
+            } catch (IMUException& e) {
+               imu->closeDevice();
+               imu->openDevice();
+            }
          }
          imu->closeDevice();
       } catch (std::exception& e) {

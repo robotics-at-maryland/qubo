@@ -27,27 +27,29 @@
 #include "../include/IMU.h"
 
    IMU::IMU(std::string deviceFile, IMUSpeed speed) 
-: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout(1), _retries(10)
+: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout(1), _retries(1)
 { }
 
 IMU::~IMU() { closeDevice(); }
 
 void IMU::openDevice()
 {
+   struct termios termcfg;
+   int modemcfg = 0, fd = -1;
 #ifdef DEBUG
    printf("IMU::openDevice()\n");
 #endif
-   struct termios termcfg;
-   int modemcfg = 0, fd = -1;
    /* Open the serial port and store into a file descriptor.
     * O_RDWR allows for bi-directional I/O
     * O_ASYNC generates signals when data is transmitted
     * allowing for I/O blocking to be resolved.
     */
-   fd = open(_deviceFile.c_str(), O_RDWR, O_ASYNC);
+   fd = open(_deviceFile.c_str(), O_RDWR, O_NONBLOCK);
    // Check to see if the device exists.
    if (fd == -1)
       throw IMUException("Unix device '"+_deviceFile+"' not found.");
+   //if (fcntl(fd, F_SETFL, O_ASYNC|O_NONBLOCK))
+   //   throw IMUException("Could not enable ASYNC");
    // Read the config of the interface.
    if(tcgetattr(fd, &termcfg)) 
       throw IMUException("Unable to read terminal configuration.");
@@ -69,6 +71,8 @@ void IMU::openDevice()
    termcfg.c_cflag &= ~CRTSCTS;
    // Send one stop bit only.
    termcfg.c_cflag &= ~CSTOPB;
+   // Generate a hangup on close.
+   termcfg.c_cflag |= HUPCL;
 
    // Configure the input modes for the terminal.
    // Ignore break condition on input. 
@@ -111,19 +115,27 @@ void IMU::openDevice()
 
    // Successful execution!
    _deviceFD = fd;
+#ifdef DEBUG
+   printf("IMU::openDevice() exit\n");
+#endif
 }
 
 bool IMU::isOpen() {return _deviceFD >= 0;}
 
 void IMU::closeDevice()
 {
+   int status = 0;
 #ifdef DEBUG
    printf("IMU::closeDevice()\n");
 #endif
    // Attempt to close the device from the file descriptor.
-   close(_deviceFD);
+   status = close(_deviceFD);
    // Clear the file descriptor 
    _deviceFD = -1;
+#ifdef DEBUG
+   if (status) printf("Close error!");
+   printf("IMU::closeDevice() exit\n");
+#endif
 }
 
 bool IMU::changeSpeed(IMUSpeed speed)
