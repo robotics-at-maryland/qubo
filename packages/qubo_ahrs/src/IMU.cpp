@@ -14,6 +14,7 @@
 
 // Debug printing
 #include <stdio.h>
+#include <libexplain/tcdrain.h>
 
 #endif
 
@@ -44,7 +45,7 @@ void IMU::openDevice()
     * O_ASYNC generates signals when data is transmitted
     * allowing for I/O blocking to be resolved.
     */
-   fd = open(_deviceFile.c_str(), O_RDWR, O_NONBLOCK);
+   fd = open(_deviceFile.c_str(), O_RDWR, O_NONBLOCK | O_SYNC | O_DIRECT | O_NOCTTY);
    // Check to see if the device exists.
    if (fd == -1)
       throw IMUException("Unix device '"+_deviceFile+"' not found.");
@@ -79,6 +80,8 @@ void IMU::openDevice()
    termcfg.c_iflag = IGNBRK;
    // Disable X control flow, only START char restarts output.
    termcfg.c_iflag &= ~(IXON|IXOFF|IXANY);
+   // Enable X control flow.
+   //termcfg.c_iflag |= (IXON|IXOFF|IXANY);
 
    // Configure the local modes for the terminal.
    termcfg.c_lflag = 0;
@@ -87,9 +90,9 @@ void IMU::openDevice()
    termcfg.c_oflag = 0;
 
    // Configure the read timeout (deciseconds)
-   termcfg.c_cc[VTIME] = 1;
+   termcfg.c_cc[VTIME] = 0;
    // Configure the minimum number of chars for read.
-   termcfg.c_cc[VMIN] = 60;
+   termcfg.c_cc[VMIN] = 1;
 
    // Push the configuration to the terminal NOW.
    if(tcsetattr(fd, TCSANOW, &termcfg))
@@ -115,26 +118,34 @@ void IMU::openDevice()
 
    // Successful execution!
    _deviceFD = fd;
-#ifdef DEBUG
-   printf("IMU::openDevice() exit\n");
-#endif
 }
 
 bool IMU::isOpen() {return _deviceFD >= 0;}
 
 void IMU::closeDevice()
 {
+   struct termios termcfg;
    int status = 0;
 #ifdef DEBUG
    printf("IMU::closeDevice()\n");
 #endif
-   // Attempt to close the device from the file descriptor.
-   status = close(_deviceFD);
+   if (isOpen()) {
+      if(tcgetattr(_deviceFD, &termcfg) || cfsetospeed(&termcfg, B0) || cfsetispeed(&termcfg, B0) || tcsetattr(_deviceFD, TCSANOW, &termcfg)) {
+#ifdef DEBUG
+         printf("Could not hang up terminal.\n");
+#endif
+      } else {
+#ifdef DEBUG
+         printf("Hung up successfully.\n");
+#endif
+      }
+      // Attempt to close the device from the file descriptor.
+      status = close(_deviceFD);
+   }
    // Clear the file descriptor 
    _deviceFD = -1;
 #ifdef DEBUG
    if (status) printf("Close error!");
-   printf("IMU::closeDevice() exit\n");
 #endif
 }
 
@@ -295,25 +306,12 @@ IMUData IMU::pollIMUData()
    return _lastReading;
 }
 
-#ifdef DEBUG
-void printRaw(uint8_t* blob, uint16_t bytes)
-{
-   int i;
-   for (i = 0; i < bytes; i++)
-   {
-      if (i!=0) printf(":");
-      printf("%x",blob[i]);
-   }
-   printf("\n");
-}
-#endif
-
 /** 
  * Reads raw data from the serial port.
  * @return number of bytes not read
  */
 int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
-{
+{  
    // Keep track of the number of bytes read, and the select status.
    int bytes_read = 0, status = 1;
    // Sets of file descriptors for use with select(2).
@@ -332,13 +330,13 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
       status = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
       if (status == 1) {
          // The filedescriptor is ready to read.
-#ifdef DEBUG
-         printf("Timeout remaining: %ld \n", timeout.tv_usec);
-#endif
-         bytes_read += status = read(_deviceFD, 
+         status = read(_deviceFD, 
                (blob + bytes_read), 
                (bytes_to_read - bytes_read)
                );
+         if (status > 0) {
+            bytes_read += status;
+         }
       } else {
          // Read timed out and we couldnt resolve the block.
 #ifdef DEBUG
@@ -351,8 +349,7 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
    }
    if (bytes_read) {
 #ifdef DEBUG
-      printf("Read %d bytes: ", bytes_read);
-      printRaw(blob, bytes_read);
+      printf("Read %d bytes\n", bytes_read);
 #endif
    }
    // Return the number of bytes we actually managed to read.
@@ -374,8 +371,7 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
    timeout.tv_sec = _timeout;
    timeout.tv_usec = 0; 
 #ifdef DEBUG
-   printf("Writing %d bytes: ", bytes_to_write);
-   printRaw(blob, bytes_to_write);
+   printf("Writing %d bytes\n", bytes_to_write);
 #endif
    // If we need to read something, attempt to.
    // Keep reading until we've run out of data, or an error occurred.
@@ -387,13 +383,27 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
       status = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
       if (status == 1) {
          // The filedescriptor is ready to read.
-#ifdef DEBUG
-         printf("Timeout remaining: %ld \n", timeout.tv_usec);
-#endif
-         bytes_written += status = write(_deviceFD, 
+         status = write(_deviceFD, 
                (blob + bytes_written), 
                (bytes_to_write - bytes_written)
                );
+         if (status > 0) {
+            bytes_written += status;
+         } 
+         if (status != -1) {
+#ifdef DEBUG
+            printf("Draining the write buffer.\n");
+#endif
+            status = tcdrain(_deviceFD);
+#ifdef DEBUG
+            if (status) {
+               //printf("Stdrain error: %s \n", explain_tcdrain(_deviceFD));
+               printf("Stdrain error.\n");
+            } else {
+               printf("Drained properly.\n");
+            }
+#endif
+         }
       } else {
          // Read timed out and we couldnt resolve the block.
 #ifdef DEBUG
