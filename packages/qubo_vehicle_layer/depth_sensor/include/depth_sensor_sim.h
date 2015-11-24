@@ -1,8 +1,11 @@
 //! This is the simulated version of our depth sensor
 
-/** This node subscribes to /g500/pressure (though that will need to change when we have our own robot sim up and running) 
- *  the "pressure" is actually just the depth plus some noise, so we're using it unadulterated. 
+
+/** Nothing too fancy going on here, we just subscribe to uwsims "pressure" (which uwsim implements by 
+ *  just taking the depth and adding some noise)
+ *  and publishing that to a topic. 
  **/
+
 
 
 #ifndef DEPTHSIM_HEADER //I don't really see anybody needing to inherit this class, but better safe than sorry. 
