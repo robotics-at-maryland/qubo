@@ -14,7 +14,6 @@
 
 // Debug printing
 #include <stdio.h>
-#include <libexplain/tcdrain.h>
 
 #endif
 
@@ -397,7 +396,6 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
             status = tcdrain(_deviceFD);
 #ifdef DEBUG
             if (status) {
-               //printf("Stdrain error: %s \n", explain_tcdrain(_deviceFD));
                printf("Stdrain error.\n");
             } else {
                printf("Drained properly.\n");
