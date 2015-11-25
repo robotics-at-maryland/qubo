@@ -388,7 +388,7 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
                );
          if (status > 0) {
             bytes_written += status;
-         } 
+         }/*
          if (status != -1) {
 #ifdef DEBUG
             printf("Draining the write buffer.\n");
@@ -401,7 +401,7 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
                printf("Drained properly.\n");
             }
 #endif
-         }
+         }*/
       } else {
          // Read timed out and we couldnt resolve the block.
 #ifdef DEBUG

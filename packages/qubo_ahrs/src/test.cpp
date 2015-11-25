@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
                // Poll data
                data = imu->pollIMUData();
                // Print the data formatted.
-               printf("Q: (%5.0f,%5.0f,%5.0f,%5.0f)\n",
+               printf("Q: (%1.3f,%1.3f,%1.3f,%1.3f)\n",
                      data.quaternion[0], data.quaternion[1], data.quaternion[2], data.quaternion[3]);
                printf("G: (%.3f,%.3f,%.3f)\n",
                      data.gyroX, data.gyroY, data.gyroZ);
