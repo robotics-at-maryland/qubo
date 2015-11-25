@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
                      data.magX, data.magY, data.magZ);
                curr = clock();
                hz = CLOCKS_PER_SEC / ((double)(curr-last))/10;
-               printf("Poll took %.6f seconds (%.2f Hz)\n", 1/hz, hz);
+               printf("Polling at %.2f Hz\n", hz);
                last = curr;
             } catch (IMUException& e) {
                imu->closeDevice();

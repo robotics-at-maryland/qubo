@@ -60,33 +60,8 @@ void IMU::openDevice()
    if(cfsetispeed(&termcfg, _termBaud))
       throw IMUException("Unable to set terminal intput speed.");
 
-   // Configure the control modes for the terminal.
-   // Replace the existing char size config to be 8 bits.
-   termcfg.c_cflag = (termcfg.c_cflag & ~CSIZE) | CS8;
-   // Ignore modem control lines, and enable the reciever.
-   termcfg.c_cflag |= CLOCAL | CREAD;
-   // Disable parity generation/checking
-   termcfg.c_cflag &= ~(PARENB | PARODD);
-   // Disable hardware flow control
-   termcfg.c_cflag &= ~CRTSCTS;
-   // Send one stop bit only.
-   termcfg.c_cflag &= ~CSTOPB;
-   // Generate a hangup on close.
-   termcfg.c_cflag |= HUPCL;
-
-   // Configure the input modes for the terminal.
-   // Ignore break condition on input. 
-   termcfg.c_iflag = IGNBRK;
-   // Disable X control flow, only START char restarts output.
-   termcfg.c_iflag &= ~(IXON|IXOFF|IXANY);
-   // Enable X control flow.
-   //termcfg.c_iflag |= (IXON|IXOFF|IXANY);
-
-   // Configure the local modes for the terminal.
-   termcfg.c_lflag = 0;
-
-   // Configure the output modes for the terminal.
-   termcfg.c_oflag = 0;
+   // Set raw I/O rules to read and write the data purely.
+   cfmakeraw(&termcfg);
 
    // Configure the read timeout (deciseconds)
    termcfg.c_cc[VTIME] = 0;
@@ -105,12 +80,12 @@ void IMU::openDevice()
    // Push the modem config back to the modem.
    if(ioctl(fd, TIOCMSET, &modemcfg))
       throw IMUException("Unable to set modem configuration.");
-
+   
    // Pull the term config (again).
    if(tcgetattr(fd, &termcfg))
       throw IMUException("Unable to re-read terminal configuration.");
    // Disable hardware flow control (again).
-   termcfg.c_cflag &= ~CRTSCTS;
+   //termcfg.c_cflag &= ~CRTSCTS;
    // Push the config back to the terminal (again).
    if (tcsetattr(fd, TCSANOW, &termcfg))
       throw IMUException("Unable to re-set terminal configuration.");
