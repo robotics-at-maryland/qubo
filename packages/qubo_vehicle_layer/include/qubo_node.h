@@ -6,6 +6,9 @@
  *
  * We have a publish and an update method that we insist all inherited classes use
  * We also go ahead and make a node handle and a publisher variable here. 
+ * 
+ * The REASON we insist everything implement an update method rather than just using ros::spin or something like that 
+ * is so we can update the real sensors correctly. 
  */
 
 
