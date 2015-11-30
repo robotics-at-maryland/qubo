@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
          IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
          char *buffer = NULL;
          size_t bufsize;
-         bool success;
          // Connect to the IMU.
          imu->openDevice();
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
@@ -26,18 +25,13 @@ int main(int argc, char *argv[])
             return -1;
          }
          // Attempt to read in a baudrate and change to it.
-         success = imu->changeSpeed(getBaudrate(buffer));
+         imu->setBaudrate(getBaudrate(buffer));
          // Clean up and close resources.
          free(buffer);
          imu->closeDevice();
          // Tell the user of the result.
-         if (success) {
-            fprintf(stderr, "Changed speed successfully.\n");
-            return 0;
-         } else {
-            fprintf(stderr, "Unable to change IMU speed.\n");
-            return 1;
-         }
+         fprintf(stderr, "Changed speed successfully.\n");
+         return 0;
 
       } catch (std::exception& e) {
          printError(e);

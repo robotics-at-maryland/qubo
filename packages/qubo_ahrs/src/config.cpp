@@ -9,40 +9,31 @@ int main(int argc, char *argv[])
    if (argc == 3) {
       try {
          IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
-         IMUConfig config;
-         int i;
+         AcqParams params;
 
          imu->openDevice();
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
-         
+
          imu->sendIMUDataFormat();
-         config = imu->readConfig();
+         params = imu->getAcqParams();
 
          printf("IMU Configuration data:\n");
-         printf("Aqusition mode:    %d\n", config.acqParams.aquisition_mode);
-         printf("Flush Filter:      %d\n", config.acqParams.flush_filter);
-         printf("Sample delay:      %f\n", config.acqParams.sample_delay);
-
-         printf("Fir filter:        %d %d\n", 
-               config.filters.FIRTaps.filter_id.byte_1,
-               config.filters.FIRTaps.filter_id.byte_2);
-         printf("# filters:         %d\n", config.filters.FIRTaps.count);
-         for (i=0; i< config.filters.FIRTaps.count; i++)
-            printf("Filter       #%.2d:  %f\n", i, config.filters.taps[i]);
-
-         printf("Mag Truth Method:  %d\n", config.magTruthMethod);
-         printf("Functional mode:   %d\n", config.mode);
-         printf("Declination:       %f\n", config.declination.value);
-         printf("UserCalNumPoints:  %d\n", config.userCalNumPoints.value);
-         printf("Mag Setting:       %d\n", config.magCoeffSet.value);
-         printf("Accel setting:     %d\n", config.accelCoeffSet.value);
-         printf("Mounting mode:     %d\n", config.mountingRef.value);
-         printf("Baudrate:          %d\n", config.baudRate.value);
-         printf("True north?        %d\n", config.trueNorth.value);
-         printf("Big endian?        %d\n", config.bigEndian.value);
-         printf("Auto sapling?      %d\n", config.userCalAutoSampling.value);
-         printf("Mils/Degrees?      %d\n", config.milOut.value);
-         printf("HPR During Cal?    %d\n", config.hprDuringCal.value);
+         printf("Aqusition mode:    %d\n", params.aquisition_mode);
+         printf("Flush Filter:      %d\n", params.flush_filter);
+         printf("Sample delay:      %f\n", params.sample_delay);
+         printf("Mag Truth Method:  %d\n", imu->getMagTruthMethod());
+         printf("Functional mode:   %d\n", imu->getAHRSMode());
+         printf("Declination:       %f\n", imu->getDeclination());
+         printf("UserCalNumPoints:  %d\n", imu->getCalPoints());
+         printf("Mag Setting:       %d\n", imu->getMagCalID());
+         printf("Accel setting:     %d\n", imu->getAccelCalID());
+         printf("Mounting mode:     %d\n", imu->getMounting());
+         printf("Baudrate:          %d\n", imu->getBaudrate().baud);
+         printf("True north?        %d\n", imu->getTrueNorth());
+         printf("Big endian?        %d\n", imu->getBigEndian());
+         printf("Auto sapling?      %d\n", imu->getAutoCalibration());
+         printf("Mils/Degrees?      %d\n", imu->getMils());
+         printf("HPR During Cal?    %d\n", imu->getHPRCal());
          imu->closeDevice();
       }
       catch (std::exception& e)

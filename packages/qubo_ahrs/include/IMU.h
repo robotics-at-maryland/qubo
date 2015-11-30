@@ -6,7 +6,7 @@
  * Header file for IMU API.
  *
  * Copyright (C) 2015 Robotics at Maryland
- * Copyright (C) 2015 Greg Harris <gharris172@gmail.com>
+ * Copyright (C) 2015 Greg Harris <gharris1727@gmail.com>
  * All rights reserved.
  * 
  * Adapted from earlier work of Steve Moskovchenko and Joseph Lisee (2007)
@@ -24,111 +24,8 @@
 // Error handling
 #include <stdexcept>
 
-#include "TRAXTypes.h"
-
-/**
- * USER-DEFINED-TYPES:
- * These types can be manipulated as to change the behavior of data flow.
- * Integrity and book-keeping are paramount, as many data payloads need a certain
- * format in order to be interpreted correctly.
- */
-
-/**
- * Struct of data types being sent/retrieved from the IMU.
- * Each field should be a data_id_t, with a count of IDs at the beginning.
- */
-typedef struct _RawDataFields {
-   uint8_t idCount;
-   data_id_t qID;
-   data_id_t gxID;
-   data_id_t gyID;
-   data_id_t gzID;
-   data_id_t axID;
-   data_id_t ayID;
-   data_id_t azID;
-   data_id_t mxID;
-   data_id_t myID;
-   data_id_t mzID;
-} RawDataFields;
-
-/**
- * Struct of data being sent/retrieved from the IMU
- * VERY IMPORTANT: each major field must be one of the types defined
- * in the PNI AHRS spec, and must be preceded by a garbage data_id_t var.
- * This is in order to read in the data directly, and discard the data IDs.
- * Additionally, there is one garbage idCount at the beginning.
- * ALSO: make sure to update IMU_RAW_N_FIELDS to the number of major fields.
- */
-#pragma pack(push,1)
-typedef struct _RawData {
-   uint8_t idCount;
-   data_id_t qID;
-   float quaternion[4];
-   data_id_t gxID;
-   float gyroX;
-   data_id_t gyID;
-   float gyroY;
-   data_id_t gzID;
-   float gyroZ;
-   data_id_t axID;
-   float accelX;
-   data_id_t ayID;
-   float accelY;
-   data_id_t azID;
-   float accelZ;
-   data_id_t mxID;
-   float magX;
-   data_id_t myID;
-   float magY;
-   data_id_t mzID;
-   float magZ;
-} RawData;
-#pragma pack(pop)
-
-/**
- * Data type storing formatted IMU data to be passed around
- */
-typedef struct _IMUData
-{
-   float quaternion[4];
-   float gyroX;
-   float gyroY;
-   float gyroZ;
-
-   float accelX;
-   float accelY;
-   float accelZ;
-
-   float magX;
-   float magY;
-   float magZ;
-} IMUData;
-
-/**
- * IMU Configuration data structure.
- * Stores all data associated with the hardware configuration.
- */
-typedef struct _IMUConfig
-{
-   // Struct configs
-   AcqParams acqParams;
-   FIRTaps_ThirtyTwo filters;
-   // Simple configs
-   MagTruthMethod magTruthMethod;
-   FunctionalMode mode;
-   // SetConfig configurations.
-   ConfigFloat32 declination;
-   ConfigUInt32 userCalNumPoints;
-   ConfigUInt32 magCoeffSet;
-   ConfigUInt32 accelCoeffSet;
-   ConfigUInt8 mountingRef;
-   ConfigUInt8 baudRate;
-   ConfigBoolean trueNorth;
-   ConfigBoolean bigEndian;
-   ConfigBoolean userCalAutoSampling;
-   ConfigBoolean milOut;
-   ConfigBoolean hprDuringCal;
-} IMUConfig;
+#include "API_Types.h"
+#include "TRAX_Types.h"
 
 /**
  * Exception class for handling IO/Data integrity errors.
@@ -148,11 +45,11 @@ class IMUException : public std::runtime_error
  */
 class IMU
 {
-   public:
-      // Front facing API function calls.
+   public: // Front facing API function calls.
       /**
        * Constructor for a new IMU interface.
        * @param (std::string) unix device name
+       * @param (IMUSpeed) Baudrate to use for connection.
        */
       IMU(std::string deviceFile, IMUSpeed speed);
 
@@ -161,6 +58,7 @@ class IMU
 
       /** 
        * Opens the device and configures the I/O terminal. 
+       * Requires dialout permissions to the device in _deviceFile.
        */
       void openDevice();
 
@@ -170,11 +68,11 @@ class IMU
        */
       bool isOpen();
 
+      /** Ensures that the IMU is open, throws an exception otherwise. */
+      void assertOpen();
+
       /** Disconnectes from the device and closes the teriminal. */
       void closeDevice();
-
-      /** Changes the IMU baudrate may require a hardware restart. */
-      bool changeSpeed(IMUSpeed speed);
 
       /** 
        * Reads the hardware info from the IMU unit. 
@@ -182,14 +80,204 @@ class IMU
        */
       std::string getInfo();
 
-      /** 
-       * Reads the current configuration from the IMU.
-       * @return an IMUConfig struct with the live config data inside.
+      /**
+       * Set the declination angle used to determine true north.
+       * This is not used if only magnetic north is needed.
+       * This is an outside variable depending on global location.
+       * @param (float32) -180 to +180 degrees.
        */
-      IMUConfig readConfig();
+      void setDeclination(float decl);
 
-      /** Sends the staged config to the hardware. */
-      void sendConfig();
+      /**
+       * Get the declination angle used to determine true north.
+       * This is not used if only magnetic north is needed.
+       * This is an outside variable depending on global location.
+       * @return (float32) -180 to +180 degrees.
+       */
+      float getDeclination();
+
+      /**
+       * Set the true north flag.
+       * If true north is enabled, accuracy depends on the declination.
+       * Otherwise the magnetic north is used without correction.
+       * @param (bool) true for true north, false for magnetic.
+       */
+      void setTrueNorth(bool north);
+
+      /**
+       * Get the true north flag.
+       * If true north is enabled, accuracy depends on the declination.
+       * Otherwise the magnetic north is used without correction.
+       * @return (bool) true for true north, false for magnetic.
+       */
+      bool getTrueNorth();
+
+      /**
+       * Set the endian-ness of the data I/O.
+       * Little-endian is used in linux/unix machines.
+       * Big-endian is used in TRAX Studio/elsewhere.
+       * @param (bool) true for big-endian, false for little-endian.
+       */
+      void setBigEndian(bool endian);
+
+      /**
+       * Get the endian-ness of the the data I/O.
+       * Little-endian is used in linux/unix machines.
+       * Big-endian is used in TRAX Studio/elsewhere.
+       * @return (bool) true for big-endian, false for little-endian.
+       */
+      bool getBigEndian();
+
+      /**
+       * Set the mounting reference orientation.
+       * @param (MountRef)
+       */
+      void setMounting(MountRef mount);
+
+      /**
+       * Get the mounting reference orientation.
+       * @return (MountRef)
+       */
+      MountRef getMounting();
+
+      /**
+       * Set the number of points in a user calibration.
+       * @param (int) Number of points to expect during calibration.
+       */
+      void setCalPoints(unsigned int points);
+
+      /**
+       * Get the number of points in a user calibration.
+       * @return (unsigned int) Number of points to expect during calibration.
+       */
+      unsigned int getCalPoints();
+
+      /**
+       * Set the auto-calibration flag.
+       * Auto-calibration automatically acquires a point if it is suitable.
+       * Manual calibration allows the user to choose each exact point.
+       * @param (bool) true for auto, false for manual.
+       */
+      void setAutoCalibration(bool cal);
+
+      /**
+       * Get the auto-calibration flag.
+       * Auto-calibration automatically acquires a point if it is suitable.
+       * Manual calibration allows the user to choose each exact point.
+       * @return (bool) true for auto, false for manual.
+       */
+      bool getAutoCalibration();
+
+      /** 
+       * Set the baudrate to the device.
+       * NOTE: change requires a full power-cycle to update.
+       * @param (IMUSpeed) Speed to use on the connection.
+       */
+      void setBaudrate(IMUSpeed speed);
+
+      /** 
+       * Get the baudrate to the device.
+       * @return (IMUSpeed) Speed to use on the connection.
+       */
+      IMUSpeed getBaudrate();
+
+      /**
+       * Set the Mils/Degree flag.
+       * 6400 Mils/circle
+       * 360 Degrees/circle
+       * @param (bool) true for mils, false for degrees.
+       */
+      void setMils(bool mils);
+
+      /**
+       * Get the Mils/Degree flag.
+       * 6400 Mils/circle
+       * 360 Degrees/circle
+       * @return (bool) true for mils, false for degrees.
+       */
+      bool getMils();
+
+      /**
+       * Set Heading/Pitch/Roll calibration flag.
+       * If true, heading pitch and roll data is sent 
+       * while the device is being calibrated.
+       * @param (bool) true for output, false for no data.
+       */
+      void setHPRCal(bool hpr);
+
+      /**
+       * Get Heading/Pitch/Roll calibration flag.
+       * If true, heading pitch and roll data is sent 
+       * while the device is being calibrated.
+       * @return (bool) true for output, false for no data.
+       */
+      bool getHPRCal();
+
+      /**
+       * Set the current magnetometer calibration id.
+       * The device stores up to 8 different calibrations.
+       * @param (CalibrationID)
+       */
+      void setMagCalID(CalibrationID id);
+
+      /**
+       * Get the current magnetometer calibration id.
+       * The device stores up to 8 different calibrations.
+       * @return (CalibrationID)
+       */
+      CalibrationID getMagCalID();
+
+      /**
+       * Set the current acclerometer calibration id.
+       * The device stores up to 8 different calibrations.
+       * @param (CalibrationID)
+       */
+      void setAccelCalID(CalibrationID id);
+
+      /**
+       * Get the current acclerometer calibration id.
+       * The device stores up to 8 different calibrations.
+       * @return (CalibrationID)
+       */
+      CalibrationID getAccelCalID();
+
+      /**
+       * Set the magnetic truth method.
+       * @param (TruthMethod)
+       */
+      void setMagTruthMethod(TruthMethod method);
+
+      /**
+       * Get the magnetic truth method.
+       * @param (TruthMethod)
+       */
+      TruthMethod getMagTruthMethod();
+
+      /**
+       * Saves the current configuration to non-volatile memory.
+       * This persists across hard restarts and power loss.
+       */
+      void saveConfig();
+
+      /**
+       * Reset the magnetic field reference.
+       * Aligns the HPR to the magnetometer/accel heading.
+       * Use only when the device is stable and the magnetic field
+       * is not changing significantly.
+       */
+      void resetMagReference();
+
+      /**
+       * Set Aquisition Parameters.
+       * @param (AcqParams)
+       */
+      void setAcqParams(AcqParams params);
+
+      /**
+       * Get Aquisition Parameters.
+       * @return (AcqParams)
+       */
+      AcqParams getAcqParams();
 
       /** Send the data poll format to the IMU. */
       void sendIMUDataFormat();
@@ -199,22 +287,63 @@ class IMU
        * @return an IMUData struct of formatted IMU data.
        */
       IMUData pollIMUData();
-   private:
-      // Internal functionality.
+
+      /**
+       * Start User Calibration.
+       * @param (CalType) type of calibration.
+       */
+      void startCalibration(CalType);
+
+      /** Stop User Calibration. */
+      void stopCalibration();
+
+      /**
+       * Take User Calibration Point.
+       * @return (int) current cal point number.
+       */
+      int takeCalibrationPoint();
+
+      /**
+       * Get User Calibration Score.
+       * @return (UserCalScore)
+       */
+      UserCalScore getCalibrationScore();
+
+      /** Reset the magnetometer to factory calibration settings. */
+      void resetMagCalibration();
+
+      /** Reset the accelerometer to factory calibration settings. */
+      void resetAccelCalibration();
+
+      /**
+       * Set the AHRS mode flag.
+       * @param (bool) true for AHRS, false for Compass.
+       */
+      void setAHRSMode(bool ahrs);
+
+      /**
+       * Get the AHRS mode flag.
+       * @param (bool) true for AHRS, false for Compass.
+       */
+      bool getAHRSMode();
+
+      /** Power down the device to conserve power. */
+      void powerDown();
+
+      /** Wake up the device from sleep. */
+      void wakeUp();
+
+   private: // Internal functionality.
       /** Unix file name to connect to */
       std::string _deviceFile;
       /** Data rate to communicate with */
       speed_t _termBaud;
       /** Serial port for I/O with the AHRS */
       int _deviceFD;
-      /** Timeout and number of retries to attempt. */
-      int _timeout, _retries;
+      /** Timeout (usec) on read/write */
+      int _timeout;
       /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
-      /** Configuration for the IMU that is staged-to-send */
-      IMUConfig _stagedConfig;
-      /** Configuration read directly from the IMU. */
-      IMUConfig _liveConfig;
 
       /** Low-level internal I/O functions */
       int readRaw(uint8_t* blob, uint16_t bytes_to_read);
@@ -312,18 +441,14 @@ class IMU
       static const data_id_t kGyroY;
       static const data_id_t kGyroZ;
    public:
-      static const IMUSpeed k0;
-      static const IMUSpeed k2400;
-      //static const IMUSpeed k3600;
-      static const IMUSpeed k4800;
-      //static const IMUSpeed k7200;
-      static const IMUSpeed k9600;
-      //static const IMUSpeed k14400;
-      static const IMUSpeed k19200;
-      //static const IMUSpeed k28800;
-      static const IMUSpeed k38400;
-      static const IMUSpeed k57600;
-      static const IMUSpeed k115200;
+      static constexpr IMUSpeed k0        = {0,    B0};
+      static constexpr IMUSpeed k2400     = {4,    B2400};
+      static constexpr IMUSpeed k4800     = {6,    B4800};
+      static constexpr IMUSpeed k9600     = {8,    B9600};
+      static constexpr IMUSpeed k19200    = {10,   B19200};
+      static constexpr IMUSpeed k38400    = {12,   B38400};
+      static constexpr IMUSpeed k57600    = {13,   B57600};
+      static constexpr IMUSpeed k115200   = {14,   B115200};
    private:
       static const FIRFilter kFilterID;
       static const RawDataFields dataConfig;

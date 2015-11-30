@@ -1,19 +1,17 @@
-#ifndef IMU_TYPES_H
-#define IMU_TYPES_H
+#ifndef TRAX_TYPES_H
+#define TRAX_TYPES_H
 
-/*
+/******************************************************************************
  * IMUTypes.h - IMU internal data types
  *
  * Copyright (C) 2015 Robotics at Maryland
- * Copyright (C) 2015 Greg Harris <gharris172@gmail.com>
+ * Copyright (C) 2015 Greg Harris <gharris1727@gmail.com>
+ *
  * All rights reserved.
- * 
- */
+ ******************************************************************************/
 
 // uintX_t types and such
 #include <stdint.h>
-// speed_t type
-#include <termios.h>
 
 /**
  * All of the following types will be assembled as-is, with no padding. 
@@ -21,43 +19,10 @@
  */
 #pragma pack(push,1)
 
-/**
- * PROTOCOL TYPES
- * These are types used in the actual protocol definition
- * Used for clarity in low-level code.
- */
-
-typedef uint16_t bytecount_t;
-
-typedef uint16_t checksum_t;
-
-typedef uint8_t frameid_t;
-
-typedef uint8_t config_id_t;
-
-typedef uint8_t data_id_t;
-
-/**
- * ABSTRACTION TYPES
- * Data type storing static protocol information about the different packet types.
- */
-typedef struct _Command
-{
-   frameid_t id;
-   bytecount_t payload_size;
-} Command;
-
-typedef struct _IMUSpeed
-{
-   uint8_t id;
-   speed_t baud;
-} IMUSpeed;
-
-/**
+/******************************************************************************
  * HARDCODED PAYLOAD TYPES:
- * Please dont change any of these unless the spec changes, or there is a bug.
  * These should be exactly out of the specification file.
- */
+ ******************************************************************************/
 
 #define EMPTY 0
 
@@ -65,6 +30,8 @@ typedef struct _ModInfo {
    char type[4];
    uint8_t rev[4];
 } ModInfo;
+
+typedef uint8_t config_id_t;
 
 typedef struct _ConfigBoolean {
    config_id_t id;
