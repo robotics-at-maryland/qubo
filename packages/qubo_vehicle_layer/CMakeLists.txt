@@ -5,6 +5,7 @@ project(qubo_vehicle_layer)
 # Catkin Setup ###############
 ##############################
 
+
 find_package(catkin 
     REQUIRED COMPONENTS
    # qubo_vehicle_layer
@@ -17,27 +18,50 @@ catkin_package(
     CATKIN_DEPENDS roscpp
 )
 
+
 ##############################
 # File List ##################
 ##############################
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+  include 
+  depth_sensor/include
+  dvl/include
+  imu/include)
 
-set(SRC_FILES
-    src/vehicle_layer.cpp
-    )
+set(DEPTH_SRC_FILES
+  depth_sensor/src/main.cpp
+  depth_sensor/src/depth_sensor_sim.cpp
+  )
+
+set(DVL_SRC_FILES
+  dvl/src/main.cpp
+  dvl/src/dvl_sim.cpp
+  )
+
+set(IMU_SRC_FILES
+  imu/src/main.cpp
+  imu/src/imu_sim.cpp
+  )
     
 set(TEST_FILES
- 
+  
     )
-
 
 ##############################
 # Add Executables ############
 ##############################
 
-add_executable(vehicle_layer src/vehicle_layer.cpp)
-target_link_libraries(vehicle_layer ${catkin_LIBRARIES})
+
+add_executable(depth_node ${DEPTH_SRC_FILES}) 
+target_link_libraries(depth_node ${catkin_LIBRARIES})
+
+add_executable(dvl_node ${DVL_SRC_FILES})
+target_link_libraries(dvl_node ${catkin_LIBRARIES})
+
+add_executable(imu_node ${IMU_SRC_FILES})
+target_link_libraries(imu_node ${catkin_LIBRARIES})
   
 
 ##############################
