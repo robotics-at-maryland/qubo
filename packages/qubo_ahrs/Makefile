@@ -15,27 +15,27 @@ debug: CXXFLAGS += -DDEBUG
 
 debug: all
 
-all: bin/IMU.o bin/config bin/baudrate
+all: bin bin/IMU.o bin/config bin/baudrate
 
-test: bin/test
+test: all bin/test
 	./bin/test /dev/ttyUSB0 115200
 
 bin:
 	mkdir bin
 
-bin/IMU.o: src/IMU.cpp $(HEADS) bin
+bin/IMU.o: src/IMU.cpp $(HEADS)
 	$(CXX) $(CXXFLAGS) -o $@ $< -c 
 
-bin/util.o: src/util.cpp include/util.h $(HEADS) bin
+bin/util.o: src/util.cpp include/util.h $(HEADS)
 	$(CXX) $(CXXFLAGS) -o $@ $< -c
 
-bin/config: src/config.cpp $(OBJS) bin
+bin/config: src/config.cpp $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(OBJS)
 
-bin/baudrate: src/baudrate.cpp $(OBJS) bin
+bin/baudrate: src/baudrate.cpp $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(OBJS)
 
-bin/test: src/test.cpp $(OBJS) bin
+bin/test: src/test.cpp $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(OBJS)
 
 clean:
