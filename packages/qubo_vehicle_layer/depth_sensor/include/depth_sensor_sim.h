@@ -1,3 +1,13 @@
+//! This is the simulated version of our depth sensor
+
+
+/** Nothing too fancy going on here, we just subscribe to uwsims "pressure" (which uwsim implements by 
+ *  just taking the depth and adding some noise)
+ *  and publishing that to a topic. 
+ **/
+
+
+
 #ifndef DEPTHSIM_HEADER //I don't really see anybody needing to inherit this class, but better safe than sorry. 
 #define DEPTHSIM_HEADER
 
