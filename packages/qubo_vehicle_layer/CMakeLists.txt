@@ -23,8 +23,9 @@ catkin_package(
 # File List ##################
 ##############################
 
-include_directories(include 
+include_directories(
   ${catkin_INCLUDE_DIRS}
+  include 
   depth_sensor/include
   dvl/include
   imu/include)
