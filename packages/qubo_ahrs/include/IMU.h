@@ -340,8 +340,8 @@ class IMU
       speed_t _termBaud;
       /** Serial port for I/O with the AHRS */
       int _deviceFD;
-      /** Timeout (usec) on read/write */
-      int _timeout;
+      /** Timeout (sec,usec) on read/write */
+      struct timeval _timeout;
       /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
 

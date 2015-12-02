@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
          params = imu->getAcqParams();
 
          printf("IMU Configuration data:\n");
-         printf("Aqusition mode:    %d\n", params.aquisition_mode);
+         printf("Acqusition mode:   %d\n", params.aquisition_mode);
          printf("Flush Filter:      %d\n", params.flush_filter);
          printf("Sample delay:      %f\n", params.sample_delay);
          printf("Mag Truth Method:  %d\n", imu->getMagTruthMethod());
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
          printf("Baudrate:          %d\n", imu->getBaudrate().baud);
          printf("True north?        %d\n", imu->getTrueNorth());
          printf("Big endian?        %d\n", imu->getBigEndian());
-         printf("Auto sapling?      %d\n", imu->getAutoCalibration());
+         printf("Auto sampling?     %d\n", imu->getAutoCalibration());
          printf("Mils/Degrees?      %d\n", imu->getMils());
          printf("HPR During Cal?    %d\n", imu->getHPRCal());
          imu->closeDevice();
