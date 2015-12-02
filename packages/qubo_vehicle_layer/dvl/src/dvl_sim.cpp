@@ -2,8 +2,8 @@
 
 DVLSimNode::DVLSimNode(int argc, char **argv, int rate){
   ros::Rate  loop_rate(rate);
-  subscriber = n.subscribe("/g500/dvl", 1000, &DVLSimNode::dvlCallBack,this);
-  publisher = n.advertise< underwater_sensor_msgs::DVL>("qubo/dvl", 1000);
+  subscriber = n.subscribe("/g500/dvl", 1000, &DVLSimNode::dvlCallBack, this);
+  publisher = n.advertise<underwater_sensor_msgs::DVL>("qubo/dvl", 1000);
   
 };
 
