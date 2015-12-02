@@ -60,7 +60,7 @@ add_executable(dvl_node ${DVL_SRC_FILES})
 target_link_libraries(dvl_node ${catkin_LIBRARIES})
 
 add_executable(imu_node ${IMU_SRC_FILES})
-target_link_libraries(imu_node ${catking_LIBRARIES})
+target_link_libraries(imu_node ${catkin_LIBRARIES})
   
 
 ##############################

@@ -17,6 +17,11 @@ void ImuSimNode::publish(){
 }
 
 void ImuSimNode::imuCallBack(const sensor_msgs::Imu sim_msg){
+	msg.header = sim_msg.header;
+	msg.orientation = sim_msg.orientation;
+	msg.orientation_covariance = sim_msg.orientation_covariance;
 	msg.angular_velocity = sim_msg.angular_velocity;
+	msg.linear_acceleration = sim_msg.linear_acceleration;
+	msg.linear_acceleration_covariance = sim_msg.linear_acceleration_covariance;
 	//this doesn't exist, I need to find what the actual msg is
 }

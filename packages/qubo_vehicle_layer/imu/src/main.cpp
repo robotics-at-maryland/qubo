@@ -1,5 +1,6 @@
 #include "imu_sim.h"
 
+
 int main(int argc, char **argv){
 
   ros::init(argc, argv, "imu_node"); //basically always needs to be called first
