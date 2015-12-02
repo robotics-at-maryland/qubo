@@ -90,63 +90,54 @@ void IMU::closeDevice() {
 
 std::string IMU::getInfo() {
    ModInfo info;
-   assertOpen();
    sendCommand(kGetModInfo, NULL, kGetModInfoResp, &info);
    return std::string(((char*) &info), sizeof(ModInfo));
 }
 
 void IMU::setDeclination(float decl) {
    ConfigFloat32 data = {kDeclination, decl};
-   assertOpen();
    sendCommand(kSetConfigFloat32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 float IMU::getDeclination() {
    ConfigFloat32 data;
-   assertOpen();
    sendCommand(kGetConfig, &kDeclination, kGetConfigRespFloat32, &data);
    return data.value;
 }
 
 void IMU::setTrueNorth(bool north) {
    ConfigBoolean data = {kTrueNorth, north};
-   assertOpen();
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 bool IMU::getTrueNorth() {
    ConfigBoolean data;
-   assertOpen();
    sendCommand(kGetConfig, &kTrueNorth, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
 void IMU::setBigEndian(bool endian) {
    ConfigBoolean data = {kBigEndian, endian};
-   assertOpen();
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 bool IMU::getBigEndian() {
    ConfigBoolean data;
-   assertOpen();
    sendCommand(kGetConfig, &kBigEndian, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
 void IMU::setMounting(MountRef mount) {
    ConfigUInt8 data = {kMountingRef, mount};
-   assertOpen();
    sendCommand(kSetConfigUInt8, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 MountRef IMU::getMounting() {
    ConfigUInt8 data;
-   assertOpen();
    sendCommand(kGetConfig, &kMountingRef, kGetConfigRespUInt8, &data);
    switch(data.id) {
       case STD_0:       return STD_0;
@@ -172,28 +163,24 @@ MountRef IMU::getMounting() {
 
 void IMU::setCalPoints(unsigned int points) {
    ConfigUInt32 data = {kUserCalNumPoints, points};
-   assertOpen();
    sendCommand(kSetConfigUInt32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 unsigned int IMU::getCalPoints() {
    ConfigUInt32 data;
-   assertOpen();
    sendCommand(kGetConfig, &kUserCalNumPoints, kGetConfigRespUInt32, &data);
    return data.value;
 }
 
 void IMU::setAutoCalibration(bool cal) {
    ConfigBoolean data = {kUserCalAutoSampling, cal};
-   assertOpen();
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 bool IMU::getAutoCalibration() {
    ConfigBoolean data;
-   assertOpen();
    sendCommand(kGetConfig, &kUserCalAutoSampling, kGetConfigRespBoolean, &data);
    return data.value;
 }
@@ -201,14 +188,12 @@ bool IMU::getAutoCalibration() {
 void IMU::setBaudrate(IMUSpeed speed)
 {
    ConfigUInt8 data = {kBaudRate, speed.id};
-   assertOpen();
    sendCommand(kSetConfigUInt8, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 IMUSpeed IMU::getBaudrate() {
    ConfigUInt8 data;
-   assertOpen();
    sendCommand(kGetConfig, &kBaudRate, kGetConfigRespUInt8, &data);
    switch (data.value) {
       case k0.id:       return k0;
@@ -226,42 +211,36 @@ IMUSpeed IMU::getBaudrate() {
 
 void IMU::setMils(bool mils) {
    ConfigBoolean data = {kMilOut, mils};
-   assertOpen();
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 bool IMU::getMils() {
    ConfigBoolean data;
-   assertOpen();
    sendCommand(kGetConfig, &kMilOut, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
 void IMU::setHPRCal(bool hpr) {
    ConfigBoolean data = {kHPRDuringCal, hpr};
-   assertOpen();
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 bool IMU::getHPRCal() {
    ConfigBoolean data;
-   assertOpen();
    sendCommand(kGetConfig, &kHPRDuringCal, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
 void IMU::setMagCalID(CalibrationID id) {
    ConfigUInt32 data = {kMagCoeffSet, id};
-   assertOpen();
    sendCommand(kSetConfigUInt32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 CalibrationID IMU::getMagCalID() {
    ConfigUInt32 data;
-   assertOpen();
    sendCommand(kGetConfig, &kMagCoeffSet, kGetConfigRespUInt32, &data);
    switch(data.value) {
       case CAL_0: return CAL_0;
@@ -279,14 +258,12 @@ CalibrationID IMU::getMagCalID() {
 
 void IMU::setAccelCalID(CalibrationID id) {
    ConfigUInt32 data = {kAccelCoeffSet, id};
-   assertOpen();
    sendCommand(kSetConfigUInt32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
 CalibrationID IMU::getAccelCalID() {
    ConfigUInt32 data;
-   assertOpen();
    sendCommand(kGetConfig, &kAccelCoeffSet, kGetConfigRespUInt32, &data);
    switch(data.value) {
       case CAL_0: return CAL_0;
@@ -303,14 +280,12 @@ CalibrationID IMU::getAccelCalID() {
 }
 
 void IMU::setMagTruthMethod(TruthMethod method) {
-   assertOpen();
    writeCommand(kSetMagTruthMethod, &method);
    saveConfig();
 }
 
 TruthMethod IMU::getMagTruthMethod() {
    MagTruthMethod data;
-   assertOpen();
    sendCommand(kGetMagTruthMethod, NULL, kGetMagTruthMethodResp, &data);
    switch(data) {
       case STANDARD: return STANDARD;
@@ -323,14 +298,12 @@ TruthMethod IMU::getMagTruthMethod() {
 
 void IMU::saveConfig() {
    SaveError err;
-   assertOpen();
    sendCommand(kSave, NULL, kSaveDone, &err);
    if (err) 
       throw IMUException("Error while saving configuration to nonvolatile memory.");
 }
 
 void IMU::resetMagReference() {
-   assertOpen();
    writeCommand(kSetResetRef, NULL);
 }
 
@@ -355,7 +328,6 @@ void IMU::sendIMUDataFormat()
 IMUData IMU::pollIMUData()
 {
    RawData data;
-   assertOpen();
    // Poll the IMU for a data message.
    sendCommand(kGetData, NULL, kGetDataResp, &data);
    // Copy all the data to the actual IMU storage.
@@ -376,63 +348,53 @@ IMUData IMU::pollIMUData()
 }
 
 void IMU::startCalibration(CalType type) {
-   assertOpen();
    writeCommand(kStartCal, &type);
 }
 
 void IMU::stopCalibration() {
-   assertOpen();
    writeCommand(kStopCal, NULL);
 }
 
 int IMU::takeCalibrationPoint() {
    SampleCount point;
-   assertOpen();
    sendCommand(kTakeUserCalSample, NULL, kUserCalSampleCount, &point);
    return point;
 }
 
 UserCalScore IMU::getCalibrationScore() {
    UserCalScore score;
-   assertOpen();
    readCommand(kUserCalScore, &score);
    saveConfig();
    return score;
 }
 
 void IMU::resetMagCalibration() {
-   assertOpen();
    sendCommand(kFactoryMagCoeff, NULL, kFactoryMagCoeffDone, NULL);
    saveConfig();
 }
 
 void IMU::resetAccelCalibration() {
-   assertOpen();
    sendCommand(kFactoryAccelCoeff, NULL, kFactoryAccelCoeffDone, NULL);
    saveConfig();
 }
 
 void IMU::setAHRSMode(bool mode) {
-   assertOpen();
    writeCommand(kSetFunctionalMode, &mode);
    saveConfig();
 }
 
 bool IMU::getAHRSMode() {
    bool mode;
-   assertOpen();
    sendCommand(kGetFunctionalMode, NULL, kGetFunctionalModeResp, &mode);
    return mode;
 }
 
 void IMU::powerDown() {
-   assertOpen();
    sendCommand(kPowerDown, NULL, kPowerDownDone, NULL);
 }
 
 void IMU::wakeUp() {
    bool mode;
-   assertOpen();
    writeCommand(kGetFunctionalMode, NULL);
    readCommand(kPowerUpDone, NULL);
    readCommand(kGetFunctionalMode, &mode);
@@ -450,6 +412,8 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
    fd_set read_fds, write_fds, except_fds;
    // Timeout in the form of {sec, usec}, for use with select(2).
    struct timeval timeout = _timeout;
+   // Ensure the device is avaliable and open.
+   assertOpen();
    // Check if we need to read data at all.
    if (bytes_to_read > 0) {
       do {
@@ -488,6 +452,8 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
    fd_set read_fds, write_fds, except_fds;
    // Timeout in the form of {sec, usec}, for use with select(2).
    struct timeval timeout = _timeout;
+   // Ensure the device is avaliable and open.
+   assertOpen();
    // Check if we need to write data at all.
    if (bytes_to_write > 0) {
       do {
