@@ -449,7 +449,7 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
    // Sets of file descriptors for use with select(2).
    fd_set read_fds, write_fds, except_fds;
    // Timeout in the form of {sec, usec}, for use with select(2).
-   struct timeval timeout = {0, _timeout};
+   struct timeval timeout = {1, _timeout};
    // Check if we need to read data at all.
    if (bytes_to_read > 0) {
       do {
