@@ -3,7 +3,7 @@
  * IMU Device API implementation.
  *
  * Copyright (C) 2015 Robotics at Maryland
- * Copyright (C) 2015 Greg Harris <gharris172@gmail.com>
+ * Copyright (C) 2015 Greg Harris <gharris1727@gmail.com>
  * All rights reserved.
  * 
  * Adapted from earlier work of Steve Moskovchenko and Joseph Lisee (2007)
@@ -25,6 +25,7 @@
 
 // Header include
 #include "../include/IMU.h"
+#include "../include/TRAX_Types.h"
 
    IMU::IMU(std::string deviceFile, IMUSpeed speed) 
 : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({1,0})
@@ -307,15 +308,18 @@ void IMU::resetMagReference() {
    writeCommand(kSetResetRef, NULL);
 }
 
-void IMU::setAcqParams(AcqParams params) {
+void IMU::setAcqConfig(AcqConfig config) {
+   AcqParams params = {config.poll_mode, config.flush_filter, 0, config.sample_delay};
    sendCommand(kSetAcqParams, &params, kSetAcqParamsDone, NULL);
    saveConfig();
 }
 
-AcqParams IMU::getAcqParams() {
+AcqConfig IMU::getAcqConfig() {
    AcqParams params;
    sendCommand(kGetAcqParams, NULL, kGetAcqParamsResp, &params);
-   return params;
+   return { params.sample_delay,
+            ((params.flush_filter) ? true : false), 
+            ((params.aquisition_mode) ? true : false)};
 }
 
 void IMU::sendIMUDataFormat()
@@ -361,11 +365,15 @@ int IMU::takeCalibrationPoint() {
    return point;
 }
 
-UserCalScore IMU::getCalibrationScore() {
+CalScore IMU::getCalibrationScore() {
    UserCalScore score;
    readCommand(kUserCalScore, &score);
    saveConfig();
-   return score;
+   return { score.mag_cal_score, 
+            score.accel_cal_score, 
+            score.distribution_error, 
+            score.tilt_error, 
+            score.tilt_range};
 }
 
 void IMU::resetMagCalibration() {
@@ -389,6 +397,44 @@ bool IMU::getAHRSMode() {
    return mode;
 }
 
+void IMU::setFIRFilters(FilterData data) {
+   FIRFilter filter_id = {3,1};
+   switch (data.count) {
+      case F_0: {
+         FIRTaps_Zero zero = {filter_id, F_0};
+         sendCommand(kSetFIRFiltersZero, &zero, kSetFIRFiltersDone, NULL);
+         break; }
+      case F_4: {
+         FIRTaps_Four four = {filter_id, F_4};
+         if (!memcpy(&(four.taps),data.coeffs.get(), F_4*sizeof(double)))
+            throw IMUException("Could not copy FIR coefficient array.");
+         sendCommand(kSetFIRFiltersFour, &four, kSetFIRFiltersDone, NULL);
+         break; }
+      case F_8: {
+         FIRTaps_Eight eight = {filter_id, F_8};
+         if (!memcpy(&(eight.taps),data.coeffs.get(), F_8*sizeof(double)))
+            throw IMUException("Could not copy FIR coefficient array.");
+         sendCommand(kSetFIRFiltersEight, &eight, kSetFIRFiltersDone, NULL);
+         break; }
+      case F_16: {
+         FIRTaps_Sixteen sixteen = {filter_id, F_16};
+         if (!memcpy(&(sixteen.taps),data.coeffs.get(), F_16*sizeof(double)))
+            throw IMUException("Could not copy FIR coefficient array.");
+         sendCommand(kSetFIRFiltersSixteen, &sixteen, kSetFIRFiltersDone, NULL);
+         break; }
+      case F_32: {
+         FIRTaps_ThirtyTwo thirtytwo = {filter_id, F_32};
+         if (!memcpy(&(thirtytwo.taps),data.coeffs.get(), F_32*sizeof(double)))
+            throw IMUException("Could not copy FIR coefficient array.");
+         sendCommand(kSetFIRFiltersThirtyTwo, &thirtytwo, kSetFIRFiltersDone, NULL);
+         break; }
+   }
+}
+
+FilterData IMU::getFIRFilters() {
+   throw IMUException("NOT IMPLEMENTED SORRY");
+}
+
 void IMU::powerDown() {
    sendCommand(kPowerDown, NULL, kPowerDownDone, NULL);
 }
@@ -404,7 +450,7 @@ void IMU::wakeUp() {
  * Reads raw data from the serial port.
  * @return number of bytes not read
  */
-int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
+int IMU::readRaw(void* blob, uint16_t bytes_to_read)
 {  
    // Keep track of the number of bytes read, and the number of fds that are ready.
    int bytes_read = 0, current_read = 0, fds_ready = 0;
@@ -426,7 +472,7 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
          fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
          if (fds_ready == 1) {
             // The filedescriptor is ready to read.
-            current_read = read(_deviceFD, (blob + bytes_read), 
+            current_read = read(_deviceFD, (((char*)blob) + bytes_read), 
                   (bytes_to_read - bytes_read));
             // If the read was successful, record the number of bytes read.
             if (current_read > 0) {
@@ -444,7 +490,7 @@ int IMU::readRaw(uint8_t* blob, uint16_t bytes_to_read)
  * Write raw data to the serial port.
  * @return number of bytes not written.
  */
-int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
+int IMU::writeRaw(void* blob, uint16_t bytes_to_write)
 {
    // Keep track of the number of bytes written, and the number of fds that are ready.
    int bytes_written = 0, current_write = 0, fds_ready = 0;
@@ -466,7 +512,7 @@ int IMU::writeRaw(uint8_t* blob, uint16_t bytes_to_write)
          fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
          if (fds_ready == 1) {
             // The filedescriptor is ready to write.
-            current_write = write(_deviceFD, (blob + bytes_written), 
+            current_write = write(_deviceFD, (((char*)blob) + bytes_written), 
                   (bytes_to_write - bytes_written));
             // If the write was successful, record the number of bytes written.
             if (current_write > 0) {
@@ -564,18 +610,22 @@ void IMU::readCommand(Command cmd, void* target)
 #endif
    // Temporary storage for the data read from the datagram.
    uint8_t datagram[BUF_SIZE];
+   // Pointer to the bytecount
+   bytecount_t *bytecount_p = reinterpret_cast<bytecount_t*>(datagram);
    // Pointer to the start of the frame
-   uint8_t *frame = datagram + sizeof(bytecount_t);
+   uint8_t *frame_p = datagram + sizeof(bytecount_t);
+   // Pointer to the checksum at the end of the datagram.
+   checksum_t *checksum_p = NULL;
    // Some storage for data pulled out of the datagram.
    bytecount_t total_size, checksum_size, frame_size;
    // Storage for the expected checksum.
    checksum_t checksum;
 
    // Read in the header of the datagram packet: UInt16.
-   if (readRaw(datagram, sizeof(bytecount_t)))
+   if (readRaw(bytecount_p, sizeof(bytecount_t)))
       throw IMUException("Unable to read bytecount of incoming packet.");
    // Calculate the number of bytes to read from the header.
-   total_size = *((bytecount_t*) datagram);
+   total_size = *bytecount_p;
    // Convert from big-endian to little-endian.
    total_size = ENDIAN16(total_size);
    // Do not include the checksum in the checksum
@@ -584,22 +634,22 @@ void IMU::readCommand(Command cmd, void* target)
    frame_size = checksum_size - sizeof(bytecount_t);
 
    // Read in the actual data frame + checksum
-   if (readRaw(frame, frame_size + sizeof(checksum_t)))
+   if (readRaw(frame_p, frame_size + sizeof(checksum_t)))
       throw IMUException("Unable to read body of incoming packet");
-   // Pull out the sent checksum
-   checksum = *((checksum_t*)(frame + frame_size));
-   // Convert from big-endian to little-endian.
-   checksum = ENDIAN16(checksum);
+   // Find the position of the checksum
+   checksum_p = reinterpret_cast<checksum_t*>(frame_p + frame_size);
+   // Pull out the sent checksum and convert from big-endian to little-endian.
+   checksum = ENDIAN16(*checksum_p);
 
    // Validate the existing checksum
    if (crc16(datagram, checksum_size) != checksum)
       throw IMUException("Incoming packet checksum invalid.");
    //Identify that the message recieved matches what was expected.
-   if (*frame != cmd.id)
+   if (*frame_p != cmd.id)
       throw IMUException("Incoming packet frameid unexpected.");
 
    // Copy the data into the given buffer.
-   memcpy(target, frame + sizeof(frameid_t), cmd.payload_size);
+   memcpy(target, frame_p + sizeof(frameid_t), cmd.payload_size);
 }
 
 #undef BUF_SIZE
@@ -693,7 +743,6 @@ const data_id_t IMU::kGyroX                     = 0x4a;
 const data_id_t IMU::kGyroY                     = 0x4b;
 const data_id_t IMU::kGyroZ                     = 0x4c;
 
-const FIRFilter IMU::kFilterID                  = {3,1};
 const RawDataFields IMU::dataConfig             = {
    10, kQuaternion, kGyroX, kGyroY, kGyroZ,
    kAccelX, kAccelY, kAccelZ, kMagX, kMagY, kMagZ};

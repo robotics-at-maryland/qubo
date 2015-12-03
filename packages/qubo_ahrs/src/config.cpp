@@ -9,18 +9,18 @@ int main(int argc, char *argv[])
    if (argc == 3) {
       try {
          IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
-         AcqParams params;
+         AcqConfig config;
 
          imu->openDevice();
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
 
          imu->sendIMUDataFormat();
-         params = imu->getAcqParams();
+         config = imu->getAcqConfig();
 
          printf("IMU Configuration data:\n");
-         printf("Acqusition mode:   %d\n", params.aquisition_mode);
-         printf("Flush Filter:      %d\n", params.flush_filter);
-         printf("Sample delay:      %f\n", params.sample_delay);
+         printf("Acqusition mode:   %d\n", config.poll_mode);
+         printf("Flush Filter:      %d\n", config.flush_filter);
+         printf("Sample delay:      %f\n", config.sample_delay);
          printf("Mag Truth Method:  %d\n", imu->getMagTruthMethod());
          printf("Functional mode:   %d\n", imu->getAHRSMode());
          printf("Declination:       %f\n", imu->getDeclination());

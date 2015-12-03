@@ -25,7 +25,6 @@
 #include <stdexcept>
 
 #include "API_Types.h"
-#include "TRAX_Types.h"
 
 /**
  * Exception class for handling IO/Data integrity errors.
@@ -268,16 +267,16 @@ class IMU
       void resetMagReference();
 
       /**
-       * Set Aquisition Parameters.
+       * Set Aquisition Configuration
        * @param (AcqParams)
        */
-      void setAcqParams(AcqParams params);
+      void setAcqConfig(AcqConfig config);
 
       /**
        * Get Aquisition Parameters.
        * @return (AcqParams)
        */
-      AcqParams getAcqParams();
+      AcqConfig getAcqConfig();
 
       /** Send the data poll format to the IMU. */
       void sendIMUDataFormat();
@@ -304,10 +303,10 @@ class IMU
       int takeCalibrationPoint();
 
       /**
-       * Get User Calibration Score.
-       * @return (UserCalScore)
+       * Get the calibration score for the calibration just completed.
+       * @return (CalScore)
        */
-      UserCalScore getCalibrationScore();
+      CalScore getCalibrationScore();
 
       /** Reset the magnetometer to factory calibration settings. */
       void resetMagCalibration();
@@ -326,6 +325,18 @@ class IMU
        * @param (bool) true for AHRS, false for Compass.
        */
       bool getAHRSMode();
+
+      /**
+       * Set the Finite-Impuse-Response filters coefficient array.
+       * @param (FilterData) filter configuration
+       */
+      void setFIRFilters(FilterData filters);
+
+      /**
+       * Get the Finite-Impuse-Response filters coefficient array.
+       * @return (FilterData) filter configuration
+       */
+      FilterData getFIRFilters();
 
       /** Power down the device to conserve power. */
       void powerDown();
@@ -346,8 +357,8 @@ class IMU
       IMUData _lastReading;
 
       /** Low-level internal I/O functions */
-      int readRaw(uint8_t* blob, uint16_t bytes_to_read);
-      int writeRaw(uint8_t* blob, uint16_t bytes_to_write);
+      int readRaw(void* blob, uint16_t bytes_to_read);
+      int writeRaw(void* blob, uint16_t bytes_to_write);
 
       /** Mid-level I/O functionality using the protocol definitions. */
       void writeCommand(Command cmd, const void* payload);
@@ -450,7 +461,6 @@ class IMU
       static constexpr IMUSpeed k57600    = {13,   B57600};
       static constexpr IMUSpeed k115200   = {14,   B115200};
    private:
-      static const FIRFilter kFilterID;
       static const RawDataFields dataConfig;
 
 };

@@ -14,6 +14,8 @@
 #include <stdint.h>
 // speed_t type
 #include <termios.h>
+// std::smart_ptr
+#include <memory>
 
 /**
  * All of the following types will be assembled as-is, with no padding. 
@@ -29,6 +31,8 @@
 typedef uint8_t frameid_t;
 typedef uint16_t bytecount_t;
 typedef uint16_t checksum_t;
+
+typedef uint8_t config_id_t;
 
 /** Specification of a command defined in the PNI binary protocol. */
 typedef struct _Command
@@ -123,6 +127,58 @@ typedef struct _IMUData
    float magY;
    float magZ;
 } IMUData;
+
+/******************************************************************************
+ * API STRUCT TYPES
+ * These types are structs that abstract between 
+ * the API and the underlying protocol.
+ ******************************************************************************/
+
+/*
+ * Struct for configuring the data aquisitions.
+ */
+typedef struct _AcqConfig
+{
+   /** Delay between samples while in continous mode. */
+   float sample_delay;
+   /** true will flush the collected data every time a reading is taken. */
+   bool flush_filter;
+   /** true for polling aquisition, false for continuous */
+   bool poll_mode;
+} AcqConfig;
+
+/*
+ * Struct containing calibration report data.
+ */
+typedef struct _CalScore
+{
+/** Magnetometer score (smaller is better, <2 is best). */
+  float mag_score;
+  /** Accelerometer score (smaller is better, <1 is best) */
+  float accel_score;
+  /** Distribution quality (should be 0) */
+  float dist_error;
+  /** Tilt angle quality (should be 0) */
+  float tilt_error;
+  /** Range of tilt angle (larger is better) */
+  float tilt_range;
+} CalScore;
+
+typedef enum _FilterCount
+{
+   F_0   = 0,
+   F_4   = 4,
+   F_8   = 8,
+   F_16  = 16,
+   F_32  = 32
+} FilterCount;
+
+typedef struct _FilterData
+{
+   FilterCount count;
+   std::shared_ptr<double> coeffs;
+} FilterData;
+   
 
 /******************************************************************************
  * ENUMERATED TYPES

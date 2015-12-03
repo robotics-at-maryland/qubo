@@ -31,8 +31,6 @@ typedef struct _ModInfo {
    uint8_t rev[4];
 } ModInfo;
 
-typedef uint8_t config_id_t;
-
 typedef struct _ConfigBoolean {
    config_id_t id;
    bool value;
@@ -90,22 +88,26 @@ typedef struct _FIRTaps_Zero {
 } FIRTaps_Zero;
 
 typedef struct _FIRTaps_Four {
-   FIRTaps_Zero FIRTaps;
+   FIRFilter filter_id;
+   uint8_t count;
    double taps[4];
 } FIRTaps_Four;
 
 typedef struct _FIRTaps_Eight {
-   FIRTaps_Zero FIRTaps;
+   FIRFilter filter_id;
+   uint8_t count;
    double taps[8];
 } FIRTaps_Eight;
 
 typedef struct _FIRTaps_Sixteen {
-   FIRTaps_Zero FIRTaps;
+   FIRFilter filter_id;
+   uint8_t count;
    double taps[16];
 } FIRTaps_Sixteen;
 
 typedef struct _FIRTaps_ThirtyTwo {
-   FIRTaps_Zero FIRTaps;
+   FIRFilter filter_id;
+   uint8_t count;
    double taps[32];
 } FIRTaps_ThirtyTwo;
 
