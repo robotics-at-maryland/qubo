@@ -666,22 +666,25 @@ class IMU
       /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
 
-      /** Low-level internal I/O functions */
+      /** Read bytes to a blob, return the bytes not read. */
       int readRaw(void* blob, uint16_t bytes_to_read);
+      /** Write bytes from a blob, return the bytes not written. */
       int writeRaw(void* blob, uint16_t bytes_to_write);
-      /** Checksum functionality */
-      uint16_t crc_xmodem_update (uint16_t crc, uint8_t data);
+      /** Checksum function to compute binary CRC16s. */
       checksum_t crc16(uint8_t* data, bytecount_t bytes);
+      /** Checksum helper function. */
+      uint16_t crc_xmodem_update (uint16_t crc, uint8_t data);
 
-
-      /** Mid-level I/O functionality using the protocol definitions. */
+      /** Infer the command based on the frameid and bytes read. */
       Command inferCommand(Command hint, frameid_t id, bytecount_t size);
+      /** Read a data packet and figure out the command. */
       Command readFrame(Command hint, void* blob);
-
+      /** Write a command with a payload to the device. */
       void writeCommand(Command cmd, const void* payload);
+      /** Read a command and its payload from the device. */
       void readCommand(Command cmd, void* target);
+      /** Send a command and wait for a response. */
       void sendCommand(Command cmd, const void* payload, Command resp, void* target);
-      void printCommand(Command cmd);
    private:
 #define EMPTY 0
       /*****************************************************************************************************************
