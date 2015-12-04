@@ -7,8 +7,9 @@ project(ram_msgs)
 
 find_package(
     catkin REQUIRED COMPONENTS 
-    message_generation
     std_msgs
+    sensor_msgs
+    message_generation
 )
 
 ##############################
@@ -27,6 +28,8 @@ add_message_files(
 
     # New messages added in 2015
     PowerSource.msg
+    Sim_Temperature.msg
+    Sim_Led.msg
 )
 
 generate_messages(
