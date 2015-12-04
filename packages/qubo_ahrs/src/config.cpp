@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
    if (argc == 3) {
       try {
          IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
-         AcqConfig config;
+         IMU::AcqConfig config;
 
          imu->openDevice();
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
          printf("Mils/Degrees?      %d\n", imu->getMils());
          printf("HPR During Cal?    %d\n", imu->getHPRCal());
          imu->closeDevice();
+         exit(0);
       }
       catch (std::exception& e)
       {

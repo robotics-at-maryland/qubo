@@ -31,8 +31,7 @@ int main(int argc, char *argv[])
          imu->closeDevice();
          // Tell the user of the result.
          fprintf(stderr, "Changed speed successfully.\n");
-         return 0;
-
+         exit(0);
       } catch (std::exception& e) {
          printError(e);
       }

@@ -12,7 +12,7 @@ void printUsage()
    exit(EX_USAGE);
 }
 
-IMUSpeed getBaudrate(const char* arg)
+IMU::IMUSpeed getBaudrate(const char* arg)
 {
    switch (atoi(arg))
    {

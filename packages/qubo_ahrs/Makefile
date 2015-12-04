@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -pedantic
-HEADS = include/IMU.h include/API_Types.h include/TRAX_Types.h
+HEADS = include/IMU.h
 OBJS = bin/IMU.o bin/util.o
 
 .PHONY: all debug test clean

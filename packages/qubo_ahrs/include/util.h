@@ -10,7 +10,7 @@
 void printUsage();
 
 /** Converts a string into an IMUSpeed */
-IMUSpeed getBaudrate(const char*);
+IMU::IMUSpeed getBaudrate(const char*);
 
 /** Prints an exception and kills the program. */
 void printError(std::exception& e);

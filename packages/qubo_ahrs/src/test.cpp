@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
       IMU *imu;
       try {
          imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
-         IMUData data;
+         IMU::IMUData data;
          clock_t curr, last;
          double hz;
          imu->openDevice();
