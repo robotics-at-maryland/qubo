@@ -28,7 +28,9 @@ include_directories(
   include 
   depth_sensor/include
   dvl/include
-  imu/include)
+  imu/include
+  power_source/include
+  )
 
 set(DEPTH_SRC_FILES
   depth_sensor/src/main.cpp
@@ -44,7 +46,12 @@ set(IMU_SRC_FILES
   imu/src/main.cpp
   imu/src/imu_sim.cpp
   )
-    
+
+set(POWER_SRC_FILES
+  power_source/src/main.cpp
+  power_source/src/power_sensor_sim.cpp
+  )
+
 set(TEST_FILES
   
     )
@@ -63,6 +70,8 @@ target_link_libraries(dvl_node ${catkin_LIBRARIES})
 add_executable(imu_node ${IMU_SRC_FILES})
 target_link_libraries(imu_node ${catkin_LIBRARIES})
   
+add_executable(power_node ${POWER_SRC_FILES})
+target_link_libraries(power_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################

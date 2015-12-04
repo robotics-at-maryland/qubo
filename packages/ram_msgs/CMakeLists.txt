@@ -7,7 +7,8 @@ project(ram_msgs)
 
 find_package(
     catkin REQUIRED COMPONENTS 
-    message_generation 
+    message_generation
+    std_msgs
 )
 
 ##############################
@@ -23,9 +24,15 @@ add_message_files(
     Vector2.msg
     Vector3.msg
     Vector4.msg
+
+    # New messages added in 2015
+    PowerSource.msg
 )
 
-generate_messages()
+generate_messages(
+    DEPENDENCIES
+    std_msgs
+)
 
 ##############################
 # Catkin Setup ###############
