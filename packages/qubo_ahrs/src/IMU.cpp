@@ -25,7 +25,6 @@
 
 // Header include
 #include "../include/IMU.h"
-#include "../include/TRAX_Types.h"
 
    IMU::IMU(std::string deviceFile, IMUSpeed speed) 
 : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({1,0})
@@ -446,6 +445,39 @@ void IMU::wakeUp() {
    readCommand(kGetFunctionalMode, &mode);
 }
 
+/******************************************************************************
+ * Internal Functionality
+ * All of the following functions are meant for internal-use only
+ ******************************************************************************/
+
+/**
+ * CRC update code conforming to the xmodem crc spec.
+ */
+uint16_t crc_xmodem_update (uint16_t crc, uint8_t data)
+{
+   int i;
+   crc = crc ^ ((uint16_t)data << 8);
+   for (i=0; i<8; i++)
+   {
+      if (crc & 0x8000)
+         crc = (crc << 1) ^ 0x1021;
+      else
+         crc <<= 1;
+   }
+   return crc;
+}
+
+/**
+ * CRC checksum code conforming to the xmodem crc spec.
+ */
+checksum_t crc16(uint8_t* data, bytecount_t bytes){
+   uint16_t crc;
+   for (crc = 0x0; bytes > 0; bytes--, data++){
+      crc = crc_xmodem_update(crc, *data);
+   }
+   return (checksum_t) crc;
+}
+
 /** 
  * Reads raw data from the serial port.
  * @return number of bytes not read
@@ -526,32 +558,122 @@ int IMU::writeRaw(void* blob, uint16_t bytes_to_write)
    return bytes_to_write - bytes_written;
 }
 
-/**
- * CRC update code conforming to the xmodem crc spec.
- */
-uint16_t crc_xmodem_update (uint16_t crc, uint8_t data)
-{
-   int i;
-   crc = crc ^ ((uint16_t)data << 8);
-   for (i=0; i<8; i++)
-   {
-      if (crc & 0x8000)
-         crc = (crc << 1) ^ 0x1021;
-      else
-         crc <<= 1;
-   }
-   return crc;
-}
+#define BUF_SIZE 4096
+#define ENDIAN16(A) ((A << 8) | (A >> 8))
 
-/**
- * CRC checksum code conforming to the xmodem crc spec.
- */
-checksum_t crc16(uint8_t* data, bytecount_t bytes){
-   uint16_t crc;
-   for (crc = 0x0; bytes > 0; bytes--, data++){
-      crc = crc_xmodem_update(crc, *data);
+Command IMU::readFrame(Command hint, void* target)
+{
+   // Temporary storage for the data read from the datagram.
+   uint8_t datagram[BUF_SIZE];
+   // Pointer to the bytecount
+   bytecount_t *bytecount_p = reinterpret_cast<bytecount_t*>(datagram);
+   // Pointer to the start of the frame
+   uint8_t *frame_p = datagram + sizeof(bytecount_t);
+   // Pointer to the checksum at the end of the datagram.
+   checksum_t *checksum_p = NULL;
+   // Some storage for data pulled out of the datagram.
+   bytecount_t total_size, checksum_size, frame_size;
+   // Storage for the expected checksum.
+   checksum_t checksum;
+   // Storage for the read command
+   Command cmd;
+
+   // Read in the header of the datagram packet: UInt16.
+   if (readRaw(bytecount_p, sizeof(bytecount_t)))
+      throw IMUException("Unable to read bytecount of incoming packet.");
+   // Calculate the number of bytes to read from the header.
+   total_size = *bytecount_p;
+   // Convert from big-endian to little-endian.
+   total_size = ENDIAN16(total_size);
+   // Do not include the checksum in the checksum
+   checksum_size = total_size - sizeof(checksum_t);
+   // Do not include the bytecount in the frame.
+   frame_size = checksum_size - sizeof(bytecount_t);
+
+   // Read in the actual data frame + checksum
+   if (readRaw(frame_p, frame_size + sizeof(checksum_t)))
+      throw IMUException("Unable to read body of incoming packet");
+   // Find the position of the checksum
+   checksum_p = reinterpret_cast<checksum_t*>(frame_p + frame_size);
+   // Pull out the sent checksum and convert from big-endian to little-endian.
+   checksum = ENDIAN16(*checksum_p);
+
+   // Validate the existing checksum
+   if (crc16(datagram, checksum_size) != checksum)
+      throw IMUException("Incoming packet checksum invalid.");
+
+   // Copy the data into the given buffer.
+   memcpy(target, frame_p + sizeof(frameid_t), cmd.payload_size);
+
+   if (*frame_p == hint.id) {
+      cmd = hint;
+   } else {
+      switch(*frame_p) {
+         case kGetModInfoResp.id:               
+            cmd = kGetModInfoResp; break;
+         case kGetDataResp.id:                  
+            cmd = kGetDataResp; break;
+         case kGetConfigRespBoolean.id:         
+            switch (frame_size) {
+               case kGetConfigRespFloat32.payload_size:
+                  cmd = kGetConfigRespFloat32; break;
+               case kGetConfigRespUInt8.payload_size:
+                  cmd = kGetConfigRespUInt8; break;
+               default:
+                  throw IMUException("Unknown command response packet length");
+            } break;
+         case kGetFIRFiltersRespZero.id:        
+            switch (frame_size) {
+               case kGetFIRFiltersRespZero.payload_size:
+                  cmd = kGetFIRFiltersRespZero; break;
+               case kGetFIRFiltersRespFour.payload_size:
+                  cmd = kGetFIRFiltersRespFour; break;
+               case kGetFIRFiltersRespEight.payload_size:
+                  cmd = kGetFIRFiltersRespEight; break;
+               case kGetFIRFiltersRespSixteen.payload_size:
+                  cmd = kGetFIRFiltersRespSixteen; break;
+               case kGetFIRFiltersRespThirtyTwo.payload_size:
+                  cmd = kGetFIRFiltersRespThirtyTwo; break;
+               default:
+                  throw IMUException("Unknown filter response packet length");
+            } break;
+         case kSaveDone.id:                     
+            cmd = kSaveDone; break;
+         case kUserCalSampleCount.id:           
+            cmd = kUserCalSampleCount; break;
+         case kUserCalScore.id:                 
+            cmd = kUserCalScore; break;
+         case kSetConfigDone.id:                
+            cmd = kSetConfigDone; break;
+         case kSetFIRFiltersDone.id:            
+            cmd = kSetFIRFiltersDone; break;
+         case kPowerUpDone.id:                  
+            cmd = kPowerUpDone; break;
+         case kSetAcqParamsDone.id:             
+            cmd = kSetAcqParamsDone; break;
+         case kGetAcqParamsResp.id:             
+            cmd = kGetAcqParamsResp; break;
+         case kPowerDownDone.id:                
+            cmd = kPowerDownDone; break;
+         case kFactoryMagCoeffDone.id:          
+            cmd = kFactoryMagCoeffDone; break;
+         case kFactoryAccelCoeffDone.id:        
+            cmd = kFactoryAccelCoeffDone; break;
+         case kGetFunctionalModeResp.id:        
+            cmd = kGetFunctionalModeResp; break;
+         case kGetMagTruthMethod.id:            
+            cmd = kGetMagTruthMethod; break;
+         case kGetMagTruthMethodResp.id:        
+            cmd = kGetMagTruthMethodResp; break;
+         default: 
+            throw IMUException("Unknown frameid read from device!"); break;
+      }
    }
-   return (checksum_t) crc;
+#ifdef DEBUG
+   printf("Read command %s.\n", cmd.name);
+#endif
+   // Tell the caller what message we read.
+   return cmd;
 }
 
 /**
@@ -565,8 +687,6 @@ void IMU::sendCommand(Command send, const void* payload, Command resp, void* tar
    readCommand(resp, target);
 }
 
-#define BUF_SIZE 4096
-#define ENDIAN16(A) ((A << 8) | (A >> 8))
 
 void IMU::writeCommand(Command cmd, const void* payload)
 {
@@ -608,159 +728,24 @@ void IMU::readCommand(Command cmd, void* target)
 #ifdef DEBUG
    printf("Reading command %s.\n", cmd.name);
 #endif
-   // Temporary storage for the data read from the datagram.
-   uint8_t datagram[BUF_SIZE];
-   // Pointer to the bytecount
-   bytecount_t *bytecount_p = reinterpret_cast<bytecount_t*>(datagram);
-   // Pointer to the start of the frame
-   uint8_t *frame_p = datagram + sizeof(bytecount_t);
-   // Pointer to the checksum at the end of the datagram.
-   checksum_t *checksum_p = NULL;
-   // Some storage for data pulled out of the datagram.
-   bytecount_t total_size, checksum_size, frame_size;
-   // Storage for the expected checksum.
-   checksum_t checksum;
-
-   // Read in the header of the datagram packet: UInt16.
-   if (readRaw(bytecount_p, sizeof(bytecount_t)))
-      throw IMUException("Unable to read bytecount of incoming packet.");
-   // Calculate the number of bytes to read from the header.
-   total_size = *bytecount_p;
-   // Convert from big-endian to little-endian.
-   total_size = ENDIAN16(total_size);
-   // Do not include the checksum in the checksum
-   checksum_size = total_size - sizeof(checksum_t);
-   // Do not include the bytecount in the frame.
-   frame_size = checksum_size - sizeof(bytecount_t);
-
-   // Read in the actual data frame + checksum
-   if (readRaw(frame_p, frame_size + sizeof(checksum_t)))
-      throw IMUException("Unable to read body of incoming packet");
-   // Find the position of the checksum
-   checksum_p = reinterpret_cast<checksum_t*>(frame_p + frame_size);
-   // Pull out the sent checksum and convert from big-endian to little-endian.
-   checksum = ENDIAN16(*checksum_p);
-
-   // Validate the existing checksum
-   if (crc16(datagram, checksum_size) != checksum)
-      throw IMUException("Incoming packet checksum invalid.");
-   //Identify that the message recieved matches what was expected.
-   if (*frame_p != cmd.id)
-      throw IMUException("Incoming packet frameid unexpected.");
-
-   // Copy the data into the given buffer.
-   memcpy(target, frame_p + sizeof(frameid_t), cmd.payload_size);
+   uint8_t buffer[BUF_SIZE];
+   Command recv;
+   do {
+      recv = readFrame(cmd,buffer);
+      if (recv.id == cmd.id)
+         memcpy(target, buffer, cmd.payload_size);
+      else {
+#ifdef DEBUG
+         printf("Read unexpected command: %s\n", cmd.name);
+#endif
+      }
+   } while (recv.id != cmd.id);
 }
 
 #undef BUF_SIZE
 #undef ENDIAN16
 
-/*****************************************************************************************************************
- * Below is all hardcoded data from the protocol spec'd for the TRAX.
- *               | Command Name                  | ID  | Payload Size             | Command String
- *****************************************************************************************************************/
-const Command IMU::kGetModInfo                  = {0x01, EMPTY,                     "kGetModInfo"};
-const Command IMU::kGetModInfoResp              = {0x02, sizeof(ModInfo),           "kGetModInfoResp"};
-const Command IMU::kSetDataComponents           = {0x03, sizeof(RawDataFields),     "kSetDataComponents"};
-const Command IMU::kGetData                     = {0x04, EMPTY,                     "kGetData"};
-const Command IMU::kGetDataResp                 = {0x05, sizeof(RawData),           "kGetDataResp"};
-const Command IMU::kSetConfigBoolean            = {0x06, sizeof(ConfigBoolean),     "kSetConfigBoolean"};
-const Command IMU::kSetConfigFloat32            = {0x06, sizeof(ConfigFloat32),     "kSetConfigFloat32"};
-const Command IMU::kSetConfigUInt8              = {0x06, sizeof(ConfigUInt8),       "kSetConfigUInt8"};
-const Command IMU::kSetConfigUInt32             = {0x06, sizeof(ConfigUInt32),      "kSetConfigUInt32"};
-const Command IMU::kGetConfig                   = {0x07, sizeof(config_id_t),       "kGetConfig"};
-const Command IMU::kGetConfigRespBoolean        = {0x08, sizeof(ConfigBoolean),     "kGetConfigRespBoolean"};
-const Command IMU::kGetConfigRespFloat32        = {0x08, sizeof(ConfigFloat32),     "kGetConfigRespFloat32"};
-const Command IMU::kGetConfigRespUInt8          = {0x08, sizeof(ConfigUInt8),       "kGetConfigRespUInt8"};
-const Command IMU::kGetConfigRespUInt32         = {0x08, sizeof(ConfigUInt32),      "kGetConfigRespUInt32"};
-const Command IMU::kSave                        = {0x09, EMPTY,                     "kSave"};
-const Command IMU::kStartCal                    = {0x0a, sizeof(CalOption),         "kStartCal"};
-const Command IMU::kStopCal                     = {0x0b, EMPTY,                     "kStopCal"};
-const Command IMU::kSetFIRFiltersZero           = {0x0c, sizeof(FIRTaps_Zero),      "kSetFIRFiltersZero"};
-const Command IMU::kSetFIRFiltersFour           = {0x0c, sizeof(FIRTaps_Four),      "kSetFIRFiltersFour"};
-const Command IMU::kSetFIRFiltersEight          = {0x0c, sizeof(FIRTaps_Eight),     "kSetFIRFiltersEight"};
-const Command IMU::kSetFIRFiltersSixteen        = {0x0c, sizeof(FIRTaps_Sixteen),   "kSetFIRFiltersSixteen"};
-const Command IMU::kSetFIRFiltersThirtyTwo      = {0x0c, sizeof(FIRTaps_ThirtyTwo), "kSetFIRFiltersThirtyTwo"};
-const Command IMU::kGetFIRFilters               = {0x0d, sizeof(FIRFilter),         "kGetFIRFilters"};
-const Command IMU::kGetFIRFiltersRespZero       = {0x0e, sizeof(FIRTaps_Zero),      "kGetFIRFiltersRespZero"};
-const Command IMU::kGetFIRFiltersRespFour       = {0x0e, sizeof(FIRTaps_Four),      "kGetFIRFiltersRespFour"};
-const Command IMU::kGetFIRFiltersRespEight      = {0x0e, sizeof(FIRTaps_Eight),     "kGetFIRFiltersRespEight"};
-const Command IMU::kGetFIRFiltersRespSixteen    = {0x0e, sizeof(FIRTaps_Sixteen),   "kGetFIRFiltersRespSixteen"};
-const Command IMU::kGetFIRFiltersRespThirtyTwo  = {0x0e, sizeof(FIRTaps_ThirtyTwo), "kGetFIRFiltersRespThirtyTwo"};
-const Command IMU::kPowerDown                   = {0x0f, EMPTY,                     "kPowerDown"};
-const Command IMU::kSaveDone                    = {0x10, sizeof(SaveError),         "kSaveDone"};
-const Command IMU::kUserCalSampleCount          = {0x11, sizeof(SampleCount),       "kUserCalSampleCount"};
-const Command IMU::kUserCalScore                = {0x12, sizeof(UserCalScore),      "kUserCalScore"};
-const Command IMU::kSetConfigDone               = {0x13, EMPTY,                     "kSetConfigDone"};
-const Command IMU::kSetFIRFiltersDone           = {0x14, EMPTY,                     "kSetFIRFiltersDone"};
-const Command IMU::kStartContinuousMode         = {0x15, EMPTY,                     "kStartContinuousMode"};
-const Command IMU::kStopContinousMode           = {0x16, EMPTY,                     "kStopContinousMode"};
-const Command IMU::kPowerUpDone                 = {0x17, EMPTY,                     "kPowerUpDone"};
-const Command IMU::kSetAcqParams                = {0x18, sizeof(AcqParams),         "kSetAcqParams"};
-const Command IMU::kGetAcqParams                = {0x19, EMPTY,                     "kGetAcqParams"};
-const Command IMU::kSetAcqParamsDone            = {0x1a, EMPTY,                     "kSetAcqParamsDone"};
-const Command IMU::kGetAcqParamsResp            = {0x1b, sizeof(AcqParams),         "kGetAcqParamsResp"};
-const Command IMU::kPowerDownDone               = {0x1c, EMPTY,                     "kPowerDownDone"};
-const Command IMU::kFactoryMagCoeff             = {0x1d, EMPTY,                     "kFactoryMagCoeff"};
-const Command IMU::kFactoryMagCoeffDone         = {0x1e, EMPTY,                     "kFactoryMagCoeffDone"};
-const Command IMU::kTakeUserCalSample           = {0x1f, EMPTY,                     "kTakeUserCalSample"};
-const Command IMU::kFactoryAccelCoeff           = {0x24, EMPTY,                     "kFactoryAccelCoeff"};
-const Command IMU::kFactoryAccelCoeffDone       = {0x25, EMPTY,                     "kFactoryAccelCoeffDone"};
-const Command IMU::kSetFunctionalMode           = {0x4f, sizeof(FunctionalMode),    "kSetFunctionalMode"};
-const Command IMU::kGetFunctionalMode           = {0x50, EMPTY,                     "kGetFunctionalMode"};
-const Command IMU::kGetFunctionalModeResp       = {0x51, sizeof(FunctionalMode),    "kGetFunctionalModeResp"};
-const Command IMU::kSetResetRef                 = {0x6e, EMPTY,                     "kSetResetRef"};
-const Command IMU::kSetMagTruthMethod           = {0x77, sizeof(MagTruthMethod),    "kSetMagTruthMethod"};
-const Command IMU::kGetMagTruthMethod           = {0x78, EMPTY,                     "kGetMagTruthMethod"};
-const Command IMU::kGetMagTruthMethodResp       = {0x79, sizeof(MagTruthMethod),    "kGetMagTruthMethodResp"};
-
-const config_id_t IMU::kDeclination             = 1;
-const config_id_t IMU::kTrueNorth               = 2;
-const config_id_t IMU::kBigEndian               = 6;
-const config_id_t IMU::kMountingRef             = 10;
-const config_id_t IMU::kUserCalNumPoints        = 12;
-const config_id_t IMU::kUserCalAutoSampling     = 13;
-const config_id_t IMU::kBaudRate                = 14;
-const config_id_t IMU::kMilOut                  = 15;
-const config_id_t IMU::kHPRDuringCal            = 16;
-const config_id_t IMU::kMagCoeffSet             = 18;
-const config_id_t IMU::kAccelCoeffSet           = 19;
-
-const data_id_t IMU::kPitch                     = 0x18;
-const data_id_t IMU::kRoll                      = 0x19;
-const data_id_t IMU::kHeadingStatus             = 0x4f;
-const data_id_t IMU::kQuaternion                = 0x4d;
-const data_id_t IMU::kTemperature               = 0x07;
-const data_id_t IMU::kDistortion                = 0x08;
-const data_id_t IMU::kCalStatus                 = 0x09;
-const data_id_t IMU::kAccelX                    = 0x15;
-const data_id_t IMU::kAccelY                    = 0x16;
-const data_id_t IMU::kAccelZ                    = 0x17;
-const data_id_t IMU::kMagX                      = 0x1b;
-const data_id_t IMU::kMagY                      = 0x1c;
-const data_id_t IMU::kMagZ                      = 0x1d;
-const data_id_t IMU::kGyroX                     = 0x4a;
-const data_id_t IMU::kGyroY                     = 0x4b;
-const data_id_t IMU::kGyroZ                     = 0x4c;
-
 const RawDataFields IMU::dataConfig             = {
    10, kQuaternion, kGyroX, kGyroY, kGyroZ,
    kAccelX, kAccelY, kAccelZ, kMagX, kMagY, kMagZ};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

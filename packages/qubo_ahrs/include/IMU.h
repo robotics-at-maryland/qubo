@@ -44,6 +44,10 @@ class IMUException : public std::runtime_error
  */
 class IMU
 {
+   public: // Front-facing types that need to be exposed to the user.
+#include "API_Types.h"
+   private: // Backend protocol types.
+#include "TRAX_Types.h"
    public: // Front facing API function calls.
       /**
        * Constructor for a new IMU interface.
@@ -359,6 +363,7 @@ class IMU
       /** Low-level internal I/O functions */
       int readRaw(void* blob, uint16_t bytes_to_read);
       int writeRaw(void* blob, uint16_t bytes_to_write);
+      Command readFrame(Command hint, void* blob);
 
       /** Mid-level I/O functionality using the protocol definitions. */
       void writeCommand(Command cmd, const void* payload);
@@ -366,91 +371,93 @@ class IMU
       void sendCommand(Command cmd, const void* payload, Command resp, void* target);
       void printCommand(Command cmd);
    private:
-      /** Library of static protocol frame definitions to categorize frames. */
-      static const Command kGetModInfo;
-      static const Command kGetModInfoResp;
-      static const Command kSetDataComponents;
-      static const Command kGetData;
-      static const Command kGetDataResp;
-      static const Command kSetConfigBoolean;
-      static const Command kSetConfigFloat32;
-      static const Command kSetConfigUInt8;
-      static const Command kSetConfigUInt32;
-      static const Command kGetConfig;
-      static const Command kGetConfigRespBoolean;
-      static const Command kGetConfigRespFloat32;
-      static const Command kGetConfigRespUInt8;
-      static const Command kGetConfigRespUInt32;
-      static const Command kSave;
-      static const Command kStartCal;
-      static const Command kStopCal;
-      static const Command kSetFIRFiltersZero;
-      static const Command kSetFIRFiltersFour;
-      static const Command kSetFIRFiltersEight;
-      static const Command kSetFIRFiltersSixteen;
-      static const Command kSetFIRFiltersThirtyTwo;
-      static const Command kGetFIRFilters;
-      static const Command kGetFIRFiltersRespZero;
-      static const Command kGetFIRFiltersRespFour;
-      static const Command kGetFIRFiltersRespEight;
-      static const Command kGetFIRFiltersRespSixteen;
-      static const Command kGetFIRFiltersRespThirtyTwo;
-      static const Command kPowerDown;
-      static const Command kSaveDone;
-      static const Command kUserCalSampleCount;
-      static const Command kUserCalScore;
-      static const Command kSetConfigDone;
-      static const Command kSetFIRFiltersDone;
-      static const Command kStartContinuousMode;
-      static const Command kStopContinousMode;
-      static const Command kPowerUpDone;
-      static const Command kSetAcqParams;
-      static const Command kGetAcqParams;
-      static const Command kSetAcqParamsDone;
-      static const Command kGetAcqParamsResp;
-      static const Command kPowerDownDone;
-      static const Command kFactoryMagCoeff;
-      static const Command kFactoryMagCoeffDone;
-      static const Command kTakeUserCalSample;
-      static const Command kFactoryAccelCoeff;
-      static const Command kFactoryAccelCoeffDone;
-      static const Command kSetFunctionalMode;
-      static const Command kGetFunctionalMode;
-      static const Command kGetFunctionalModeResp;
-      static const Command kSetResetRef;
-      static const Command kSetMagTruthMethod;
-      static const Command kGetMagTruthMethod;
-      static const Command kGetMagTruthMethodResp;
+      /*****************************************************************************************************************
+       * Below is all hardcoded data from the protocol spec'd for the TRAX.
+       *                     | Command Name                  | ID  | Payload Size             | Command String
+       *****************************************************************************************************************/
+      static constexpr Command kGetModInfo                  = {0x01, EMPTY,                     "kGetModInfo"};
+      static constexpr Command kGetModInfoResp              = {0x02, sizeof(ModInfo),           "kGetModInfoResp"};
+      static constexpr Command kSetDataComponents           = {0x03, sizeof(RawDataFields),     "kSetDataComponents"};
+      static constexpr Command kGetData                     = {0x04, EMPTY,                     "kGetData"};
+      static constexpr Command kGetDataResp                 = {0x05, sizeof(RawData),           "kGetDataResp"};
+      static constexpr Command kSetConfigBoolean            = {0x06, sizeof(ConfigBoolean),     "kSetConfigBoolean"};
+      static constexpr Command kSetConfigFloat32            = {0x06, sizeof(ConfigFloat32),     "kSetConfigFloat32"};
+      static constexpr Command kSetConfigUInt8              = {0x06, sizeof(ConfigUInt8),       "kSetConfigUInt8"};
+      static constexpr Command kSetConfigUInt32             = {0x06, sizeof(ConfigUInt32),      "kSetConfigUInt32"};
+      static constexpr Command kGetConfig                   = {0x07, sizeof(config_id_t),       "kGetConfig"};
+      static constexpr Command kGetConfigRespBoolean        = {0x08, sizeof(ConfigBoolean),     "kGetConfigRespBoolean"};
+      static constexpr Command kGetConfigRespFloat32        = {0x08, sizeof(ConfigFloat32),     "kGetConfigRespFloat32"};
+      static constexpr Command kGetConfigRespUInt8          = {0x08, sizeof(ConfigUInt8),       "kGetConfigRespUInt8"};
+      static constexpr Command kGetConfigRespUInt32         = {0x08, sizeof(ConfigUInt32),      "kGetConfigRespUInt32"};
+      static constexpr Command kSave                        = {0x09, EMPTY,                     "kSave"};
+      static constexpr Command kStartCal                    = {0x0a, sizeof(CalOption),         "kStartCal"};
+      static constexpr Command kStopCal                     = {0x0b, EMPTY,                     "kStopCal"};
+      static constexpr Command kSetFIRFiltersZero           = {0x0c, sizeof(FIRTaps_Zero),      "kSetFIRFiltersZero"};
+      static constexpr Command kSetFIRFiltersFour           = {0x0c, sizeof(FIRTaps_Four),      "kSetFIRFiltersFour"};
+      static constexpr Command kSetFIRFiltersEight          = {0x0c, sizeof(FIRTaps_Eight),     "kSetFIRFiltersEight"};
+      static constexpr Command kSetFIRFiltersSixteen        = {0x0c, sizeof(FIRTaps_Sixteen),   "kSetFIRFiltersSixteen"};
+      static constexpr Command kSetFIRFiltersThirtyTwo      = {0x0c, sizeof(FIRTaps_ThirtyTwo), "kSetFIRFiltersThirtyTwo"};
+      static constexpr Command kGetFIRFilters               = {0x0d, sizeof(FIRFilter),         "kGetFIRFilters"};
+      static constexpr Command kGetFIRFiltersRespZero       = {0x0e, sizeof(FIRTaps_Zero),      "kGetFIRFiltersRespZero"};
+      static constexpr Command kGetFIRFiltersRespFour       = {0x0e, sizeof(FIRTaps_Four),      "kGetFIRFiltersRespFour"};
+      static constexpr Command kGetFIRFiltersRespEight      = {0x0e, sizeof(FIRTaps_Eight),     "kGetFIRFiltersRespEight"};
+      static constexpr Command kGetFIRFiltersRespSixteen    = {0x0e, sizeof(FIRTaps_Sixteen),   "kGetFIRFiltersRespSixteen"};
+      static constexpr Command kGetFIRFiltersRespThirtyTwo  = {0x0e, sizeof(FIRTaps_ThirtyTwo), "kGetFIRFiltersRespThirtyTwo"};
+      static constexpr Command kPowerDown                   = {0x0f, EMPTY,                     "kPowerDown"};
+      static constexpr Command kSaveDone                    = {0x10, sizeof(SaveError),         "kSaveDone"};
+      static constexpr Command kUserCalSampleCount          = {0x11, sizeof(SampleCount),       "kUserCalSampleCount"};
+      static constexpr Command kUserCalScore                = {0x12, sizeof(UserCalScore),      "kUserCalScore"};
+      static constexpr Command kSetConfigDone               = {0x13, EMPTY,                     "kSetConfigDone"};
+      static constexpr Command kSetFIRFiltersDone           = {0x14, EMPTY,                     "kSetFIRFiltersDone"};
+      static constexpr Command kStartContinuousMode         = {0x15, EMPTY,                     "kStartContinuousMode"};
+      static constexpr Command kStopContinousMode           = {0x16, EMPTY,                     "kStopContinousMode"};
+      static constexpr Command kPowerUpDone                 = {0x17, EMPTY,                     "kPowerUpDone"};
+      static constexpr Command kSetAcqParams                = {0x18, sizeof(AcqParams),         "kSetAcqParams"};
+      static constexpr Command kGetAcqParams                = {0x19, EMPTY,                     "kGetAcqParams"};
+      static constexpr Command kSetAcqParamsDone            = {0x1a, EMPTY,                     "kSetAcqParamsDone"};
+      static constexpr Command kGetAcqParamsResp            = {0x1b, sizeof(AcqParams),         "kGetAcqParamsResp"};
+      static constexpr Command kPowerDownDone               = {0x1c, EMPTY,                     "kPowerDownDone"};
+      static constexpr Command kFactoryMagCoeff             = {0x1d, EMPTY,                     "kFactoryMagCoeff"};
+      static constexpr Command kFactoryMagCoeffDone         = {0x1e, EMPTY,                     "kFactoryMagCoeffDone"};
+      static constexpr Command kTakeUserCalSample           = {0x1f, EMPTY,                     "kTakeUserCalSample"};
+      static constexpr Command kFactoryAccelCoeff           = {0x24, EMPTY,                     "kFactoryAccelCoeff"};
+      static constexpr Command kFactoryAccelCoeffDone       = {0x25, EMPTY,                     "kFactoryAccelCoeffDone"};
+      static constexpr Command kSetFunctionalMode           = {0x4f, sizeof(FunctionalMode),    "kSetFunctionalMode"};
+      static constexpr Command kGetFunctionalMode           = {0x50, EMPTY,                     "kGetFunctionalMode"};
+      static constexpr Command kGetFunctionalModeResp       = {0x51, sizeof(FunctionalMode),    "kGetFunctionalModeResp"};
+      static constexpr Command kSetResetRef                 = {0x6e, EMPTY,                     "kSetResetRef"};
+      static constexpr Command kSetMagTruthMethod           = {0x77, sizeof(MagTruthMethod),    "kSetMagTruthMethod"};
+      static constexpr Command kGetMagTruthMethod           = {0x78, EMPTY,                     "kGetMagTruthMethod"};
+      static constexpr Command kGetMagTruthMethodResp       = {0x79, sizeof(MagTruthMethod),    "kGetMagTruthMethodResp"};
 
-      static const config_id_t kDeclination;
-      static const config_id_t kTrueNorth;
-      static const config_id_t kBigEndian;
-      static const config_id_t kMountingRef;
-      static const config_id_t kUserCalNumPoints;
-      static const config_id_t kUserCalAutoSampling;
-      static const config_id_t kBaudRate;
-      static const config_id_t kMilOut;
-      static const config_id_t kHPRDuringCal;
-      static const config_id_t kMagCoeffSet;
-      static const config_id_t kAccelCoeffSet;
+      static constexpr config_id_t kDeclination             = 1;
+      static constexpr config_id_t kTrueNorth               = 2;
+      static constexpr config_id_t kBigEndian               = 6;
+      static constexpr config_id_t kMountingRef             = 10;
+      static constexpr config_id_t kUserCalNumPoints        = 12;
+      static constexpr config_id_t kUserCalAutoSampling     = 13;
+      static constexpr config_id_t kBaudRate                = 14;
+      static constexpr config_id_t kMilOut                  = 15;
+      static constexpr config_id_t kHPRDuringCal            = 16;
+      static constexpr config_id_t kMagCoeffSet             = 18;
+      static constexpr config_id_t kAccelCoeffSet           = 19;
 
-      static const data_id_t kHeading;
-      static const data_id_t kPitch;
-      static const data_id_t kRoll;
-      static const data_id_t kHeadingStatus;
-      static const data_id_t kQuaternion;
-      static const data_id_t kTemperature;
-      static const data_id_t kDistortion;
-      static const data_id_t kCalStatus;
-      static const data_id_t kAccelX;
-      static const data_id_t kAccelY;
-      static const data_id_t kAccelZ;
-      static const data_id_t kMagX;
-      static const data_id_t kMagY;
-      static const data_id_t kMagZ;
-      static const data_id_t kGyroX;
-      static const data_id_t kGyroY;
-      static const data_id_t kGyroZ;
+      static constexpr data_id_t kPitch                     = 0x18;
+      static constexpr data_id_t kRoll                      = 0x19;
+      static constexpr data_id_t kHeadingStatus             = 0x4f;
+      static constexpr data_id_t kQuaternion                = 0x4d;
+      static constexpr data_id_t kTemperature               = 0x07;
+      static constexpr data_id_t kDistortion                = 0x08;
+      static constexpr data_id_t kCalStatus                 = 0x09;
+      static constexpr data_id_t kAccelX                    = 0x15;
+      static constexpr data_id_t kAccelY                    = 0x16;
+      static constexpr data_id_t kAccelZ                    = 0x17;
+      static constexpr data_id_t kMagX                      = 0x1b;
+      static constexpr data_id_t kMagY                      = 0x1c;
+      static constexpr data_id_t kMagZ                      = 0x1d;
+      static constexpr data_id_t kGyroX                     = 0x4a;
+      static constexpr data_id_t kGyroY                     = 0x4b;
+      static constexpr data_id_t kGyroZ                     = 0x4c;
    public:
       static constexpr IMUSpeed k0        = {0,    B0};
       static constexpr IMUSpeed k2400     = {4,    B2400};
