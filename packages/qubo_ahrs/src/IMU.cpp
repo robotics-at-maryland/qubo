@@ -398,40 +398,41 @@ bool IMU::getAHRSMode() {
 
 void IMU::setFIRFilters(FilterData data) {
    FIRFilter filter_id = {3,1};
-   switch (data.count) {
+   switch (data.size()) {
       case F_0: {
          FIRTaps_Zero zero = {filter_id, F_0};
          sendCommand(kSetFIRFiltersZero, &zero, kSetFIRFiltersDone, NULL);
          break; }
       case F_4: {
          FIRTaps_Four four = {filter_id, F_4};
-         if (!memcpy(&(four.taps),data.coeffs.get(), F_4*sizeof(double)))
-            throw IMUException("Could not copy FIR coefficient array.");
+         std::copy(data.begin(), data.end(), (double*) &(four.taps));
          sendCommand(kSetFIRFiltersFour, &four, kSetFIRFiltersDone, NULL);
          break; }
       case F_8: {
          FIRTaps_Eight eight = {filter_id, F_8};
-         if (!memcpy(&(eight.taps),data.coeffs.get(), F_8*sizeof(double)))
-            throw IMUException("Could not copy FIR coefficient array.");
+         std::copy(data.begin(), data.end(), (double*) &(eight.taps));
          sendCommand(kSetFIRFiltersEight, &eight, kSetFIRFiltersDone, NULL);
          break; }
       case F_16: {
          FIRTaps_Sixteen sixteen = {filter_id, F_16};
-         if (!memcpy(&(sixteen.taps),data.coeffs.get(), F_16*sizeof(double)))
-            throw IMUException("Could not copy FIR coefficient array.");
+         std::copy(data.begin(), data.end(), (double*) &(sixteen.taps));
          sendCommand(kSetFIRFiltersSixteen, &sixteen, kSetFIRFiltersDone, NULL);
          break; }
       case F_32: {
          FIRTaps_ThirtyTwo thirtytwo = {filter_id, F_32};
-         if (!memcpy(&(thirtytwo.taps),data.coeffs.get(), F_32*sizeof(double)))
-            throw IMUException("Could not copy FIR coefficient array.");
+         std::copy(data.begin(), data.end(), (double*) &(thirtytwo.taps));
          sendCommand(kSetFIRFiltersThirtyTwo, &thirtytwo, kSetFIRFiltersDone, NULL);
          break; }
+      default: throw IMUException("Invalid number of FIR filter coefficients!");
    }
 }
 
 IMU::FilterData IMU::getFIRFilters() {
-   throw IMUException("NOT IMPLEMENTED SORRY");
+   FIRFilter filter_id = {3,1};
+   writeCommand(kGetFIRFilters, &filter_id);
+   FIRTaps_ThirtyTwo data;
+   readFrame(kGetFIRFiltersRespThirtyTwo,&data);
+   return FilterData((double*) &(data.taps),((double*) &(data.taps)) + data.count);
 }
 
 void IMU::powerDown() {
@@ -563,7 +564,7 @@ int IMU::writeRaw(void* blob, uint16_t bytes_to_write)
 
 IMU::Command IMU::inferCommand(Command hint, frameid_t id, bytecount_t size)
 {
-   if (id == hint.id) {
+   if (id == hint.id && size == hint.payload_size) {
       return hint;
    } else {
       switch(id) {
@@ -593,6 +594,14 @@ IMU::Command IMU::inferCommand(Command hint, frameid_t id, bytecount_t size)
                case kGetFIRFiltersRespThirtyTwo.payload_size:
                   return kGetFIRFiltersRespThirtyTwo;
                default:
+#ifdef DEBUG
+                  printf("size was %d \n",size);
+                  printf("zero is %d \n", kGetFIRFiltersRespZero.payload_size);
+                  printf("four is %d \n", kGetFIRFiltersRespFour.payload_size);
+                  printf("eight is %d \n", kGetFIRFiltersRespEight.payload_size);
+                  printf("sixteen is %d \n", kGetFIRFiltersRespSixteen.payload_size);
+                  printf("thirtytwo is %d \n", kGetFIRFiltersRespThirtyTwo.payload_size);
+#endif
                   throw IMUException("Unknown filter response packet length");
             } break;
          case kSaveDone.id:                     

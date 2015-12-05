@@ -24,8 +24,8 @@
 
 // uint*_t types
 #include <stdint.h>
-// shared_ptr type
-#include <memory>
+// vector type
+#include <vector>
 // speed_t type
 #include <termios.h>
 
@@ -156,25 +156,25 @@ class IMU
          FIRFilter filter_id;
          uint8_t count;
          double taps[4];
-      } FIRTaps_Four;
+      }__attribute__((__packed__)) FIRTaps_Four;
 
       typedef struct _FIRTaps_Eight {
          FIRFilter filter_id;
          uint8_t count;
          double taps[8];
-      } FIRTaps_Eight;
+      }__attribute__((__packed__)) FIRTaps_Eight;
 
       typedef struct _FIRTaps_Sixteen {
          FIRFilter filter_id;
          uint8_t count;
          double taps[16];
-      } FIRTaps_Sixteen;
+      }__attribute__((__packed__)) FIRTaps_Sixteen;
 
       typedef struct _FIRTaps_ThirtyTwo {
          FIRFilter filter_id;
          uint8_t count;
          double taps[32];
-      } FIRTaps_ThirtyTwo;
+      }__attribute__((__packed__)) FIRTaps_ThirtyTwo;
    public:
       /************************************************************************
        * ENUMERATED TYPEDEFS
@@ -271,10 +271,7 @@ class IMU
       } CalScore;
 
       /** FIR filter coefficient data with the filter count. */
-      typedef struct _FilterData {
-         FilterCount count;
-         std::shared_ptr<double> coeffs;
-      } FilterData;
+      typedef std::vector<double> FilterData;
 
       /******************************************************************************
        * USER DEFINED TYPEDEFS

@@ -10,17 +10,25 @@ int main(int argc, char *argv[])
       try {
          IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
          IMU::AcqConfig config;
+         IMU::FilterData filters;
+         unsigned int i;
 
          imu->openDevice();
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
 
          imu->sendIMUDataFormat();
          config = imu->getAcqConfig();
+         filters = imu->getFIRFilters();
 
          printf("IMU Configuration data:\n");
+
          printf("Acqusition mode:   %d\n", config.poll_mode);
          printf("Flush Filter:      %d\n", config.flush_filter);
          printf("Sample delay:      %f\n", config.sample_delay);
+
+         for (i=0; i < filters.size(); i++)
+         printf("Filter             %.2d:%f\n",i, filters[i]);
+
          printf("Mag Truth Method:  %d\n", imu->getMagTruthMethod());
          printf("Functional mode:   %d\n", imu->getAHRSMode());
          printf("Declination:       %f\n", imu->getDeclination());
