@@ -17,17 +17,18 @@ int main(int argc, char *argv[])
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
 
          imu->sendIMUDataFormat();
-         config = imu->getAcqConfig();
-         filters = imu->getFIRFilters();
 
          printf("IMU Configuration data:\n");
 
+         config = imu->getAcqConfig();
          printf("Acqusition mode:   %d\n", config.poll_mode);
          printf("Flush Filter:      %d\n", config.flush_filter);
          printf("Sample delay:      %f\n", config.sample_delay);
 
+         filters = imu->getFIRFilters();
+         printf("Number of filters: %u\n", filters.size());
          for (i=0; i < filters.size(); i++)
-         printf("Filter             %.2d:%f\n",i, filters[i]);
+         printf("Filter #%.2d:        %f\n",i, filters[i]);
 
          printf("Mag Truth Method:  %d\n", imu->getMagTruthMethod());
          printf("Functional mode:   %d\n", imu->getAHRSMode());

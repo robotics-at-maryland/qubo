@@ -339,21 +339,15 @@ IMU::FilterData IMU::getFIRFilters() {
    FIRFilter filter_id = {3,1};
    Message message;
    FilterData data;
-   bool rcvd = false;
 
    writeCommand(kGetFIRFilters, &filter_id);
    do {
       message = readMessage();
-      switch (inferCommand(message).id) {
-         case kGetFIRFiltersRespZero.id:
-            rcvd = true;
-         default:
-            rcvd = false;
-      }
-   } while (!rcvd);
+   } while (inferCommand(message).id != kGetFIRFiltersRespZero.id);
 
-   data.reserve((message.payload_size - 3)/sizeof(double));
-   data.assign(message.payload->data() + 3, message.payload->data() + message.payload_size);
+   data.resize((message.payload_size - 3)/sizeof(double));
+   if (!memcpy(data.data(), message.payload->data() + 3, message.payload_size - 3))
+      throw IMUException("Could not copy filter data.");
 
    return data;
 }

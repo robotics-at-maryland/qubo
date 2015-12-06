@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <endian.h>
 
 // Header include
 #include "../include/IMU.h"
@@ -118,7 +119,9 @@ IMU::checksum_t IMU::crc16(checksum_t crc, uint8_t* data, bytecount_t bytes){
 int IMU::readRaw(void* blob, int bytes_to_read)
 {  
 #ifdef DEBUG
+   /*
    printf("Reading %d bytes ", bytes_to_read);
+   */
 #endif
    // Keep track of the number of bytes read, and the number of fds that are ready.
    int bytes_read = 0, current_read = 0, fds_ready = 0;
@@ -151,10 +154,12 @@ int IMU::readRaw(void* blob, int bytes_to_read)
       } while ((bytes_read < bytes_to_read) && (fds_ready == 1) && (current_read > 0));
    }
 #ifdef DEBUG
+   /*
    int i;
    for (i = 0; i < bytes_read; i++)
       printf("|%2x",*(((unsigned char*)blob) + i));
    printf("|\n");
+   */
 #endif
    // Return the number of bytes we actually managed to read.
    return bytes_to_read - bytes_read;
@@ -163,12 +168,14 @@ int IMU::readRaw(void* blob, int bytes_to_read)
 int IMU::writeRaw(void* blob, int bytes_to_write)
 {
 #ifdef DEBUG
+   /*
    printf("Writing %d bytes ", bytes_to_write);
    int i;
    for (i = 0; i < bytes_to_write; i++)
       printf("|%2x",*(((unsigned char*)blob) + i));
-   printf("|\n");
-#endif
+   printf("|\n"); 
+   */
+#endif 
    // Keep track of the number of bytes written, and the number of fds that are ready.
    int bytes_written = 0, current_write = 0, fds_ready = 0;
    // Sets of file descriptors for use with select(2).
@@ -203,13 +210,8 @@ int IMU::writeRaw(void* blob, int bytes_to_write)
    return bytes_to_write - bytes_written;
 }
 
-#define ENDIAN16(A) ((A << 8) | (A >> 8))
-
 IMU::Message IMU::readMessage()
 {
-#ifdef DEBUG
-   printf("Reading message\n");
-#endif
    // Storage for packet bytecount.
    bytecount_t total_size;
    // Storage for calculating the checksum.
@@ -222,8 +224,8 @@ IMU::Message IMU::readMessage()
       throw IMUException("Unable to read bytecount of incoming packet.");
    // Add the total size to the checksum.
    checksum = crc16(checksum, (uint8_t*) &total_size, sizeof(bytecount_t));
-   // Convert the total size from big-endian to little-endian.
-   total_size = ENDIAN16(total_size);
+   // Convert the total size from big-endian to host-endian.
+   total_size = be16toh(total_size);
    // Do not include the checksum, frameid, or bytecount in the payload.
    message.payload_size = 
       total_size - sizeof(checksum_t) - sizeof(bytecount_t) - sizeof(frameid_t);
@@ -245,41 +247,34 @@ IMU::Message IMU::readMessage()
    // Read the remote checksum that the device computed.
    if (readRaw(&remote_checksum, sizeof(checksum_t)))
       throw IMUException("Unable to read checksum of incoming packet");
-   // Convert the checksum from big-endian to little-endian.
-   remote_checksum = ENDIAN16(remote_checksum);
+   // Convert the checksum from big-endian to host-endian.
+   remote_checksum = be16toh(remote_checksum);
 
    // Validate the remote checksum
    if (checksum != remote_checksum)
       throw IMUException("Incoming packet checksum invalid.");
    
-#ifdef DEBUG
-   printf("Read message %d\n", message.id);
-#endif
-
    // Everything succeeded. The packet was read in properly.
    return message;
 }
 
 void IMU::writeMessage(Message message)
 {
-#ifdef DEBUG
-   printf("Writing message %d\n", message.id);
-#endif
    // Calculate the total packet length.
    bytecount_t total_size = 
       sizeof(bytecount_t) + sizeof(frameid_t) + message.payload_size + sizeof(checksum_t);
    // Storage for the checksum.
    checksum_t checksum = 0x0;
 
-   // Convert the packet length to big-endian for the device.
-   total_size = ENDIAN16(total_size);
+   // Convert from host-endian to big-endian
+   total_size = htobe16(total_size);
 
    // Compute the checksum from the packet data.
    checksum = crc16(checksum, (uint8_t*) &total_size, sizeof(bytecount_t));
    checksum = crc16(checksum, (uint8_t*) &message.id, sizeof(frameid_t));
    checksum = crc16(checksum, (uint8_t*) message.payload->data(), message.payload_size);
-   // Convert from little-endian to big-endian
-   checksum = ENDIAN16(checksum);
+   // Convert from host-endian to big-endian
+   checksum = htobe16(checksum);
 
    // Attempt to write the datagram to the serial port.
    if (writeRaw(&total_size, sizeof(bytecount_t)))
@@ -295,13 +290,8 @@ void IMU::writeMessage(Message message)
       throw IMUException("Unable to write checksum.");
 }
 
-#undef ENDIAN16
-
 IMU::Message IMU::createMessage(Command cmd, const void* payload)
 {
-#ifdef DEBUG
-   printf("Creating message from %s\n", cmd.name);
-#endif
    // Temporary storage to assemble the message.
    Message message;
 
@@ -322,9 +312,6 @@ IMU::Message IMU::createMessage(Command cmd, const void* payload)
 
 IMU::Command IMU::inferCommand(Message message)
 {
-#ifdef DEBUG
-   printf("Inferring command from id %d\n", message.id);
-#endif
    // In many cases after comparing the ID the command is unambiguous.
    // Some cases need some special attention.
    switch(message.id) {
@@ -505,9 +492,6 @@ void IMU::writeCommand(Command cmd, const void* payload)
 
 void IMU::sendCommand(Command send, const void* payload, Command resp, void* target)
 {
-#ifdef DEBUG
-   printf("Sending command %s expecting %s in response\n", send.name, resp.name);
-#endif
    if ((target != NULL) && memset(target, 0, resp.payload_size) == NULL)
       throw IMUException("Unable to clear command response target memory.");
    writeCommand(send, payload);
