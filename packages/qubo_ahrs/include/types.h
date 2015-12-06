@@ -38,6 +38,18 @@ typedef struct _Command {
    const char* name;
 } Command;
 
+typedef std::vector<char> Payload;
+
+/** Message read/written from the hardware device. */
+typedef struct _Message {
+   /** Frame identifier from the beginning of the data frame. */
+   frameid_t id;
+   /** Length of the payload pointed to by the payload pointer. */
+   bytecount_t payload_size;
+   /** Pointer to the memory allocated for this message. */
+   std::shared_ptr<Payload> payload;
+} Message;
+
 /******************************************************************************
  * HARDCODED PAYLOAD TYPES:
  * These should be exactly out of the specification file.
@@ -99,34 +111,6 @@ typedef struct _FIRFilter {
    uint8_t byte_2;
 } FIRFilter;
 
-typedef struct _FIRTaps_Zero {
-   FIRFilter filter_id;
-   uint8_t count;
-} FIRTaps_Zero;
-
-typedef struct _FIRTaps_Four {
-   FIRFilter filter_id;
-   uint8_t count;
-   double taps[4];
-}__attribute__((__packed__)) FIRTaps_Four;
-
-typedef struct _FIRTaps_Eight {
-   FIRFilter filter_id;
-   uint8_t count;
-   double taps[8];
-}__attribute__((__packed__)) FIRTaps_Eight;
-
-typedef struct _FIRTaps_Sixteen {
-   FIRFilter filter_id;
-   uint8_t count;
-   double taps[16];
-}__attribute__((__packed__)) FIRTaps_Sixteen;
-
-typedef struct _FIRTaps_ThirtyTwo {
-   FIRFilter filter_id;
-   uint8_t count;
-   double taps[32];
-}__attribute__((__packed__)) FIRTaps_ThirtyTwo;
 public:
 /************************************************************************
  * ENUMERATED TYPEDEFS
@@ -249,11 +233,6 @@ typedef struct _RawDataFields {
    data_id_t myID;
    data_id_t mzID;
 } RawDataFields;
-
-/** static const struct with the permanent data type config. */
-const RawDataFields dataConfig             = {
-   10, kQuaternion, kGyroX, kGyroY, kGyroZ,
-   kAccelX, kAccelY, kAccelZ, kMagX, kMagY, kMagZ};
 
 /**
  * Struct of data being sent/retrieved from the IMU

@@ -12,22 +12,22 @@
  * Adapted from earlier work of Steve Moskovchenko and Joseph Lisee (2007)
  */
 
-// Standard lib includes.
+// memcpy method
 #include <string>
+// std::string type
 #include <string.h>
-
 // Unix includes
 #include <unistd.h>
-
 // Error handling
 #include <stdexcept>
-
 // uint*_t types
 #include <stdint.h>
 // vector type
 #include <vector>
 // speed_t type
 #include <termios.h>
+// shared_ptr type
+#include <memory>
 
 /**
  * Exception class for handling IO/Data integrity errors.
@@ -85,23 +85,28 @@ class IMU
       /** Storage for readings from the IMU for caching purposes. */
       IMUData _lastReading;
 
-      /** Read bytes to a blob, return the bytes not read. */
-      int readRaw(void* blob, uint16_t bytes_to_read);
-      /** Write bytes from a blob, return the bytes not written. */
-      int writeRaw(void* blob, uint16_t bytes_to_write);
-      /** Checksum function to compute binary CRC16s. */
-      checksum_t crc16(uint8_t* data, bytecount_t bytes);
       /** Checksum helper function. */
-      uint16_t crc_xmodem_update (uint16_t crc, uint8_t data);
+      checksum_t crc_xmodem_update (checksum_t crc, uint8_t data);
+      /** Checksum function to compute binary CRC16s. */
+      checksum_t crc16(checksum_t crc, uint8_t* data, bytecount_t bytes);
+      /** Read bytes to a blob, return the bytes not read. */
+      int readRaw(void* blob, int bytes_to_read);
+      /** Write bytes from a blob, return the bytes not written. */
+      int writeRaw(void* blob, int bytes_to_write);
 
-      /** Infer the command based on the frameid and bytes read. */
-      Command inferCommand(Command hint, frameid_t id, bytecount_t size);
-      /** Read a data packet and figure out the command. */
-      Command readFrame(Command hint, void* blob);
-      /** Write a command with a payload to the device. */
-      void writeCommand(Command cmd, const void* payload);
+      /** Read an incoming frame and format it for interpreting. */
+      Message readMessage();
+      /** Write a message to the device, adding bytecount and checksum. */
+      void writeMessage(Message message);
+      /** Create a message from a command and a payload */
+      Message createMessage(Command cmd, const void* payload);
+      /** Infer the command that the message refers to. */
+      Command inferCommand(Message message);
+
       /** Read a command and its payload from the device. */
       void readCommand(Command cmd, void* target);
+      /** Write a command with a payload to the device. */
+      void writeCommand(Command cmd, const void* payload);
       /** Send a command and wait for a response. */
       void sendCommand(Command cmd, const void* payload, Command resp, void* target);
 };

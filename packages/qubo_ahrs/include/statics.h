@@ -22,17 +22,17 @@ static constexpr Command kGetConfigRespUInt32         = {0x08, sizeof(ConfigUInt
 static constexpr Command kSave                        = {0x09, EMPTY,                     "kSave"};
 static constexpr Command kStartCal                    = {0x0a, sizeof(CalOption),         "kStartCal"};
 static constexpr Command kStopCal                     = {0x0b, EMPTY,                     "kStopCal"};
-static constexpr Command kSetFIRFiltersZero           = {0x0c, sizeof(FIRTaps_Zero),      "kSetFIRFiltersZero"};
-static constexpr Command kSetFIRFiltersFour           = {0x0c, sizeof(FIRTaps_Four),      "kSetFIRFiltersFour"};
-static constexpr Command kSetFIRFiltersEight          = {0x0c, sizeof(FIRTaps_Eight),     "kSetFIRFiltersEight"};
-static constexpr Command kSetFIRFiltersSixteen        = {0x0c, sizeof(FIRTaps_Sixteen),   "kSetFIRFiltersSixteen"};
-static constexpr Command kSetFIRFiltersThirtyTwo      = {0x0c, sizeof(FIRTaps_ThirtyTwo), "kSetFIRFiltersThirtyTwo"};
+static constexpr Command kSetFIRFiltersZero           = {0x0c, F_0*sizeof(double)+3,      "kSetFIRFiltersZero"};
+static constexpr Command kSetFIRFiltersFour           = {0x0c, F_4*sizeof(double)+3,      "kSetFIRFiltersFour"};
+static constexpr Command kSetFIRFiltersEight          = {0x0c, F_8*sizeof(double)+3,      "kSetFIRFiltersEight"};
+static constexpr Command kSetFIRFiltersSixteen        = {0x0c, F_16*sizeof(double)+3,     "kSetFIRFiltersSixteen"};
+static constexpr Command kSetFIRFiltersThirtyTwo      = {0x0c, F_32*sizeof(double)+3,     "kSetFIRFiltersThirtyTwo"};
 static constexpr Command kGetFIRFilters               = {0x0d, sizeof(FIRFilter),         "kGetFIRFilters"};
-static constexpr Command kGetFIRFiltersRespZero       = {0x0e, sizeof(FIRTaps_Zero),      "kGetFIRFiltersRespZero"};
-static constexpr Command kGetFIRFiltersRespFour       = {0x0e, sizeof(FIRTaps_Four),      "kGetFIRFiltersRespFour"};
-static constexpr Command kGetFIRFiltersRespEight      = {0x0e, sizeof(FIRTaps_Eight),     "kGetFIRFiltersRespEight"};
-static constexpr Command kGetFIRFiltersRespSixteen    = {0x0e, sizeof(FIRTaps_Sixteen),   "kGetFIRFiltersRespSixteen"};
-static constexpr Command kGetFIRFiltersRespThirtyTwo  = {0x0e, sizeof(FIRTaps_ThirtyTwo), "kGetFIRFiltersRespThirtyTwo"};
+static constexpr Command kGetFIRFiltersRespZero       = {0x0e, F_0*sizeof(double)+3,      "kGetFIRFiltersRespZero"};
+static constexpr Command kGetFIRFiltersRespFour       = {0x0e, F_4*sizeof(double)+3,      "kGetFIRFiltersRespFour"};
+static constexpr Command kGetFIRFiltersRespEight      = {0x0e, F_8*sizeof(double)+3,      "kGetFIRFiltersRespEight"};
+static constexpr Command kGetFIRFiltersRespSixteen    = {0x0e, F_16*sizeof(double)+3,     "kGetFIRFiltersRespSixteen"};
+static constexpr Command kGetFIRFiltersRespThirtyTwo  = {0x0e, F_32*sizeof(double)+3,     "kGetFIRFiltersRespThirtyTwo"};
 static constexpr Command kPowerDown                   = {0x0f, EMPTY,                     "kPowerDown"};
 static constexpr Command kSaveDone                    = {0x10, sizeof(SaveError),         "kSaveDone"};
 static constexpr Command kUserCalSampleCount          = {0x11, sizeof(SampleCount),       "kUserCalSampleCount"};
@@ -89,6 +89,12 @@ static constexpr data_id_t kMagZ                      = 0x1d;
 static constexpr data_id_t kGyroX                     = 0x4a;
 static constexpr data_id_t kGyroY                     = 0x4b;
 static constexpr data_id_t kGyroZ                     = 0x4c;
+
+/** static const struct with the permanent data type config. */
+static constexpr RawDataFields dataConfig             = {
+   10, kQuaternion, kGyroX, kGyroY, kGyroZ,
+   kAccelX, kAccelY, kAccelZ, kMagX, kMagY, kMagZ};
+
 public:
 static constexpr IMUSpeed k0        = {0,    B0};
 static constexpr IMUSpeed k2400     = {4,    B2400};
