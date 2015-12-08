@@ -1,19 +1,11 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -pedantic
+CXXFLAGS = -std=c++11 -Wall -pedantic -O3
 HEADS = include/IMU.h include/types.h include/statics.h include/functions.h
 OBJS = bin/IMU.o bin/util.o
 
-.PHONY: all debug test clean
+.PHONY: all test clean
 
 .INTERMEDIATE: bin/util.o
-
-release: CXXFLAGS += -O3
-
-release: all
-
-debug: CXXFLAGS += -DDEBUG
-
-debug: all
 
 all: bin bin/IMU.o bin/config bin/baudrate
 

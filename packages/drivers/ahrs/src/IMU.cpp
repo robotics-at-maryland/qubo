@@ -9,14 +9,6 @@
  * Adapted from earlier work of Steve Moskovchenko and Joseph Lisee (2007)
  ******************************************************************************/
 
-// DEBUG includes
-#ifdef DEBUG
-
-// Debug printing
-#include <stdio.h>
-
-#endif
-
 // UNIX Serial includes
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -118,11 +110,6 @@ IMU::checksum_t IMU::crc16(checksum_t crc, uint8_t* data, bytecount_t bytes){
 
 int IMU::readRaw(void* blob, int bytes_to_read)
 {  
-#ifdef DEBUG
-   /*
-   printf("Reading %d bytes ", bytes_to_read);
-   */
-#endif
    // Keep track of the number of bytes read, and the number of fds that are ready.
    int bytes_read = 0, current_read = 0, fds_ready = 0;
    // Sets of file descriptors for use with select(2).
@@ -153,29 +140,12 @@ int IMU::readRaw(void* blob, int bytes_to_read)
          // Keep reading until we've run out of data, or we couldnt read more data.
       } while ((bytes_read < bytes_to_read) && (fds_ready == 1) && (current_read > 0));
    }
-#ifdef DEBUG
-   /*
-   int i;
-   for (i = 0; i < bytes_read; i++)
-      printf("|%2x",*(((unsigned char*)blob) + i));
-   printf("|\n");
-   */
-#endif
    // Return the number of bytes we actually managed to read.
    return bytes_to_read - bytes_read;
 }
 
 int IMU::writeRaw(void* blob, int bytes_to_write)
 {
-#ifdef DEBUG
-   /*
-   printf("Writing %d bytes ", bytes_to_write);
-   int i;
-   for (i = 0; i < bytes_to_write; i++)
-      printf("|%2x",*(((unsigned char*)blob) + i));
-   printf("|\n"); 
-   */
-#endif 
    // Keep track of the number of bytes written, and the number of fds that are ready.
    int bytes_written = 0, current_write = 0, fds_ready = 0;
    // Sets of file descriptors for use with select(2).
@@ -468,9 +438,6 @@ IMU::Command IMU::inferCommand(Message message)
 
 void IMU::readCommand(Command cmd, void* target)
 {
-#ifdef DEBUG
-   printf("Reading command %s\n", cmd.name);
-#endif
    // Read until the message we receive is the one we want.
    Message message;
    do {
@@ -484,9 +451,6 @@ void IMU::readCommand(Command cmd, void* target)
 
 void IMU::writeCommand(Command cmd, const void* payload)
 {
-#ifdef DEBUG
-   printf("Writing command %s\n", cmd.name);
-#endif
    writeMessage(createMessage(cmd, payload));
 }
 
