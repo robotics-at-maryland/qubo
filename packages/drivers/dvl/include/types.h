@@ -17,10 +17,6 @@ typedef uint8_t frameid_t;
 typedef uint16_t bytecount_t;
 /** Xmodem 16-bit CRC checksum sent at the end of a packet. */
 typedef uint16_t checksum_t;
-/** Identifier for configuration data */
-typedef uint8_t config_id_t;
-/** Identifier for sensor data */
-typedef uint8_t data_id_t;
 
 private:
 /************************************************************************
@@ -55,61 +51,6 @@ typedef struct _Message {
  * These should be exactly out of the specification file.
  ******************************************************************************/
 
-typedef struct _ModInfo {
-   char type[4];
-   uint8_t rev[4];
-} ModInfo;
-
-typedef struct _ConfigBoolean {
-   config_id_t id;
-   bool value;
-} ConfigBoolean;
-
-typedef struct _ConfigFloat32 {
-   config_id_t id;
-   float value;
-} ConfigFloat32;
-
-typedef struct _ConfigUInt8 {
-   config_id_t id;
-   uint8_t value;
-} ConfigUInt8;
-
-typedef struct _ConfigUInt32 {
-   config_id_t id;
-   uint32_t value;
-} ConfigUInt32;
-
-typedef uint8_t MagTruthMethod;
-
-typedef uint16_t SaveError;
-
-typedef struct _AcqParams {
-   uint8_t aquisition_mode;
-   uint8_t flush_filter;
-   float pni_reserved;
-   float sample_delay;
-} AcqParams;
-
-typedef uint32_t CalOption;
-
-typedef uint32_t SampleCount;
-
-typedef struct _UserCalScore {
-   float mag_cal_score;
-   float pni_reserved;
-   float accel_cal_score;
-   float distribution_error;
-   float tilt_error;
-   float tilt_range;
-} UserCalScore;
-
-typedef uint8_t FunctionalMode;
-
-typedef struct _FIRFilter {
-   uint8_t byte_1;
-   uint8_t byte_2;
-} FIRFilter;
 
 public:
 /************************************************************************
@@ -118,56 +59,6 @@ public:
  * limited number of unique values.
  ************************************************************************/
 
-/** Mounting reference ID. */
-typedef enum _MountRef {
-   STD_0       = 1,
-   X_UP_0      = 2,
-   Y_UP_0      = 3,
-   STD_90      = 4,
-   STD_180     = 5,
-   STD_270     = 6,
-   Z_DOWN_0    = 7,
-   X_UP_90     = 8,
-   X_UP_180    = 9,
-   X_UP_270    = 10,
-   Y_UP_90     = 11,
-   Y_UP_180    = 12,
-   Y_UP_270    = 13,
-   Z_DOWN_90   = 14,
-   Z_DOWN_180  = 15,
-   Z_DOWN_270  = 16
-} MountRef;
-
-/** Current calibration set ID. */
-typedef enum _CalibrationID {
-   CAL_0, CAL_1, CAL_2, CAL_3, CAL_4, CAL_5, CAL_6, CAL_7
-} CalibrationID;
-
-/** Method for determining the truth of the magnetometer data. */
-typedef enum _TruthMethod {
-   STANDARD    = 1,
-   TIGHT       = 2,
-   AUTOMERGE   = 3
-} TruthMethod;
-
-/** Type of calibration to perform. */
-typedef enum _CalType {
-   FULL_RANGE = 10,
-   TWO_DIM = 20,
-   HARD_IRON_ONLY = 30,
-   LIMITED_TILT = 40,
-   ACCEL_ONLY = 100,
-   MAG_AND_ACCEL = 110
-} CalType;
-
-/** FIR Filter coefficient counts. */
-typedef enum _FilterCount {
-   F_0   = 0,
-   F_4   = 4,
-   F_8   = 8,
-   F_16  = 16,
-   F_32  = 32
-} FilterCount;
 
 /************************************************************************
  * API TYPEDEFS
@@ -175,39 +66,12 @@ typedef enum _FilterCount {
  ************************************************************************/
 
 /** Specification for the baudrate of the serial link. */
-typedef struct _IMUSpeed {
+typedef struct _DVLSpeed {
    /** Identifier for the device speed for the device. */
    uint8_t id;
    /** Identifier for the host speed for the computer. */
    speed_t baud;
-} IMUSpeed;
-
-/** Struct for configuring the data aquisitions. */
-typedef struct _AcqConfig {
-   /** Delay between samples while in continous mode. */
-   float sample_delay;
-   /** true will flush the collected data every time a reading is taken. */
-   bool flush_filter;
-   /** true for polling aquisition, false for continuous */
-   bool poll_mode;
-} AcqConfig;
-
-/** Struct containing calibration report data. */
-typedef struct _CalScore {
-   /** Magnetometer score (smaller is better, <2 is best). */
-   float mag_score;
-   /** Accelerometer score (smaller is better, <1 is best) */
-   float accel_score;
-   /** Distribution quality (should be 0) */
-   float dist_error;
-   /** Tilt angle quality (should be 0) */
-   float tilt_error;
-   /** Range of tilt angle (larger is better) */
-   float tilt_range;
-} CalScore;
-
-/** FIR filter coefficient data with the filter count. */
-typedef std::vector<double> FilterData;
+} DVLSpeed;
 
 /******************************************************************************
  * USER DEFINED TYPEDEFS
@@ -216,69 +80,5 @@ typedef std::vector<double> FilterData;
  * format in order to be interpreted correctly.
  ******************************************************************************/
 
-/**
- * Struct of data types being sent/retrieved from the IMU.
- * The idCount at the beginning is how many different ids are in the struct.
- */
-typedef struct _RawDataFields {
-   uint8_t idCount;
-   data_id_t qID;
-   data_id_t gxID;
-   data_id_t gyID;
-   data_id_t gzID;
-   data_id_t axID;
-   data_id_t ayID;
-   data_id_t azID;
-   data_id_t mxID;
-   data_id_t myID;
-   data_id_t mzID;
-} RawDataFields;
-
-/**
- * Struct of data being sent/retrieved from the IMU
- * VERY IMPORTANT: each major field must be one of the types defined
- * in the PNI AHRS spec, and must be preceded by a garbage data_id_t var.
- * This is in order to read in the data directly, and discard the data IDs.
- * Additionally, there is one garbage idCount at the beginning.
- * ALSO: make sure to update IMU_RAW_N_FIELDS to the number of major fields.
- */
-typedef struct _RawData {
-   uint8_t idCount;
-   data_id_t qID;
-   float quaternion[4];
-   data_id_t gxID;
-   float gyroX;
-   data_id_t gyID;
-   float gyroY;
-   data_id_t gzID;
-   float gyroZ;
-   data_id_t axID;
-   float accelX;
-   data_id_t ayID;
-   float accelY;
-   data_id_t azID;
-   float accelZ;
-   data_id_t mxID;
-   float magX;
-   data_id_t myID;
-   float magY;
-   data_id_t mzID;
-   float magZ;
-} RawData;
-
-public:
-/** Data type storing formatted IMU data to be passed around. */
-typedef struct _IMUData {
-   float quaternion[4];
-   float gyroX;
-   float gyroY;
-   float gyroZ;
-   float accelX;
-   float accelY;
-   float accelZ;
-   float magX;
-   float magY;
-   float magZ;
-} IMUData;
 
 #pragma pack(pop)

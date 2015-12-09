@@ -1,15 +1,13 @@
-#ifndef IMU_H
-#define IMU_H
+#ifndef DVL_H
+#define DVL_H
 
 /*
- * IMU.h
- * Header file for IMU API.
+ * DVL.h
+ * Header file for DVL API.
  *
  * Copyright (C) 2015 Robotics at Maryland
  * Copyright (C) 2015 Greg Harris <gharris1727@gmail.com>
  * All rights reserved.
- * 
- * Adapted from earlier work of Steve Moskovchenko and Joseph Lisee (2007)
  */
 
 // memcpy method
@@ -32,44 +30,44 @@
 /**
  * Exception class for handling IO/Data integrity errors.
  */
-class IMUException : public std::runtime_error
+class DVLException : public std::runtime_error
 {
    public:
-      IMUException(std::string message)
+      DVLException(std::string message)
          : runtime_error(message) {}
 };
 
 /**
- * IMU API class
+ * DVL API class
  * Contains all the low-level I/O abstraction, and allows the user to communicate
- * with the IMU hardware at a high level. Connects to a unix serial/usb terminal
- * and speaks the PNI Binary protocol to send and recieve packets of data.
+ * with the DVL hardware at a high level. Connects to a unix serial/usb terminal
+ * and speaks the DVL Binary protocol to send and recieve packets of data.
  */
-class IMU
+class DVL
 {
 #include "types.h"
 #include "statics.h"
 #include "functions.h"
    public:
       /**
-       * Constructor for a new IMU interface.
+       * Constructor for a new DVL interface.
        * @param (std::string) unix device name
-       * @param (IMUSpeed) Baudrate to use for connection.
+       * @param (DVLSpeed) Baudrate to use for connection.
        */
-      IMU(std::string deviceFile, IMUSpeed speed);
+      DVL(std::string deviceFile, DVLSpeed speed);
       /** Destructor that cleans up and closes the device. */
-      ~IMU();
+      ~DVL();
       /** 
        * Opens the device and configures the I/O terminal. 
        * Requires dialout permissions to the device in _deviceFile.
        */
       void openDevice();
       /** 
-       * Checks if the IMU is currently open and avaiable 
-       * @return (bool) whether the IMU is avaliable for other API operations.
+       * Checks if the DVL is currently open and avaiable 
+       * @return (bool) whether the DVL is avaliable for other API operations.
        */
       bool isOpen();
-      /** Ensures that the IMU is open, throws an exception otherwise. */
+      /** Ensures that the DVL is open, throws an exception otherwise. */
       void assertOpen();
       /** Disconnectes from the device and closes the teriminal. */
       void closeDevice();
@@ -78,12 +76,12 @@ class IMU
       std::string _deviceFile;
       /** Data rate to communicate with */
       speed_t _termBaud;
-      /** Serial port for I/O with the AHRS */
+      /** Serial port for I/O with the DVL */
       int _deviceFD;
       /** Timeout (sec,usec) on read/write */
       struct timeval _timeout;
-      /** Storage for readings from the IMU for caching purposes. */
-      IMUData _lastReading;
+      /** Storage for readings from the DVL for caching purposes. */
+      DVLData _lastReading;
 
       /** Checksum helper function. */
       checksum_t crc_xmodem_update (checksum_t crc, uint8_t data);
