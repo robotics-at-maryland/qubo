@@ -86,6 +86,14 @@ void DVL::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
+void sendBreak() {
+   // Send a break in the data line for n deciseconds.
+   // The DVL specs for more than 300ms, 
+   // but it 'may respond to breaks shorter than this'
+   // Here we will spec for 400ms of break time.
+   ioctl(_deviceFD, TCDBRKP, 4);
+}
+
 DVL::checksum_t DVL::crc_xmodem_update (checksum_t crc, uint8_t data)
 {
    int i;

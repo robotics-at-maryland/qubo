@@ -1,3 +1,117 @@
 
 private: // Static data about the DVL binary protocol
 
+#define EMPTY 0
+// Help Commands
+static constexpr Command cGeneralCommandHelp             = {"?",                                   "cGeneralCommandHelp"};
+static constexpr Command cBottomCommandHelp              = {"B?",                                  "cBottomCommandHelp"};
+static constexpr Command cControlCommandHelp             = {"C?",                                  "cControlCommandHelp"};
+static constexpr Command cEnvironmentCommandHelp         = {"E?",                                  "cEnvironmentalCommandHelp"};
+static constexpr Command cLoopRecorderCommandHelp        = {"M?",                                  "cLoopRecorderCommandHelp"};
+static constexpr Command cPerformanceTestCommandHelp     = {"P?",                                  "cPerformanceTestHelp"};
+static constexpr Command cSensorCommandHelp              = {"S?",                                  "cSensorCommandHelp"};
+static constexpr Command cTimeCommandHelp                = {"T?",                                  "cTimeCommandHelp"};
+static constexpr Command cWaterProfilingCommandHelp      = {"W?",                                  "cWaterProfilingHelp"};
+// Bottom Tracking Commands
+static constexpr Command cEvaluationAmplitudeMinimum     = {"#BA%3d",                              "cEvaluationAmplitudeMinimum"};
+static constexpr Command cBottomBlankingInterval         = {"#BB%4d",                              "cBottomBlankingInterval"};
+static constexpr Command cBottomCorrelationMagnitude     = {"#BC%3d",                              "cBottomCorrelationMagnitude"};
+static constexpr Command cBottomErrorVelocityMaximum     = {"#BE%4f",                              "cBottomErrorVelocityMaximum"};
+static constexpr Command cBottomDepthGuess               = {"#BF%5d",                              "cBottomDepthGuess"};
+static constexpr Command cBottomGainSwitchDepth          = {"#BI%3d",                              "cBottomGainSwitchDepth"};
+static constexpr Command cBottomDataOut                  = {"#BJ%9d",                              "cBottomDataOut"}; // BINARY
+static constexpr Command cWaterMassPingDisable           = {"#BK0",                                "cWaterMassPingDisable"};
+static constexpr Command cWaterMassPingBoth              = {"#BK1",                                "cWaterMassPingBoth"};
+static constexpr Command cWaterMassPingOnBottomLoss      = {"#BK2",                                "cWaterMassPingOnBottomLoss"};
+static constexpr Command cWaterMassPingOnly              = {"#BK3",                                "cWaterMassPingOnly"};
+static constexpr Command cWaterMassParameters            = {"#BL%3d,%4d,%4d",                      "cWaterMassParameters"};
+static constexpr Command cSpeedLogControl                = {"#BN%1d,%3d",                          "cSpeedLogControl"};
+static constexpr Command cDistanceMeasureFilterConstant  = {"#BO%3d",                              "cDistanceMeasureFilterConstant"};
+static constexpr Command cBottomTrackPingsPerEnsemble    = {"BP%3d",                               "cBottomTrackPingsPerEnsemble"};
+static constexpr Command cClearDistanceTravelled         = {"#BS",                                 "cClearDistanceTravelled"};
+static constexpr Command cMaximumTrackingDepth           = {"BX%5d",                               "cMaximumTrackingDepth"};
+// Control Commands
+static constexpr Command cSerialPortControl              = {"CB%1d%1d%1d",                         "cSerialPortControl"};
+static constexpr Command cFlowControl                    = {"CF%1d%1d%1d%1d%1d",                   "cFlowControl"}; // BINARY
+static constexpr Command cKeepParameters                 = {"CK",                                  "cKeepParameters"};
+static constexpr Command cRetrieveUserParameters         = {"CR0",                                 "cRetrieveUserParameters"};
+static constexpr Command cRetrieveFactoryParameters      = {"CR1",                                 "cRetrieveFactoryParameters"};
+static constexpr Command cStartPinging                   = {"CS",                                  "cStartPinging"};
+static constexpr Command cTurnkeyDisable                 = {"#CT0",                                "cTurnkeyDisable"};
+static constexpr Command cTurnkeyEnable                  = {"#CT1",                                "cTurnkeyEnable"};
+static constexpr Command cSetOutTrigger                  = {"#CO %1d %1d",                         "cSetOutTriger"};
+static constexpr Command cSetInputTrigger                = {"CX %1d %1d %5d",                      "cSetInputTrigger"};
+// Environment Commands
+static constexpr Command cStaticHeadingOffset            = {"EA%+5d",                              "cHeadingAlignment"};
+static constexpr Command cManualSpeedOfSound             = {"#EC%4d",                              "cManualSpeedOfSound"};
+static constexpr Command cLiveDepth                      = {"ED%5d",                               "cLiveDepth"};
+static constexpr Command cEnvironmentalDataOutput        = {"#EE%7d",                              "cEnvironmentalDataOutput"}; // BINARY
+static constexpr Command cLiveHeading                    = {"#EH%5d,%1d",                          "cLiveHeading"};
+static constexpr Command cStaticRollOffset               = {"#EI%+5d",                             "cStaticRollOffset"};
+static constexpr Command cStaticPitchOffset              = {"#EJ%+5d",                             "cStaticPitchOffset"};
+static constexpr Command cLivePitchAndRoll               = {"#EP%+5d,%+5d,%1d",                    "cLivePitchAndRoll"};
+static constexpr Command cLiveSalinity                   = {"ES%2d",                               "cLiveSalinity"};
+static constexpr Command cLiveTemperature                = {"#ET%+4d",                             "cLiveTemperature"};
+static constexpr Command cOrientationDynamic             = {"#EU0",                                "cOrientationDynamic"};
+static constexpr Command cOrientationFixedUp             = {"#EU1",                                "cOrientationFixedUp"};
+static constexpr Command cOrientationFixedDown           = {"#EU2",                                "cOrientationFixedDown"};
+static constexpr Command cStaticMagneticHeadingOffset    = {"#EV%+5d",                             "cStaticMagneticHeadingOffset"};
+static constexpr Command cCoordinateTransformation       = {"EX%5d",                               "cCoordinateTransformation"}; // BINARY
+static constexpr Command cDopplerParameterSource         = {"#EY %1d %1d %1d %1d %1d %1d %1d %1d", "cDopplerParameterSource"}; // BINARY
+static constexpr Command cSensorSource                   = {"EZ%1d%1d%1d%1d%1d%1d%1d%1d",          "SensorSource"};
+// Loop Recorder Commands
+static constexpr Command cRecorderErase                  = {"ME ErAsE",                            "cRecorderErase"};
+static constexpr Command cShowMemoryUsage                = {"MM",                                  "cShowMemoryUsage"};
+static constexpr Command cSetFileName                    = {"MN %s",                               "cSetFileName"};
+static constexpr Command cRecorderDisable                = {"MR0",                                 "cRecorderDisable"};
+static constexpr Command cRecorderEnable                 = {"MR1",                                 "cRecorderEnable"};
+static constexpr Command cFileDownload                   = {"MY",                                  "cFileDownload"};
+// Performance Commands
+static constexpr Command cPreDeploymentTests             = {"PA",                                  "cPreDeploymentTests"};
+static constexpr Command cInteractiveTest                = {"PC2",                                 "cInteractiveTest"};
+static constexpr Command cSendRawWaterCurrentData        = {"#PD0",                                "cSendRawWaterCurrentData"};
+static constexpr Command cSendWithoutSensorData          = {"#PD4",                                "cSendWithoutSensorData"};
+static constexpr Command cSendWithSensorData             = {"#PD5",                                "cSendWithSensorData"};
+static constexpr Command cSendASCIIData                  = {"#PD6",                                "cSendASCIIData"};
+static constexpr Command cDisplaySystemConfiguration     = {"PS0",                                 "cDisplaySystemConfiguration"};
+static constexpr Command cDisplayFixedLeader             = {"PS1",                                 "cDisplayFixedLeader"};
+static constexpr Command cDisplayTransformMatrix         = {"PS3",                                 "cDisplayTransformMatrix"};
+static constexpr Command cDisplayPingSequence            = {"PS4",                                 "cDisplayPingSequence"};
+static constexpr Command cTestDVLRecievePath             = {"PT3",                                 "cTestDVLRecievePath"};
+static constexpr Command cTestTxRxLoop                   = {"PT5",                                 "cTestTxRxLoop"};
+static constexpr Command cTestWiring                     = {"PT7",                                 "cTestWiring"};
+static constexpr Command cTestDVLRecievePathRepeat       = {"PT103",                               "cTestDVLRecievePathRepeat"};
+static constexpr Command cTestTxRxLoopRepeat             = {"PT105",                               "cTestTxRxLoopRepeat"};
+static constexpr Command cTestWiringRepeat               = {"PT107",                               "cTestWiringRepeat"};
+static constexpr Command cTestAll                        = {"PT200",                               "cTestAll"};
+static constexpr Command cTestAllRepeat                  = {"PT300",                               "cTestAllRepeat"};
+// Sensor Commands
+static constexpr Command cSendSensorCommand              = {"SC %2d %1d %5d \"%s\"",               "cSendSensorCommand"};
+static constexpr Command cSensorDataOut                  = {"SD",                                  "cSensorDataOut"};
+static constexpr Command cAuxSensorAuxMenu               = {"SM",                                  "cAuxSensorAuxMenu"};
+static constexpr Command cPressureSensorOffset           = {"#SO %3.3f",                           "cPressureSensorOffset"};
+static constexpr Command cSensorPortAssignment           = {"SP%1d %2d %5d",                       "cSensorPortAssignment"};
+static constexpr Command cSensorReset                    = {"SR %2d",                              "cSensorReset"};
+// Time Commands
+static constexpr Command cTimePerEnsemble                = {"TE%2d:%2d:%2.2f",                     "cTimePerEnsemble"};
+static constexpr Command cTimeBetweenPings               = {"TP%2d:%2d:%2.2f",                     "cTimeBetweenPings"};
+static constexpr Command cSetRealTimeClock               = {"TS%4d/%2d/%2d,%2d:%2d:%2.2f",         "cSetRealTimeClock"}; //Y2K-Compliant
+// Water Profiling Commands
+static constexpr Command cFalseTargetThreshold           = {"WA%3d",                               "cFalseTargetThreshold"};
+static constexpr Command cWideBandwithMode               = {"WB0",                                 "cWideBandwithMode"};
+static constexpr Command cNarrowBandwidthMode            = {"WB1",                                 "cNarrowBandwidthMode"};
+static constexpr Command cCoorelationThreshold           = {"#WC%3d",                              "cCoorelationThreshold"};
+static constexpr Command cDataOut                        = {"#WD%1d%1d%1d %1d%1d%1d %1d%1d%1d",    "cDataOut"}; // BINARY
+static constexpr Command cErrorVelocityThreshold         = {"#WE%4d",                              "cErrorVelocityThreshold"};
+static constexpr Command cBlankingDistance               = {"WF%3d",                               "cBlankingDistance"};
+static constexpr Command cReceiverLowGainMode            = {"#WJ0",                                "cReceiverLowGainMode"};
+static constexpr Command cReceiverHighGainMode           = {"#WJ1",                                "cReceiverHighGainMode"};
+static constexpr Command cNumberOfBins                   = {"WN%3d",                               "cNumberOfBins"};
+static constexpr Command cPingsPerEnsemble               = {"WP%5d",                               "cPingsPerEnsemble"};
+static constexpr Command cBinSize                        = {"WS%4d",                               "cBinSize"};
+static constexpr Command cTransmitLength                 = {"#WT%4d",                              "cTransmitLength"};
+static constexpr Command cAmbiguityVelocity              = {"#WV%3d",                              "cAmbiguityVelocity"};
+// Feature Commands
+static constexpr Command cListFeatures                   = {"OL",                                  "cListFeatures"};
+static constexpr Command cInstallFeature                 = {"OI",                                  "cInstallFeature"};
+

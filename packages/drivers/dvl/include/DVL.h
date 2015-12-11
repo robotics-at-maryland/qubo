@@ -83,6 +83,9 @@ class DVL
       /** Storage for readings from the DVL for caching purposes. */
       DVLData _lastReading;
 
+      /** Sends a pause to the DVL, triggering it to restart */
+      void sendBreak();
+
       /** Checksum helper function. */
       checksum_t crc_xmodem_update (checksum_t crc, uint8_t data);
       /** Checksum function to compute binary CRC16s. */
