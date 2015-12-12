@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <endian.h>
+#include <stdarg.h>
 
 // Header include
 #include "../include/DVL.h"
@@ -86,31 +86,18 @@ void DVL::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
-void sendBreak() {
+void DVL::sendBreak() {
    // Send a break in the data line for n deciseconds.
    // The DVL specs for more than 300ms, 
    // but it 'may respond to breaks shorter than this'
    // Here we will spec for 400ms of break time.
-   ioctl(_deviceFD, TCDBRKP, 4);
+   ioctl(_deviceFD, TCSBRKP, 4);
 }
 
-DVL::checksum_t DVL::crc_xmodem_update (checksum_t crc, uint8_t data)
-{
-   int i;
-   crc = crc ^ ((uint16_t)data << 8);
-   for (i=0; i<8; i++)
-   {
-      if (crc & 0x8000)
-         crc = (crc << 1) ^ 0x1021;
-      else
-         crc <<= 1;
-   }
-   return crc;
-}
-
-DVL::checksum_t DVL::crc16(checksum_t crc, uint8_t* data, bytecount_t bytes){
+DVL::checksum_t DVL::crc16(checksum_t crc, void* ptr, int bytes) {
+   char* data = (char*) ptr;
    for (; bytes > 0; bytes--, data++)
-      crc = crc_xmodem_update(crc, *data);
+      crc += *data;
    return crc;
 }
 
@@ -188,131 +175,296 @@ int DVL::writeRaw(void* blob, int bytes_to_write)
 
 DVL::Message DVL::readMessage()
 {
-   // Storage for packet bytecount.
-   bytecount_t total_size;
-   // Storage for calculating the checksum.
-   checksum_t remote_checksum, checksum = 0x0;
    // Output structure, storage for the read memory.
    Message message;
-
-   // Read in the header of the datagram packet: UInt16.
-   if (readRaw(&total_size, sizeof(bytecount_t)))
-      throw DVLException("Unable to read bytecount of incoming packet.");
-   // Add the total size to the checksum.
-   checksum = crc16(checksum, (uint8_t*) &total_size, sizeof(bytecount_t));
-   // Convert the total size from big-endian to host-endian.
-   total_size = be16toh(total_size);
-   // Do not include the checksum, frameid, or bytecount in the payload.
-   message.payload_size = 
-      total_size - sizeof(checksum_t) - sizeof(bytecount_t) - sizeof(frameid_t);
-
+   // Storage for calculating the checksum.
+   checksum_t remote_checksum, checksum = 0x0;
+   // Storage for the beginning of a message
+   frameid_t start;
+   // Bytecounts for perts of the PD0 data format.
+   bytecount_t header_bytes = sizeof(PD0_Header);
+   bytecount_t total_bytes;
+   bytecount_t payload_bytes;
+   // Temporary veriables for decoding the PD0 format.
+   uint8_t data_types_i;
+   data_offset_t *offsets;
    // Create the memory in the Message struct.
    message.payload = std::make_shared<std::vector<char>>();
-   message.payload->reserve(message.payload_size);
 
-   // Read in the frameid: UInt8.
-   if (readRaw(&message.id, sizeof(frameid_t)))
-      throw DVLException("Unable to read frameid of incoming packet");
-   // Add the message id to the checksum.
-   checksum = crc16(checksum, (uint8_t*) &message.id, sizeof(frameid_t));
-   // Read in the payload and spit it into the vector storage.
-   if (readRaw(message.payload->data(), message.payload_size))
-      throw DVLException("Unable to read payload of incoming packet");
-   // Add the data read in to the checksum.
-   checksum = crc16(checksum, (uint8_t*) message.payload->data(), message.payload_size);
-   // Read the remote checksum that the device computed.
-   if (readRaw(&remote_checksum, sizeof(checksum_t)))
-      throw DVLException("Unable to read checksum of incoming packet");
-   // Convert the checksum from big-endian to host-endian.
-   remote_checksum = be16toh(remote_checksum);
+   // Read in the header of the datagram packet: UInt16.
+   if (readRaw(&start, sizeof(frameid_t)))
+      throw DVLException("Unable to read beginning of incoming packet.");
+   // Compute the local checksum with the read data.
+   checksum = crc16(checksum, &start, sizeof(frameid_t));
 
-   // Validate the remote checksum
-   if (checksum != remote_checksum)
-      throw DVLException("Incoming packet checksum invalid.");
-   
+   // From the first bytes, determine the type of message being sent in.
+   switch (start) {
+      case kPD0HeaderID: // We grabbed a PD0 packet that we have to read.
+         message.format = PD0;
+         message.payload->reserve(sizeof(PD0_Header));
+         // Read in the header and spit it into the vector storage.
+         if (readRaw(message.payload->data(), header_bytes))
+            throw DVLException("Unable to read header of incoming packet");
+         // Compute what's needed to read in the rest of the payload.
+         message.pd0_header = (PD0_Header*) message.payload->data();
+         total_bytes = message.pd0_header->bytes_in_ensemble;
+         payload_bytes = total_bytes - sizeof(checksum_t) - sizeof(frameid_t);
+         // Reserve enough storage for the payload.
+         message.payload->reserve(payload_bytes);
+
+         // Read in the remaining payload and spit it into the vector storage.
+         if (readRaw(message.payload->data()+ header_bytes, payload_bytes - header_bytes))
+            throw DVLException("Unable to read payload of incoming packet");
+         // Compute the local checksum with the read data.
+         checksum = crc16(checksum, message.payload->data(), payload_bytes);
+
+         // Read the remote checksum that the device computed.
+         if (readRaw(&remote_checksum, sizeof(checksum_t)))
+            throw DVLException("Unable to read checksum of incoming packet");
+
+         // Compare the checksums to validate the message.
+         if (checksum != remote_checksum)
+            throw DVLException("Remote and local checksum mismatch");
+
+         message.pd0_header = (PD0_Header*) message.payload->data();
+         offsets = (data_offset_t*) message.payload->data() + header_bytes;
+
+         for(data_types_i = 0; data_types_i < message.pd0_header->data_types; data_types_i++) {
+            data_offset_t offset = offsets[data_types_i];
+            char* frame = message.payload->data() + offset;
+            char* body = frame + sizeof(frameid_t);
+            switch (*((frameid_t*) frame)) {
+               case kPD0FixedLeaderID:
+                  message.pd0_fixed =(PD0_FixedLeader*) body;
+                  break;
+               case kPD0VariableLeaderID:
+                  message.pd0_variable = (PD0_VariableLeader*) body;
+                  break;
+               case kPD0VelocityDataID:
+                  message.pd0_velocity = (PD0_CellShortFields*) body;
+                  break;
+               case kPD0CorrelationMagnitudeID:
+                  message.pd0_correlation = (PD0_CellByteFields*) body;
+                  break;
+               case kPD0EchoIntensityID:
+                  message.pd0_echo_intensity = (PD0_CellByteFields*) body;
+                  break;
+               case kPD0PercentGoodID:
+                  message.pd0_percent_good = (PD0_CellByteFields*) body;
+                  break;
+               case kPD0StatusDataID:
+                  message.pd0_status = (PD0_CellByteFields*) body;
+                  break;
+               case kPD0BottomTrackID:
+                  message.pd0_bottom_track = (PD0_BottomTrack*) body;
+                  break;
+               case kPD0EnvironmentID:
+                  message.pd0_environment = (PD0_Environment*) body;
+                  break;
+               case kPD0BottomTrackCommandID:
+                  message.pd0_bottom_track_command = (PD0_BottomTrackCommand*) body;
+                  break;
+               case kPD0BottomTrackHighResID:
+                  message.pd0_bottom_track_highres = (PD0_BottomTrackHighRes*) body;
+                  break;
+               case kPD0BottomTrackRangeID:
+                  message.pd0_bottom_track_range = (PD0_BottomTrackRange*) body;
+                  break;
+               case kPD0SensorDataID:
+                  message.pd0_sensor_data = (PD0_SensorData*) body;
+                  break;
+               default:
+                  throw DVLException("Unknown data format in PD0 packet");
+            }
+         }
+         break;
+      case kPD4HeaderID: // We grabbed a PD4 packet that we have to read (easy).
+         message.format = PD4;
+         message.payload->reserve(sizeof(PD4_Data));
+         // Read in the payload and spit it into the vector storage.
+         if (readRaw(message.payload->data(), sizeof(PD4_Data)))
+            throw DVLException("Unable to read payload of incoming packet");
+         // Compute the local checksum with the read data.
+         checksum = crc16(checksum, message.payload->data(), sizeof(PD4_Data));
+         // Read the remote checksum that the device computed.
+         if (readRaw(&remote_checksum, sizeof(checksum_t)))
+            throw DVLException("Unable to read checksum of incoming packet");
+         // Compare the checksums to validate the message.
+         if (checksum != remote_checksum)
+            throw DVLException("Remote and local checksum mismatch");
+         message.pd4_data = (PD4_Data*) message.payload->data();
+         break;
+      case kPD5HeaderID: // We grabbed a PD5 packet that we have to read (easy).
+         message.format = PD5;
+         message.payload->reserve(sizeof(PD5_Data));
+         // Read in the payload and spit it into the vector storage.
+         if (readRaw(message.payload->data(), sizeof(PD5_Data)))
+            throw DVLException("Unable to read payload of incoming packet");
+         // Compute the local checksum with the read data.
+         checksum = crc16(checksum, message.payload->data(), sizeof(PD4_Data));
+         // Read the remote checksum that the device computed.
+         if (readRaw(&remote_checksum, sizeof(checksum_t)))
+            throw DVLException("Unable to read checksum of incoming packet");
+         // Compare the checksums to validate the message.
+         if (checksum != remote_checksum)
+            throw DVLException("Remote and local checksum mismatch");
+         message.pd5_data = (PD5_Data*) message.payload->data();
+         break;
+      default:
+         char text;
+         message.format = TEXT;
+         do {
+            // Read in a single char and push it onto the payload.
+            if(readRaw(&text, sizeof(char)))
+               throw DVLException("Unable to read text character");
+            message.payload->push_back(text);
+         } while (text != '>'); // Read until the next prompt appears.
+         message.payload->push_back('\0'); // Null terminate the string
+         message.text = message.payload->data();
+         break;
+   }
    // Everything succeeded. The packet was read in properly.
    return message;
 }
 
-void DVL::writeMessage(Message message)
+#define BUF_SIZE 1024
+
+void DVL::writeCommand(Command cmd, ...)
 {
-   // Calculate the total packet length.
-   bytecount_t total_size = 
-      sizeof(bytecount_t) + sizeof(frameid_t) + message.payload_size + sizeof(checksum_t);
-   // Storage for the checksum.
-   checksum_t checksum = 0x0;
-
-   // Convert from host-endian to big-endian
-   total_size = htobe16(total_size);
-
-   // Compute the checksum from the packet data.
-   checksum = crc16(checksum, (uint8_t*) &total_size, sizeof(bytecount_t));
-   checksum = crc16(checksum, (uint8_t*) &message.id, sizeof(frameid_t));
-   checksum = crc16(checksum, (uint8_t*) message.payload->data(), message.payload_size);
-   // Convert from host-endian to big-endian
-   checksum = htobe16(checksum);
-
-   // Attempt to write the datagram to the serial port.
-   if (writeRaw(&total_size, sizeof(bytecount_t)))
-      throw DVLException("Unable to write bytecount.");
-   // Attempt to write the frameid to the serial port.
-   if (writeRaw(&message.id, sizeof(frameid_t)))
-      throw DVLException("Unable to write frameid.");
-   // Attempt to write the payload to the serial port.
-   if (writeRaw(message.payload->data(), message.payload_size))
-      throw DVLException("Unable to write payload.");
-   // Attempt to write the checksum to the serial port.
-   if (writeRaw(&checksum, sizeof(checksum_t)))
-      throw DVLException("Unable to write checksum.");
+   char buffer[BUF_SIZE];
+   char cr = '\r';
+   va_list argv;
+   // The second argument should be the last defined function arg. 
+   va_start(argv,cmd);
+   // Assemble the command to a string from the format string.
+   int bytes = vsnprintf(buffer, BUF_SIZE, cmd.format, argv);
+   // Bytes written will not include the null char at the end.
+   if (bytes == BUF_SIZE - 1)
+      throw DVLException("Write buffer overflow");
+   // Write the command to the output line to the DVL.
+   if (writeRaw(buffer, bytes))
+      throw DVLException("Unable to send message");
+   // Send a carriage return to tell the DVL input is finished.
+   if (writeRaw(&cr, 1))
+      throw DVLException("Unable to send carriage return");
 }
 
-DVL::Message DVL::createMessage(Command cmd, const void* payload)
-{
-   // Temporary storage to assemble the message.
-   Message message;
+constexpr DVL::Command DVL::cGeneralCommandHelp;
+constexpr DVL::Command DVL::cBottomCommandHelp;
+constexpr DVL::Command DVL::cControlCommandHelp;
+constexpr DVL::Command DVL::cEnvironmentCommandHelp;
+constexpr DVL::Command DVL::cLoopRecorderCommandHelp;
+constexpr DVL::Command DVL::cPerformanceTestCommandHelp;
+constexpr DVL::Command DVL::cSensorCommandHelp;
+constexpr DVL::Command DVL::cTimeCommandHelp;
+constexpr DVL::Command DVL::cWaterProfilingCommandHelp;
+constexpr DVL::Command DVL::cEvaluationAmplitudeMinimum;
+constexpr DVL::Command DVL::cBottomBlankingInterval;
+constexpr DVL::Command DVL::cBottomCorrelationMagnitude;
+constexpr DVL::Command DVL::cBottomErrorVelocityMaximum;
+constexpr DVL::Command DVL::cBottomDepthGuess;
+constexpr DVL::Command DVL::cBottomGainSwitchDepth;
+constexpr DVL::Command DVL::cBottomDataOut;
+constexpr DVL::Command DVL::cWaterMassPingDisable;
+constexpr DVL::Command DVL::cWaterMassPingBoth;
+constexpr DVL::Command DVL::cWaterMassPingOnBottomLoss;
+constexpr DVL::Command DVL::cWaterMassPingOnly;
+constexpr DVL::Command DVL::cWaterMassParameters;
+constexpr DVL::Command DVL::cSpeedLogControl;
+constexpr DVL::Command DVL::cDistanceMeasureFilterConstant;
+constexpr DVL::Command DVL::cBottomTrackPingsPerEnsemble;
+constexpr DVL::Command DVL::cClearDistanceTravelled;
+constexpr DVL::Command DVL::cMaximumTrackingDepth;
+constexpr DVL::Command DVL::cSerialPortControl;
+constexpr DVL::Command DVL::cFlowControl;
+constexpr DVL::Command DVL::cKeepParameters;
+constexpr DVL::Command DVL::cRetrieveUserParameters;
+constexpr DVL::Command DVL::cRetrieveFactoryParameters;
+constexpr DVL::Command DVL::cStartPinging;
+constexpr DVL::Command DVL::cTurnkeyDisable;
+constexpr DVL::Command DVL::cTurnkeyEnable;
+constexpr DVL::Command DVL::cSetOutTrigger;
+constexpr DVL::Command DVL::cSetInputTrigger;
+constexpr DVL::Command DVL::cStaticHeadingOffset;
+constexpr DVL::Command DVL::cManualSpeedOfSound;
+constexpr DVL::Command DVL::cLiveDepth;
+constexpr DVL::Command DVL::cEnvironmentalDataOutput;
+constexpr DVL::Command DVL::cLiveHeading;
+constexpr DVL::Command DVL::cStaticRollOffset;
+constexpr DVL::Command DVL::cStaticPitchOffset;
+constexpr DVL::Command DVL::cLivePitchAndRoll;
+constexpr DVL::Command DVL::cLiveSalinity;
+constexpr DVL::Command DVL::cLiveTemperature;
+constexpr DVL::Command DVL::cOrientationDynamic;
+constexpr DVL::Command DVL::cOrientationFixedUp;
+constexpr DVL::Command DVL::cOrientationFixedDown;
+constexpr DVL::Command DVL::cStaticMagneticHeadingOffset;
+constexpr DVL::Command DVL::cCoordinateTransformation;
+constexpr DVL::Command DVL::cDopplerParameterSource;
+constexpr DVL::Command DVL::cSensorSource;
+constexpr DVL::Command DVL::cRecorderErase;
+constexpr DVL::Command DVL::cShowMemoryUsage;
+constexpr DVL::Command DVL::cSetFileName;
+constexpr DVL::Command DVL::cRecorderDisable;
+constexpr DVL::Command DVL::cRecorderEnable;
+constexpr DVL::Command DVL::cFileDownload;
+constexpr DVL::Command DVL::cPreDeploymentTests;
+constexpr DVL::Command DVL::cInteractiveTest;
+constexpr DVL::Command DVL::cSendRawWaterCurrentData;
+constexpr DVL::Command DVL::cSendWithoutSensorData;
+constexpr DVL::Command DVL::cSendWithSensorData;
+constexpr DVL::Command DVL::cSendASCIIData;
+constexpr DVL::Command DVL::cDisplaySystemConfiguration;
+constexpr DVL::Command DVL::cDisplayFixedLeader;
+constexpr DVL::Command DVL::cDisplayTransformMatrix;
+constexpr DVL::Command DVL::cDisplayPingSequence;
+constexpr DVL::Command DVL::cTestDVLRecievePath;
+constexpr DVL::Command DVL::cTestTxRxLoop;
+constexpr DVL::Command DVL::cTestWiring;
+constexpr DVL::Command DVL::cTestDVLRecievePathRepeat;
+constexpr DVL::Command DVL::cTestTxRxLoopRepeat;
+constexpr DVL::Command DVL::cTestWiringRepeat;
+constexpr DVL::Command DVL::cTestAll;
+constexpr DVL::Command DVL::cTestAllRepeat;
+constexpr DVL::Command DVL::cSendSensorCommand;
+constexpr DVL::Command DVL::cSensorDataOut;
+constexpr DVL::Command DVL::cAuxSensorAuxMenu;
+constexpr DVL::Command DVL::cPressureSensorOffset;
+constexpr DVL::Command DVL::cSensorPortAssignment;
+constexpr DVL::Command DVL::cSensorReset;
+constexpr DVL::Command DVL::cTimePerEnsemble;
+constexpr DVL::Command DVL::cTimeBetweenPings;
+constexpr DVL::Command DVL::cSetRealTimeClock;
+constexpr DVL::Command DVL::cFalseTargetThreshold;
+constexpr DVL::Command DVL::cWideBandwithMode;
+constexpr DVL::Command DVL::cNarrowBandwidthMode;
+constexpr DVL::Command DVL::cCoorelationThreshold;
+constexpr DVL::Command DVL::cDataOut;
+constexpr DVL::Command DVL::cErrorVelocityThreshold;
+constexpr DVL::Command DVL::cBlankingDistance;
+constexpr DVL::Command DVL::cReceiverLowGainMode;
+constexpr DVL::Command DVL::cReceiverHighGainMode;
+constexpr DVL::Command DVL::cNumberOfBins;
+constexpr DVL::Command DVL::cPingsPerEnsemble;
+constexpr DVL::Command DVL::cBinSize;
+constexpr DVL::Command DVL::cTransmitLength;
+constexpr DVL::Command DVL::cAmbiguityVelocity;
+constexpr DVL::Command DVL::cListFeatures;
+constexpr DVL::Command DVL::cInstallFeature;
 
-   // Copy the details of the command to the message.
-   message.id = cmd.id;
-   message.payload_size = cmd.payload_size;
-
-   // Create the memory in the Message struct.
-   message.payload = std::make_shared<std::vector<char>>();
-   message.payload->reserve(message.payload_size);
-
-   // Copy the payload to the vector.
-   message.payload->assign((char*) payload, ((char*)payload) + message.payload_size);
-
-   // Return the message created.
-   return message;
-}
-
-DVL::Command DVL::inferCommand(Message message)
-{
-   throw DVLException("Unimplemented");
-}
-
-void DVL::readCommand(Command cmd, void* target)
-{
-   // Read until the message we receive is the one we want.
-   Message message;
-   do {
-      message = readMessage();
-   } while (cmd.name != inferCommand(message).name);
-
-   // Copy the data to the target memory.
-   if (target != NULL && !memcpy(target, message.payload->data(),message.payload_size))
-      throw DVLException("Unable to copy the read command to the caller's memory.");
-}
-
-void DVL::writeCommand(Command cmd, const void* payload)
-{
-   writeMessage(createMessage(cmd, payload));
-}
-
-void DVL::sendCommand(Command send, const void* payload, Command resp, void* target)
-{
-   if ((target != NULL) && memset(target, 0, resp.payload_size) == NULL)
-      throw DVLException("Unable to clear command response target memory.");
-   writeCommand(send, payload);
-   readCommand(resp, target);
-}
+constexpr DVL::frameid_t DVL::kPD0HeaderID;
+constexpr DVL::frameid_t DVL::kPD0FixedLeaderID;
+constexpr DVL::frameid_t DVL::kPD0VariableLeaderID;
+constexpr DVL::frameid_t DVL::kPD0VelocityDataID;
+constexpr DVL::frameid_t DVL::kPD0CorrelationMagnitudeID;
+constexpr DVL::frameid_t DVL::kPD0EchoIntensityID;
+constexpr DVL::frameid_t DVL::kPD0PercentGoodID;
+constexpr DVL::frameid_t DVL::kPD0StatusDataID;
+constexpr DVL::frameid_t DVL::kPD0BottomTrackID;
+constexpr DVL::frameid_t DVL::kPD0EnvironmentID;
+constexpr DVL::frameid_t DVL::kPD0BottomTrackCommandID;
+constexpr DVL::frameid_t DVL::kPD0BottomTrackHighResID;
+constexpr DVL::frameid_t DVL::kPD0BottomTrackRangeID;
+constexpr DVL::frameid_t DVL::kPD0SensorDataID;
+constexpr DVL::frameid_t DVL::kPD4HeaderID;
+constexpr DVL::frameid_t DVL::kPD5HeaderID;

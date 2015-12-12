@@ -87,9 +87,8 @@ class DVL
       void sendBreak();
 
       /** Checksum helper function. */
-      checksum_t crc_xmodem_update (checksum_t crc, uint8_t data);
       /** Checksum function to compute binary CRC16s. */
-      checksum_t crc16(checksum_t crc, uint8_t* data, bytecount_t bytes);
+      checksum_t crc16(checksum_t crc, void* data, int bytes);
       /** Read bytes to a blob, return the bytes not read. */
       int readRaw(void* blob, int bytes_to_read);
       /** Write bytes from a blob, return the bytes not written. */
@@ -97,18 +96,7 @@ class DVL
 
       /** Read an incoming frame and format it for interpreting. */
       Message readMessage();
-      /** Write a message to the device, adding bytecount and checksum. */
-      void writeMessage(Message message);
-      /** Create a message from a command and a payload */
-      Message createMessage(Command cmd, const void* payload);
-      /** Infer the command that the message refers to. */
-      Command inferCommand(Message message);
-
-      /** Read a command and its payload from the device. */
-      void readCommand(Command cmd, void* target);
       /** Write a command with a payload to the device. */
-      void writeCommand(Command cmd, const void* payload);
-      /** Send a command and wait for a response. */
-      void sendCommand(Command cmd, const void* payload, Command resp, void* target);
+      void writeCommand(Command cmd, ...);
 };
 #endif

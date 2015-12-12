@@ -115,3 +115,28 @@ static constexpr Command cAmbiguityVelocity              = {"#WV%3d",           
 static constexpr Command cListFeatures                   = {"OL",                                  "cListFeatures"};
 static constexpr Command cInstallFeature                 = {"OI",                                  "cInstallFeature"};
 
+static constexpr frameid_t kPD0HeaderID                  = 0x7f7f;
+static constexpr frameid_t kPD0FixedLeaderID             = 0x0000;
+static constexpr frameid_t kPD0VariableLeaderID          = 0x0080;
+static constexpr frameid_t kPD0VelocityDataID            = 0x0100;
+static constexpr frameid_t kPD0CorrelationMagnitudeID    = 0x0200;
+static constexpr frameid_t kPD0EchoIntensityID           = 0x0300;
+static constexpr frameid_t kPD0PercentGoodID             = 0x0400;
+static constexpr frameid_t kPD0StatusDataID              = 0x0500;
+static constexpr frameid_t kPD0BottomTrackID             = 0x0600;
+static constexpr frameid_t kPD0EnvironmentID             = 0x3000;
+static constexpr frameid_t kPD0BottomTrackCommandID      = 0x5800;
+static constexpr frameid_t kPD0BottomTrackHighResID      = 0x5803;
+static constexpr frameid_t kPD0BottomTrackRangeID        = 0x5804;
+static constexpr frameid_t kPD0SensorDataID              = 0x3001;
+static constexpr frameid_t kPD4HeaderID                  = 0x007d;
+static constexpr frameid_t kPD5HeaderID                  = 0x017d;
+
+
+
+
+
+
+
+
+
