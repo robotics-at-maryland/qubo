@@ -1,4 +1,4 @@
-private:
+
 constexpr DVL::Command DVL::cGeneralCommandHelp;
 constexpr DVL::Command DVL::cBottomCommandHelp;
 constexpr DVL::Command DVL::cControlCommandHelp;
@@ -118,3 +118,24 @@ constexpr DVL::frameid_t DVL::kPD0BottomTrackRangeID;
 constexpr DVL::frameid_t DVL::kPD0SensorDataID;
 constexpr DVL::frameid_t DVL::kPD4HeaderID;
 constexpr DVL::frameid_t DVL::kPD5HeaderID;
+
+constexpr DVL::DVLSpeed DVL::k300;
+constexpr DVL::DVLSpeed DVL::k1200;
+constexpr DVL::DVLSpeed DVL::k2400;
+constexpr DVL::DVLSpeed DVL::k4800;
+constexpr DVL::DVLSpeed DVL::k9600;
+constexpr DVL::DVLSpeed DVL::k19200;
+constexpr DVL::DVLSpeed DVL::k38400;
+constexpr DVL::DVLSpeed DVL::k57600;
+constexpr DVL::DVLSpeed DVL::k115200;
+
+
+
+
+
+
+
+
+
+
+

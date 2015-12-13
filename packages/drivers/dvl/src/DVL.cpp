@@ -201,7 +201,7 @@ DVL::Message DVL::readMessage()
    // From the first bytes, determine the type of message being sent in.
    switch (start) {
       case kPD0HeaderID: // We grabbed a PD0 packet that we have to read.
-         message.format = PD0;
+         message.format = FORMAT_PD0;
          message.payload->reserve(sizeof(PD0_Header));
          // Read in the header and spit it into the vector storage.
          if (readRaw(message.payload->data(), header_bytes))
@@ -280,7 +280,7 @@ DVL::Message DVL::readMessage()
          }
          break;
       case kPD4HeaderID: // We grabbed a PD4 packet that we have to read (easy).
-         message.format = PD4;
+         message.format = FORMAT_PD4;
          message.payload->reserve(sizeof(PD4_Data));
          // Read in the payload and spit it into the vector storage.
          if (readRaw(message.payload->data(), sizeof(PD4_Data)))
@@ -296,7 +296,7 @@ DVL::Message DVL::readMessage()
          message.pd4_data = (PD4_Data*) message.payload->data();
          break;
       case kPD5HeaderID: // We grabbed a PD5 packet that we have to read (easy).
-         message.format = PD5;
+         message.format = FORMAT_PD5;
          message.payload->reserve(sizeof(PD5_Data));
          // Read in the payload and spit it into the vector storage.
          if (readRaw(message.payload->data(), sizeof(PD5_Data)))
@@ -313,7 +313,7 @@ DVL::Message DVL::readMessage()
          break;
       default:
          char text;
-         message.format = TEXT;
+         message.format = FORMAT_TEXT;
          do {
             // Read in a single char and push it onto the payload.
             if(readRaw(&text, sizeof(char)))

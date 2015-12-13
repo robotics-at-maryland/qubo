@@ -318,7 +318,7 @@ typedef struct _Command {
 
 /** Format for the message recieved from the DVL. */
 typedef enum _MessageFormat {
-   TEXT, PD0, PD4, PD5
+   FORMAT_TEXT, FORMAT_PD0, FORMAT_PD4, FORMAT_PD5
 } MessageFormat;
 
 /** Memory storage for a message recieved from the DVL. */
@@ -360,6 +360,46 @@ public:
  * limited number of unique values.
  ************************************************************************/
 
+typedef enum _DataOutput {
+   ALL_DATA, PARTIAL_DATA, MINIMUM_DATA
+} DataOutput;
+
+typedef enum _Parity {
+   NO_PARITY = 1, EVEN_PARITY = 2, ODD_PARITY = 3, LOW_PARITY = 4, HIGH_PARITY = 5
+} Parity;
+
+typedef enum _StopBits {
+   ONE_STOPB = 1, TWO_STOPB = 2
+} StopBits;
+
+typedef enum _CoordTransform {
+   NO_TRANFORM = 0, INSTRUMENT_TRANSFORM = 1, VEHICLE_TRANSFORM = 10, EARTH_TRANSFORM = 11
+} CoordTransform;
+
+typedef enum _OrientationResolution {
+   AUTO_ORIENT = 0, FORCE_UP = 1, FORCE_DOWN = 2
+} OrientationResolution;
+
+typedef enum _ConditionSource {
+   MANUAL_SOURCE = 0, PRIMARY_SOURCE = 1, SECONDARY_SOURCE = 2
+} ConditionSource;
+
+typedef enum _SensorID {
+   HPR_GYRO = 1, GARMIN_GPS = 2, PRESSURE = 3, SPEEDOFSOUND = 4, HONEYWELL_COMPASS = 5,
+   SEABIRD_CTD = 6, ECHO_SOUNDER = 7, TEMPERATURE = 8, PNI_COMPASS = 9, SENSOR_PACKAGE = 10, SENSOR_LAST
+} SensorID;
+
+typedef enum _BottomOutputID {
+   TRACK, COMMAND, HIGHRES, RANGE, NAVIGATION, BOTTOM_LAST
+} BottomOutputID;
+
+typedef enum _ProfileOutputID {
+   VELOCITY, CORRELATION, ECHO_INTENSITY, PERCENT_GOOD, STATUS, PROFILE_LAST
+} ProfileOutputID;
+
+typedef enum _WaterMassPing {
+   WM_PING_DISABLE, WM_PING_EVERY, WM_PING_ON_LOSS, WM_PING_ONLY
+} WaterMassPing;
 
 /************************************************************************
  * API TYPEDEFS
@@ -373,6 +413,70 @@ typedef struct _DVLSpeed {
    /** Identifier for the host speed for the computer. */
    speed_t baud;
 } DVLSpeed;
+
+typedef struct _SystemConfig {
+   DVLSpeed speed;
+   Parity parity;
+   StopBits stopbits;
+   bool auto_ensemble_cycling;
+   bool auto_ping_cycling;
+   bool binary_data_output;
+   bool serial_output;
+   bool turnkey;
+} SystemConfig;
+
+typedef struct _VehicleConfig {
+   float beam3_alignment;
+   CoordTransform transformation;
+   bool use_pitch_roll;
+   bool use_three_beams;
+   bool use_bin_mappings;
+   OrientationResolution orientation;
+   ConditionSource condition_sources[8];
+   SensorID port2;
+   SensorID port3;
+   SensorID port4;
+} VehicleConfig;
+
+typedef struct _LiveConditions {
+   int depth;
+   float heading;
+   float pitch;
+   float roll;
+   int salinity;
+   float temperature;
+} LiveConditions;
+
+typedef struct _DataConfig {
+   DataOutput output_type;
+   bool sensor_output[SENSOR_LAST][4];
+   bool bottom_output[BOTTOM_LAST];
+   bool profile_output[PROFILE_LAST];
+   bool environment_output;
+   bool condition_output;
+} DataConfig;
+
+typedef struct _BottomTrackConfig {
+   int pings_per_ensemble;
+   unsigned int maximum_depth;
+   int evaluation_amplitude_minimum;
+   int bottom_blank_interval;
+   int correlation_magnitude_minimum;
+   int error_velocity_maximum;
+   unsigned int depth_guess;
+   int gain_switch_depth;
+   WaterMassPing water_mass_mode;
+   int water_mass_layer_size;
+   int water_mass_near_bound;
+   int water_mass_far_bound;
+   bool distance_kept_while_unlocked;
+   int distance_timeout_while_unlocked;
+   int distance_filter_constant;
+} BottomTrackConfig;
+
+typedef struct _WaterProfileConfig {
+   bool narrow_bandwidth;
+} WaterProfileConfig;
 
 /******************************************************************************
  * USER DEFINED TYPEDEFS

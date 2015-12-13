@@ -86,17 +86,16 @@ class DVL
       /** Sends a pause to the DVL, triggering it to restart */
       void sendBreak();
 
-      /** Checksum helper function. */
-      /** Checksum function to compute binary CRC16s. */
+      /** Checksum function to compute modulus 65535 CRC16s. */
       checksum_t crc16(checksum_t crc, void* data, int bytes);
       /** Read bytes to a blob, return the bytes not read. */
       int readRaw(void* blob, int bytes_to_read);
       /** Write bytes from a blob, return the bytes not written. */
       int writeRaw(void* blob, int bytes_to_write);
 
-      /** Read an incoming frame and format it for interpreting. */
+      /** Read an incoming message and format it for interpreting. */
       Message readMessage();
-      /** Write a command with a payload to the device. */
+      /** Write a command and its arguments to the device. */
       void writeCommand(Command cmd, ...);
 };
 #endif
