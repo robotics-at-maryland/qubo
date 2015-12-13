@@ -10,21 +10,22 @@ int main(int argc, char *argv[])
    if (argc == 3)
    {
       DVL *dvl;
+      DVL::DVLData data;
+      clock_t curr, last;
+      double hz;
       try {
-         //dvl = new DVL(std::string(argv[1]),getBaudrate(argv[2]));
-         clock_t curr, last;
-         double hz;
+         dvl = new DVL(std::string(argv[1]),getBaudrate(argv[2]));
+         std::cout << dvl->getSystemInfo() << std::endl;
          last = clock();
          while (dvl->isOpen()) {
-            try {
                curr = clock();
+               data = dvl->getDVLData();
                hz = CLOCKS_PER_SEC / ((double)(curr-last))/10;
-               printf("Polling at %.2f Hz\n", hz);
+               std::cout << "Polling at " << hz << " Hz" << std::endl;
                last = curr;
-            } catch (DVLException& e) {
-            }
          }
       } catch (std::exception& e) {
+         delete dvl;
          printError(e);
          return DVL_ERR;
       }

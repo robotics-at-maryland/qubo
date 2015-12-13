@@ -368,10 +368,6 @@ typedef enum _Parity {
    NO_PARITY = 1, EVEN_PARITY = 2, ODD_PARITY = 3, LOW_PARITY = 4, HIGH_PARITY = 5
 } Parity;
 
-typedef enum _StopBits {
-   ONE_STOPB = 1, TWO_STOPB = 2
-} StopBits;
-
 typedef enum _CoordTransform {
    NO_TRANFORM = 0, INSTRUMENT_TRANSFORM = 1, VEHICLE_TRANSFORM = 10, EARTH_TRANSFORM = 11
 } CoordTransform;
@@ -417,12 +413,13 @@ typedef struct _DVLSpeed {
 typedef struct _SystemConfig {
    DVLSpeed speed;
    Parity parity;
-   StopBits stopbits;
+   bool two_stopbits;
    bool auto_ensemble_cycling;
    bool auto_ping_cycling;
    bool binary_data_output;
    bool serial_output;
    bool turnkey;
+   bool recorder_enable;
 } SystemConfig;
 
 typedef struct _VehicleConfig {
@@ -476,6 +473,16 @@ typedef struct _BottomTrackConfig {
 
 typedef struct _WaterProfileConfig {
    bool narrow_bandwidth;
+   int blank_after_transmit;
+   int depth_cells;
+   int pings_per_ensemble;
+   int depth_cell_size;
+   int radial_ambiguity_velocity;
+   int false_target_threshold;
+   int low_correlation_threshold;
+   int error_velocity_threshold;
+   bool high_gain;
+   int transmit_length;
 } WaterProfileConfig;
 
 /******************************************************************************

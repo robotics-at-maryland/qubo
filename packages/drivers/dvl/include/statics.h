@@ -132,6 +132,7 @@ static constexpr frameid_t kPD0SensorDataID              = 0x3001;
 static constexpr frameid_t kPD4HeaderID                  = 0x007d;
 static constexpr frameid_t kPD5HeaderID                  = 0x017d;
 
+public:
 static constexpr DVLSpeed k300                           = {0, B300};
 static constexpr DVLSpeed k1200                          = {1, B1200};
 static constexpr DVLSpeed k2400                          = {2, B2400};

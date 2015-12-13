@@ -275,6 +275,7 @@ DVL::Message DVL::readMessage()
                   message.pd0_sensor_data = (PD0_SensorData*) body;
                   break;
                default:
+                  // This may be a sensor data packet, maybe we dont want to except.
                   throw DVLException("Unknown data format in PD0 packet");
             }
          }
@@ -316,10 +317,13 @@ DVL::Message DVL::readMessage()
          message.format = FORMAT_TEXT;
          do {
             // Read in a single char and push it onto the payload.
-            if(readRaw(&text, sizeof(char)))
+            if (readRaw(&text, sizeof(char)))
                throw DVLException("Unable to read text character");
-            message.payload->push_back(text);
-         } while (text != '>'); // Read until the next prompt appears.
+            // Disregard some characters from the input.
+            if (text != '\r' && text != '>' && text != '<')
+               message.payload->push_back(text);
+            // This might all screw up if the command fails.
+         } while (text != '>' && text != '<'); // Read until the next prompt appears.
          message.payload->push_back('\0'); // Null terminate the string
          message.text = message.payload->data();
          break;
