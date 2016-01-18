@@ -94,7 +94,7 @@ static constexpr Command cSetRealTimeClock               = {"TS%4d/%2d/%2d,%2d:%
 // Water Profiling Commands
 static constexpr Command cFalseTargetThreshold           = {"WA%3d",                               "cFalseTargetThreshold"};
 static constexpr Command cBandwidthMode                  = {"WB%1d",                               "cBandwithMode"};
-static constexpr Command cCoorelationThreshold           = {"#WC%3d",                              "cCoorelationThreshold"};
+static constexpr Command cCorrelationThreshold           = {"#WC%3d",                              "cCorrelationThreshold"};
 static constexpr Command cDataOut                        = {"#WD%1d%1d%1d %1d%1d%1d %1d%1d%1d",    "cDataOut"}; // BINARY
 static constexpr Command cErrorVelocityThreshold         = {"#WE%4d",                              "cErrorVelocityThreshold"};
 static constexpr Command cBlankingDistance               = {"WF%3d",                               "cBlankingDistance"};

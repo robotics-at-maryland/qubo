@@ -16,46 +16,46 @@ void DVL::saveUserSettings() {
 }
 
 std::string DVL::getSystemInfo() {
-    return new std::string(sendMessage(cDistplaySystemConfiguration).text);
+    return std::string(sendCommand(cDisplaySystemConfiguration).text);
 }
 
 std::string DVL::getFeaturesList() {
-    return new std::string(sendMessage(cListFeatures).text);
+    return std::string(sendCommand(cListFeatures).text);
 }
 
 std::string DVL::getBottomTrackHelp() {
-    return new std::string(sendCommand(cBottomControlHelp).text);
+    return std::string(sendCommand(cBottomCommandHelp).text);
 }
 
 std::string DVL::getControlHelp() {
-    return new std::string(sendCommand(cControlCommandHelp).text);
+    return std::string(sendCommand(cControlCommandHelp).text);
 }
 
 std::string DVL::getEnvironmentHelp() {
-    return new std::string(sendCommand(cEnvironmentCommandHelp).text);
+    return std::string(sendCommand(cEnvironmentCommandHelp).text);
 }
 
 std::string DVL::getLoopRecorderHelp() {
-    return new std::string(sendCommand(cLoopRecorderCommandHelp).text);
+    return std::string(sendCommand(cLoopRecorderCommandHelp).text);
 }
 
 std::string DVL::getPerformanceTestHelp() {
-    return new std::string(sendCommand(cPerformanceTestCommandHelp).text);
+    return std::string(sendCommand(cPerformanceTestCommandHelp).text);
 }
 
 std::string DVL::getSensorCommandHelp() {
-    return new std::string(sendCommand(cSensorCommandHelp).text);
+    return std::string(sendCommand(cSensorCommandHelp).text);
 }
 
 std::string DVL::getTimeCommandHelp() {
-    return new std::string(sendCommand(cTimeCommandHelp).text);
+    return std::string(sendCommand(cTimeCommandHelp).text);
 }
 
 std::string DVL::getWaterProfilingHelp() {
-    return new std::string(sendCommand(cWaterProfilingCommandHelp).text);
+    return std::string(sendCommand(cWaterProfilingCommandHelp).text);
 }
 
-void setSystemConfiguration(SystemConfig& config) {
+void DVL::setSystemConfiguration(SystemConfig& config) {
     sendCommand(cSerialPortControl, 
             config.speed.id, 
             config.parity, 
@@ -109,29 +109,30 @@ void DVL::setLiveConditions(LiveConditions& conditions) {
 }
 
 void DVL::setDataTransferConfiguration(DataConfig& config) {
-    switch (config) {
+    switch (config.output_type) {
         case ALL_DATA:
+            int i;
             sendCommand(cSendRawWaterCurrentData);
             for (i = HPR_GYRO; i < SENSOR_LAST; i++) {
                 sendCommand(cSensorDataOut,
                     i,
-                    sensor_output[i][0],
-                    sensor_output[i][1],
-                    sensor_output[i][2],
-                    sensor_output[i][3]);
+                    config.sensor_output[i][0],
+                    config.sensor_output[i][1],
+                    config.sensor_output[i][2],
+                    config.sensor_output[i][3]);
             }
-            sendCommand(cBottomDataOutput,
-                    bottom_output[TRACK],
-                    bottom_output[COMMAND],
-                    bottom_output[HIGHRES],
-                    bottom_output[RANGE],
-                    bottom_output[NAVIGATION]);
+            sendCommand(cBottomDataOut,
+                    config.bottom_output[TRACK],
+                    config.bottom_output[COMMAND],
+                    config.bottom_output[HIGHRES],
+                    config.bottom_output[RANGE],
+                    config.bottom_output[NAVIGATION]);
             sendCommand(cDataOut,
-                    profile_output[VELOCITY],
-                    profile_output[CORRELATION],
-                    profile_output[ECHO_INTENSITY],
-                    profile_output[PERCENT_GOOD],
-                    profile_output[STATUS]);
+                    config.profile_output[VELOCITY],
+                    config.profile_output[CORRELATION],
+                    config.profile_output[ECHO_INTENSITY],
+                    config.profile_output[PERCENT_GOOD],
+                    config.profile_output[STATUS]);
             break;
         case PARTIAL_DATA:
             sendCommand(cSendWithSensorData);
@@ -145,7 +146,7 @@ void DVL::setDataTransferConfiguration(DataConfig& config) {
     }
 }
 
-void setBottomTrackConfiguration(BottomTrackConfig& config) {
+void DVL::setBottomTrackConfiguration(BottomTrackConfig& config) {
     sendCommand(cBottomTrackPingsPerEnsemble, config.pings_per_ensemble);
     sendCommand(cMaximumTrackingDepth, config.maximum_depth);
     sendCommand(cEvaluationAmplitudeMinimum, config.evaluation_amplitude_minimum);
@@ -165,8 +166,8 @@ void setBottomTrackConfiguration(BottomTrackConfig& config) {
     sendCommand(cDistanceMeasureFilterConstant, config.distance_filter_constant);
 }
 
-void setWaterProfileConfiguration(WaterProfileConfig& config) {
-    sendCommand(cBandwithMode, config.narrow_bandwidth);
+void DVL::setWaterProfileConfiguration(WaterProfileConfig& config) {
+    sendCommand(cBandwidthMode, config.narrow_bandwidth);
     sendCommand(cBlankingDistance, config.blank_after_transmit);
     sendCommand(cNumberOfBins, config.depth_cells);
     sendCommand(cPingsPerEnsemble, config.pings_per_ensemble);
@@ -175,64 +176,64 @@ void setWaterProfileConfiguration(WaterProfileConfig& config) {
     sendCommand(cFalseTargetThreshold, config.false_target_threshold);
     sendCommand(cCorrelationThreshold, config.low_correlation_threshold);
     sendCommand(cErrorVelocityThreshold, config.error_velocity_threshold);
-    sendCommand(cRecieverGain, config.high_gain);
+    sendCommand(cReceiverGain, config.high_gain);
     sendCommand(cTransmitLength, config.transmit_length);
 }
 
-void setRecorderFilename(std::string& name) {
+void DVL::setRecorderFilename(std::string& name) {
     sendCommand(cSetFileName, name.c_str());
 }
 
-void eraseRecorder() {
+void DVL::eraseRecorder() {
     sendCommand(cRecorderErase);
 }
 
-std::string getRecorderStatus() {
-    return new std::string(sendCommand(cShowMemoryUsage).text);
+std::string DVL::getRecorderStatus() {
+    return std::string(sendCommand(cShowMemoryUsage).text);
 }
 
-void getRecordedData() {
-    throw new std::exception("NOT IMPLEMENTED");
+void DVL::getRecordedData() {
 }
 
-std::string getInstrumentTransformationMatrix() {
-    return new std::string(sendCommand(cDisplayTransformMatrix).text);
+std::string DVL::getInstrumentTransformationMatrix() {
+    return std::string(sendCommand(cDisplayTransformMatrix).text);
 }
 
-std::string getPingSequence() {
-    return new std::string(sendCommand(cDisplayPingSequence).text);
+std::string DVL::getPingSequence() {
+    return std::string(sendCommand(cDisplayPingSequence).text);
 }
 
-std::string testPreDeployment() {
-    return new std::string(sendCommand(cPreDeploymentTests).text);
+std::string DVL::testPreDeployment() {
+    return std::string(sendCommand(cPreDeploymentTests).text);
 }
 
-std::string testReceiver() {
-    return new std::string(sendCommand(cTestDVLRecievePath).text);
+std::string DVL::testReceiver() {
+    return std::string(sendCommand(cTestDVLRecievePath).text);
 }
 
-std::string testContinuity() {
-    return new std::string(sendCommand(cTestTxRxLoop).text);
+std::string DVL::testContinuity() {
+    return std::string(sendCommand(cTestTxRxLoop).text);
 }
 
-std::string testWiring() {
-    return new std::string(sendCommand(cTestWiring).text);
+std::string DVL::testWiring() {
+    return std::string(sendCommand(cTestWiring).text);
 }
 
-void enableMeasurement() {
+void DVL::enableMeasurement() {
     sendCommand(cStartPinging);
 }
 
-void disableMeasurement() {
+void DVL::disableMeasurement() {
     sendBreak();
 }
 
-DVLData getDVLData() {
+DVL::DVLData DVL::getDVLData() {
     Message message = readMessage();
-    DVLData data = {0};
+    DVLData data = {};
     data.mms_east = message.pd0_bottom_track->bot_velocity[0];
     data.mms_north = message.pd0_bottom_track->bot_velocity[1];
     data.mms_surface = message.pd0_bottom_track->bot_velocity[2];
+    return data;
 }
 
 

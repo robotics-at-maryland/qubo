@@ -139,7 +139,7 @@ void setWaterProfileConfiguration(WaterProfileConfig& config);
  * This file can be downloaded later.
  * @param (std::string) of length <= 32 for a filename.
  */
-void setRecorderFilename(std::string name);
+void setRecorderFilename(std::string& name);
 
 /** Erase the recorder's data file completely. */
 void eraseRecorder();

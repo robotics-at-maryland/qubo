@@ -354,3 +354,11 @@ void DVL::writeCommand(Command cmd, ...)
       throw DVLException("Unable to send carriage return");
 }
 
+DVL::Message DVL::sendCommand(Command cmd, ...)
+{
+    va_list argv;
+    va_start(argv,cmd);
+    writeCommand(cmd, argv);
+    return readMessage();
+}
+
