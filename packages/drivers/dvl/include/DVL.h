@@ -80,8 +80,6 @@ class DVL
       int _deviceFD;
       /** Timeout (sec,usec) on read/write */
       struct timeval _timeout;
-      /** Storage for readings from the DVL for caching purposes. */
-      DVLData _lastReading;
 
       /** Sends a pause to the DVL, triggering it to restart */
       void sendBreak();
@@ -97,5 +95,8 @@ class DVL
       Message readMessage();
       /** Write a command and its arguments to the device. */
       void writeCommand(Command cmd, ...);
+
+      /** Write a command with variable args and read something back */
+      Message sendCommand(Command cmd, ...);
 };
 #endif

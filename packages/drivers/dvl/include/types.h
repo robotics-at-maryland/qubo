@@ -361,7 +361,7 @@ public:
  ************************************************************************/
 
 typedef enum _DataOutput {
-   ALL_DATA, PARTIAL_DATA, MINIMUM_DATA
+   ALL_DATA, PARTIAL_DATA, MINIMUM_DATA, TEXT_DATA
 } DataOutput;
 
 typedef enum _Parity {
@@ -493,7 +493,22 @@ typedef struct _WaterProfileConfig {
  ******************************************************************************/
 
 typedef struct _DVLData {
-   int blah;
+   int mms_east;
+   int mms_north;
+   int mms_surface;
 } DVLData;
 
 #pragma pack(pop)
+
+
+
+
+
+
+
+
+
+
+
+
+
