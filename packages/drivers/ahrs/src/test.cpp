@@ -9,20 +9,20 @@ int main(int argc, char *argv[])
 {
    if (argc == 3)
    {
-      IMU *imu;
+      AHRS *ahrs;
       try {
-         imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
-         IMU::IMUData data;
+         ahrs = new AHRS(std::string(argv[1]),getBaudrate(argv[2]));
+         AHRS::AHRSData data;
          clock_t curr, last;
          double hz;
-         imu->openDevice();
-         printf("Connected to %s.\n", (imu->getInfo()).c_str());
-         imu->sendIMUDataFormat();
+         ahrs->openDevice();
+         printf("Connected to %s.\n", (ahrs->getInfo()).c_str());
+         ahrs->sendAHRSDataFormat();
          last = clock();
-         while (imu->isOpen()) {
+         while (ahrs->isOpen()) {
             try {
                // Poll data
-               data = imu->pollIMUData();
+               data = ahrs->pollAHRSData();
                // Print the data formatted.
                printf("Q: (%1.3f,%1.3f,%1.3f,%1.3f)\n",
                      data.quaternion[0], data.quaternion[1], data.quaternion[2], data.quaternion[3]);
@@ -36,16 +36,16 @@ int main(int argc, char *argv[])
                hz = CLOCKS_PER_SEC / ((double)(curr-last))/10;
                printf("Polling at %.2f Hz\n", hz);
                last = curr;
-            } catch (IMUException& e) {
-               imu->closeDevice();
-               imu->openDevice();
+            } catch (AHRSException& e) {
+               ahrs->closeDevice();
+               ahrs->openDevice();
             }
          }
-         imu->closeDevice();
+         ahrs->closeDevice();
       } catch (std::exception& e) {
-         delete imu;
+         delete ahrs;
          printError(e);
-         return IMU_ERR;
+         return AHRS_ERR;
       }
    }
    printUsage();

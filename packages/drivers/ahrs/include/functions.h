@@ -2,7 +2,7 @@
 public: // Front facing API function calls.
 
 /** 
- * Reads the hardware info from the IMU unit. 
+ * Reads the hardware info from the AHRS unit. 
  * @return (std::string) Hardware info
  */
 std::string getInfo();
@@ -98,15 +98,15 @@ bool getAutoCalibration();
 /** 
  * Set the baudrate to the device.
  * NOTE: change requires a full power-cycle to update.
- * @param (IMUSpeed) Speed to use on the connection.
+ * @param (AHRSSpeed) Speed to use on the connection.
  */
-void setBaudrate(IMUSpeed speed);
+void setBaudrate(AHRSSpeed speed);
 
 /** 
  * Get the baudrate to the device.
- * @return (IMUSpeed) Speed to use on the connection.
+ * @return (AHRSSpeed) Speed to use on the connection.
  */
-IMUSpeed getBaudrate();
+AHRSSpeed getBaudrate();
 
 /**
  * Set the Mils/Degree flag.
@@ -206,14 +206,14 @@ void setAcqConfig(AcqConfig config);
  */
 AcqConfig getAcqConfig();
 
-/** Send the data poll format to the IMU. */
-void sendIMUDataFormat();
+/** Send the data poll format to the AHRS. */
+void sendAHRSDataFormat();
 
 /** 
- * Polls the IMU for position information.
- * @return an IMUData struct of formatted IMU data.
+ * Polls the AHRS for position information.
+ * @return an AHRSData struct of formatted AHRS data.
  */
-IMUData pollIMUData();
+AHRSData pollAHRSData();
 
 /**
  * Start User Calibration.

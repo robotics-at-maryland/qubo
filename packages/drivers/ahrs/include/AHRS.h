@@ -1,9 +1,9 @@
-#ifndef IMU_H
-#define IMU_H
+#ifndef AHRS_H
+#define AHRS_H
 
 /*
- * IMU.h
- * Header file for IMU API.
+ * AHRS.h
+ * Header file for AHRS API.
  *
  * Copyright (C) 2015 Robotics at Maryland
  * Copyright (C) 2015 Greg Harris <gharris1727@gmail.com>
@@ -32,44 +32,44 @@
 /**
  * Exception class for handling IO/Data integrity errors.
  */
-class IMUException : public std::runtime_error
+class AHRSException : public std::runtime_error
 {
    public:
-      IMUException(std::string message)
+      AHRSException(std::string message)
          : runtime_error(message) {}
 };
 
 /**
- * IMU API class
+ * AHRS API class
  * Contains all the low-level I/O abstraction, and allows the user to communicate
- * with the IMU hardware at a high level. Connects to a unix serial/usb terminal
+ * with the AHRS hardware at a high level. Connects to a unix serial/usb terminal
  * and speaks the PNI Binary protocol to send and recieve packets of data.
  */
-class IMU
+class AHRS
 {
 #include "types.h"
 #include "statics.h"
 #include "functions.h"
    public:
       /**
-       * Constructor for a new IMU interface.
+       * Constructor for a new AHRS interface.
        * @param (std::string) unix device name
-       * @param (IMUSpeed) Baudrate to use for connection.
+       * @param (AHRSSpeed) Baudrate to use for connection.
        */
-      IMU(std::string deviceFile, IMUSpeed speed);
+      AHRS(std::string deviceFile, AHRSSpeed speed);
       /** Destructor that cleans up and closes the device. */
-      ~IMU();
+      ~AHRS();
       /** 
        * Opens the device and configures the I/O terminal. 
        * Requires dialout permissions to the device in _deviceFile.
        */
       void openDevice();
       /** 
-       * Checks if the IMU is currently open and avaiable 
-       * @return (bool) whether the IMU is avaliable for other API operations.
+       * Checks if the AHRS is currently open and avaiable 
+       * @return (bool) whether the AHRS is avaliable for other API operations.
        */
       bool isOpen();
-      /** Ensures that the IMU is open, throws an exception otherwise. */
+      /** Ensures that the AHRS is open, throws an exception otherwise. */
       void assertOpen();
       /** Disconnectes from the device and closes the teriminal. */
       void closeDevice();
@@ -82,8 +82,8 @@ class IMU
       int _deviceFD;
       /** Timeout (sec,usec) on read/write */
       struct timeval _timeout;
-      /** Storage for readings from the IMU for caching purposes. */
-      IMUData _lastReading;
+      /** Storage for readings from the AHRS for caching purposes. */
+      AHRSData _lastReading;
 
       /** Checksum helper function. */
       checksum_t crc_xmodem_update (checksum_t crc, uint8_t data);

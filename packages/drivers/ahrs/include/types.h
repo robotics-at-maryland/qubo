@@ -175,12 +175,12 @@ typedef enum _FilterCount {
  ************************************************************************/
 
 /** Specification for the baudrate of the serial link. */
-typedef struct _IMUSpeed {
+typedef struct _AHRSSpeed {
    /** Identifier for the device speed for the device. */
    uint8_t id;
    /** Identifier for the host speed for the computer. */
    speed_t baud;
-} IMUSpeed;
+} AHRSSpeed;
 
 /** Struct for configuring the data aquisitions. */
 typedef struct _AcqConfig {
@@ -217,7 +217,7 @@ typedef std::vector<double> FilterData;
  ******************************************************************************/
 
 /**
- * Struct of data types being sent/retrieved from the IMU.
+ * Struct of data types being sent/retrieved from the AHRS.
  * The idCount at the beginning is how many different ids are in the struct.
  */
 typedef struct _RawDataFields {
@@ -235,12 +235,12 @@ typedef struct _RawDataFields {
 } RawDataFields;
 
 /**
- * Struct of data being sent/retrieved from the IMU
+ * Struct of data being sent/retrieved from the AHRS
  * VERY IMPORTANT: each major field must be one of the types defined
  * in the PNI AHRS spec, and must be preceded by a garbage data_id_t var.
  * This is in order to read in the data directly, and discard the data IDs.
  * Additionally, there is one garbage idCount at the beginning.
- * ALSO: make sure to update IMU_RAW_N_FIELDS to the number of major fields.
+ * ALSO: make sure to update AHRS_RAW_N_FIELDS to the number of major fields.
  */
 typedef struct _RawData {
    uint8_t idCount;
@@ -267,8 +267,8 @@ typedef struct _RawData {
 } RawData;
 
 public:
-/** Data type storing formatted IMU data to be passed around. */
-typedef struct _IMUData {
+/** Data type storing formatted AHRS data to be passed around. */
+typedef struct _AHRSData {
    float quaternion[4];
    float gyroX;
    float gyroY;
@@ -279,6 +279,6 @@ typedef struct _IMUData {
    float magX;
    float magY;
    float magZ;
-} IMUData;
+} AHRSData;
 
 #pragma pack(pop)
