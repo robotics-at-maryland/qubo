@@ -30,6 +30,7 @@ include_directories(
   dvl/include
   imu/include
   power_source/include
+  led_status/include
   )
 
 set(DEPTH_SRC_FILES
@@ -52,6 +53,11 @@ set(POWER_SRC_FILES
   power_source/src/power_sensor_sim.cpp
   )
 
+set(LED_SRC_FILES
+  led_status/src/main.cpp
+  led_status/src/led_status_sim.cpp
+  )
+
 set(TEST_FILES
   
     )
@@ -72,6 +78,9 @@ target_link_libraries(imu_node ${catkin_LIBRARIES})
   
 add_executable(power_node ${POWER_SRC_FILES})
 target_link_libraries(power_node ${catkin_LIBRARIES})
+
+add_executable(led_node ${LED_SRC_FILES})
+target_link_libraries(led_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################

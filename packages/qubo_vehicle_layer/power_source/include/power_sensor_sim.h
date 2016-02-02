@@ -5,7 +5,7 @@
 #include "qubo_node.h"
 #include "ram_msgs/PowerSource.h"
 
-#define DEFAULT_STATUS true
+#define DEFAULT_STATUS false
 #define DEFAULT_VOLTAGE 24.0
 #define DEFAULT_CURRENT 9001.0
 #define DEFAULT_LIFE 3600
@@ -22,7 +22,7 @@ class PowerSimNode : QuboNode {
 
         double voltageDrainRate = DEFAULT_VOLTAGE / DEFAULT_LIFE;
         double currentDrainRate = DEFAULT_CURRENT / DEFAULT_LIFE;
-        std::time_t startTime;
+        std::time_t prevTime;
     
     public:
         PowerSimNode(int, char **, int, std::string);

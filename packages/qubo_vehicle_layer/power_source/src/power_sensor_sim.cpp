@@ -13,20 +13,37 @@ PowerSimNode::PowerSimNode(int argc, char **argv, int rate, std::string name) {
     current = DEFAULT_CURRENT;
     life = DEFAULT_LIFE;
     /* Record the start time */
-    startTime = std::time(nullptr);
+    prevTime = std::time(nullptr);
 
-    n.setParam("qubo/source_enabled_" + name, DEFAULT_STATUS);
+    n.setParam("qubo/current_source", currentSource);
+
+    /*
     n.setParam("qubo/source_voltage_" + name, DEFAULT_VOLTAGE);
     n.setParam("qubo/source_current_" + name, DEFAULT_CURRENT);
-    n.setParam("qubo/source_life__" + name, DEFAULT_LIFE);
-    
+    n.setParam("qubo/source_life_" + name, DEFAULT_LIFE);
+    */
     
 }
 
 PowerSimNode::~PowerSimNode() {}
 
 void PowerSimNode::update() {
-   std::time_t currTime = std::time(nullptr);
+    std::string specifiedSource = "";
+    std::time_t currTime = std::time(nullptr);
+    double deltaTime = std::difftime(currTime, prevTime);
+    prevTime = currTime;
+
+    n.param("qubo/current_source", specifiedSource, currentSource);
+    
+    if (sourceName.compare(currentSource) == 0) {
+        enabled = true;
+        voltage -= deltaTime * voltageDrainRate;
+        current -= deltaTime * currentDrainRate;
+    } else {
+        enabled = false;
+    }
+
+    ros::spinOnce();
 }
 
 void PowerSimNode::publish() {
