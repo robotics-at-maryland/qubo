@@ -25,3 +25,4 @@ void DVLSimNode::dvlCallBack(const underwater_sensor_msgs::DVL sim_msg)
   msg.bi_y_axis = sim_msg.bi_y_axis;
   msg.bi_z_axis = sim_msg.bi_z_axis;
 }
+       
