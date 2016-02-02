@@ -10,10 +10,10 @@ int main(int argc, char *argv[])
 {
    if (argc == 3) {
       try {
-         IMU *imu = new IMU(std::string(argv[1]),getBaudrate(argv[2]));
+         AHRS *imu = new AHRS(std::string(argv[1]),getBaudrate(argv[2]));
          char *buffer = NULL;
          size_t bufsize;
-         // Connect to the IMU.
+         // Connect to the AHRS.
          imu->openDevice();
          printf("Connected to %s.\n", (imu->getInfo()).c_str());
          // Prompt the user for a new baudrate.

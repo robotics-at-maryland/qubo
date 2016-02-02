@@ -1,6 +1,6 @@
 /******************************************************************************
- * IMU.cpp
- * IMU Device API implementation.
+ * AHRS.cpp
+ * AHRS Device API implementation.
  *
  * Copyright (C) 2015 Robotics at Maryland
  * Copyright (C) 2015 Greg Harris <gharris1727@gmail.com>
@@ -17,17 +17,17 @@
 #include <endian.h>
 
 // Header include
-#include "../include/IMU.h"
+#include "../include/AHRS.h"
 
 #include "impl.cpp"
 
-   IMU::IMU(std::string deviceFile, IMUSpeed speed) 
+   AHRS::AHRS(std::string deviceFile, AHRSSpeed speed) 
 : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({1,0})
 { }
 
-IMU::~IMU() { closeDevice(); }
+AHRS::~AHRS() { closeDevice(); }
 
-void IMU::openDevice() {
+void AHRS::openDevice() {
    struct termios termcfg;
    int modemcfg = 0, fd = -1;
    /* Open the serial port and store into a file descriptor.
@@ -37,16 +37,16 @@ void IMU::openDevice() {
    fd = open(_deviceFile.c_str(), O_RDWR, O_NONBLOCK);
    // Check to see if the device exists.
    if (fd == -1)
-      throw IMUException("Device '"+_deviceFile+"' unavaliable.");
+      throw AHRSException("Device '"+_deviceFile+"' unavaliable.");
    // Read the config of the interface.
    if(tcgetattr(fd, &termcfg)) 
-      throw IMUException("Unable to read terminal configuration.");
+      throw AHRSException("Unable to read terminal configuration.");
 
    // Set the baudrate for the terminal
    if(cfsetospeed(&termcfg, _termBaud))
-      throw IMUException("Unable to set terminal output speed.");
+      throw AHRSException("Unable to set terminal output speed.");
    if(cfsetispeed(&termcfg, _termBaud))
-      throw IMUException("Unable to set terminal intput speed.");
+      throw AHRSException("Unable to set terminal intput speed.");
 
    // Set raw I/O rules to read and write the data purely.
    cfmakeraw(&termcfg);
@@ -58,26 +58,26 @@ void IMU::openDevice() {
 
    // Push the configuration to the terminal NOW.
    if(tcsetattr(fd, TCSANOW, &termcfg))
-      throw IMUException("Unable to set terminal configuration.");
+      throw AHRSException("Unable to set terminal configuration.");
 
    // Pull in the modem configuration
    if(ioctl(fd, TIOCMGET, &modemcfg))
-      throw IMUException("Unable to read modem configuration.");
+      throw AHRSException("Unable to read modem configuration.");
    // Enable Request to Send
    modemcfg |= TIOCM_RTS;
    // Push the modem config back to the modem.
    if(ioctl(fd, TIOCMSET, &modemcfg))
-      throw IMUException("Unable to set modem configuration.");
+      throw AHRSException("Unable to set modem configuration.");
 
    // Successful execution!
    _deviceFD = fd;
 }
 
-bool IMU::isOpen() {return _deviceFD >= 0;}
+bool AHRS::isOpen() {return _deviceFD >= 0;}
 
-void IMU::assertOpen() { if (!isOpen()) throw IMUException("Device needs to be open!"); }
+void AHRS::assertOpen() { if (!isOpen()) throw AHRSException("Device needs to be open!"); }
 
-void IMU::closeDevice() {
+void AHRS::closeDevice() {
    if (isOpen()) 
       close(_deviceFD);
    _deviceFD = -1;
@@ -88,7 +88,7 @@ void IMU::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
-IMU::checksum_t IMU::crc_xmodem_update (checksum_t crc, uint8_t data)
+AHRS::checksum_t AHRS::crc_xmodem_update (checksum_t crc, uint8_t data)
 {
    int i;
    crc = crc ^ ((uint16_t)data << 8);
@@ -102,13 +102,13 @@ IMU::checksum_t IMU::crc_xmodem_update (checksum_t crc, uint8_t data)
    return crc;
 }
 
-IMU::checksum_t IMU::crc16(checksum_t crc, uint8_t* data, bytecount_t bytes){
+AHRS::checksum_t AHRS::crc16(checksum_t crc, uint8_t* data, bytecount_t bytes){
    for (; bytes > 0; bytes--, data++)
       crc = crc_xmodem_update(crc, *data);
    return crc;
 }
 
-int IMU::readRaw(void* blob, int bytes_to_read)
+int AHRS::readRaw(void* blob, int bytes_to_read)
 {  
    // Keep track of the number of bytes read, and the number of fds that are ready.
    int bytes_read = 0, current_read = 0, fds_ready = 0;
@@ -144,7 +144,7 @@ int IMU::readRaw(void* blob, int bytes_to_read)
    return bytes_to_read - bytes_read;
 }
 
-int IMU::writeRaw(void* blob, int bytes_to_write)
+int AHRS::writeRaw(void* blob, int bytes_to_write)
 {
    // Keep track of the number of bytes written, and the number of fds that are ready.
    int bytes_written = 0, current_write = 0, fds_ready = 0;
@@ -180,7 +180,7 @@ int IMU::writeRaw(void* blob, int bytes_to_write)
    return bytes_to_write - bytes_written;
 }
 
-IMU::Message IMU::readMessage()
+AHRS::Message AHRS::readMessage()
 {
    // Storage for packet bytecount.
    bytecount_t total_size;
@@ -191,7 +191,7 @@ IMU::Message IMU::readMessage()
 
    // Read in the header of the datagram packet: UInt16.
    if (readRaw(&total_size, sizeof(bytecount_t)))
-      throw IMUException("Unable to read bytecount of incoming packet.");
+      throw AHRSException("Unable to read bytecount of incoming packet.");
    // Add the total size to the checksum.
    checksum = crc16(checksum, (uint8_t*) &total_size, sizeof(bytecount_t));
    // Convert the total size from big-endian to host-endian.
@@ -206,29 +206,29 @@ IMU::Message IMU::readMessage()
 
    // Read in the frameid: UInt8.
    if (readRaw(&message.id, sizeof(frameid_t)))
-      throw IMUException("Unable to read frameid of incoming packet");
+      throw AHRSException("Unable to read frameid of incoming packet");
    // Add the message id to the checksum.
    checksum = crc16(checksum, (uint8_t*) &message.id, sizeof(frameid_t));
    // Read in the payload and spit it into the vector storage.
    if (readRaw(message.payload->data(), message.payload_size))
-      throw IMUException("Unable to read payload of incoming packet");
+      throw AHRSException("Unable to read payload of incoming packet");
    // Add the data read in to the checksum.
    checksum = crc16(checksum, (uint8_t*) message.payload->data(), message.payload_size);
    // Read the remote checksum that the device computed.
    if (readRaw(&remote_checksum, sizeof(checksum_t)))
-      throw IMUException("Unable to read checksum of incoming packet");
+      throw AHRSException("Unable to read checksum of incoming packet");
    // Convert the checksum from big-endian to host-endian.
    remote_checksum = be16toh(remote_checksum);
 
    // Validate the remote checksum
    if (checksum != remote_checksum)
-      throw IMUException("Incoming packet checksum invalid.");
+      throw AHRSException("Incoming packet checksum invalid.");
    
    // Everything succeeded. The packet was read in properly.
    return message;
 }
 
-void IMU::writeMessage(Message message)
+void AHRS::writeMessage(Message message)
 {
    // Calculate the total packet length.
    bytecount_t total_size = 
@@ -248,19 +248,19 @@ void IMU::writeMessage(Message message)
 
    // Attempt to write the datagram to the serial port.
    if (writeRaw(&total_size, sizeof(bytecount_t)))
-      throw IMUException("Unable to write bytecount.");
+      throw AHRSException("Unable to write bytecount.");
    // Attempt to write the frameid to the serial port.
    if (writeRaw(&message.id, sizeof(frameid_t)))
-      throw IMUException("Unable to write frameid.");
+      throw AHRSException("Unable to write frameid.");
    // Attempt to write the payload to the serial port.
    if (writeRaw(message.payload->data(), message.payload_size))
-      throw IMUException("Unable to write payload.");
+      throw AHRSException("Unable to write payload.");
    // Attempt to write the checksum to the serial port.
    if (writeRaw(&checksum, sizeof(checksum_t)))
-      throw IMUException("Unable to write checksum.");
+      throw AHRSException("Unable to write checksum.");
 }
 
-IMU::Message IMU::createMessage(Command cmd, const void* payload)
+AHRS::Message AHRS::createMessage(Command cmd, const void* payload)
 {
    // Temporary storage to assemble the message.
    Message message;
@@ -280,7 +280,7 @@ IMU::Message IMU::createMessage(Command cmd, const void* payload)
    return message;
 }
 
-IMU::Command IMU::inferCommand(Message message)
+AHRS::Command AHRS::inferCommand(Message message)
 {
    // In many cases after comparing the ID the command is unambiguous.
    // Some cases need some special attention.
@@ -314,7 +314,7 @@ IMU::Command IMU::inferCommand(Message message)
             case kAccelCoeffSet:
                return kSetConfigUInt32;
             default:
-               throw IMUException("Unknown configuration field id. corrupt?");
+               throw AHRSException("Unknown configuration field id. corrupt?");
          }
       case kGetConfig.id:
          return kGetConfig;
@@ -337,7 +337,7 @@ IMU::Command IMU::inferCommand(Message message)
             case kAccelCoeffSet:
                return kGetConfigRespUInt32;
             default:
-               throw IMUException("Unknown configuration field id. corrupt?");
+               throw AHRSException("Unknown configuration field id. corrupt?");
          }
       case kSave.id:
          return kSave;
@@ -359,7 +359,7 @@ IMU::Command IMU::inferCommand(Message message)
             case F_32:
                return kSetFIRFiltersThirtyTwo;
             default:
-               throw IMUException("Unknown number of filters. corrupt?");
+               throw AHRSException("Unknown number of filters. corrupt?");
          }
       case kGetFIRFilters.id:
          return kGetFIRFilters;
@@ -377,7 +377,7 @@ IMU::Command IMU::inferCommand(Message message)
             case F_32:
                return kGetFIRFiltersRespThirtyTwo;
             default:
-               throw IMUException("Unknown number of filters. corrupt?");
+               throw AHRSException("Unknown number of filters. corrupt?");
          }
       case kPowerDown.id:
          return kPowerDown;
@@ -432,11 +432,11 @@ IMU::Command IMU::inferCommand(Message message)
       case kGetMagTruthMethodResp.id:
          return kGetMagTruthMethodResp;
       default: 
-         throw IMUException("Unable to infer command from frameid. corrupt?"); break;
+         throw AHRSException("Unable to infer command from frameid. corrupt?"); break;
    }
 }
 
-void IMU::readCommand(Command cmd, void* target)
+void AHRS::readCommand(Command cmd, void* target)
 {
    // Read until the message we receive is the one we want.
    Message message;
@@ -446,114 +446,114 @@ void IMU::readCommand(Command cmd, void* target)
 
    // Copy the data to the target memory.
    if (target != NULL && !memcpy(target, message.payload->data(),message.payload_size))
-      throw IMUException("Unable to copy the read command to the caller's memory.");
+      throw AHRSException("Unable to copy the read command to the caller's memory.");
 }
 
-void IMU::writeCommand(Command cmd, const void* payload)
+void AHRS::writeCommand(Command cmd, const void* payload)
 {
    writeMessage(createMessage(cmd, payload));
 }
 
-void IMU::sendCommand(Command send, const void* payload, Command resp, void* target)
+void AHRS::sendCommand(Command send, const void* payload, Command resp, void* target)
 {
    if ((target != NULL) && memset(target, 0, resp.payload_size) == NULL)
-      throw IMUException("Unable to clear command response target memory.");
+      throw AHRSException("Unable to clear command response target memory.");
    writeCommand(send, payload);
    readCommand(resp, target);
 }
 
-constexpr IMU::Command IMU::kGetModInfo;
-constexpr IMU::Command IMU::kGetModInfoResp;
-constexpr IMU::Command IMU::kSetDataComponents;
-constexpr IMU::Command IMU::kGetData;
-constexpr IMU::Command IMU::kGetDataResp;
-constexpr IMU::Command IMU::kSetConfigBoolean;
-constexpr IMU::Command IMU::kSetConfigFloat32;
-constexpr IMU::Command IMU::kSetConfigUInt8;
-constexpr IMU::Command IMU::kSetConfigUInt32;
-constexpr IMU::Command IMU::kGetConfig;
-constexpr IMU::Command IMU::kGetConfigRespBoolean;
-constexpr IMU::Command IMU::kGetConfigRespFloat32;
-constexpr IMU::Command IMU::kGetConfigRespUInt8;
-constexpr IMU::Command IMU::kGetConfigRespUInt32;
-constexpr IMU::Command IMU::kSave;
-constexpr IMU::Command IMU::kStartCal;
-constexpr IMU::Command IMU::kStopCal;
-constexpr IMU::Command IMU::kSetFIRFiltersZero;
-constexpr IMU::Command IMU::kSetFIRFiltersFour;
-constexpr IMU::Command IMU::kSetFIRFiltersEight;
-constexpr IMU::Command IMU::kSetFIRFiltersSixteen;
-constexpr IMU::Command IMU::kSetFIRFiltersThirtyTwo;
-constexpr IMU::Command IMU::kGetFIRFilters;
-constexpr IMU::Command IMU::kGetFIRFiltersRespZero;
-constexpr IMU::Command IMU::kGetFIRFiltersRespFour;
-constexpr IMU::Command IMU::kGetFIRFiltersRespEight;
-constexpr IMU::Command IMU::kGetFIRFiltersRespSixteen;
-constexpr IMU::Command IMU::kGetFIRFiltersRespThirtyTwo;
-constexpr IMU::Command IMU::kPowerDown;
-constexpr IMU::Command IMU::kSaveDone;
-constexpr IMU::Command IMU::kUserCalSampleCount;
-constexpr IMU::Command IMU::kUserCalScore;
-constexpr IMU::Command IMU::kSetConfigDone;
-constexpr IMU::Command IMU::kSetFIRFiltersDone;
-constexpr IMU::Command IMU::kStartContinuousMode;
-constexpr IMU::Command IMU::kStopContinousMode;
-constexpr IMU::Command IMU::kPowerUpDone;
-constexpr IMU::Command IMU::kSetAcqParams;
-constexpr IMU::Command IMU::kGetAcqParams;
-constexpr IMU::Command IMU::kSetAcqParamsDone;
-constexpr IMU::Command IMU::kGetAcqParamsResp;
-constexpr IMU::Command IMU::kPowerDownDone;
-constexpr IMU::Command IMU::kFactoryMagCoeff;
-constexpr IMU::Command IMU::kFactoryMagCoeffDone;
-constexpr IMU::Command IMU::kTakeUserCalSample;
-constexpr IMU::Command IMU::kFactoryAccelCoeff;
-constexpr IMU::Command IMU::kFactoryAccelCoeffDone;
-constexpr IMU::Command IMU::kSetFunctionalMode;
-constexpr IMU::Command IMU::kGetFunctionalMode;
-constexpr IMU::Command IMU::kGetFunctionalModeResp;
-constexpr IMU::Command IMU::kSetResetRef;
-constexpr IMU::Command IMU::kSetMagTruthMethod;
-constexpr IMU::Command IMU::kGetMagTruthMethod;
-constexpr IMU::Command IMU::kGetMagTruthMethodResp;
+constexpr AHRS::Command AHRS::kGetModInfo;
+constexpr AHRS::Command AHRS::kGetModInfoResp;
+constexpr AHRS::Command AHRS::kSetDataComponents;
+constexpr AHRS::Command AHRS::kGetData;
+constexpr AHRS::Command AHRS::kGetDataResp;
+constexpr AHRS::Command AHRS::kSetConfigBoolean;
+constexpr AHRS::Command AHRS::kSetConfigFloat32;
+constexpr AHRS::Command AHRS::kSetConfigUInt8;
+constexpr AHRS::Command AHRS::kSetConfigUInt32;
+constexpr AHRS::Command AHRS::kGetConfig;
+constexpr AHRS::Command AHRS::kGetConfigRespBoolean;
+constexpr AHRS::Command AHRS::kGetConfigRespFloat32;
+constexpr AHRS::Command AHRS::kGetConfigRespUInt8;
+constexpr AHRS::Command AHRS::kGetConfigRespUInt32;
+constexpr AHRS::Command AHRS::kSave;
+constexpr AHRS::Command AHRS::kStartCal;
+constexpr AHRS::Command AHRS::kStopCal;
+constexpr AHRS::Command AHRS::kSetFIRFiltersZero;
+constexpr AHRS::Command AHRS::kSetFIRFiltersFour;
+constexpr AHRS::Command AHRS::kSetFIRFiltersEight;
+constexpr AHRS::Command AHRS::kSetFIRFiltersSixteen;
+constexpr AHRS::Command AHRS::kSetFIRFiltersThirtyTwo;
+constexpr AHRS::Command AHRS::kGetFIRFilters;
+constexpr AHRS::Command AHRS::kGetFIRFiltersRespZero;
+constexpr AHRS::Command AHRS::kGetFIRFiltersRespFour;
+constexpr AHRS::Command AHRS::kGetFIRFiltersRespEight;
+constexpr AHRS::Command AHRS::kGetFIRFiltersRespSixteen;
+constexpr AHRS::Command AHRS::kGetFIRFiltersRespThirtyTwo;
+constexpr AHRS::Command AHRS::kPowerDown;
+constexpr AHRS::Command AHRS::kSaveDone;
+constexpr AHRS::Command AHRS::kUserCalSampleCount;
+constexpr AHRS::Command AHRS::kUserCalScore;
+constexpr AHRS::Command AHRS::kSetConfigDone;
+constexpr AHRS::Command AHRS::kSetFIRFiltersDone;
+constexpr AHRS::Command AHRS::kStartContinuousMode;
+constexpr AHRS::Command AHRS::kStopContinousMode;
+constexpr AHRS::Command AHRS::kPowerUpDone;
+constexpr AHRS::Command AHRS::kSetAcqParams;
+constexpr AHRS::Command AHRS::kGetAcqParams;
+constexpr AHRS::Command AHRS::kSetAcqParamsDone;
+constexpr AHRS::Command AHRS::kGetAcqParamsResp;
+constexpr AHRS::Command AHRS::kPowerDownDone;
+constexpr AHRS::Command AHRS::kFactoryMagCoeff;
+constexpr AHRS::Command AHRS::kFactoryMagCoeffDone;
+constexpr AHRS::Command AHRS::kTakeUserCalSample;
+constexpr AHRS::Command AHRS::kFactoryAccelCoeff;
+constexpr AHRS::Command AHRS::kFactoryAccelCoeffDone;
+constexpr AHRS::Command AHRS::kSetFunctionalMode;
+constexpr AHRS::Command AHRS::kGetFunctionalMode;
+constexpr AHRS::Command AHRS::kGetFunctionalModeResp;
+constexpr AHRS::Command AHRS::kSetResetRef;
+constexpr AHRS::Command AHRS::kSetMagTruthMethod;
+constexpr AHRS::Command AHRS::kGetMagTruthMethod;
+constexpr AHRS::Command AHRS::kGetMagTruthMethodResp;
 
-constexpr IMU::config_id_t IMU::kDeclination;
-constexpr IMU::config_id_t IMU::kTrueNorth;
-constexpr IMU::config_id_t IMU::kBigEndian;
-constexpr IMU::config_id_t IMU::kMountingRef;
-constexpr IMU::config_id_t IMU::kUserCalNumPoints;
-constexpr IMU::config_id_t IMU::kUserCalAutoSampling;
-constexpr IMU::config_id_t IMU::kBaudRate;
-constexpr IMU::config_id_t IMU::kMilOut;
-constexpr IMU::config_id_t IMU::kHPRDuringCal;
-constexpr IMU::config_id_t IMU::kMagCoeffSet;
-constexpr IMU::config_id_t IMU::kAccelCoeffSet;
+constexpr AHRS::config_id_t AHRS::kDeclination;
+constexpr AHRS::config_id_t AHRS::kTrueNorth;
+constexpr AHRS::config_id_t AHRS::kBigEndian;
+constexpr AHRS::config_id_t AHRS::kMountingRef;
+constexpr AHRS::config_id_t AHRS::kUserCalNumPoints;
+constexpr AHRS::config_id_t AHRS::kUserCalAutoSampling;
+constexpr AHRS::config_id_t AHRS::kBaudRate;
+constexpr AHRS::config_id_t AHRS::kMilOut;
+constexpr AHRS::config_id_t AHRS::kHPRDuringCal;
+constexpr AHRS::config_id_t AHRS::kMagCoeffSet;
+constexpr AHRS::config_id_t AHRS::kAccelCoeffSet;
 
-constexpr IMU::data_id_t IMU::kPitch;
-constexpr IMU::data_id_t IMU::kRoll;
-constexpr IMU::data_id_t IMU::kHeadingStatus;
-constexpr IMU::data_id_t IMU::kQuaternion;
-constexpr IMU::data_id_t IMU::kTemperature;
-constexpr IMU::data_id_t IMU::kDistortion;
-constexpr IMU::data_id_t IMU::kCalStatus;
-constexpr IMU::data_id_t IMU::kAccelX;
-constexpr IMU::data_id_t IMU::kAccelY;
-constexpr IMU::data_id_t IMU::kAccelZ;
-constexpr IMU::data_id_t IMU::kMagX;
-constexpr IMU::data_id_t IMU::kMagY;
-constexpr IMU::data_id_t IMU::kMagZ;
-constexpr IMU::data_id_t IMU::kGyroX;
-constexpr IMU::data_id_t IMU::kGyroY;
-constexpr IMU::data_id_t IMU::kGyroZ;
+constexpr AHRS::data_id_t AHRS::kPitch;
+constexpr AHRS::data_id_t AHRS::kRoll;
+constexpr AHRS::data_id_t AHRS::kHeadingStatus;
+constexpr AHRS::data_id_t AHRS::kQuaternion;
+constexpr AHRS::data_id_t AHRS::kTemperature;
+constexpr AHRS::data_id_t AHRS::kDistortion;
+constexpr AHRS::data_id_t AHRS::kCalStatus;
+constexpr AHRS::data_id_t AHRS::kAccelX;
+constexpr AHRS::data_id_t AHRS::kAccelY;
+constexpr AHRS::data_id_t AHRS::kAccelZ;
+constexpr AHRS::data_id_t AHRS::kMagX;
+constexpr AHRS::data_id_t AHRS::kMagY;
+constexpr AHRS::data_id_t AHRS::kMagZ;
+constexpr AHRS::data_id_t AHRS::kGyroX;
+constexpr AHRS::data_id_t AHRS::kGyroY;
+constexpr AHRS::data_id_t AHRS::kGyroZ;
 
-constexpr IMU::IMUSpeed IMU::k0;
-constexpr IMU::IMUSpeed IMU::k2400;
-constexpr IMU::IMUSpeed IMU::k4800;
-constexpr IMU::IMUSpeed IMU::k9600;
-constexpr IMU::IMUSpeed IMU::k19200;
-constexpr IMU::IMUSpeed IMU::k38400;
-constexpr IMU::IMUSpeed IMU::k57600;
-constexpr IMU::IMUSpeed IMU::k115200;
+constexpr AHRS::AHRSSpeed AHRS::k0;
+constexpr AHRS::AHRSSpeed AHRS::k2400;
+constexpr AHRS::AHRSSpeed AHRS::k4800;
+constexpr AHRS::AHRSSpeed AHRS::k9600;
+constexpr AHRS::AHRSSpeed AHRS::k19200;
+constexpr AHRS::AHRSSpeed AHRS::k38400;
+constexpr AHRS::AHRSSpeed AHRS::k57600;
+constexpr AHRS::AHRSSpeed AHRS::k115200;
 
-constexpr IMU::RawDataFields IMU::dataConfig;
+constexpr AHRS::RawDataFields AHRS::dataConfig;
 

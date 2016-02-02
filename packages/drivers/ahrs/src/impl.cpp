@@ -1,54 +1,54 @@
 
 
-std::string IMU::getInfo() {
+std::string AHRS::getInfo() {
    ModInfo info;
    sendCommand(kGetModInfo, NULL, kGetModInfoResp, &info);
    return std::string(((char*) &info), sizeof(ModInfo));
 }
 
-void IMU::setDeclination(float decl) {
+void AHRS::setDeclination(float decl) {
    ConfigFloat32 data = {kDeclination, decl};
    sendCommand(kSetConfigFloat32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-float IMU::getDeclination() {
+float AHRS::getDeclination() {
    ConfigFloat32 data;
    sendCommand(kGetConfig, &kDeclination, kGetConfigRespFloat32, &data);
    return data.value;
 }
 
-void IMU::setTrueNorth(bool north) {
+void AHRS::setTrueNorth(bool north) {
    ConfigBoolean data = {kTrueNorth, north};
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-bool IMU::getTrueNorth() {
+bool AHRS::getTrueNorth() {
    ConfigBoolean data;
    sendCommand(kGetConfig, &kTrueNorth, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
-void IMU::setBigEndian(bool endian) {
+void AHRS::setBigEndian(bool endian) {
    ConfigBoolean data = {kBigEndian, endian};
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-bool IMU::getBigEndian() {
+bool AHRS::getBigEndian() {
    ConfigBoolean data;
    sendCommand(kGetConfig, &kBigEndian, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
-void IMU::setMounting(MountRef mount) {
+void AHRS::setMounting(MountRef mount) {
    ConfigUInt8 data = {kMountingRef, mount};
    sendCommand(kSetConfigUInt8, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-IMU::MountRef IMU::getMounting() {
+AHRS::MountRef AHRS::getMounting() {
    ConfigUInt8 data;
    sendCommand(kGetConfig, &kMountingRef, kGetConfigRespUInt8, &data);
    switch(data.id) {
@@ -70,41 +70,41 @@ IMU::MountRef IMU::getMounting() {
       case Z_DOWN_270:  return Z_DOWN_270;
       default:          break;
    }
-   throw IMUException("Unknown mounting reference id reported.");
+   throw AHRSException("Unknown mounting reference id reported.");
 }
 
-void IMU::setCalPoints(unsigned int points) {
+void AHRS::setCalPoints(unsigned int points) {
    ConfigUInt32 data = {kUserCalNumPoints, points};
    sendCommand(kSetConfigUInt32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-unsigned int IMU::getCalPoints() {
+unsigned int AHRS::getCalPoints() {
    ConfigUInt32 data;
    sendCommand(kGetConfig, &kUserCalNumPoints, kGetConfigRespUInt32, &data);
    return data.value;
 }
 
-void IMU::setAutoCalibration(bool cal) {
+void AHRS::setAutoCalibration(bool cal) {
    ConfigBoolean data = {kUserCalAutoSampling, cal};
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-bool IMU::getAutoCalibration() {
+bool AHRS::getAutoCalibration() {
    ConfigBoolean data;
    sendCommand(kGetConfig, &kUserCalAutoSampling, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
-void IMU::setBaudrate(IMUSpeed speed)
+void AHRS::setBaudrate(AHRSSpeed speed)
 {
    ConfigUInt8 data = {kBaudRate, speed.id};
    sendCommand(kSetConfigUInt8, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-IMU::IMUSpeed IMU::getBaudrate() {
+AHRS::AHRSSpeed AHRS::getBaudrate() {
    ConfigUInt8 data;
    sendCommand(kGetConfig, &kBaudRate, kGetConfigRespUInt8, &data);
    switch (data.value) {
@@ -118,40 +118,40 @@ IMU::IMUSpeed IMU::getBaudrate() {
       case k115200.id:  return k115200;
       default:          break;
    }
-   throw IMUException("Unknown device baudrate id reported.");
+   throw AHRSException("Unknown device baudrate id reported.");
 }
 
-void IMU::setMils(bool mils) {
+void AHRS::setMils(bool mils) {
    ConfigBoolean data = {kMilOut, mils};
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-bool IMU::getMils() {
+bool AHRS::getMils() {
    ConfigBoolean data;
    sendCommand(kGetConfig, &kMilOut, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
-void IMU::setHPRCal(bool hpr) {
+void AHRS::setHPRCal(bool hpr) {
    ConfigBoolean data = {kHPRDuringCal, hpr};
    sendCommand(kSetConfigBoolean, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-bool IMU::getHPRCal() {
+bool AHRS::getHPRCal() {
    ConfigBoolean data;
    sendCommand(kGetConfig, &kHPRDuringCal, kGetConfigRespBoolean, &data);
    return data.value;
 }
 
-void IMU::setMagCalID(CalibrationID id) {
+void AHRS::setMagCalID(CalibrationID id) {
    ConfigUInt32 data = {kMagCoeffSet, id};
    sendCommand(kSetConfigUInt32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-IMU::CalibrationID IMU::getMagCalID() {
+AHRS::CalibrationID AHRS::getMagCalID() {
    ConfigUInt32 data;
    sendCommand(kGetConfig, &kMagCoeffSet, kGetConfigRespUInt32, &data);
    switch(data.value) {
@@ -165,16 +165,16 @@ IMU::CalibrationID IMU::getMagCalID() {
       case CAL_7: return CAL_7;
       default:    break;
    }
-   throw IMUException("Unexpected device calibration id reported.");
+   throw AHRSException("Unexpected device calibration id reported.");
 }
 
-void IMU::setAccelCalID(CalibrationID id) {
+void AHRS::setAccelCalID(CalibrationID id) {
    ConfigUInt32 data = {kAccelCoeffSet, id};
    sendCommand(kSetConfigUInt32, &data, kSetConfigDone, NULL);
    saveConfig();
 }
 
-IMU::CalibrationID IMU::getAccelCalID() {
+AHRS::CalibrationID AHRS::getAccelCalID() {
    ConfigUInt32 data;
    sendCommand(kGetConfig, &kAccelCoeffSet, kGetConfigRespUInt32, &data);
    switch(data.value) {
@@ -188,15 +188,15 @@ IMU::CalibrationID IMU::getAccelCalID() {
       case CAL_7: return CAL_7;
       default:    break;
    }
-   throw IMUException("Unexpected device calibration id reported.");
+   throw AHRSException("Unexpected device calibration id reported.");
 }
 
-void IMU::setMagTruthMethod(TruthMethod method) {
+void AHRS::setMagTruthMethod(TruthMethod method) {
    writeCommand(kSetMagTruthMethod, &method);
    saveConfig();
 }
 
-IMU::TruthMethod IMU::getMagTruthMethod() {
+AHRS::TruthMethod AHRS::getMagTruthMethod() {
    MagTruthMethod data;
    sendCommand(kGetMagTruthMethod, NULL, kGetMagTruthMethodResp, &data);
    switch(data) {
@@ -205,27 +205,27 @@ IMU::TruthMethod IMU::getMagTruthMethod() {
       case AUTOMERGE: return AUTOMERGE;
       default:    break;
    }
-   throw IMUException("Unexpected device truth method reported.");
+   throw AHRSException("Unexpected device truth method reported.");
 }
 
-void IMU::saveConfig() {
+void AHRS::saveConfig() {
    SaveError err;
    sendCommand(kSave, NULL, kSaveDone, &err);
    if (err) 
-      throw IMUException("Error while saving configuration to nonvolatile memory.");
+      throw AHRSException("Error while saving configuration to nonvolatile memory.");
 }
 
-void IMU::resetMagReference() {
+void AHRS::resetMagReference() {
    writeCommand(kSetResetRef, NULL);
 }
 
-void IMU::setAcqConfig(AcqConfig config) {
+void AHRS::setAcqConfig(AcqConfig config) {
    AcqParams params = {config.poll_mode, config.flush_filter, 0, config.sample_delay};
    sendCommand(kSetAcqParams, &params, kSetAcqParamsDone, NULL);
    saveConfig();
 }
 
-IMU::AcqConfig IMU::getAcqConfig() {
+AHRS::AcqConfig AHRS::getAcqConfig() {
    AcqParams params;
    sendCommand(kGetAcqParams, NULL, kGetAcqParamsResp, &params);
    return { params.sample_delay,
@@ -233,19 +233,19 @@ IMU::AcqConfig IMU::getAcqConfig() {
             ((params.aquisition_mode) ? true : false)};
 }
 
-void IMU::sendIMUDataFormat()
+void AHRS::sendAHRSDataFormat()
 {
    setBigEndian(false);
    writeCommand(kSetDataComponents, &dataConfig);
    saveConfig();
 }
 
-IMU::IMUData IMU::pollIMUData()
+AHRS::AHRSData AHRS::pollAHRSData()
 {
    RawData data;
-   // Poll the IMU for a data message.
+   // Poll the AHRS for a data message.
    sendCommand(kGetData, NULL, kGetDataResp, &data);
-   // Copy all the data to the actual IMU storage.
+   // Copy all the data to the actual AHRS storage.
    _lastReading.quaternion[0] = data.quaternion[0];
    _lastReading.quaternion[1] = data.quaternion[1];
    _lastReading.quaternion[2] = data.quaternion[2];
@@ -262,21 +262,21 @@ IMU::IMUData IMU::pollIMUData()
    return _lastReading;
 }
 
-void IMU::startCalibration(CalType type) {
+void AHRS::startCalibration(CalType type) {
    writeCommand(kStartCal, &type);
 }
 
-void IMU::stopCalibration() {
+void AHRS::stopCalibration() {
    writeCommand(kStopCal, NULL);
 }
 
-int IMU::takeCalibrationPoint() {
+int AHRS::takeCalibrationPoint() {
    SampleCount point;
    sendCommand(kTakeUserCalSample, NULL, kUserCalSampleCount, &point);
    return point;
 }
 
-IMU::CalScore IMU::getCalibrationScore() {
+AHRS::CalScore AHRS::getCalibrationScore() {
    UserCalScore score;
    readCommand(kUserCalScore, &score);
    saveConfig();
@@ -287,28 +287,28 @@ IMU::CalScore IMU::getCalibrationScore() {
             score.tilt_range};
 }
 
-void IMU::resetMagCalibration() {
+void AHRS::resetMagCalibration() {
    sendCommand(kFactoryMagCoeff, NULL, kFactoryMagCoeffDone, NULL);
    saveConfig();
 }
 
-void IMU::resetAccelCalibration() {
+void AHRS::resetAccelCalibration() {
    sendCommand(kFactoryAccelCoeff, NULL, kFactoryAccelCoeffDone, NULL);
    saveConfig();
 }
 
-void IMU::setAHRSMode(bool mode) {
+void AHRS::setAHRSMode(bool mode) {
    writeCommand(kSetFunctionalMode, &mode);
    saveConfig();
 }
 
-bool IMU::getAHRSMode() {
+bool AHRS::getAHRSMode() {
    bool mode;
    sendCommand(kGetFunctionalMode, NULL, kGetFunctionalModeResp, &mode);
    return mode;
 }
 
-void IMU::setFIRFilters(FilterData data) {
+void AHRS::setFIRFilters(FilterData data) {
    char buffer[kSetFIRFiltersThirtyTwo.payload_size] = {3,1,(char) data.size()};
    char* begin = (char*) data.data();
    Command cmd;
@@ -328,14 +328,14 @@ void IMU::setFIRFilters(FilterData data) {
       case F_32:
          cmd = kSetFIRFiltersThirtyTwo;
          break;
-      default: throw IMUException("Invalid number of FIR filter coefficients!");
+      default: throw AHRSException("Invalid number of FIR filter coefficients!");
    }
    if (!memcpy(buffer+3, begin, data.size()*sizeof(double)))
-      throw IMUException("Could not copy filter data");
+      throw AHRSException("Could not copy filter data");
    sendCommand(cmd, buffer, kSetFIRFiltersDone, NULL);
 }
 
-IMU::FilterData IMU::getFIRFilters() {
+AHRS::FilterData AHRS::getFIRFilters() {
    FIRFilter filter_id = {3,1};
    Message message;
    FilterData data;
@@ -347,16 +347,16 @@ IMU::FilterData IMU::getFIRFilters() {
 
    data.resize((message.payload_size - 3)/sizeof(double));
    if (!memcpy(data.data(), message.payload->data() + 3, message.payload_size - 3))
-      throw IMUException("Could not copy filter data.");
+      throw AHRSException("Could not copy filter data.");
 
    return data;
 }
 
-void IMU::powerDown() {
+void AHRS::powerDown() {
    sendCommand(kPowerDown, NULL, kPowerDownDone, NULL);
 }
 
-void IMU::wakeUp() {
+void AHRS::wakeUp() {
    bool mode;
    writeCommand(kGetFunctionalMode, NULL);
    readCommand(kPowerUpDone, NULL);

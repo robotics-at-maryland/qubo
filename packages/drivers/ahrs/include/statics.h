@@ -96,11 +96,11 @@ static constexpr RawDataFields dataConfig             = {
    kAccelX, kAccelY, kAccelZ, kMagX, kMagY, kMagZ};
 
 public:
-static constexpr IMUSpeed k0        = {0,    B0};
-static constexpr IMUSpeed k2400     = {4,    B2400};
-static constexpr IMUSpeed k4800     = {6,    B4800};
-static constexpr IMUSpeed k9600     = {8,    B9600};
-static constexpr IMUSpeed k19200    = {10,   B19200};
-static constexpr IMUSpeed k38400    = {12,   B38400};
-static constexpr IMUSpeed k57600    = {13,   B57600};
-static constexpr IMUSpeed k115200   = {14,   B115200};
+static constexpr AHRSSpeed k0        = {0,    B0};
+static constexpr AHRSSpeed k2400     = {4,    B2400};
+static constexpr AHRSSpeed k4800     = {6,    B4800};
+static constexpr AHRSSpeed k9600     = {8,    B9600};
+static constexpr AHRSSpeed k19200    = {10,   B19200};
+static constexpr AHRSSpeed k38400    = {12,   B38400};
+static constexpr AHRSSpeed k57600    = {13,   B57600};
+static constexpr AHRSSpeed k115200   = {14,   B115200};
