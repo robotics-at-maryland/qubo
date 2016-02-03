@@ -3,8 +3,8 @@
 
 ThrusterSimNode::ThrusterSimNode(int argc, char **argv, int rate){
   ros::Rate  loop_rate(rate);
-  subscriber = n.subscribe("/g500/pressure", 1000, &ThrusterSimNode::depthCallBack,this);
-  publisher = n.advertise< underwater_sensor_msgs::Pressure>("qubo/depth", 1000);
+  subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterSimNode::depthCallBack,this);
+  publisher = n.advertise< underwater_sensor_msgs::Pressure>("g500/thruster_input", 1000);
   
 };
 

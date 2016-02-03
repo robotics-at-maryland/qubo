@@ -1,4 +1,5 @@
-#include "depth_sensor_sim.h"
+#include "thruster_sim.h"
+
 /**
 This is the main method for our depth_sensor node
 **/
@@ -6,9 +7,8 @@ This is the main method for our depth_sensor node
 
 int main(int argc, char **argv){
 
-  ros::init(argc, argv, "depth_sensor_node"); /** basically always needs to be called first */
+  ros::init(argc, argv, "thruster_node"); /** basically always needs to be called first */
   bool simulated = true; /** We'll have to pass this one in eventually */
-
 
   /**
      The basic idea here is to pass in a boolean from a launch script that determines if our class is 
@@ -18,7 +18,7 @@ int main(int argc, char **argv){
 
 
   // if(simulated){
-    DepthSimNode *node = new DepthSimNode(argc, argv, 10); /** 10 (the rate) is completely arbitrary */
+    ThrusterSimNode *node = ThrusterSimNode(argc, argv, 10); /** 10 (the rate) is completely arbitrary */
     //}else{
     // DepthNode *node = new DepthNode(argc, argv, 10); 
     // }
