@@ -1,8 +1,15 @@
 #include "led_status_sim.h"
 
+int main(int argc, char **argv){
+  ros::init(argc, argv, "led_node");
+  bool simulated = true;
 
-//adding so I can compile
-int main(){
-  //test
-  return 0;
+  LedSimNode *test = new LedSimNode(argc, argv, 10, "TEST");
+
+  test->enable();
+
+  while (ros::ok()) {
+    test->publish();
+    test->update();
+  }
 }
