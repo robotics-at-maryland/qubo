@@ -31,6 +31,7 @@ include_directories(
   imu/include
   power_source/include
   led_status/include
+  temperature/include
   )
 
 set(DEPTH_SRC_FILES
@@ -58,6 +59,11 @@ set(LED_SRC_FILES
   led_status/src/led_status_sim.cpp
   )
 
+set(TEMP_SRC_FILES
+  temperature/src/main.cpp
+  temperature/src/temp_sensor_sim.cpp
+  )
+
 set(TEST_FILES
   
     )
@@ -81,6 +87,9 @@ target_link_libraries(power_node ${catkin_LIBRARIES})
 
 add_executable(led_node ${LED_SRC_FILES})
 target_link_libraries(led_node ${catkin_LIBRARIES})
+
+add_executable(temp_node ${TEMP_SRC_FILES})
+target_link_libraries(temp_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################

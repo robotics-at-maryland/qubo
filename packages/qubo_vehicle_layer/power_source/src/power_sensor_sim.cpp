@@ -4,7 +4,7 @@ std::string PowerSimNode::currentSource;
 
 PowerSimNode::PowerSimNode(int argc, char **argv, int rate, std::string name) {
     ros::Rate loop_rate(rate);
-    publisher = n.advertise<ram_msgs::PowerSource>("qubo/source_" + name, 1000);
+    publisher = n.advertise<ram_msgs::PowerSource>("qubo/power_source/" + name, 1000);
     
     currentSource = "";
     sourceName = name;

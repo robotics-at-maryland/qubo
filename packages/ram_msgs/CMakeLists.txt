@@ -28,6 +28,7 @@ add_message_files(
 
     # New messages added in 2015
     PowerSource.msg
+    Temperature.msg
     Sim_Power_Source.msg
     Sim_Temperature.msg
     Sim_Led.msg
