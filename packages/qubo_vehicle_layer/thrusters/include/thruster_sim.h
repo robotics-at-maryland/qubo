@@ -5,7 +5,7 @@
 #define THRUSTER_SIM_HEADER
 
 #include "qubo_node.h"
-//#include "underwater_sensor_msgs/Pressure.h"
+#include "std_msgs/Float64MultiArray"
 
 class ThrusterSimNode : QuboNode {
 
@@ -15,14 +15,11 @@ class ThrusterSimNode : QuboNode {
   
   void update();
   void publish();
-  void thrusterCallBack(const underwater_sensor_msgs::Pressure msg);
+  void thrusterCallBack(const std_msgs::Float64MultiArray msg);
   
  protected:
-  
-  // underwater_sensor_msgs::Pressure msg;
+  std::Float64MultiArray msg;
   ros::Subscriber subscriber;
-  
-  
 };
 
 
