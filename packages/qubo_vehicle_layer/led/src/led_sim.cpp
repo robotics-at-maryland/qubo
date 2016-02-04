@@ -3,14 +3,14 @@
 LedSimNode::LedSimNode(int argc, char **argv, int rate, std::string name) {
   ledName = name;
   enabled = false;
-  publisher = n.advertise<ram_msgs::Led>("/qubo/led_sensor/" + ledName, 1000);
-  n.setParam("qubo/led_sensor/" + ledName + "/enabled", DEFAULT_ENABLED);
+  publisher = n.advertise<ram_msgs::Led>("/qubo/led/" + ledName, 1000);
+  n.setParam("qubo/led/" + ledName + "/enabled", DEFAULT_ENABLED);
 }
 
 LedSimNode::~LedSimNode() {}
 
 void LedSimNode::update() {
-  n.param("qubo/led_sensor/" + ledName + "/enabled", enabled, DEFAULT_ENABLED);
+  n.param("qubo/led/" + ledName + "/enabled", enabled, DEFAULT_ENABLED);
 
   ros::spinOnce();
 }
@@ -23,6 +23,9 @@ void LedSimNode::publish() {
 
 void LedSimNode::enable() {
   enabled = true;
+  //test code
+  std::stringstream ss;
+  ss << "hello world";
 }
 
 void LedSimNode::disable() {
