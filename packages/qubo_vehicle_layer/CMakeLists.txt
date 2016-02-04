@@ -30,7 +30,7 @@ include_directories(
   dvl/include
   imu/include
   power_source/include
-  led_status/include
+  led/include
   temperature/include
   )
 
@@ -55,8 +55,8 @@ set(POWER_SRC_FILES
   )
 
 set(LED_SRC_FILES
-  led_status/src/main.cpp
-  led_status/src/led_status_sim.cpp
+  led/src/main.cpp
+  led/src/led_sim.cpp
   )
 
 set(TEMP_SRC_FILES

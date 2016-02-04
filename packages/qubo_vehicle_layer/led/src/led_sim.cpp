@@ -1,4 +1,4 @@
-#include "led_status_sim.h"
+#include "led_sim.h"
 
 LedSimNode::LedSimNode(int argc, char **argv, int rate, std::string name) {
   ledName = name;

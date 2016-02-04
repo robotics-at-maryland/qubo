@@ -2,6 +2,7 @@
 #define TEMPSIM_HEADER
 
 #include <string>
+#include <random>
 #include "qubo_node.h"
 #include "ram_msgs/Temperature.h"
 
@@ -11,7 +12,11 @@ class TempSimNode : QuboNode {
     protected:
         std::string sensorName;
         ram_msgs::Temperature msg;
-        double temp;
+        double real_temp;
+        double lower_bound = -1;
+        double upper_bound = 1;
+        std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
+        std::default_random_engine re;
 
     public:
         TempSimNode(int, char **, int, std::string);

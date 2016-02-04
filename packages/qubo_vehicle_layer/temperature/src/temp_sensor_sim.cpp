@@ -5,18 +5,18 @@ TempSimNode::TempSimNode(int argc, char **argv, int rate, std::string name) {
     publisher = n.advertise<ram_msgs::Temperature>("qubo/temp/" + name, 1000);
 
     sensorName = name;
-    temp = DEFAULT_TEMP;
-    n.setParam("qubo/temp/" + sensorName, temp); 
+    real_temp = DEFAULT_TEMP;
+    n.setParam("qubo/temp/" + sensorName, real_temp); 
 } 
 
 TempSimNode::~TempSimNode() {}
 
 void TempSimNode::update() {
-    n.param("qubo/temp/" + sensorName, temp, DEFAULT_TEMP);
-    std::uniform_real_distribution<double> unif(-1.0, 1.0);
-    std::default_random_engine re;
+    n.param("qubo/temp/" + sensorName, real_temp, DEFAULT_TEMP);
     ros::spinOnce();
 }
 
 void TempSimNode::publish() {
+    msg.temp = real_temp + unif(re);
+    publisher.publish(msg);
 }

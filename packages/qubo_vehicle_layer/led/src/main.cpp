@@ -1,4 +1,4 @@
-#include "led_status_sim.h"
+#include "led_sim.h"
 
 int main(int argc, char **argv){
   ros::init(argc, argv, "led_node");
