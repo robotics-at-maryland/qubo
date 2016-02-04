@@ -17,6 +17,6 @@ void TempSimNode::update() {
 }
 
 void TempSimNode::publish() {
-    msg.temp = real_temp + unif(re);
+//    msg.temp = real_temp + unif(re);
     publisher.publish(msg);
 }
