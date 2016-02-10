@@ -12,10 +12,10 @@ TempSimNode::TempSimNode(int argc, char **argv, int rate, std::string name) {
 TempSimNode::~TempSimNode() {}
 
 void TempSimNode::update() {
-    ros::spinOnce(); //magic method always included in update
+  ros::spinOnce(); //magic method always included in update
 }
 
 void TempSimNode::publish() {
-//    msg.temp = real_temp + unif(re);
-    publisher.publish(msg);
+  // msg.temp = real_temp + unif(re);
+  publisher.publish(msg);
 }
