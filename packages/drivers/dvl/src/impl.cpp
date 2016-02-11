@@ -230,9 +230,11 @@ void DVL::disableMeasurement() {
 DVL::DVLData DVL::getDVLData() {
     Message message = readMessage();
     DVLData data = {};
-    data.mms_east = message.pd0_bottom_track->bot_velocity[0];
-    data.mms_north = message.pd0_bottom_track->bot_velocity[1];
-    data.mms_surface = message.pd0_bottom_track->bot_velocity[2];
+    if (message.format == FORMAT_PDO) {
+        data.mms_east = message.pd0_bottom_track->bot_velocity[0];
+        data.mms_north = message.pd0_bottom_track->bot_velocity[1];
+        data.mms_surface = message.pd0_bottom_track->bot_velocity[2];
+    }
     return data;
 }
 

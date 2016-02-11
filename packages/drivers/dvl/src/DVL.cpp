@@ -20,8 +20,10 @@
 #include "statics.cpp"
 #include "impl.cpp"
 
+#include <stdio.h>
+
    DVL::DVL(std::string deviceFile, DVLSpeed speed) 
-: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({1,0})
+: _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({100,0})
 { }
 
 DVL::~DVL() { closeDevice(); }
@@ -70,6 +72,8 @@ void DVL::openDevice() {
 
    // Successful execution!
    _deviceFD = fd;
+
+   sendBreak();
 }
 
 bool DVL::isOpen() {return _deviceFD >= 0;}
@@ -92,6 +96,7 @@ void DVL::sendBreak() {
    // The DVL specs for more than 300ms, 
    // but it 'may respond to breaks shorter than this'
    // Here we will spec for 400ms of break time.
+   printf("Sending break\n");
    ioctl(_deviceFD, TCSBRKP, 4);
 }
 
@@ -176,6 +181,7 @@ int DVL::writeRaw(void* blob, int bytes_to_write)
 
 DVL::Message DVL::readMessage()
 {
+   printf("Waiting for message\n");
    // Output structure, storage for the read memory.
    Message message;
    // Storage for calculating the checksum.
@@ -198,6 +204,7 @@ DVL::Message DVL::readMessage()
    // Compute the local checksum with the read data.
    checksum = crc16(checksum, &start, sizeof(frameid_t));
 
+   printf("Reading in message %x\n", start);
    // From the first bytes, determine the type of message being sent in.
    switch (start) {
       case kPD0HeaderID: // We grabbed a PD0 packet that we have to read.
@@ -328,6 +335,7 @@ DVL::Message DVL::readMessage()
          message.text = message.payload->data();
          break;
    }
+   printf("Finished reading message\n");
    // Everything succeeded. The packet was read in properly.
    return message;
 }
@@ -341,6 +349,7 @@ void DVL::writeCommand(Command cmd, ...)
    va_list argv;
    // The second argument should be the last defined function arg. 
    va_start(argv,cmd);
+   printf("Writing command %s\n", cmd.name);
    // Assemble the command to a string from the format string.
    int bytes = vsnprintf(buffer, BUF_SIZE, cmd.format, argv);
    // Bytes written will not include the null char at the end.
@@ -352,6 +361,7 @@ void DVL::writeCommand(Command cmd, ...)
    // Send a carriage return to tell the DVL input is finished.
    if (writeRaw(&cr, 1))
       throw DVLException("Unable to send carriage return");
+   printf("Wrote command\n");
 }
 
 DVL::Message DVL::sendCommand(Command cmd, ...)
