@@ -13,10 +13,7 @@ class TempSimNode : QuboNode {
         std::string sensorName;
         ram_msgs::Temperature msg;
         double real_temp;
-        double lower_bound = -1;
-        double upper_bound = 1;
-//       std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
-//        std::default_random_engine re;
+        std::default_random_engine re;
 
     public:
         TempSimNode(int, char **, int, std::string);
