@@ -2,10 +2,9 @@
 
 std::string PowerSimNode::currentSource;
 
-PowerSimNode::PowerSimNode(int argc, char **argv, int rate, std::string name) {
-    ros::Rate loop_rate(rate);
+PowerSimNode::PowerSimNode(int argc, char **argv, int inputRate, std::string name) {
     publisher = n.advertise<ram_msgs::PowerSource>("qubo/power_source/" + name, 1000);
-    
+    rate = inputRate; 
     currentSource = "";
     sourceName = name;
     enabled = DEFAULT_STATUS;

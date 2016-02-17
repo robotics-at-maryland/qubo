@@ -10,14 +10,12 @@ int main(int argc, char **argv) {
 
     PowerSimNode::setCurrentSource("BATT1");
 
-    while (ros::ok()) {
-        node1->publish();
-        node1->update();
-        
-        node2->publish();
-        node2->update();
+    std::thread worker1(&PowerSimNode::runThread, node1);
+    std::thread worker2(&PowerSimNode::runThread, node2);
+    std::thread worker3(&PowerSimNode::runThread, node3);
+    
+    worker1.join();
+    worker2.join();
+    worker3.join();
 
-        node3->publish();
-        node3->update();
-    }
 }

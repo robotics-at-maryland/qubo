@@ -8,7 +8,7 @@
 
 #define DEFAULT_TEMP 23.0
 
-class TempSimNode : QuboNode {
+class TempSimNode : public QuboNode {
     protected: //fields
         std::string sensorName;
         ram_msgs::Temperature msg; //always include this, used to create specific message file for this node

@@ -7,14 +7,13 @@ int main(int argc, char **argv) {
     TempSimNode *node1 = new TempSimNode(argc, argv, 1, "HULL");
     TempSimNode *node2 = new TempSimNode(argc, argv, 10, "HULL2");
     
-    std::thread worker1(&QuboNode::runThread, (QuboNode *) node1);
-    std::thread worker2(&QuboNode::runThread, (QuboNode *) node2);
+    /*
+     * This is the general structure for using threads. The runThread function
+     * has already been defined in QuboNode. Just call the thread here to run
+     * a sub-node.
+     */ 
+    std::thread worker1(&TempSimNode::runThread, node1);
+    std::thread worker2(&TempSimNode::runThread, node2);
     worker1.join();
     worker2.join();
-
-    /*
-    while (ros::ok()) {
-        node1->publish();
-        node1->update();
-    }*/
 }

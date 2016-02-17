@@ -10,7 +10,7 @@
 #define DEFAULT_CURRENT 9001.0
 #define DEFAULT_LIFE 3600
 
-class PowerSimNode : QuboNode {
+class PowerSimNode : public QuboNode {
     protected:
         static std::string currentSource;
         ram_msgs::PowerSource msg;
