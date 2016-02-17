@@ -96,8 +96,8 @@ void DVL::sendBreak() {
     // The DVL specs for more than 300ms, 
     // but it 'may respond to breaks shorter than this'
     // Here we will spec for 400ms of break time.
-    printf("Sending break\n");
     ioctl(_deviceFD, TCSBRKP, 4);
+    readMessage();
 }
 
 DVL::checksum_t DVL::crc16(checksum_t crc, const void* ptr, int bytes) {
@@ -182,6 +182,7 @@ int DVL::writeRaw(void* blob, int bytes_to_write)
 
 DVL::Message DVL::readPD0()
 {
+    printf("Reading PD0\n");
     // Create storage to read in data.
     char dummy;
     Message message;
@@ -293,6 +294,7 @@ DVL::Message DVL::readPD4()
 {
     // Create storage to read in data.
     Message message;
+    printf("Reading PD4\n");
     message.format = FORMAT_PD4;
     // Create storage for the checksum operation.
     checksum_t remote_checksum, checksum = 0x0;
@@ -323,6 +325,7 @@ DVL::Message DVL::readPD5()
 {
     // Create storage to read in data.
     Message message;
+    printf("Reading PD5\n");
     message.format = FORMAT_PD5;
     // Create storage for the checksum operation.
     checksum_t remote_checksum, checksum = 0x0;
@@ -356,6 +359,7 @@ DVL::Message DVL::readPD6()
     // Create storage to read in data.
     char text;
     Message message;
+    printf("Reading PD6\n");
     message.format = FORMAT_PD6;
     // Create the memory in the Message struct.
     message.payload = std::make_shared<std::vector<char>>();
@@ -368,7 +372,7 @@ DVL::Message DVL::readPD6()
     // Read in the data line-by-line and parse
     // We need to read at least 3 lines, and then the limit changes based on what
     // lines we have seen so far.
-    for (lines = 0; lines < 3 || lines < (2 + LINES(water) + LINES(bottom)); lines++) {
+    for (lines = 0; lines <= 3 || lines <= (2 + LINES(water) + LINES(bottom)); lines++) {
         do {
             // Read in a single char and push it onto the payload.
             if (readRaw(&text, sizeof(char)))
@@ -384,12 +388,14 @@ DVL::Message DVL::readPD6()
                 case 'S': // System Attitude Data
                 case 'T': // Time/Scaling Data
                 case 'B': // Bottom Track Data
+                    bottom = true;
                 case 'W': // Water Mass Data
-                    printf("Read a line of PD6 data: %s\n", message.payload->data());
+                    water = true;
                     break;
                 default:
                     throw DVLException("Unknown PD6 line format char.");
             }
+            printf("%s", message.payload->data());
         }
         lines++;
         message.payload->clear();
@@ -400,40 +406,36 @@ DVL::Message DVL::readPD6()
 
 #undef LINES
 
-DVL::Message DVL::readText(char first)
+DVL::Message DVL::readText(char text)
 {
     // Create storage to read in data.
-    char text;
     Message message;
     message.format = FORMAT_TEXT;
     // Create the memory in the Message struct.
     message.payload = std::make_shared<std::vector<char>>();
-    // Push the first char we already read in.
-    message.payload->push_back(first);
-    // Read in all the data.
-    do {
+    // Read until the next prompt appears.
+    while (text != '>') {
+        // Put what we just read into storage.
+        message.payload->push_back(text);
         // Read in a single char and push it onto the payload.
         if (readRaw(&text, sizeof(text)))
             throw DVLException("Unable to read text character");
-        // Disregard some characters from the input.
-        if (text != '\r')
-            message.payload->push_back(text);
-    } while (text != '>'); // Read until the next prompt appears.
+    }
     // Null terminate the string
     message.payload->push_back('\0');
     // The string pointer will start at the beginning of the payload vector.
     message.text = message.payload->data();
-    printf("Read in a text message: %s\n", message.text);
     return message;
 }
 
 DVL::Message DVL::readMessage()
 {
-    printf("Waiting for message\n");
-    char first;
+    char first = 0;
     // Read in the header of the datagram packet: UInt16.
-    if (readRaw(&first, sizeof(first)))
-        throw DVLException("Unable to read beginning of incoming message.");
+    do {
+        if (readRaw(&first, sizeof(first)))
+            throw DVLException("Unable to read beginning of incoming message.");
+    } while (!first);
     // From the first bytes, determine the type of message being sent in.
     switch (first) {
         case kPD0HeaderID & 0xff: // We grabbed a PD0 packet that we have to read.
@@ -466,10 +468,15 @@ void DVL::writeFormatted(Command cmd, va_list argv)
         throw DVLException("Write buffer overflow");
     // Write the command to the output line to the DVL.
     if (writeRaw(buffer, bytes))
-        throw DVLException("Unable to send message");
-    // Send a carriage return to tell the DVL input is finished.
+        throw DVLException("Unable to send command");
     if (writeRaw(&cr, 1))
         throw DVLException("Unable to send carriage return");
+    if (readRaw(buffer, bytes))
+        throw DVLException("Unable to read command");
+    if (readRaw(&cr, 1))
+        throw DVLException("Unable to read carriage return");
+    if (readRaw(&cr, 1))
+        throw DVLException("Unable to read carriage return");
     printf("Wrote command\n");
 }
 
@@ -485,7 +492,7 @@ DVL::Message DVL::sendCommand(Command cmd, ...)
 {
     va_list argv;
     va_start(argv, cmd);
-    writeCommand(cmd, argv);
+    writeFormatted(cmd, argv);
     va_end(argv);
     return readMessage();
 }
