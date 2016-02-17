@@ -32,6 +32,7 @@ include_directories(
   power_source/include
   led/include
   temperature/include
+  camera/include
   )
 
 set(DEPTH_SRC_FILES
@@ -64,6 +65,11 @@ set(TEMP_SRC_FILES
   temperature/src/temp_sensor_sim.cpp
   )
 
+set(CAMERA_SRC_FILES
+  camera/src/main.cpp
+  camera/src/camera_sim.cpp
+  )
+
 set(TEST_FILES
   
     )
@@ -90,6 +96,9 @@ target_link_libraries(led_node ${catkin_LIBRARIES})
 
 add_executable(temp_node ${TEMP_SRC_FILES})
 target_link_libraries(temp_node ${catkin_LIBRARIES})
+
+add_executable(camera_node ${CAMERA_SRC_FILES})
+target_link_libraries(camera_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
