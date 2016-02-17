@@ -220,6 +220,8 @@ std::string DVL::testWiring() {
 }
 
 void DVL::enableMeasurement() {
+    sendCommand(cTimePerEnsemble, 0,0,0);
+    sendCommand(cTimeBetweenPings, 0,0,0);
     sendCommand(cStartPinging);
 }
 

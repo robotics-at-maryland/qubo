@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
         try {
             dvl = new DVL(std::string(argv[1]),getBaudrate(argv[2]));
             dvl->openDevice();
+            dvl->loadUserSettings();
             dvl->setSystemConfiguration(config);
             dvl->setDataTransferConfiguration(output);
             dvl->enableMeasurement();

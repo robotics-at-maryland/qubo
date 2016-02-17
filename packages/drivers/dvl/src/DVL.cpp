@@ -410,6 +410,7 @@ DVL::Message DVL::readText(char text)
 {
     // Create storage to read in data.
     Message message;
+    printf("Reading Text\n");
     message.format = FORMAT_TEXT;
     // Create the memory in the Message struct.
     message.payload = std::make_shared<std::vector<char>>();
@@ -425,12 +426,14 @@ DVL::Message DVL::readText(char text)
     message.payload->push_back('\0');
     // The string pointer will start at the beginning of the payload vector.
     message.text = message.payload->data();
+    printf("Read in text: %s\n",message.text);
     return message;
 }
 
 DVL::Message DVL::readMessage()
 {
     char first = 0;
+    printf("Waiting for incoming message\n");
     // Read in the header of the datagram packet: UInt16.
     do {
         if (readRaw(&first, sizeof(first)))
