@@ -318,14 +318,22 @@ typedef struct _Command {
 
 /** Format for the message recieved from the DVL. */
 typedef enum _MessageFormat {
-    FORMAT_TEXT, FORMAT_PD0, FORMAT_PD4, FORMAT_PD5, FORMAT_PD6
+    FORMAT_EMPTY, FORMAT_TEXT, FORMAT_PD0, FORMAT_PD4, FORMAT_PD5, FORMAT_PD6
 } MessageFormat;
 
 /** Memory storage for a message recieved from the DVL. */
 typedef std::vector<char> Payload;
 
-/** Message read/written from the hardware device. */
+/** 
+ * Message read from the hardware device. 
+ * Contains a shared ptr to dynamic storage, so that this struct can be copied
+ * as many times as needed, and then deletes any dynamic memory when all
+ * copies of the struct go out of scope. Pointers in this struct are often null,
+ * otherwise they should point into special places in the dynamic storage.
+ */
 typedef struct _Message {
+    /** Type of data stored in this message */
+    MessageFormat                 format;
     /** Pointer to the memory allocated for this message. */
     std::shared_ptr<Payload>      payload;
     /** Pointers to portions of the PD0 payload */
@@ -349,8 +357,6 @@ typedef struct _Message {
     PD5_Data                      *pd5_data;
     /** Pointer to the text */
     const char*                   text;
-    /** Type of data stored in this message */
-    MessageFormat                 format;
 } Message;
 
 public:
