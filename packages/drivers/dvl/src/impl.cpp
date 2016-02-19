@@ -111,8 +111,9 @@ void DVL::setLiveConditions(LiveConditions& conditions) {
 void DVL::setDataTransferConfiguration(DataConfig& config) {
     switch (config.output_type) {
         case ALL_DATA:
-            int i;
+            //int i;
             sendCommand(cSendRawWaterCurrentData);
+            /* this needs to be dynamic for each sensor.
             for (i = HPR_GYRO; i < SENSOR_LAST; i++) {
                 sendCommand(cSensorDataOut,
                     i,
@@ -121,6 +122,7 @@ void DVL::setDataTransferConfiguration(DataConfig& config) {
                     config.sensor_output[i][2],
                     config.sensor_output[i][3]);
             }
+            */
             sendCommand(cBottomDataOut,
                     config.bottom_output[TRACK],
                     config.bottom_output[COMMAND],

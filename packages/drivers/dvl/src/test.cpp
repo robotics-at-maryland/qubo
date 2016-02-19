@@ -20,11 +20,19 @@ int main(int argc, char *argv[])
         config.two_stopbits=false;
         config.auto_ensemble_cycling=true;
         config.auto_ping_cycling=true;
-        config.binary_data_output=false;
+        config.binary_data_output=true;
         config.serial_output=true;
         config.turnkey=true;
         config.recorder_enable=false;
-        output.output_type = DVL::DataOutput::TEXT_DATA;
+        output.output_type = DVL::DataOutput::ALL_DATA;
+        //output.output_type = DVL::DataOutput::PARTIAL_DATA;
+        //output.output_type = DVL::DataOutput::MINIMUM_DATA;
+        //output.output_type = DVL::DataOutput::TEXT_DATA;
+        output.profile_output[DVL::VELOCITY] = true,
+        output.profile_output[DVL::CORRELATION] = true,
+        output.profile_output[DVL::ECHO_INTENSITY] = true,
+        output.profile_output[DVL::PERCENT_GOOD] = true,
+        output.profile_output[DVL::STATUS] = true;
         try {
             dvl = new DVL(std::string(argv[1]),getBaudrate(argv[2]));
             dvl->openDevice();

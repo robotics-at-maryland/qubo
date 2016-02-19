@@ -82,20 +82,20 @@ static constexpr Command cTestAll                        = {"PT200",            
 static constexpr Command cTestAllRepeat                  = {"PT300",                               "cTestAllRepeat"};
 // Sensor Commands
 static constexpr Command cSendSensorCommand              = {"SC %2d %1d %5d \"%s\"",               "cSendSensorCommand"};
-static constexpr Command cSensorDataOut                  = {"SD %2d %1d%1d%1d %1d00 000",          "cSensorDataOut"}; //BINARY
+static constexpr Command cSensorDataOut                  = {"SD %02d %1d%1d%1d%1d00000",            "cSensorDataOut"}; //BINARY
 static constexpr Command cAuxSensorAuxMenu               = {"SM",                                  "cAuxSensorAuxMenu"};
 static constexpr Command cPressureSensorOffset           = {"#SO %3.3f",                           "cPressureSensorOffset"};
 static constexpr Command cSensorPortAssignment           = {"SP%1d %2d",                           "cSensorPortAssignment"};
 static constexpr Command cSensorReset                    = {"SR %2d",                              "cSensorReset"};
 // Time Commands
-static constexpr Command cTimePerEnsemble                = {"TE%2d:%2d:%2.2f",                     "cTimePerEnsemble"};
-static constexpr Command cTimeBetweenPings               = {"TP%2d:%2d:%2.2f",                     "cTimeBetweenPings"};
-static constexpr Command cSetRealTimeClock               = {"TS%4d/%2d/%2d,%2d:%2d:%2.2f",         "cSetRealTimeClock"}; //Y2K-Compliant
+static constexpr Command cTimePerEnsemble                = {"TE %02d:%02d:%05.2f",                     "cTimePerEnsemble"};
+static constexpr Command cTimeBetweenPings               = {"TP %02d:%05.2f",                         "cTimeBetweenPings"};
+static constexpr Command cSetRealTimeClock               = {"TS %04d/%02d/%02d,%02d:%02d:%02.2f",         "cSetRealTimeClock"}; //Y2K-Compliant
 // Water Profiling Commands
 static constexpr Command cFalseTargetThreshold           = {"WA%3d",                               "cFalseTargetThreshold"};
 static constexpr Command cBandwidthMode                  = {"WB%1d",                               "cBandwithMode"};
 static constexpr Command cCorrelationThreshold           = {"#WC%3d",                              "cCorrelationThreshold"};
-static constexpr Command cDataOut                        = {"#WD%1d%1d%1d %1d%1d%1d %1d%1d%1d",    "cDataOut"}; // BINARY
+static constexpr Command cDataOut                        = {"WD %1d%1d%1d %1d%1d0 000",     "cDataOut"}; // BINARY
 static constexpr Command cErrorVelocityThreshold         = {"#WE%4d",                              "cErrorVelocityThreshold"};
 static constexpr Command cBlankingDistance               = {"WF%3d",                               "cBlankingDistance"};
 static constexpr Command cReceiverGain                   = {"#WJ%1d",                              "cReceiverGain"};

@@ -188,7 +188,7 @@ DVL::Message DVL::readPD0()
     // Single character buffer for dummy data.
     char dummy;
     // Create storage for the checksum calculations.
-    checksum_t remote_checksum, checksum = 0x0;
+    checksum_t remote_checksum, checksum = 0x0e00;
     // Bytecounts for parts of the PD0 data format.
     bytecount_t header_bytes = sizeof(PD0_Header);
     bytecount_t total_bytes;
@@ -216,7 +216,7 @@ DVL::Message DVL::readPD0()
     // Pull the total number of bytes from the header we just read.
     total_bytes = message.pd0_header->bytes_in_ensemble;
     // Calculate the number of bytes we have yet to read.
-    payload_bytes = total_bytes - header_bytes - sizeof(kPD0HeaderID) - sizeof(checksum);
+    payload_bytes = total_bytes - header_bytes - sizeof(kPD0HeaderID);
     // Reserve enough storage for the payload.
     message.payload->reserve(header_bytes + payload_bytes);
     // This invalidates the header we read in, so just to be safe null it out.
@@ -232,6 +232,7 @@ DVL::Message DVL::readPD0()
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
 
+    printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
     if (checksum != remote_checksum)
         throw DVLException("Remote and local checksum mismatch");
@@ -246,7 +247,7 @@ DVL::Message DVL::readPD0()
         // Pull out the offset from the offset array.
         data_offset_t offset = offsets[data_types_i];
         // Get a pointer to the beginning of the data referenced by the offset.
-        char* frame = message.payload->data() + offset;
+        char* frame = message.payload->data() + offset - sizeof(kPD0HeaderID);
         // The body of the data at that point is one frameid_t length farther.
         char* body = frame + sizeof(frameid_t);
         // Access the frameid at the start of the frame and decide what is there.
@@ -292,7 +293,8 @@ DVL::Message DVL::readPD0()
                 break;
             default:
                 // If the packet is well formed then this shouldnt happen.
-                throw DVLException("Unknown data format in PD0 packet");
+                printf("Unrecogized data header: 0x%x\n",*((frameid_t*) frame));
+                //throw DVLException("Unknown data format in PD0 packet");
         }
     }
     // Return the finished message to the caller.
@@ -304,7 +306,7 @@ DVL::Message DVL::readPD4()
     // Create a Message that we can return to the caller.
     Message message = {FORMAT_PD4, std::make_shared<Payload>()};
     // Create storage for the checksum operation.
-    checksum_t remote_checksum, checksum = 0x0;
+    checksum_t remote_checksum, checksum = 0x0700;
     // Compute the checksum with the read info so far.
     checksum = crc16(checksum, &kPD4HeaderID, sizeof(kPD4HeaderID));
     // Pre-allocate storage for the whole packet.
@@ -317,6 +319,8 @@ DVL::Message DVL::readPD4()
     // Read the remote checksum that the device computed.
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
+
+    printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
     if (checksum != remote_checksum)
         throw DVLException("Remote and local checksum mismatch");
@@ -331,7 +335,7 @@ DVL::Message DVL::readPD5()
     // Create a Message that we can return to the caller.
     Message message = {FORMAT_PD5, std::make_shared<Payload>()};
     // Create storage for the checksum operation.
-    checksum_t remote_checksum, checksum = 0x0;
+    checksum_t remote_checksum, checksum = 0x0700;
     // Pre-allocate storage for the whole packet.
     message.payload->reserve(sizeof(PD5_Data));
     // Compute the checksum with the read info so far.
@@ -344,6 +348,8 @@ DVL::Message DVL::readPD5()
     // Read the remote checksum that the device computed.
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
+
+    printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
     if (checksum != remote_checksum)
         throw DVLException("Remote and local checksum mismatch");
@@ -412,6 +418,7 @@ DVL::Message DVL::readText(char text)
     while (text != '>') {
         // Put what we just read into storage.
         message.payload->push_back(text);
+        printf("%c", text);
         // Read in a single char and push it onto the payload.
         if (readRaw(&text, sizeof(text)))
             throw DVLException("Unable to read text character");
@@ -427,13 +434,11 @@ DVL::Message DVL::readText(char text)
 DVL::Message DVL::readMessage()
 {
     char first = 0;
-    printf("Waiting for incoming message\n");
     // Read in the beginning of the incoming message.
     do {
         if (readRaw(&first, sizeof(first)))
             throw DVLException("Unable to read beginning of incoming message.");
     } while (!first);
-    printf("Deciding on %x, options %x %x %x\n", first, kPD0HeaderID & 0xff, kPD4HeaderID & 0xff, ':');
     // From the first byte, determine the type of message being sent in.
     switch (first) {
         case kPD0HeaderID & 0xff: // We grabbed a PD0 packet that we have to read.
@@ -443,11 +448,11 @@ DVL::Message DVL::readMessage()
             if (readRaw(&first, sizeof(first)))
                 throw DVLException("Unable to read beginning of PD4/5 message.");
             if (first) {
-                printf("Reading PD4\n");
-                return readPD4();
-             } else {
                 printf("Reading PD5\n");
                 return readPD5();
+             } else {
+                printf("Reading PD4\n");
+                return readPD4();
             }
         case ':': // We grabbed a PD6 packet that we have to read.
             printf("Reading PD6\n");
@@ -473,6 +478,7 @@ void DVL::writeFormatted(Command cmd, va_list argv)
     // Bytes written will not include the null char at the end.
     if (bytes == BUF_SIZE - 1)
         throw DVLException("Write buffer overflow");
+    printf("Formatted: %s\n", buffer);
     // Write the command to the output line to the DVL.
     if (writeRaw(buffer, bytes))
         throw DVLException("Unable to send command");
@@ -488,7 +494,6 @@ void DVL::writeFormatted(Command cmd, va_list argv)
     // Read the linefeed that the DVL responds with.
     if (readRaw(&cr, 1))
         throw DVLException("Unable to read linefeed");
-    printf("Wrote command\n");
 }
 
 void DVL::writeCommand(Command cmd, ...)
