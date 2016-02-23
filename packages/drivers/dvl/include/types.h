@@ -27,7 +27,7 @@ private:
 /** Header for each packet, containing information about the whole packet. */
 typedef struct _PD0_Header {
     bytecount_t bytes_in_ensemble;
-    uint8_t spare;
+    uint8_t checksum_offset;
     uint8_t data_types;
 } PD0_Header;
 

@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 DVL::DVL(std::string deviceFile, DVLSpeed speed) 
-    : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({100,0})
+    : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({10,0})
 { }
 
 DVL::~DVL() { closeDevice(); }
@@ -188,7 +188,7 @@ DVL::Message DVL::readPD0()
     // Single character buffer for dummy data.
     char dummy;
     // Create storage for the checksum calculations.
-    checksum_t remote_checksum, checksum = 0x0e00;
+    checksum_t remote_checksum, checksum = 0x0, offset = 0x0;
     // Bytecounts for parts of the PD0 data format.
     bytecount_t header_bytes = sizeof(PD0_Header);
     bytecount_t total_bytes;
@@ -232,15 +232,20 @@ DVL::Message DVL::readPD0()
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
 
-    printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
     if (checksum != remote_checksum)
-        throw DVLException("Remote and local checksum mismatch");
+        printf("WARNING checksum comparison failed.");
+        //throw DVLException("Remote and local checksum mismatch");
 
     // Reassign the header pointer, because the old pointer got invalidated by reserve()
     message.pd0_header = (PD0_Header*) message.payload->data();
     // Get a pointer to the data offset array.
     offsets = (data_offset_t*) message.payload->data() + header_bytes;
+
+    // Pull the checksum offset from the header.
+    offset = message.pd0_header->checksum_offset;
+    printf("Local: %x Remote: %x Offset: %x Candidate: %x\n", 
+            checksum, remote_checksum, offset, remote_checksum + (offset << sizeof(char)));
 
     // Loop over the offset array to find all the data in the packet.
     for(data_types_i = 0; data_types_i < message.pd0_header->data_types; data_types_i++) {
@@ -323,7 +328,8 @@ DVL::Message DVL::readPD4()
     printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
     if (checksum != remote_checksum)
-        throw DVLException("Remote and local checksum mismatch");
+        printf("WARNING checksum comparison failed.");
+        //throw DVLException("Remote and local checksum mismatch");
     // Store the pointer to allow easy access to the data.
     message.pd4_data = (PD4_Data*) message.payload->data();
     // Return the finished message to the caller.
@@ -352,7 +358,8 @@ DVL::Message DVL::readPD5()
     printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
     if (checksum != remote_checksum)
-        throw DVLException("Remote and local checksum mismatch");
+        printf("WARNING checksum comparison failed.");
+        //throw DVLException("Remote and local checksum mismatch");
     // Store the pointer to allow easy access to the data.
     message.pd5_data = (PD5_Data*) message.payload->data();
     // Return the finished message to the caller.
@@ -500,6 +507,7 @@ void DVL::writeCommand(Command cmd, ...)
 {
     va_list argv;
     va_start(argv, cmd);
+    assertOpen();
     writeFormatted(cmd, argv);
     va_end(argv);
 }
@@ -508,6 +516,7 @@ DVL::Message DVL::sendCommand(Command cmd, ...)
 {
     va_list argv;
     va_start(argv, cmd);
+    assertOpen();
     writeFormatted(cmd, argv);
     va_end(argv);
     return readMessage();
