@@ -353,8 +353,19 @@ typedef struct _Message {
     PD0_SensorData                *pd0_sensor_data;   
     /** Pointer to the PD4 formatted data. */
     PD4_Data                      *pd4_data;
-    /** Pointer to the PD5 formatted data */
+    /** Pointer to the PD5 formatted data. */
     PD5_Data                      *pd5_data;
+    /** Pointer to portions of the PD6 data. */
+    const char*                   pd6_attitude;
+    const char*                   pd6_timing;
+    const char*                   pd6_w_instrument;
+    const char*                   pd6_b_instrument;
+    const char*                   pd6_w_ship;
+    const char*                   pd6_b_ship;
+    const char*                   pd6_w_earth;
+    const char*                   pd6_b_earth;
+    const char*                   pd6_w_distance;
+    const char*                   pd6_b_distance;
     /** Pointer to the text */
     const char*                   text;
 } Message;

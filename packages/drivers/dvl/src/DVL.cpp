@@ -188,7 +188,7 @@ DVL::Message DVL::readPD0()
     // Single character buffer for dummy data.
     char dummy;
     // Create storage for the checksum calculations.
-    checksum_t remote_checksum, checksum = 0x0, offset = 0x0;
+    checksum_t remote_checksum, checksum = 0x0;
     // Bytecounts for parts of the PD0 data format.
     bytecount_t header_bytes = sizeof(PD0_Header);
     bytecount_t total_bytes;
@@ -232,21 +232,14 @@ DVL::Message DVL::readPD0()
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
 
-    // Compare the checksums to validate the message.
-    if (checksum != remote_checksum)
-        printf("WARNING checksum comparison failed.");
-        //throw DVLException("Remote and local checksum mismatch");
+    // Compare the LSBs of the checksums to validate the message.
+    if ((remote_checksum ^ checksum) & 0xff)
+        throw DVLException("Remote and local checksum mismatch");
 
     // Reassign the header pointer, because the old pointer got invalidated by reserve()
     message.pd0_header = (PD0_Header*) message.payload->data();
     // Get a pointer to the data offset array.
     offsets = (data_offset_t*) message.payload->data() + header_bytes;
-
-    // Pull the checksum offset from the header.
-    offset = message.pd0_header->checksum_offset;
-    printf("Local: %x Remote: %x Offset: %x Candidate: %x\n", 
-            checksum, remote_checksum, offset, remote_checksum + (offset << sizeof(char)));
-
     // Loop over the offset array to find all the data in the packet.
     for(data_types_i = 0; data_types_i < message.pd0_header->data_types; data_types_i++) {
         // Pull out the offset from the offset array.
@@ -311,7 +304,7 @@ DVL::Message DVL::readPD4()
     // Create a Message that we can return to the caller.
     Message message = {FORMAT_PD4, std::make_shared<Payload>()};
     // Create storage for the checksum operation.
-    checksum_t remote_checksum, checksum = 0x0700;
+    checksum_t remote_checksum, checksum = 0x0;
     // Compute the checksum with the read info so far.
     checksum = crc16(checksum, &kPD4HeaderID, sizeof(kPD4HeaderID));
     // Pre-allocate storage for the whole packet.
@@ -325,11 +318,9 @@ DVL::Message DVL::readPD4()
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
 
-    printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
-    if (checksum != remote_checksum)
-        printf("WARNING checksum comparison failed.");
-        //throw DVLException("Remote and local checksum mismatch");
+    if ((remote_checksum ^ checksum) & 0xff)
+        throw DVLException("Remote and local checksum mismatch");
     // Store the pointer to allow easy access to the data.
     message.pd4_data = (PD4_Data*) message.payload->data();
     // Return the finished message to the caller.
@@ -341,7 +332,7 @@ DVL::Message DVL::readPD5()
     // Create a Message that we can return to the caller.
     Message message = {FORMAT_PD5, std::make_shared<Payload>()};
     // Create storage for the checksum operation.
-    checksum_t remote_checksum, checksum = 0x0700;
+    checksum_t remote_checksum, checksum = 0x0;
     // Pre-allocate storage for the whole packet.
     message.payload->reserve(sizeof(PD5_Data));
     // Compute the checksum with the read info so far.
@@ -355,11 +346,9 @@ DVL::Message DVL::readPD5()
     if (readRaw(&remote_checksum, sizeof(remote_checksum)))
         throw DVLException("Unable to read checksum of incoming packet");
 
-    printf("Local: %x Remote: %x\n", checksum, remote_checksum);
     // Compare the checksums to validate the message.
-    if (checksum != remote_checksum)
-        printf("WARNING checksum comparison failed.");
-        //throw DVLException("Remote and local checksum mismatch");
+    if ((remote_checksum ^ checksum) & 0xff)
+        throw DVLException("Remote and local checksum mismatch");
     // Store the pointer to allow easy access to the data.
     message.pd5_data = (PD5_Data*) message.payload->data();
     // Return the finished message to the caller.
@@ -372,6 +361,11 @@ DVL::Message DVL::readPD6()
     Message message = {FORMAT_PD6, std::make_shared<Payload>()};
     // Create buffer storage to read in data char-by-char.
     char text;
+    // Keep a list of the starts of strings.
+    int attitude = 0, timing = 0, w_instrument, b_instrument;
+    int w_ship, b_ship, w_earth, b_earth, w_distance, b_distance;
+    // Track the beginning of each string offset in the payload
+    int start = 0;
     // Number of lines is dynamic, so keep track of what we've already seen.
     bool water = false, bottom = false;
     // Put the character we already read in the vector.
@@ -385,7 +379,7 @@ DVL::Message DVL::readPD6()
             if (readRaw(&text, sizeof(char)))
                 throw DVLException("Unable to read text character");
             // Disregard some characters from the input.
-            if (text != '\r')
+            if (text != '\r' && text != '\n')
                 message.payload->push_back(text);
             // Read until the end of the line.
         } while (text != '\n');
@@ -393,25 +387,68 @@ DVL::Message DVL::readPD6()
         message.payload->push_back('\0');
 
         // If we managed to read at least three chars (:XX) then take a look at what we read.
-        if (message.payload->size() < 3)
+        if ((message.payload->size() - start) < 3)
             throw new DVLException("Line was too short to interpret.");
         // Look at the first command char.
-        switch(message.payload->at(1)) {
+        switch(message.payload->at(start + 1)) {
             case 'S': // System Attitude Data
+                attitude = start;
                 break;
             case 'T': // Time/Scaling Data
+                timing = start;
                 break;
             case 'B': // Bottom Track Data
                 bottom = true;
+                switch(message.payload->at(start + 2)) {
+                    case 'I':
+                        b_instrument = start;
+                        break;
+                    case 'S':
+                        b_ship = start;
+                        break;
+                    case 'E':
+                        b_earth = start;
+                        break;
+                    case 'D':
+                        b_distance = start;
+                        break;
+                }
                 break;
             case 'W': // Water Mass Data
                 water = true;
+                switch(message.payload->at(start + 2)) {
+                    case 'I':
+                        w_instrument = start;
+                        break;
+                    case 'S':
+                        w_ship = start;
+                        break;
+                    case 'E':
+                        w_earth = start;
+                        break;
+                    case 'D':
+                        w_distance = start;
+                        break;
+                }
                 break;
             default:
                 throw DVLException("Unknown PD6 line format char.");
         }
-        // Clear the storage and start over with the next line.
-        message.payload->clear();
+        start = message.payload->size();
+    }
+    message.pd6_attitude = attitude + message.payload->data();
+    message.pd6_timing = timing + message.payload->data();
+    if (water) {
+        message.pd6_w_instrument = w_instrument + message.payload->data();
+        message.pd6_w_ship = w_ship + message.payload->data();
+        message.pd6_w_earth = w_earth + message.payload->data();
+        message.pd6_w_distance = w_distance + message.payload->data();
+    }
+    if (bottom) {
+        message.pd6_b_instrument = b_instrument + message.payload->data();
+        message.pd6_b_ship = b_ship + message.payload->data();
+        message.pd6_b_earth = b_earth + message.payload->data();
+        message.pd6_b_distance = b_distance + message.payload->data();
     }
     // Return the finished message to the caller.
     return message;
@@ -425,7 +462,6 @@ DVL::Message DVL::readText(char text)
     while (text != '>') {
         // Put what we just read into storage.
         message.payload->push_back(text);
-        printf("%c", text);
         // Read in a single char and push it onto the payload.
         if (readRaw(&text, sizeof(text)))
             throw DVLException("Unable to read text character");
@@ -449,26 +485,20 @@ DVL::Message DVL::readMessage()
     // From the first byte, determine the type of message being sent in.
     switch (first) {
         case kPD0HeaderID & 0xff: // We grabbed a PD0 packet that we have to read.
-            printf("Reading PD0\n");
             return readPD0();
         case kPD4HeaderID & 0xff: // We grabbed a PD4/5 packet that we have to read.
             if (readRaw(&first, sizeof(first)))
                 throw DVLException("Unable to read beginning of PD4/5 message.");
             if (first) {
-                printf("Reading PD5\n");
                 return readPD5();
              } else {
-                printf("Reading PD4\n");
                 return readPD4();
             }
         case ':': // We grabbed a PD6 packet that we have to read.
-            printf("Reading PD6\n");
             return readPD6();
         case '>': // The message that came back was just a prompt.
-            printf("Read prompt\n");
             return {FORMAT_EMPTY};
         default:
-            printf("Reading Text\n");
             return readText(first);
     }
 }
@@ -479,13 +509,11 @@ void DVL::writeFormatted(Command cmd, va_list argv)
 {
     char buffer[BUF_SIZE];
     char cr = '\r';
-    printf("Writing command %s\n", cmd.name);
     // Assemble the command to a string from the format string.
     int bytes = vsnprintf(buffer, BUF_SIZE, cmd.format, argv);
     // Bytes written will not include the null char at the end.
     if (bytes == BUF_SIZE - 1)
         throw DVLException("Write buffer overflow");
-    printf("Formatted: %s\n", buffer);
     // Write the command to the output line to the DVL.
     if (writeRaw(buffer, bytes))
         throw DVLException("Unable to send command");
