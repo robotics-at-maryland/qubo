@@ -509,10 +509,16 @@ typedef struct _WaterProfileConfig {
  * format in order to be interpreted correctly.
  ******************************************************************************/
 
+typedef enum _CoordinateSystem {
+    BEAM_COORD, INST_COORD, SHIP_COORD, EARTH_COORD
+} Coordinate System;
+
 typedef struct _DVLData {
+    CoordinateSystem transform;
     int mms_east;
     int mms_north;
     int mms_surface;
+    int mms_error;
 } DVLData;
 
 #pragma pack(pop)

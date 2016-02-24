@@ -234,27 +234,58 @@ void DVL::disableMeasurement() {
 DVL::DVLData DVL::getDVLData() {
     Message message = readMessage();
     DVLData data = {};
+    int scanned;
     switch (message.format) {
         case FORMAT_PD0:
+            message.pd0_fixed->coord_transform;
+            message.pd0_fixed->sensor_source;
+            message.pd0_variable->bit_result
             break;
         case FORMAT_PD4:
+            data.transform = message.pd4_data->system_config;
+            data.mms_xvel = message.pd4_data->x_vel;
+            data.mms_yvel = message.pd4_data->y_vel;
+            data.mms_zvel = message.pd4_data->z_vel;
+            data.mms_evel = message.pd4_data->e_vel;
             break;
         case FORMAT_PD5:
             break;
         case FORMAT_PD6:
-            printf("%s\n%s\n", message.pd6_attitude, message.pd6_timing);
-            if (message.pd6_w_instrument)
-                printf("%s\n%s\n%s\n%s\n", 
-                    message.pd6_w_instrument, 
-                    message.pd6_w_ship, 
-                    message.pd6_w_earth, 
-                    message.pd6_w_distance);
-            if (message.pd6_b_instrument)
-                printf("%s\n%s\n%s\n%s\n", 
-                    message.pd6_b_instrument, 
-                    message.pd6_b_ship, 
-                    message.pd6_b_earth, 
-                    message.pd6_b_distance);
+            scanned = sscanf(message.pd6_attitude, 
+                    ":SA,%f,%f,%f", 
+                    &pitch, &roll, &heading);
+            scanned = sscanf(message.pd6_timing, 
+                    ":TS,%2d%2d%2d%2d%2d%2d%2d,%f,%f,%f,%f,%1d%x",
+                    &year, &month, &day, &hour, &minute, &second, &hundreth,
+                    &salinity, &temperature, &depth, &speedofsound, &nerrors, &errcode);
+            if (message.pd6_w_instrument) {
+                scanned = sscanf(message.pd6_w_instrument, 
+                        ":WI,%d,%d,%d,%d,%c",
+                        &xvel, &yvel, &zvel, &evel, &inststatus);
+                scanned = sscanf(message.pd6_w_ship, 
+                        ":WS,%d,%d,%d,%c",
+                        &transverse, &longitudinal, &normal, &shipstatus);
+                scanned = sscanf(message.pd6_w_earth, 
+                        ":WE,%d,%d,%d,%c",
+                        &east, &north, &up, &earthstatus);
+                scanned = sscanf(message.pd6_w_distance,
+                        ":WD,%f,%f,%f,%f,%f",
+                        &east, &north, &up, &range, &time);
+            }
+            if (message.pd6_b_instrument) {
+                    scanned = sscanf(message.pd6_b_instrument, 
+                        ":BI,%d,%d,%d,%d,%c",
+                        &xvel, &yvel, &zvel, &evel, &inststatus);
+                    scanned = sscanf(message.pd6_b_ship, 
+                        ":BS,%d,%d,%d,%c",
+                        &transverse, &longitudinal, &normal, &shipstatus);
+                    scanned = sscanf(message.pd6_b_earth, 
+                        ":BE,%d,%d,%d,%c",
+                        &east, &north, &up, &earthstatus);
+                    scanned = sscanf(message.pd6_b_distance,
+                        ":BD,%f,%f,%f,%f,%f",
+                        &east, &north, &up, &range, &time);
+            }
             break;
         case FORMAT_EMPTY:
         case FORMAT_TEXT:
