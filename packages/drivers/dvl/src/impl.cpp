@@ -234,6 +234,33 @@ void DVL::disableMeasurement() {
 DVL::DVLData DVL::getDVLData() {
     Message message = readMessage();
     DVLData data = {};
+    switch (message.format) {
+        case FORMAT_PD0:
+            break;
+        case FORMAT_PD4:
+            break;
+        case FORMAT_PD5:
+            break;
+        case FORMAT_PD6:
+            printf("%s\n%s\n", message.pd6_attitude, message.pd6_timing);
+            if (message.pd6_w_instrument)
+                printf("%s\n%s\n%s\n%s\n", 
+                    message.pd6_w_instrument, 
+                    message.pd6_w_ship, 
+                    message.pd6_w_earth, 
+                    message.pd6_w_distance);
+            if (message.pd6_b_instrument)
+                printf("%s\n%s\n%s\n%s\n", 
+                    message.pd6_b_instrument, 
+                    message.pd6_b_ship, 
+                    message.pd6_b_earth, 
+                    message.pd6_b_distance);
+            break;
+        case FORMAT_EMPTY:
+        case FORMAT_TEXT:
+        default:
+            throw new DVLException("Did not recieve a data ensemble from device.");
+    }
     return data;
 }
 
