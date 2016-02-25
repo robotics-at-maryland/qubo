@@ -2,6 +2,8 @@
 #include "ros/package.h"
 #include "cv.h"
 #include "highgui.h"
+#include <opencv2/contrib/contrib.hpp>
+#include <iostream>
 
 using namespace cv;
 
@@ -19,7 +21,22 @@ int main(int argc, char **argv) {
   }
 
   // various stages of images used in processing
-  Mat raw_image, thresh_image, thresh_color;
+  Mat raw_image, back_proj;
+  Mat hist;
+
+  Mat target = imread("/home/michael/Documents/ram/bouy/buoy.png");
+  Mat target_mask = imread("/home/michael/Documents/ram/bouy/buoy_mask.png");
+  cvtColor(target_mask, target_mask, CV_BGR2GRAY);
+  cvtColor(target, target, CV_BGR2HSV);
+
+  const int channels[] = {0 , 1};
+  const int sizes[] = {180, 256};
+  float range1[2] = {0, 180};
+  float range2[2] = {0, 256};
+  const float *ranges[] = {range1, range2};
+
+  calcHist(&target, 1, channels, target_mask, hist, 2, sizes, ranges, true, false);
+  normalize(hist, hist, 0, 255, NORM_MINMAX, -1, Mat());
 
   // process frames at 15hz
   ros::Rate loop_rate(15);
@@ -32,9 +49,6 @@ int main(int argc, char **argv) {
 
 
   namedWindow("raw image", 2);
-  namedWindow("HSV threshold", 2);
-  createTrackbar("Hue min", "HSV threshold", &hue_min, 255);
-  createTrackbar("Hue max", "HSV threshold", &hue_max, 255);
 
   // main loop
   while (ros::ok()) {
@@ -53,18 +67,24 @@ int main(int argc, char **argv) {
       return -1;
     }
 
-    // HSV thresholding
-    cvtColor(raw_image, thresh_image, CV_BGR2HSV);
-    inRange(thresh_image, Scalar(hue_min, 0, 0), Scalar(hue_max, 255, 255), thresh_image);
-    thresh_color = Scalar::all(0);
-    raw_image.copyTo(thresh_color, thresh_image);
+    cvtColor(raw_image, raw_image, CV_BGR2HSV);
+
+    // histogram backprojection
+    calcBackProject(&raw_image, 1, channels, hist, back_proj, ranges);
+    GaussianBlur(back_proj, back_proj, Size(11, 11), 5);
+    threshold(back_proj, back_proj, 3, 255, CV_THRESH_BINARY);
+
+    Mat image;
+    cvtColor(raw_image, raw_image, CV_HSV2BGR);
+    raw_image.copyTo(image, back_proj);
 
     // display images is seperate windows
-    imshow("raw image", raw_image);
-    imshow("HSV threshold", thresh_color);
-
+    imshow("image", image);
+    imshow("raw_image", raw_image);
     // needed for the opencv GUI
     waitKey(1);
+
+
 
     // make sure we run at 15hz
     loop_rate.sleep();
