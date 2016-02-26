@@ -242,16 +242,10 @@ typedef struct _PD0_SensorData {
 typedef struct _PD4_Data {
     uint16_t bytecount;
     uint8_t system_config;
-    uint16_t x_vel;
-    uint16_t y_vel;
-    uint16_t z_vel;
-    uint16_t e_vel;
+    uint16_t bottom[4];
     uint16_t beam_range[4];
     uint8_t bottom_status;
-    uint16_t x_ref_vel;
-    uint16_t y_ref_vel;
-    uint16_t z_ref_vel;
-    uint16_t e_ref_vel;
+    uint16_t velocity[4];
     uint16_t ref_start;
     uint16_t ref_end;
     uint8_t ref_status;
@@ -268,16 +262,10 @@ typedef struct _PD4_Data {
 typedef struct _PD5_Data {
     uint16_t bytecount;
     uint8_t system_config;
-    uint16_t x_vel;
-    uint16_t y_vel;
-    uint16_t z_vel;
-    uint16_t e_vel;
+    uint16_t bottom[4];
     uint16_t beam_range[4];
     uint8_t bottom_status;
-    uint16_t x_ref_vel;
-    uint16_t y_ref_vel;
-    uint16_t z_ref_vel;
-    uint16_t e_ref_vel;
+    uint16_t velocity[4];
     uint16_t ref_start;
     uint16_t ref_end;
     uint8_t ref_status;
@@ -511,14 +499,12 @@ typedef struct _WaterProfileConfig {
 
 typedef enum _CoordinateSystem {
     BEAM_COORD, INST_COORD, SHIP_COORD, EARTH_COORD
-} Coordinate System;
+} CoordinateSystem;
 
 typedef struct _DVLData {
     CoordinateSystem transform;
-    int mms_east;
-    int mms_north;
-    int mms_surface;
-    int mms_error;
+    int water_vel[4];
+    int bottom_vel[4];
 } DVLData;
 
 #pragma pack(pop)

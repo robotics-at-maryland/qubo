@@ -237,20 +237,45 @@ DVL::DVLData DVL::getDVLData() {
     int scanned;
     switch (message.format) {
         case FORMAT_PD0:
-            message.pd0_fixed->coord_transform;
-            message.pd0_fixed->sensor_source;
-            message.pd0_variable->bit_result
+            data.transform = (CoordinateSystem) 
+                ((message.pd0_fixed->coord_transform >> 3) & 0x3);
+            if (message.pd0_velocity) {
+                data.water_vel[0] = message.pd0_velocity[0][0];
+                data.water_vel[1] = message.pd0_velocity[0][1];
+                data.water_vel[2] = message.pd0_velocity[0][2];
+                data.water_vel[3] = message.pd0_velocity[0][3];
+            }
+            if (message.pd0_bottom_track_highres) {
+                data.bottom_vel[0] = message.pd0_bottom_track_highres->bot_velocity[0];
+                data.bottom_vel[1] = message.pd0_bottom_track_highres->bot_velocity[1];
+                data.bottom_vel[2] = message.pd0_bottom_track_highres->bot_velocity[2];
+                data.bottom_vel[3] = message.pd0_bottom_track_highres->bot_velocity[3];
+            }
             break;
         case FORMAT_PD4:
-            data.transform = message.pd4_data->system_config;
-            data.mms_xvel = message.pd4_data->x_vel;
-            data.mms_yvel = message.pd4_data->y_vel;
-            data.mms_zvel = message.pd4_data->z_vel;
-            data.mms_evel = message.pd4_data->e_vel;
+            data.transform = (CoordinateSystem) (message.pd4_data->system_config >> 6);
+            data.water_vel[0] = message.pd4_data->velocity[0];
+            data.water_vel[1] = message.pd4_data->velocity[1];
+            data.water_vel[2] = message.pd4_data->velocity[2];
+            data.water_vel[3] = message.pd4_data->velocity[3];
+            data.bottom_vel[0] = message.pd4_data->bottom[0];
+            data.bottom_vel[1] = message.pd4_data->bottom[1];
+            data.bottom_vel[2] = message.pd4_data->bottom[2];
+            data.bottom_vel[3] = message.pd4_data->bottom[3];
             break;
         case FORMAT_PD5:
+            data.transform = (CoordinateSystem) (message.pd5_data->system_config >> 6);
+            data.water_vel[0] = message.pd5_data->velocity[0];
+            data.water_vel[1] = message.pd5_data->velocity[1];
+            data.water_vel[2] = message.pd5_data->velocity[2];
+            data.water_vel[3] = message.pd5_data->velocity[3];
+            data.bottom_vel[0] = message.pd5_data->bottom[0];
+            data.bottom_vel[1] = message.pd5_data->bottom[1];
+            data.bottom_vel[2] = message.pd5_data->bottom[2];
+            data.bottom_vel[3] = message.pd5_data->bottom[3];
             break;
         case FORMAT_PD6:
+            /* These are the basic ways to grab data from the PD6 format.
             scanned = sscanf(message.pd6_attitude, 
                     ":SA,%f,%f,%f", 
                     &pitch, &roll, &heading);
@@ -286,6 +311,18 @@ DVL::DVLData DVL::getDVLData() {
                         ":BD,%f,%f,%f,%f,%f",
                         &east, &north, &up, &range, &time);
             }
+            */
+            data.transform = CoordinateSystem::SHIP_COORD;
+            scanned = sscanf(message.pd6_w_ship, 
+                    ":WS,%d,%d,%d,%*c",
+                    &(data.water_vel[0]), &(data.water_vel[1]), &(data.water_vel[2]));
+            if (scanned != 3)
+                throw new DVLException("Unable to parse PD6 Water Data");
+            scanned = sscanf(message.pd6_b_ship, 
+                    ":BS,%d,%d,%d,%*c",
+                    &(data.bottom_vel[0]), &(data.bottom_vel[1]), &(data.bottom_vel[2]));
+            if (scanned != 3)
+                throw new DVLException("Unable to parse PD6 Bottom Data");
             break;
         case FORMAT_EMPTY:
         case FORMAT_TEXT:
