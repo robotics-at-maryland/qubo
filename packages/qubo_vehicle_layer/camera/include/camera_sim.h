@@ -22,6 +22,7 @@ public:
 	void update();
 	void publish();
 	void cameraCallBack(const sensor_msgs::Image msg);
+	ros::NodeHandle getNode(){ return n; };
 
 protected:
 	sensor_msgs::Image msg;
@@ -39,7 +40,7 @@ protected:
 		image_transport::Publisher image_pub;
 
 	public:
-		ImageConverter();
+		ImageConverter(const CameraSimNode& c_node);
 		~ImageConverter();
 		void imageCallBack(const sensor_msgs::ImageConstPtr& msg);
 	};

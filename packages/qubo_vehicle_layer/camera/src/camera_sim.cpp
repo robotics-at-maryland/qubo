@@ -3,7 +3,7 @@
 
 CameraSimNode::CameraSimNode(int argc, char **argv, int rate){
 	ros::Rate loop_rate(rate);
-	CameraSimNode::ImageConverter();
+	CameraSimNode::ImageConverter(*this);
 	/* These are left over from when we just republished the camera feed
 	 *
 	subscriber = n.subscribe("/uwsim/camera1", 1000, &CameraSimNode::cameraCallBack, this);
@@ -34,7 +34,7 @@ void CameraSimNode::cameraCallBack(const sensor_msgs::Image sim_msg){
 	msg.data = sim_msg.data;
 }
 
-CameraSimNode::ImageConverter::ImageConverter() : image_tran(n){
+CameraSimNode::ImageConverter::ImageConverter(const CameraSimNode& c_node) : image_tran(c_node.n){
 	image_sub = image_tran.subscribe("/uwsim/camera1", 1000, &CameraSimNode::ImageConverter::imageCallBack, this);
 	image_pub = image_tran.advertise("qubo/cv_camera", 1000);
 }
