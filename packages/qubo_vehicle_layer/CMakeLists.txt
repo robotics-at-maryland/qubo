@@ -10,6 +10,8 @@ find_package(catkin
     REQUIRED COMPONENTS
    # qubo_vehicle_layer
     roscpp
+    cv_bridge
+    image_transport
 )
 
 catkin_package(

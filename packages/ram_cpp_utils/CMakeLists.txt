@@ -9,6 +9,8 @@ find_package(catkin
     REQUIRED COMPONENTS
     ram_msgs
     roscpp
+    cv_bridge
+    image_transport
 )
 
 catkin_package(
