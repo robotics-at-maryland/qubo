@@ -10,7 +10,7 @@ find_package(catkin
     REQUIRED COMPONENTS
    # qubo_vehicle_layer
     roscpp
-    cv_bridge
+    cv_bridge #these two are used in the camera node
     image_transport
 )
 

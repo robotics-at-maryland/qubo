@@ -40,6 +40,7 @@ protected:
 		image_transport::Publisher image_pub;
 
 	public:
+		// Allows the converter to publish from the camera
 		ImageConverter(const CameraSimNode& c_node);
 		~ImageConverter();
 		void imageCallBack(const sensor_msgs::ImageConstPtr& msg);

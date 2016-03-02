@@ -4,6 +4,7 @@
 CameraSimNode::CameraSimNode(int argc, char **argv, int rate){
 	ros::Rate loop_rate(rate);
 	CameraSimNode::ImageConverter(*this);
+
 	/* These are left over from when we just republished the camera feed
 	 *
 	subscriber = n.subscribe("/uwsim/camera1", 1000, &CameraSimNode::cameraCallBack, this);
@@ -24,6 +25,7 @@ void CameraSimNode::publish(){
 	//publisher.publish(msg);
 }
 
+//this shouldn't ever be used or called
 void CameraSimNode::cameraCallBack(const sensor_msgs::Image sim_msg){
 	msg.header = sim_msg.header;
 	msg.height = sim_msg.height;
@@ -34,6 +36,7 @@ void CameraSimNode::cameraCallBack(const sensor_msgs::Image sim_msg){
 	msg.data = sim_msg.data;
 }
 
+//constructor for the converter internal class
 CameraSimNode::ImageConverter::ImageConverter(const CameraSimNode& c_node) : image_tran(c_node.n){
 	image_sub = image_tran.subscribe("/uwsim/camera1", 1000, &CameraSimNode::ImageConverter::imageCallBack, this);
 	image_pub = image_tran.advertise("qubo/cv_camera", 1000);
@@ -41,6 +44,8 @@ CameraSimNode::ImageConverter::ImageConverter(const CameraSimNode& c_node) : ima
 
 CameraSimNode::ImageConverter::~ImageConverter(){};
 
+//callback for the converter
+//this should grab the image, and then republish it as something readable to opencv
 void CameraSimNode::ImageConverter::imageCallBack(const sensor_msgs::ImageConstPtr& msg){
 
 	cv_bridge::CvImagePtr cv_ptr;
