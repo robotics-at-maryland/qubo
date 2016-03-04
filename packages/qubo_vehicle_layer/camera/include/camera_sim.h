@@ -27,6 +27,7 @@ public:
 protected:
 	sensor_msgs::Image msg;
 	ros::Subscriber subscriber;
+	ImageConverter image_con;
 
 	/* this is a class used to convert the camera images into something
 	 * opencv can understand.
