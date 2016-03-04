@@ -35,6 +35,7 @@ include_directories(
   led/include
   temperature/include
   camera/include
+  thrusters/include
   )
 
 set(DEPTH_SRC_FILES
@@ -72,6 +73,12 @@ set(CAMERA_SRC_FILES
   camera/src/camera_sim.cpp
   )
 
+set(THRUSTER_SRC_FILES
+  thrusters/src/main.cpp
+  thrusters/src/thruster_sim.cpp
+  )
+  
+
 set(TEST_FILES
   
     )
@@ -101,6 +108,13 @@ target_link_libraries(temp_node ${catkin_LIBRARIES})
 
 add_executable(camera_node ${CAMERA_SRC_FILES})
 target_link_libraries(camera_node ${catkin_LIBRARIES})
+
+add_executable(thruster_node ${THRUSTER_SRC_FILES})
+target_link_libraries(thruster_node ${catkin_LIBRARIES})
+
+
+
+
 
 ##############################
 # Unit Tests #################

@@ -5,7 +5,7 @@
 #define THRUSTER_SIM_HEADER
 
 #include "qubo_node.h"
-#include "std_msgs/Float64MultiArray"
+#include "std_msgs/Float64MultiArray.h"
 
 class ThrusterSimNode : QuboNode {
 
@@ -18,7 +18,7 @@ class ThrusterSimNode : QuboNode {
   void thrusterCallBack(const std_msgs::Float64MultiArray msg);
   
  protected:
-  std::Float64MultiArray msg;
+  std_msgs::Float64MultiArray msg;
   ros::Subscriber subscriber;
 };
 

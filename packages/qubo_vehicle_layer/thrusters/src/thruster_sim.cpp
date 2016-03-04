@@ -1,10 +1,9 @@
 #include "thruster_sim.h"
 
-
 ThrusterSimNode::ThrusterSimNode(int argc, char **argv, int rate){
   ros::Rate  loop_rate(rate);
-  subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterSimNode::depthCallBack,this);
-  publisher = n.advertise< underwater_sensor_msgs::Pressure>("g500/thruster_input", 1000);
+  subscriber = n.subscribe("/qubo/thrusters_input", 1000, &ThrusterSimNode::thrusterCallBack,this);
+  publisher = n.advertise<std_msgs::Float64MultiArray>("/g500/thrusters_input", 1000);
   
 };
 
@@ -20,8 +19,8 @@ void ThrusterSimNode::publish(){ //We might be able to get rid of this and alway
 }
 
 
-void ThrusterSimNode::thrusterCallBack(const underwater_sensor_msgs::Pressure sim_msg)
+void ThrusterSimNode::thrusterCallBack(const std_msgs::Float64MultiArray sim_msg)
 {
-  msg.pressure = sim_msg.pressure;
+  msg.data = sim_msg.data;
 }
 
