@@ -28,6 +28,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   include 
+  ../../tortuga_code/include
   depth_sensor/include
   dvl/include
   imu/include
