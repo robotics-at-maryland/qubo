@@ -24,10 +24,10 @@ public:
 	void cameraCallBack(const sensor_msgs::Image msg);
 	ros::NodeHandle getNode(){ return n; };
 
+
 protected:
 	sensor_msgs::Image msg;
 	ros::Subscriber subscriber;
-	ImageConverter image_con;
 
 	/* this is a class used to convert the camera images into something
 	 * opencv can understand.
@@ -47,9 +47,9 @@ protected:
 		void imageCallBack(const sensor_msgs::ImageConstPtr& msg);
 	};
 
+	//CameraSimNode::ImageConverter image_con;
+
+
 };
-
-
-
 
 #endif

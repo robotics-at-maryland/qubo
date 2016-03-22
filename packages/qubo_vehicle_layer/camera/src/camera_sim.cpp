@@ -3,7 +3,7 @@
 
 CameraSimNode::CameraSimNode(int argc, char **argv, int rate){
 	ros::Rate loop_rate(rate);
-	image_con = CameraSimNode::ImageConverter(*this);
+	CameraSimNode::ImageConverter image_con(*this);
 
 	/* These are left over from when we just republished the camera feed
 	 *
