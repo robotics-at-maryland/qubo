@@ -24,6 +24,7 @@ public:
 	void cameraCallBack(const sensor_msgs::Image msg);
 	ros::NodeHandle getNode(){ return n; };
 
+
 protected:
 	sensor_msgs::Image msg;
 	ros::Subscriber subscriber;
@@ -46,9 +47,9 @@ protected:
 		void imageCallBack(const sensor_msgs::ImageConstPtr& msg);
 	};
 
+	//CameraSimNode::ImageConverter image_con;
+
+
 };
-
-
-
 
 #endif

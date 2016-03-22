@@ -3,7 +3,7 @@
 
 CameraSimNode::CameraSimNode(int argc, char **argv, int rate){
 	ros::Rate loop_rate(rate);
-	CameraSimNode::ImageConverter(*this);
+	CameraSimNode::ImageConverter image_con(*this);
 
 	/* These are left over from when we just republished the camera feed
 	 *
@@ -38,7 +38,7 @@ void CameraSimNode::cameraCallBack(const sensor_msgs::Image sim_msg){
 
 //constructor for the converter internal class
 CameraSimNode::ImageConverter::ImageConverter(const CameraSimNode& c_node) : image_tran(c_node.n){
-	image_sub = image_tran.subscribe("/uwsim/camera1", 1000, &CameraSimNode::ImageConverter::imageCallBack, this);
+	image_sub = image_tran.subscribe("uwsim/camera1", 1000, &CameraSimNode::ImageConverter::imageCallBack, this);
 	image_pub = image_tran.advertise("qubo/cv_camera", 1000);
 }
 
@@ -47,13 +47,11 @@ CameraSimNode::ImageConverter::~ImageConverter(){};
 //callback for the converter
 //this should grab the image, and then republish it as something readable to opencv
 void CameraSimNode::ImageConverter::imageCallBack(const sensor_msgs::ImageConstPtr& msg){
-
 	cv_bridge::CvImagePtr cv_ptr;
 	try{
 		//this may or may not be how we encode the camera data
 		cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
 	}catch(cv_bridge::Exception& e){
-		ROS_ERROR("Image converting broke: %s", e.what());
 		return;
 	}
 	image_pub.publish(cv_ptr->toImageMsg());
