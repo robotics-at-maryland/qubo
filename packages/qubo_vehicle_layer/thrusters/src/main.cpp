@@ -16,17 +16,16 @@ int main(int argc, char **argv){
      right now though we don't have a real depth sensor, hence the comments
   **/
 
-
   // if(simulated){
-    ThrusterSimNode *node = ThrusterSimNode(argc, argv, 10); /** 10 (the rate) is completely arbitrary */
+    ThrusterSimNode node = ThrusterSimNode(argc, argv, 10); /** 10 (the rate) is completely arbitrary */
     //}else{
     // DepthNode *node = new DepthNode(argc, argv, 10); 
     // }
 
 
   while (ros::ok()){
-    node->update();
-    node->publish();
+    node.update();
+    node.publish();
   }
 
 }
