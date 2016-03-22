@@ -6,6 +6,7 @@
 
 #include "qubo_node.h"
 #include "std_msgs/Float64MultiArray"
+#include "sensorapi.h"
 
 class ThrusterTortugaNode : QuboNode {
 
@@ -15,6 +16,7 @@ public:
 
 	void update();
 	void publish();
+	void thrusterCallBack(const std_msgs::Float64MultiArray msg);
 
 protected:
 	std::Float64MultiArray msg;
