@@ -12,6 +12,7 @@ find_package(catkin
     roscpp
     cv_bridge #these two are used in the camera node
     image_transport
+    ram_cpp_utils
 )
 
 catkin_package(
@@ -28,7 +29,6 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   include 
-  ../../tortuga_code/include
   depth_sensor/include
   dvl/include
   imu/include
@@ -80,8 +80,6 @@ set(THRUSTER_SRC_FILES
   thrusters/src/thruster_tortuga.cpp
   )
 
-set(SENSORAPI_SRC_FILES
-  ~/qubo/tortuga_code/src/sensorapi.cpp
 
 set(TEST_FILES
   
@@ -113,7 +111,7 @@ target_link_libraries(temp_node ${catkin_LIBRARIES})
 add_executable(camera_node ${CAMERA_SRC_FILES})
 target_link_libraries(camera_node ${catkin_LIBRARIES})
 
-add_executable(thruster_node ${THRUSTER_SRC_FILES}, {SENSORAPI_SRC_FILES})
+add_executable(thruster_node ${THRUSTER_SRC_FILES})
 target_link_libraries(thruster_node ${catkin_LIBRARIES})
 
 

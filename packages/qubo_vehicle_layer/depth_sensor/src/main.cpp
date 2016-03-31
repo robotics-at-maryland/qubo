@@ -1,5 +1,4 @@
 #include "depth_sensor_sim.h"
-#include "sensorapi.h"
 /**
 This is the main method for our depth_sensor node
 **/

@@ -6,7 +6,7 @@
 
 #include "qubo_node.h"
 #include "std_msgs/Float64MultiArray.h"
-#include "sensorapi.h"
+#include "tortuga/sensorapi.h"
 
 class ThrusterTortugaNode : QuboNode {
 
