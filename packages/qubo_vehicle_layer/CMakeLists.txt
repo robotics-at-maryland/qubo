@@ -52,6 +52,7 @@ set(DVL_SRC_FILES
 set(IMU_SRC_FILES
   imu/src/main.cpp
   imu/src/imu_sim.cpp
+  imu/src/imu_tortuga.cpp
   )
 
 set(POWER_SRC_FILES

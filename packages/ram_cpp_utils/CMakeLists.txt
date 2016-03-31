@@ -26,6 +26,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 set(SRC_FILES
     src/math/Conversion.cpp
     src/tortuga/sensorapi.c
+    src/tortuga/imuapi.c
     )
     
 set(TEST_FILES
