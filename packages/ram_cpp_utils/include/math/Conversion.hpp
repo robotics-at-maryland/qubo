@@ -8,7 +8,7 @@
 #include <ram_msgs/Vector3.h>
 #include <ram_msgs/Vector4.h>
 
-#include "ram_cpp_utils/math/Typedefs.hpp"
+#include "math/Typedefs.hpp"
 
 namespace ram_utils
 {
