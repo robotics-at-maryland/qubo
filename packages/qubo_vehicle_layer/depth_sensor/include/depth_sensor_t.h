@@ -9,11 +9,11 @@
 #include "qubo_node.h"
 #include "underwater_sensor_msgs/Pressure.h"
 
-class DepthSimNode : QuboNode {
+class DepthTortugaNode : QuboNode {
 
-public:
- DepthSimNode(int,char**,int);
- ~DepthSimNode();
+public: 
+ DepthTortugaNode(int,char**,int);
+ ~DepthTortugaNode();
 
   void update();
   void publish();
@@ -22,6 +22,7 @@ public:
  protected:
 
   underwater_sensor_msgs::Pressure msg;
+  int fd; //the file descriptor, established by the a call to openSensorBoard 
  
   
 };
