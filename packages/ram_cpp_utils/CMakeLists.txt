@@ -9,6 +9,8 @@ find_package(catkin
     REQUIRED COMPONENTS
     ram_msgs
     roscpp
+    cv_bridge
+    image_transport
 )
 
 catkin_package(
@@ -24,7 +26,8 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
-    src/ram_cpp_utils/math/Conversion.cpp
+    src/math/Conversion.cpp
+    src/tortuga/sensorapi.c
     )
     
 set(TEST_FILES
