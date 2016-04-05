@@ -3,7 +3,8 @@
 ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
-	fd = openIMU("/dev/ttyUSB0");
+
+	n.getParam("imu_file_descriptor", fd);
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
@@ -11,7 +12,9 @@ ImuTortugaNode::~ImuTortugaNode(){
 }
 
 void ImuTortugaNode::update(){
-	readIMUData(fd, data);
+	if(!readIMUData(fd, data)){
+		ROS_DEBUG("IMU Checksum Error");
+	}
 
 	msg.header.stamp = ros::Time::now();
 	msg.header.seq = ++id;
@@ -20,6 +23,7 @@ void ImuTortugaNode::update(){
 	msg.orientation_covariance[0] = -1;
 
 	msg.linear_acceleration_covariance[0] = -1;
+
 	// Our IMU returns values in G's, but we should be publishing in m/s^2
 	msg.linear_acceleration.x = data->accelX * g_in_ms2;
 	msg.linear_acceleration.y = data->accelY * g_in_ms2;
