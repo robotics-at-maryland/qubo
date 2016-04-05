@@ -52,7 +52,7 @@ class QuboNode {
      Use this function to log check if an error has occured using sensorapi
      Returns if an error happened and logs it
   */
-  static void checkError(int e) {
+  static bool checkError(int e) {
     switch(e) {
     case SB_IOERROR:
       ROS_DEBUG("IO ERROR in node %s", name);
