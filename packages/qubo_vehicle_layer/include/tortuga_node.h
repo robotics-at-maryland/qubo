@@ -10,7 +10,8 @@
 #define QUBONODE_TORTUGA_HEADER
 
 // This is the file name that the fd describes
-#define BOARD_NAME "name"
+#define IMU_BOARD "imu_file_descriptor"
+#define SENSOR_BOARD "sensor_board_file_descriptor"
 #include "qubo_node.h"
 #include "sensorapi.h"
 
@@ -48,7 +49,10 @@ class TortugaNode {
   //We'll probably need a few more things 
  protected:
   std::string name;
-  static const int fd = openSensorBoard(BOARD_NAME)
+  static const int fd_sens;
+  static const int fd_imu;
+  n.getParam(IMU_BOARD, fd_imu);
+  n.getParam(SENSOR_BOARD, fd_sens);
 };
 
 
