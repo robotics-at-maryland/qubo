@@ -27,6 +27,9 @@ set(SRC_FILES
     src/math/Conversion.cpp
     src/tortuga/old_code/sensorapi.c
     src/tortuga/old_code/imuapi.c
+    )
+
+set(BOARD_OPENER_FILES
     src/tortuga/new_code/board_opener.cpp
     )
     
@@ -45,6 +48,16 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
+)
+
+##############################
+# Add Executables ############
+##############################
+
+add_executable(board_opener ${BOARD_OPENER_FILES}) 
+target_link_libraries(board_opener 
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}
 )
 
 ##############################
