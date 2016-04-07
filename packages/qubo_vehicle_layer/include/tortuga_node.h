@@ -51,8 +51,12 @@ class TortugaNode {
   std::string name;
   static const int fd_sens;
   static const int fd_imu;
-  n.getParam(IMU_BOARD, fd_imu);
-  n.getParam(SENSOR_BOARD, fd_sens);
+  if(!n.getParam(IMU_BOARD, fd_imu)){
+    ROS_ERROR("IMU file descriptor not found on param server");
+  }
+  if(!n.getParam(SENSOR_BOARD, fd_sens)){
+    ROS_ERROR("Sensor board file descriptor not found on param server");
+  }
 };
 
 
