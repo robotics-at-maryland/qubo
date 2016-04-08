@@ -16,8 +16,10 @@ bool checkError(int, char*);
 std::string imu_file = "/dev/magboom";
 std::string sensor_file = "/dev/sensor";
 
-int main(){
-	
+int main(int argc, char **argv){
+
+	ros::init(argc, argv, "board_opener");
+
 	//imu
 	if(ros::param::has(imu_file)){
 		ros::param::get("imu_device_file", imu_file);
