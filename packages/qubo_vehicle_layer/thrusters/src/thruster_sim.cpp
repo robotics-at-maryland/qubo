@@ -9,6 +9,15 @@ ThrusterSimNode::ThrusterSimNode(int argc, char **argv, int rate){
 
 ThrusterSimNode::~ThrusterSimNode(){};
 
+/*Turns a R3 cartesian vector into a Float64MultiArray.*/
+void ThrusterSimNode::cartesianToVelocity(double [] velocity){
+
+	double xPower = velocity[0];
+	double yPower = velocity[1];
+	double zPower = velocity[2];
+
+	publisher.publish({xPower/2,xPower/2,yPower,zPower/2,zPower/2});
+}
 
 void ThrusterSimNode::update(){
   ros::spinOnce(); //the only thing we care about is depth here which updated whenever we get a depth call back, on a real node we may need to do something else.
