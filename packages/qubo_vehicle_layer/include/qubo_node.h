@@ -35,6 +35,7 @@ class QuboNode {
     ros::Rate loop_rate(rate);
     loop_rate.sleep();
   }
+  
   static void runThread(QuboNode *node) {
     while (ros::ok()) {
       node->update();
