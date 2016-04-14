@@ -9,13 +9,22 @@
 #ifndef QUBONODE_TORTUGA_HEADER
 #define QUBONODE_TORTUGA_HEADER
 
-// This is the file name that the fd describes
-#define IMU_BOARD "imu_file_descriptor"
-#define SENSOR_BOARD "sensor_board_file_descriptor"
-#include "qubo_node.h"
-#include "sensorapi.h"
+/* These define the parameter server names that will hold the value of the fd's
+ Ideally these values are constant and each node should have access to it, so it would be
+ best to have a way for the values to be saved in one place where every subclass of TortugaNode
+ has access to it.
+ For now every node has access to the parameter server's variable name IMU_BOARD and SENSOR_BOARD
+ so each node can get the value.
+*/
 
-class TortugaNode {
+#define IMU_FD "t/imu_fd"
+#define SENSOR_FD "t/sensor_fd"
+
+
+#include "qubo_node.h"
+#include "tortuga/sensorapi.h"
+
+class TortugaNode : QuboNode {
  public:
 
   TortugaNode(){}; /**<Constructor, you should really never call this directly */
@@ -30,33 +39,28 @@ class TortugaNode {
   bool checkError(int e) {
     switch(e) {
     case SB_IOERROR:
-      ROS_DEBUG("IO ERROR in node %s", name);
+      ROS_ERROR("IO ERROR in node %s", name);
       return true;
     case SB_BADCC:
-      ROS_DEBUG("BAD CC ERROR in node %s", name);
+      ROS_ERROR("BAD CC ERROR in node %s", name);
       return true;
     case SB_HWFAIL:
-      ROS_DEBUG("HW FAILURE ERROR in node %s", name);
+      ROS_ERROR("HW FAILURE ERROR in node %s", name);
       return true;
     case SB_ERROR:
-      ROS_DEBUG("ERROR in node %s", name);
+      ROS_ERROR("ERROR in node %s", name);
       return true;
     default:
       return false;
     }
   }
 
-  //We'll probably need a few more things 
+  //We'll probably need a few more things
  protected:
+  // Node's name, used for debugging in checkerror
   std::string name;
-  static const int fd_sens;
-  static const int fd_imu;
-  if(!n.getParam(IMU_BOARD, fd_imu)){
-    ROS_ERROR("IMU file descriptor not found on param server");
-  }
-  if(!n.getParam(SENSOR_BOARD, fd_sens)){
-    ROS_ERROR("Sensor board file descriptor not found on param server");
-  }
+  const int sensor_fd;
+  const int imu_fd;
 };
 
 
