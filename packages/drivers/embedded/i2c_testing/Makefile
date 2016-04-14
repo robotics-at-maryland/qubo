@@ -15,7 +15,7 @@ TARGET = main
 # MCU: part number to build for
 MCU = TM4C123GH6PM
 # TIVAWARE_PATH: path to tivaware folder
-TIVAWARE_PATH = $(HOME)/ram-arm-dev/tivaware
+TIVAWARE_PATH = $(HOME)/robotics/tivaware
 # SOURCES: list of input source sources
 SOURCES = main.c startup_gcc.c sysctl.c  i2c.c gpio.c uartstdio.c uart.c ustdlib.c bmp180.c
 #$(TIVAWARE_PATH)/driverlib/*.c $(TIVAWARE_PATH)/inc/*.c
