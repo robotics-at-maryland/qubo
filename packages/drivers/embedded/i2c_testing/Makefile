@@ -71,6 +71,9 @@ $(OUTDIR)/a.out: $(OBJECTS)
 $(OUTDIR)/main.bin: $(OUTDIR)/a.out
 	$(OBJCOPY) -O binary $< $@
 
+flash: $(OUTDIR)/main.bin
+	sudo lm4flash $(OUTDIR)/$(TARGET).bin
+
 # create the output directory
 $(OUTDIR):
 	$(MKDIR) $(OUTDIR)
@@ -78,4 +81,4 @@ $(OUTDIR):
 clean:
 	-$(RM) $(OUTDIR)/*
 
-.PHONY: all clean
+.PHONY: all clean flash
