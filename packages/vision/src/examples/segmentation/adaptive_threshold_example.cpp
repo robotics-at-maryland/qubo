@@ -2,6 +2,8 @@
 #include "ros/package.h"
 #include "cv.h"
 #include "highgui.h"
+#include <iostream>
+#include <cmath>
 
 using namespace cv;
 
@@ -10,7 +12,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
 
   // open up the video
-  VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
+  VideoCapture stream("/home/michael/Documents/ram/data/misc/20100715095315.avi");
   // VideoCapture stream(0);
 
   if (!stream.isOpened()) {
@@ -27,14 +29,12 @@ int main(int argc, char **argv) {
   // variables
   int frame_count = 0,  // a frame count is needed to loop the video
       blur_number = 6,  // the rest are parameters to the algorithms...
-      hue_max     = 50,
-      hue_min     = 20;
+      kernel_size     = 1;
 
 
   namedWindow("raw image", 2);
   namedWindow("HSV threshold", 2);
-  createTrackbar("Hue min", "HSV threshold", &hue_min, 255);
-  createTrackbar("Hue max", "HSV threshold", &hue_max, 255);
+  createTrackbar("Hue min", "HSV threshold", &kernel_size, 100);
 
   // main loop
   while (ros::ok()) {
@@ -54,14 +54,19 @@ int main(int argc, char **argv) {
     }
 
     // HSV thresholding
-    cvtColor(raw_image, thresh_image, CV_BGR2HSV);
-    inRange(thresh_image, Scalar(hue_min, 0, 0), Scalar(hue_max, 255, 255), thresh_image);
-    thresh_color = Scalar::all(0);
-    raw_image.copyTo(thresh_color, thresh_image);
+    medianBlur(raw_image, raw_image, pow(2, kernel_size) + 1);
+    cvtColor(raw_image, thresh_image, CV_BGR2GRAY);
+
+
+    adaptiveThreshold(thresh_image, thresh_image, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 11, 2);
+    // th3 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+    //            cv2.THRESH_BINARY,11,2)
+
+
 
     // display images is seperate windows
     imshow("raw image", raw_image);
-    imshow("HSV threshold", thresh_color);
+    imshow("HSV threshold", thresh_image);
 
     // needed for the opencv GUI
     waitKey(1);

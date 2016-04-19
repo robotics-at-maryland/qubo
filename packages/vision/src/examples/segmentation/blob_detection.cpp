@@ -10,8 +10,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
 
   // open up the video
-  // VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
-  VideoCapture stream("/home/michael/Documents/ram/data/buoy/20090926063810.avi");
+  VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
+  // VideoCapture stream("/home/michael/Documents/ram/data/buoy/20090926063810.avi");
 
   // VideoCapture stream(0);
 
@@ -23,14 +23,30 @@ int main(int argc, char **argv) {
   // various stages of images used in processing
   Mat raw_image, thresh_image, thresh_color;
 
+  // blob detector
+  SimpleBlobDetector::Params params;
+  // params.blobColor = 255;
+  params.minDistBetweenBlobs = 1.0f;
+  params.filterByInertia = false;
+  params.filterByConvexity = true;
+  params.minConvexity = 0.8;
+  params.filterByColor = false;
+  params.filterByCircularity = true;
+  params.minCircularity = 0.7;
+  params.filterByArea = true;
+  params.minArea = 500.0f;
+  params.maxArea = 10000.0f;
+  SimpleBlobDetector blob_detector(params);
+  std::vector<KeyPoint> keypoints;
+
   // process frames at 15hz
   ros::Rate loop_rate(15);
 
   // variables
   int frame_count = 0,  // a frame count is needed to loop the video
       blur_number = 6,  // the rest are parameters to the algorithms...
-      hue_max     = 50,
-      hue_min     = 20;
+      hue_max     = 100,
+      hue_min     = 0;
 
 
   namedWindow("raw image", 2);
@@ -57,14 +73,21 @@ int main(int argc, char **argv) {
 
     // HSV thresholding
     cvtColor(raw_image, thresh_image, CV_BGR2HSV);
-    
+    GaussianBlur(thresh_image, thresh_image, Size(9, 9), 13);
     inRange(thresh_image, Scalar(0, hue_min, 0), Scalar(255, hue_max, 255), thresh_image);
+    GaussianBlur(thresh_image, thresh_image, Size(9, 9), 13);
     thresh_color = Scalar::all(0);
-    raw_image.copyTo(thresh_color, thresh_image);
+    // raw_image.copyTo(thresh_color, thresh_image);
+
+    // Blob dedection
+    // detector
+    blob_detector.detect(thresh_image, keypoints);
+    std::cout << "keypoints: " << keypoints.size() << "\n";
+    drawKeypoints(raw_image, keypoints, raw_image, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
 
     // display images is seperate windows
     imshow("raw image", raw_image);
-    imshow("HSV threshold", thresh_color);
+    imshow("HSV threshold", thresh_image);
 
     // needed for the opencv GUI
     waitKey(1);

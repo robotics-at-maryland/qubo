@@ -6,13 +6,11 @@
 using namespace cv;
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "hsv_thresholding_example");
+  ros::init(argc, argv, "adaptive_threshold_example");
   ros::NodeHandle n;
 
   // open up the video
-  // VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
-  VideoCapture stream("/home/michael/Documents/ram/data/buoy/20090926063810.avi");
-
+  VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
   // VideoCapture stream(0);
 
   if (!stream.isOpened()) {
@@ -57,8 +55,7 @@ int main(int argc, char **argv) {
 
     // HSV thresholding
     cvtColor(raw_image, thresh_image, CV_BGR2HSV);
-    
-    inRange(thresh_image, Scalar(0, hue_min, 0), Scalar(255, hue_max, 255), thresh_image);
+    inRange(thresh_image, Scalar(hue_min, 0, 0), Scalar(hue_max, 255, 255), thresh_image);
     thresh_color = Scalar::all(0);
     raw_image.copyTo(thresh_color, thresh_image);
 
