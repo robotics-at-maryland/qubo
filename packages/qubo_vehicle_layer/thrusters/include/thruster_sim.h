@@ -8,18 +8,19 @@
 #include "std_msgs/Float64MultiArray.h"
 
 class ThrusterSimNode : QuboNode {
-
- public:
-  ThrusterSimNode(int,char**,int);
-  ~ThrusterSimNode();
+    
+    public:
+    ThrusterSimNode(int,char**,int);
+    ~ThrusterSimNode();
+    
+    void update();
+    void publish();
+    void thrusterCallBack(const std_msgs::Float64MultiArray msg);
+    void cartesianToVelocity(double*);
   
-  void update();
-  void publish();
-  void thrusterCallBack(const std_msgs::Float64MultiArray msg);
-  
- protected:
-  std_msgs::Float64MultiArray msg;
-  ros::Subscriber subscriber;
+    protected:
+    std_msgs::Float64MultiArray msg;
+    ros::Subscriber subscriber;
 };
 
 

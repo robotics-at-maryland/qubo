@@ -13,7 +13,7 @@ ThrusterSimNode::~ThrusterSimNode(){};
 
   
 /*Turns a R3 cartesian vector into a Float64MultiArray.*/
-void ThrusterSimNode::cartesianToVelocity(double [] velocity){
+void ThrusterSimNode::cartesianToVelocity(double velocity[]){
 
 	/*This is the data that will be contained in the velocity vector */
 	double xPower = velocity[0];
@@ -43,7 +43,6 @@ void ThrusterSimNode::update(){
 void ThrusterSimNode::publish(){ //We might be able to get rid of this and always just call publisher.publish 
   publisher.publish(msg);
 }
-
 
 void ThrusterSimNode::thrusterCallBack(const std_msgs::Float64MultiArray sim_msg)
 {
