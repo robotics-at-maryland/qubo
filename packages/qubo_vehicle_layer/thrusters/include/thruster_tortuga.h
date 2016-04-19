@@ -47,8 +47,7 @@ class ThrusterTortugaNode : QuboNode {
     
     
     std_msgs::Float64MultiArray msg;
-  ros::Subscriber subscriber;
-  int fd;
+  	ros::Subscriber subscriber;
 };
 
 #endif

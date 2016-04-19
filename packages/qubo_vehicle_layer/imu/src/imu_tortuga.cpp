@@ -4,16 +4,15 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
 
-	n.getParam(IMU_BOARD, fd);
+	n.getParam(IMU_BOARD, imu_fd);
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
-	close(fd);
 }
 
 void ImuTortugaNode::update(){
-	if(!readIMUData(fd, data)){
-		ROS_DEBUG("IMU Checksum Error");
+	if(!readIMUData(imu_fd, data)){
+		ROS_ERROR("IMU Checksum Error");
 	}
 
 	msg.header.stamp = ros::Time::now();
@@ -36,9 +35,29 @@ void ImuTortugaNode::update(){
 	msg.angular_velocity.z = data->gyroZ;
 
 
+	//temperature data
+	tempX.temperature = data->tempX;
+	tempX.header.stamp =ros::Time::now();
+	tempX.header.frame_id = 0;
+	tempX.header.seq = id;
+
+	tempY.temperature = data->tempY;
+	tempY.header.stamp =ros::Time::now();
+	tempY.header.frame_id = 0;
+	tempY.header.seq = id;
+
+	tempZ.temperature = data->tempZ;
+	tempZ.header.stamp =ros::Time::now();
+	tempZ.header.frame_id = 0;
+	tempZ.header.seq = id;
+
+
 	ros::spinOnce();
 }
 
 void ImuTortugaNode::publish(){
 	publisher.publish(msg);
+	publisher.publish(tempX);
+	publisher.publish(tempY);
+	publisher.publish(tempZ);
 }

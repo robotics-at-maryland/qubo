@@ -21,6 +21,7 @@ protected:
 	RawIMUData *data = NULL;
 	int fd;
 	sensor_msgs::Imu msg;
+	sensor_msgs::Temperature tempX, tempY, tempZ;
 	ros::Subscriber subscriber;
 
 };
