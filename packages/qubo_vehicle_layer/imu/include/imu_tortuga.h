@@ -1,11 +1,10 @@
 #ifndef IMU_SIM_HEADER
 #define IMU_SIM_HEADER
 
-#include "qubo_node.h"
+#include "tortuga_node.h"
 #include "sensor_msgs/Imu.h"
-#include "tortuga/imuapi.h"
 
-class ImuTortugaNode : QuboNode{
+class ImuTortugaNode : TortugaNode{
 
 public:
 	ImuTortugaNode(int, char**, int);

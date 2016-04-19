@@ -2,20 +2,20 @@
 
 #define THRUSTER_TORTUGA_H
 
-#include "qubo_node.h"
+#include "tortuga_node.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "tortuga/sensorapi.h"
 
 class ThrusterTortugaNode : QuboNode {
-    
-    public:
-    ThrusterTortugaNode(int, char**, int);
-    ~ThrusterTortugaNode();
-    
-    void update();
-    void publish();
-    void thrusterCallBack(const std_msgs::Float64MultiArray msg);
-    void 
+  
+ public:
+  ThrusterTortugaNode(int, char**, int);
+  ~ThrusterTortugaNode();
+  
+  void update();
+  void publish();
+  void thrusterCallBack(const std_msgs::Float64MultiArray msg);
+  
     protected:
     
     /*
@@ -47,9 +47,8 @@ class ThrusterTortugaNode : QuboNode {
     
     
     std_msgs::Float64MultiArray msg;
-    ros::Subscriber subscriber;
-    int fd;
-
+  ros::Subscriber subscriber;
+  int fd;
 };
 
 #endif

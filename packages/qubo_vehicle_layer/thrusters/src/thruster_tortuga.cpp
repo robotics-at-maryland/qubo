@@ -2,9 +2,10 @@
 
 ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate){
     ros::Rate loop_rate(rate);
-    subscriber = n.subscribe("/quob/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
+    subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
     // copied exactly from lcdshow:
-    fd = openSensorBoard("/dev/ttyUSB0"); //TODO read this in from the parameter server
+    fd = openSensorBoard("/dev/ttyUSB0");
+        
 }
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
@@ -23,5 +24,6 @@ void ThrusterTortugaNode::publish(){
 }
 
 void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray sim_msg){
+    //SG: TODO change this shit
     msg.data = sim_msg.data;
 }

@@ -23,13 +23,13 @@
 
 #include "qubo_node.h"
 #include "tortuga/sensorapi.h"
+#include "tortuga/imuapi.h"
 
 class TortugaNode : QuboNode {
  public:
 
   TortugaNode(){}; /**<Constructor, you should really never call this directly */
   ~TortugaNode(){}; //Destructor
-
 
   /*
     Error codes are defined in sensorapi.h
@@ -39,21 +39,20 @@ class TortugaNode : QuboNode {
   bool checkError(int e) {
     switch(e) {
     case SB_IOERROR:
-      ROS_ERROR("IO ERROR in node %s", name);
+      ROS_DEBUG("IO ERROR in node %s", name.c_str());
       return true;
     case SB_BADCC:
-      ROS_ERROR("BAD CC ERROR in node %s", name);
+      ROS_DEBUG("BAD CC ERROR in node %s", name.c_str());
       return true;
     case SB_HWFAIL:
-      ROS_ERROR("HW FAILURE ERROR in node %s", name);
+      ROS_DEBUG("HW FAILURE ERROR in node %s", name.c_str());
       return true;
     case SB_ERROR:
-      ROS_ERROR("ERROR in node %s", name);
-      return true;
-    default:
-      return false;
+      ROS_DEBUG("ERROR in node %s", name.c_str());
+
     }
   }
+  
 
   //We'll probably need a few more things
  protected:
@@ -62,6 +61,8 @@ class TortugaNode : QuboNode {
   const int sensor_fd;
   const int imu_fd;
 };
+
+
 
 
 #endif
