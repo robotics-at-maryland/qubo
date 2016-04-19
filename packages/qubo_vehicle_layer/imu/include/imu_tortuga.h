@@ -3,6 +3,7 @@
 
 #include "tortuga_node.h"
 #include "sensor_msgs/Imu.h"
+#include "sensor_msgs/Temperature.h"
 
 class ImuTortugaNode : TortugaNode{
 
