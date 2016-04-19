@@ -1,6 +1,6 @@
 //!  This is the abstract base class that all our vehicle nodes should inherit from
 
-/*! 
+/*!
  * Tortuga node is a subclass of Qubo Node that will do the same thing but includes
    a couple of extra things specific to Tortuga
  */
@@ -25,10 +25,21 @@
 #include "tortuga/sensorapi.h"
 #include "tortuga/imuapi.h"
 
-class TortugaNode : QuboNode {
+class TortugaNode : public QuboNode {
+ protected:
+  // Node's name, used for debugging in checkerror
+  std::string name;
+  int sensor_fd = 0;
+  int imu_fd = 0;
  public:
 
-  TortugaNode(){}; /**<Constructor, you should really never call this directly */
+  // ISSUE: might be because n is defined in QuboNode namespace and needs the variables to set to
+  // be defined in same place
+  /**<Constructor, you should really never call this directly */
+  TortugaNode(){
+        n.getParam(IMU_FD, imu_fd);
+        n.getParam(SENSOR_FD, sensor_fd);
+  };
   ~TortugaNode(){}; //Destructor
 
   /*
@@ -52,17 +63,8 @@ class TortugaNode : QuboNode {
 
     }
   }
-  
 
   //We'll probably need a few more things
- protected:
-  // Node's name, used for debugging in checkerror
-  std::string name;
-  const int sensor_fd;
-  const int imu_fd;
 };
-
-
-
 
 #endif

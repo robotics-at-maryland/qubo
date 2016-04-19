@@ -4,7 +4,6 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
 
-	n.getParam(IMU_BOARD, fd);
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
@@ -12,7 +11,7 @@ ImuTortugaNode::~ImuTortugaNode(){
 }
 
 void ImuTortugaNode::update(){
-	if(!readIMUData(fd, data)){
+	if(!readIMUData(imu_fd, data)){
 		ROS_DEBUG("IMU Checksum Error");
 	}
 
