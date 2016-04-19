@@ -14,8 +14,9 @@
 #define SENSOR_BOARD "sensor_board_file_descriptor"
 #include "qubo_node.h"
 #include "tortuga/sensorapi.h"
+#include "tortuga/imuapi.h"
 
-class TortugaNode{
+class TortugaNode {
  public:
 
   TortugaNode(){}; /**<Constructor, you should really never call this directly */
@@ -54,6 +55,7 @@ class TortugaNode{
   static const int fd_imu;
   ros::NodeHandle n;
   /*
+  //this code can't be here 
   if(!n.getParam(IMU_BOARD, fd_imu)){
     ROS_ERROR("IMU file descriptor not found on param server");
   };

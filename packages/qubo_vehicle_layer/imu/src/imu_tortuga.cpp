@@ -4,7 +4,7 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
 
-	n.getParam("imu_file_descriptor", fd);
+	n.getParam(IMU_BOARD, fd);
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
