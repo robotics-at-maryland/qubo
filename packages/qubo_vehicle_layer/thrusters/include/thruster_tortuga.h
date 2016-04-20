@@ -46,8 +46,13 @@ class ThrusterTortugaNode : QuboNode {
      */
     
     
-    std_msgs::Float64MultiArray msg;
+  //contains the current powers we want the thrusters to be operating at
+  //this is the DESIRED relative power, since our thrusters our nonlinear
+  //we'll need to map these to another vector eventually. 
+  std_msgs::Float64MultiArray msg;
+  
   ros::Subscriber subscriber;
+ 
   int fd;
 };
 
