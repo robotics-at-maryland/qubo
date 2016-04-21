@@ -18,7 +18,7 @@ void ThrusterTortugaNode::update(){
 }
 
 void ThrusterTortugaNode::publish(){
-    //   setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
+    // setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
 }
 
 void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray new_vector){
