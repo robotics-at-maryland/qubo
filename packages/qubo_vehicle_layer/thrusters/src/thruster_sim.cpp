@@ -45,6 +45,6 @@ void ThrusterSimNode::publish(){ //We might be able to get rid of this and alway
 
 void ThrusterSimNode::thrusterCallBack(const std_msgs::Float64MultiArray sim_msg)
 {
-    cartesianToVelocity();//pass in sim_msg.data; values for cartesian velocity, and then it will be published by main/publish
+    //cartesianToVelocity();//pass in sim_msg.data; values for cartesian velocity, and then it will be published by main/publish
 }
 

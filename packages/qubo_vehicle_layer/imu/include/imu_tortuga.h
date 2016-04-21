@@ -20,9 +20,9 @@ protected:
 	double g_in_ms2 = 9.80665;
 	unsigned int id = 0;
 	RawIMUData *data = NULL;
-	int fd;
 	sensor_msgs::Imu msg;
 	sensor_msgs::Temperature tempX, tempY, tempZ;
+	ros::Publisher tempPub;
 	ros::Subscriber subscriber;
 
 };
