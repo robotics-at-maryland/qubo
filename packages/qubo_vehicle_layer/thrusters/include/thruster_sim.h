@@ -7,7 +7,7 @@
 #include "qubo_node.h"
 #include "std_msgs/Float64MultiArray.h"
 
-class ThrusterSimNode : QuboNode {
+class ThrusterSimNode : public QuboNode {
     
     public:
     ThrusterSimNode(int,char**,int);

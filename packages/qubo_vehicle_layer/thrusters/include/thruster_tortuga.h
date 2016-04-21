@@ -4,9 +4,10 @@
 
 #include "tortuga_node.h"
 #include "std_msgs/Float64MultiArray.h"
-#include "tortuga/sensorapi.h"
+//#include "tortuga/sensorapi.h"
+#include "tortuga/thrusterapi.h"
 
-class ThrusterTortugaNode : QuboNode {
+class ThrusterTortugaNode : public TortugaNode {
   
  public:
   ThrusterTortugaNode(int, char**, int);
