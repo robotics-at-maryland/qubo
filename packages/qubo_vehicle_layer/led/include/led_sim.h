@@ -7,7 +7,7 @@
 
 #define DEFAULT_ENABLED false
 
-class LedSimNode : QuboNode {
+class LedSimNode : public QuboNode {
  protected: //fields and private methods
   std::string ledName;
   ram_msgs::Led msg; //creates an instance of the message to put info in
