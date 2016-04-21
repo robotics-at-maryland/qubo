@@ -134,9 +134,9 @@ add_executable(vision_node src/main.cpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 
-add_executable(line_detector src/examples/line_detector.cpp)
-target_link_libraries(line_detector ${catkin_LIBRARIES})
-target_link_libraries(line_detector ${OpenCV_LIBRARIES})
+add_executable(pipe_detector src/examples/pipe_detector.cpp)
+target_link_libraries(pipe_detector ${catkin_LIBRARIES})
+target_link_libraries(pipe_detector ${OpenCV_LIBRARIES})
 
 add_executable(hsv_thresholding_example src/examples/segmentation/hsv_thresholding_example.cpp)
 target_link_libraries(hsv_thresholding_example ${catkin_LIBRARIES})
