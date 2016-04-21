@@ -10,16 +10,18 @@ ThrusterTortugaNode::~ThrusterTortugaNode(){
     //SG: does close make sense there?
 }
 
+
 void ThrusterTortugaNode::update(){
     //Will need more here I bet.
     ros::spinOnce();
+    
 }
 
 void ThrusterTortugaNode::publish(){
     setSpeeds(sensor_fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
 }
 
-void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray sim_msg){
+void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray new_vector){
     //SG: TODO change this shit
-    msg.data = sim_msg.data;
+    msg.data = new_vector.data;
 }

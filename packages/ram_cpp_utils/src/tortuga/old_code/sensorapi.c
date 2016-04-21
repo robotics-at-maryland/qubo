@@ -1076,6 +1076,9 @@ char* tempSensorIDToText(int id)
         return "ERROR: Id out of range";
 }
 
+
+//SG: maybe we should just remove these? do we want to actually refactor
+//olf tortuga code?
 int setServoPower(int fd, unsigned char power)
 {
     /* The command has been removed, see "setMagPower" */
@@ -1128,6 +1131,7 @@ int setMagPower(int fd, unsigned char power)
 
 int setServoEnable(int fd, unsigned char servoMask)
 {
+ 
     /* The command is depreciated. Do not use it. */
     return SB_ERROR;
     /*return simpleWrite(fd, HOST_CMD_SERVO_ENABLE, servoMask, 0x100);*/
