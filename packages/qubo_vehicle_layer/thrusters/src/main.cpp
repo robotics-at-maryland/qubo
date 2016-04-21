@@ -1,31 +1,41 @@
 #include "thruster_sim.h"
+#include "thruster_tortuga.h"
 
 /**
-This is the main method for our depth_sensor node
+   This is the main method for our depth_sensor node
 **/
 
 
 int main(int argc, char **argv){
 
-  ros::init(argc, argv, "thruster_node"); /** basically always needs to be called first */
-  bool simulated = true; /** We'll have to pass this one in eventually */
+    if(argc != 2){
+        ROS_ERROR("The thruster node received %i arguments which is not right\n", argc);
+        exit(1);
+    }
+    ros::init(argc, argv, "thruster_node"); /** basically always needs to be called first */
+  
 
-  /**
-     The basic idea here is to pass in a boolean from a launch script that determines if our class is 
-     a real one or a simulated one. after that they behave exactly the same as far as main is concerned
-     right now though we don't have a real depth sensor, hence the comments
-  **/
+    /**
+       The basic idea here is to pass in a boolean from a launch script that determines if our class is 
+       a real one or a simulated one. after that they behave exactly the same as far as main is concerned
+       right now though we don't have a real depth sensor, hence the comments
+    **/
 
-  // if(simulated){
-    ThrusterSimNode node = ThrusterSimNode(argc, argv, 10); /** 10 (the rate) is completely arbitrary */
-    //}else{
-    // DepthNode *node = new DepthNode(argc, argv, 10); 
-    // }
-
-
-  while (ros::ok()){
-    node.update();
-    node.publish();
-  }
-
-}
+    
+    std::unique_ptr<QuboNode> node;
+     
+    if(strcmp(argv[1], "simulated") == 0){
+        node.reset(new ThrusterSimNode(argc, argv, 10)); /** 10 (the rate) is completely arbitrary */
+    }else if(strcmp(argv[1], "tortuga") == 0) {
+        node.reset(new ThrusterTortugaNode(argc, argv, 10));
+    }else{
+        ROS_ERROR("the passed in arguments to thruster node (%s) doesn't match anything that makes sense..\n", argv[1]); 
+    }
+       
+        while (ros::ok()){
+            node->update();
+            node->publish();
+        }
+        
+    }
+    
