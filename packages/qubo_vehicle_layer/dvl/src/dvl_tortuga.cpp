@@ -6,7 +6,7 @@ DVLTortugaNode::DVLTortugaNode(int argc, char **argv, int rate){
 	publisher = n.advertise<underwater_sensor_msgs::DVL>("qubo/dvl", 1000);
 }
 
-~DVLTortugaNode::~DVLTortugaNode(){}
+DVLTortugaNode::~DVLTortugaNode(){}
 
 void DVLTortugaNode::update(){
 	ros::spinOnce();

@@ -4,7 +4,7 @@
 #include "tortuga_node.h"
 #include "underwater_sensor_msgs/DVL.h"
 
-class DVLTortugaNode : TortugaNode {
+class DVLTortugaNode : public TortugaNode {
 public:
 	DVLTortugaNode(int, char**, int);
 	~DVLTortugaNode();

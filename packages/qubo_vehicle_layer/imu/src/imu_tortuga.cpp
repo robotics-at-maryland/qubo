@@ -3,7 +3,12 @@
 ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
-	tempPub = n.advertise<sensor_msgs::Temperature[]>("qubo/imu/temp", 1000);
+	temp = n.advertise<std_msgs::Float64MultiArray>("qubo/imu/temperature", 1000);
+
+	temperature.layout.data_offset = 0;
+	temperature.layout.dim[0].label = "IMU Temperature";
+	temperature.layout.dim[0].size = 3;
+	temperature.layout.dim[0].stride = 3;
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
@@ -33,20 +38,12 @@ void ImuTortugaNode::update(){
 
 
 	//temperature data
-	tempX.temperature = data->tempX;
-	tempX.header.stamp =ros::Time::now();
-	tempX.header.frame_id = "0";
-	tempX.header.seq = id;
+	//its a float 64 array, in x, y, z order
 
-	tempY.temperature = data->tempY;
-	tempY.header.stamp =ros::Time::now();
-	tempY.header.frame_id = "0";
-	tempY.header.seq = id;
+	temperature.data[0] = data->tempX;
+	temperature.data[1] = data->tempY;
+	temperature.data[2] = data->tempZ;
 
-	tempZ.temperature = data->tempZ;
-	tempZ.header.stamp =ros::Time::now();
-	tempZ.header.frame_id = "0";
-	tempZ.header.seq = id;
 
 
 	ros::spinOnce();
@@ -54,7 +51,6 @@ void ImuTortugaNode::update(){
 
 void ImuTortugaNode::publish(){
 	publisher.publish(msg);
-	sensor_msgs::Temperature temp[] = {tempX, tempY, tempZ};
-	tempPub.publish(temp);
+	temp.publish(temperature);
 }
 

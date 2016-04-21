@@ -9,7 +9,7 @@
 #include "qubo_node.h"
 #include "underwater_sensor_msgs/Pressure.h"
 
-class DepthTortugaNode : QuboNode {
+class DepthTortugaNode : public QuboNode {
 
 public: 
  DepthTortugaNode(int,char**,int);
