@@ -4,15 +4,14 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
 	temp = n.advertise<std_msgs::Float64MultiArray>("qubo/imu/temperature", 1000);
-
+	
 	temperature.layout.data_offset = 0;
 	temperature.layout.dim[0].label = "IMU Temperature";
 	temperature.layout.dim[0].size = 3;
 	temperature.layout.dim[0].stride = 3;
 }
 
-ImuTortugaNode::~ImuTortugaNode(){
-}
+ImuTortugaNode::~ImuTortugaNode(){}
 
 void ImuTortugaNode::update(){
 	checkError(readIMUData(imu_fd, data));

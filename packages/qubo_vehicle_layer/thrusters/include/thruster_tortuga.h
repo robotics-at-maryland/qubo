@@ -19,7 +19,7 @@ class ThrusterTortugaNode : public TortugaNode {
   
     protected:
     
-    /*
+    /* JW:
      * Here is the definition for the Tortuga specific Float64MultiArray
      * used to control the thruster power.
      *
