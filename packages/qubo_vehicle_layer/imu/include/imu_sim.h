@@ -4,7 +4,7 @@
 #include "qubo_node.h"
 #include "sensor_msgs/Imu.h"
 
-class ImuSimNode : QuboNode{
+class ImuSimNode : public QuboNode{
 
 public:
 	ImuSimNode(int, char**, int);

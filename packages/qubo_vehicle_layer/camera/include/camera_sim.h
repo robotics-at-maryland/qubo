@@ -13,7 +13,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-class CameraSimNode : QuboNode {
+class CameraSimNode : public QuboNode {
 
 public:
 	CameraSimNode(int, char**, int);
