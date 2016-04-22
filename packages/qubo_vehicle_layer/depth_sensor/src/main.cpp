@@ -1,5 +1,5 @@
 #include "depth_sensor_sim.h"
-#include "depth_sensor_t.h"
+#include "depth_sensor_tortuga.h"
 /**
 This is the main method for our depth_sensor node
 **/
@@ -7,8 +7,12 @@ This is the main method for our depth_sensor node
 
 int main(int argc, char **argv){
 
+  if(argc != 4){
+    ROS_ERROR("The thruster node received %i arguments which is not right\n", argc);
+    exit(1);
+  }
   ros::init(argc, argv, "depth_sensor_node"); /** basically always needs to be called first */
-  bool simulated = true; /** We'll have to pass this one in eventually */
+
 
 
   /**
@@ -19,11 +23,14 @@ int main(int argc, char **argv){
 
 
   // if(simulated){
-    DepthSimNode *node = new DepthSimNode(argc, argv, 10); /** 10 (the rate) is completely arbitrary */
-    //}else{
-    // DepthNode *node = new DepthNode(argc, argv, 10); 
-    // }
-
+  std::unique_ptr<QuboNode> node;
+  if(strcmp(argv[1], "simulated") == 0){
+    node.reset(new DepthSimNode(argc, argv, 10)); /** 10 (the rate) is completely arbitrary */
+  }else if(strcmp(argv[1], "tortuga") == 0) {
+    node.reset(new DepthTortugaNode(argc, argv, 10, "DEPTH"));
+  }else{
+    ROS_ERROR("the passed in arguments to depth node (%s) doesn't match anything that makes sense..\n", argv[1]);
+    }
 
   while (ros::ok()){
     node->update();
