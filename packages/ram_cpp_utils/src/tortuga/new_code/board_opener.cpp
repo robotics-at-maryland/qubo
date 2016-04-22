@@ -31,6 +31,7 @@ int main(int argc, char **argv){
 	checkError(fd, "IMU");
 
 	ros::param::set("imu_file_descriptor", fd);
+	close(fd);
 
 	//sensor board
 	if(ros::param::has(sensor_file)){
@@ -43,7 +44,7 @@ int main(int argc, char **argv){
 	checkError(fd, "Sensor Board");
 
 	ros::param::set("sensor_board_file_descriptor", fd);
-
+	close(fd);
 }
 
 

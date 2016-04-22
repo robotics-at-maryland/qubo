@@ -14,7 +14,7 @@
 #include "qubo_node.h"
 #include "underwater_sensor_msgs/Pressure.h"
 
-class DepthSimNode : QuboNode {
+class DepthSimNode : public QuboNode {
 
  public:
   DepthSimNode(int,char**,int);

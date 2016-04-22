@@ -2,13 +2,12 @@
 
 ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): TortugaNode(){
     ros::Rate loop_rate(rate);
-    subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
+    subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);        
 }
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
-    setSpeeds(fd, 0, 0, 0, 0, 0, 0);
+    setSpeeds(sensor_fd, 0, 0, 0, 0, 0, 0);
     //SG: does close make sense there?
-    close(fd);
 }
 
 void ThrusterTortugaNode::update(){

@@ -4,7 +4,7 @@
 #include "qubo_node.h"
 #include "underwater_sensor_msgs/DVL.h"
 
-class DVLSimNode : QuboNode {
+class DVLSimNode : public QuboNode {
 
  public:
   DVLSimNode(int,char**,int);
