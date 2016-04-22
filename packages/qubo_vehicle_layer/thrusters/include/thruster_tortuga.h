@@ -3,6 +3,7 @@
 #define THRUSTER_TORTUGA_H
 
 #include "tortuga_node.h"
+#include "sensor_msgs/Joy.h"
 #include "std_msgs/Float64MultiArray.h"
 //#include "tortuga/sensorapi.h"
 #include "tortuga/thrusterapi.h"
