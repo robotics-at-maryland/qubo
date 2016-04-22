@@ -2,7 +2,7 @@
 
 
 //we pass argv and argc so in the future we can pass in command line arguments.
-DepthTortugaNode::DepthTortugaNode(int argc, char **argv, int rate){
+DepthTortugaNode::DepthTortugaNode(int argc, char **argv, int rate, std::string node_name){
   ros::Rate  loop_rate(rate);
   publisher = n.advertise< underwater_sensor_msgs::Pressure>("qubo/depth", 1000);
   //  fd = openSensorBoard("/dev/sensor");
