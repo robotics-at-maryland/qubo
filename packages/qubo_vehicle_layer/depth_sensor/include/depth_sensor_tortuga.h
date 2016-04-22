@@ -8,7 +8,7 @@
 class DepthTortugaNode : public TortugaNode {
 
 public:
-  DepthTortugaNode(int, char**, int);
+  DepthTortugaNode(int, char**, int, std::string);
   ~DepthTortugaNode();
 
   void update();
