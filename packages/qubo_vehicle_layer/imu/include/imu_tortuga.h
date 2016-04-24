@@ -5,6 +5,7 @@
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/Temperature.h"
 #include "std_msgs/Float64MultiArray.h"
+#include <Quaterion.h>
 
 class ImuTortugaNode : public TortugaNode{
 
