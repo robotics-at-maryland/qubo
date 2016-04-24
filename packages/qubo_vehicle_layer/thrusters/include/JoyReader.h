@@ -6,11 +6,11 @@
 #include "sensor_msgs/Joy.h"
 
 
-class JoyRead : public TortugaNode {
+class JoyReader : public TortugaNode {
 
  public:
-  ThrusterTortugaNode(int, char**, int);
-  ~ThrusterTortugaNode();
+  JoyReader(int, char**, int);
+  ~JoyReader();
 
   void update();
   void publish();
