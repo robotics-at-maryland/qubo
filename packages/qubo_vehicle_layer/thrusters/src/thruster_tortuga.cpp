@@ -13,7 +13,8 @@ ThrusterTortugaNode::~ThrusterTortugaNode(){
 void ThrusterTortugaNode::update(){
     //I think we need to initialize thrusters and stuff before this will work 
     ros::spinOnce();
-    setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
+    // setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
+    printf("fd = %x\n",fd); 
 }
 
 void ThrusterTortugaNode::publish(){
