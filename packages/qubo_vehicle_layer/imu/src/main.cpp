@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv){
 
-	if(argc != 2){
+	if(argc != 4){
 		ROS_ERROR("The IMU node received %i arguments which is not right\n", argc);
 		exit(1);
 	}
