@@ -31,7 +31,8 @@ sudo apt-get install doxygen ros-indigo-uwsim ros-indigo-underwater-vehicle-dyna
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
 # Setup environment variables for ROS.
-source /opt/ros/indigo/setup.bash
+echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+source ~/.bashrc
 
 # Initialize rosdep if it is not already initialized.
 if [ ! -d /etc/ros/rosdep/ ]; then

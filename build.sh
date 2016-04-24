@@ -8,6 +8,7 @@ cd build
 cmake ..
 make
 
-
-source /opt/ros/indigo/setup.bash
-source ../devel/setup.bash
+cd ..
+if ! grep -q source\ $(pwd)/devel/setup.bash  ~/.bashrc; then
+    echo "source $(pwd)/devel/setup.bash" >> ~/.bashrc
+fi
