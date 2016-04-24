@@ -5,7 +5,9 @@
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/Temperature.h"
 #include "std_msgs/Float64MultiArray.h"
-#include <Quaterion.h>
+#include "tf/transform_datatypes.h"
+#include "geometry_msgs/Quaternion.h"
+#include <cmath>
 
 class ImuTortugaNode : public TortugaNode{
 
@@ -24,7 +26,9 @@ protected:
 	RawIMUData *data = NULL;
 	sensor_msgs::Imu msg;
 	std_msgs::Float64MultiArray temperature;
+	geometry_msgs::Quaternion quaternion;
 	ros::Publisher temp;
+	ros::Publisher quaternionP;
 	ros::Subscriber subscriber;
 
 };

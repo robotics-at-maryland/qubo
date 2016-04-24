@@ -4,6 +4,7 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 	ros::Rate loop_rate(rate);
 	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
 	temp = n.advertise<std_msgs::Float64MultiArray>("qubo/imu/temperature", 1000);
+	quaternionP = n.advertise<geometry_msgs::Quaternion>("qubo/imu/quaternion", 1000);
 	
 	temperature.layout.data_offset = 0;
 	temperature.layout.dim[0].label = "IMU Temperature";
@@ -14,7 +15,12 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate){
 ImuTortugaNode::~ImuTortugaNode(){}
 
 void ImuTortugaNode::update(){
+
+	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
+
 	checkError(readIMUData(imu_fd, data));
+
+	double time_current = ros::Time::now().toSec();
 
 	msg.header.stamp = ros::Time::now();
 	msg.header.seq = ++id;
@@ -43,6 +49,18 @@ void ImuTortugaNode::update(){
 	temperature.data[1] = data->tempY;
 	temperature.data[2] = data->tempZ;
 
+	
+	double time_delta = time_current - time_last;
+
+/*~~~This is gross and I don't like it~~~*/
+
+	//normalize about 2pi radians
+	roll += fmod(data->gyroX / time_delta, 2 * M_PI);
+	pitch += fmod(data->gyroY / time_delta, 2 * M_PI);
+	yaw += fmod(data->gyroZ / time_delta, 2 * M_PI);
+
+	//quaternion - probably 
+	quaternion = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
 
 
 	ros::spinOnce();
