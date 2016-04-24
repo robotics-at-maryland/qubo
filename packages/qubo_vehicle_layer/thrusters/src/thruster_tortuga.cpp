@@ -19,7 +19,7 @@ void ThrusterTortugaNode::update(){
     // printf("fd = %x\n",fd); 
    
     ROS_ERROR("thruster state = %x\n", readThrusterState(sensor_fd)); 
-    ROS_EROOR("set speed returns %x\n",  setSpeeds(sensor_fd, 128, 128, 128, 128, 128, 128));
+    ROS_ERROR("set speed returns %x\n",  setSpeeds(sensor_fd, 128, 128, 128, 128, 128, 128));
 }
 
 void ThrusterTortugaNode::publish(){
