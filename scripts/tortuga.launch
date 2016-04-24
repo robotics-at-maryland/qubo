@@ -3,7 +3,7 @@
   <!-- <node name="camera_node" pkg="qubo_vehicle_layer" type="camera_node" args="tortuga" /> -->
   <node name="depth_node" pkg="qubo_vehicle_layer" type="depth_node" args="tortuga"/>
   <node name="dvl_node" pkg="qubo_vehicle_layer" type="dvl_node" args="tortuga" /> 
-  <!-- <node name="imu_node" pkg="qubo_vehicle_layer" type="imu_node" args="tortuga"/> -->
+  <node name="imu_node" pkg="qubo_vehicle_layer" type="imu_node" args="tortuga" />
   <node name="led_node" pkg="qubo_vehicle_layer" type="led_node" args="tortuga" /> 
   <node name="power_node" pkg="qubo_vehicle_layer" type="power_node" args="tortuga"/>
   <node name="temp_node" pkg="qubo_vehicle_layer" type="temp_node" args="tortuga"/>
