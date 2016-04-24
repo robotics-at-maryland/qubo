@@ -9,6 +9,8 @@ find_package(catkin
     REQUIRED COMPONENTS
     ram_msgs
     roscpp
+    cv_bridge
+    image_transport
 )
 
 catkin_package(
@@ -32,8 +34,7 @@ set(SRC_FILES
     )
 
 set(BOARD_OPENER_FILES
-    src/tortuga/new_code/board_opener.cpp
-    )
+    src/tortuga/new_code/board_opener.cpp)
     
 set(TEST_FILES
     test/ConversionTests.cpp
