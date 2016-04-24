@@ -41,14 +41,10 @@ int main(int argc, char **argv){
         ROS_ERROR("the passed in arguments to thruster node (%s) doesn't match anything that makes sense..\n", argv[1]); 
     }
 
-    ROS_ERROR("got here!!!!!!!\n");
     while (ros::ok()){
-        ROS_ERROR("inside the loop, all is well.\n");
         node->update();
-        ROS_ERROR("updated!.\n");
         node->publish();
-        ROS_ERROR("published!.\n");
-
+        
     }
         
 }
