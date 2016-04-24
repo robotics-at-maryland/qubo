@@ -25,4 +25,6 @@ void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray new
     msg.data = new_vector.data;
 }
 
+//ssh robot@192.168.10.12
+
 

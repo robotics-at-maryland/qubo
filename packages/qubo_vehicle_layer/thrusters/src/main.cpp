@@ -9,7 +9,7 @@
 int main(int argc, char **argv){
 
 
-    ROS_ERROR("got here!\n");
+
     //SG: argc may need to be different idk 
     if(argc != 4){
         ROS_ERROR("The thruster node received %i arguments which is not right\n", argc);
@@ -19,7 +19,6 @@ int main(int argc, char **argv){
         exit(1);
     }
     
-    ROS_ERROR("got here!!!!\n");
 
     ros::init(argc, argv, "thruster_node"); /** basically always needs to be called first */
   
@@ -33,7 +32,7 @@ int main(int argc, char **argv){
     
     std::unique_ptr<QuboNode> node;
 
-    ROS_ERROR("got here!!!!!!!!!!!\n");
+   
     if(strcmp(argv[1], "simulated") == 0){
         node.reset(new ThrusterSimNode(argc, argv, 10)); /** 10 (the rate) is completely arbitrary */
     }else if(strcmp(argv[1], "tortuga") == 0) {
@@ -41,10 +40,15 @@ int main(int argc, char **argv){
     }else{
         ROS_ERROR("the passed in arguments to thruster node (%s) doesn't match anything that makes sense..\n", argv[1]); 
     }
-    
+
+    ROS_ERROR("got here!!!!!!!\n");
     while (ros::ok()){
+        ROS_ERROR("inside the loop, all is well.\n");
         node->update();
+        ROS_ERROR("updated!.\n");
         node->publish();
+        ROS_ERROR("published!.\n");
+
     }
         
 }
