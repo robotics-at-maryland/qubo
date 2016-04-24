@@ -55,8 +55,7 @@ class ThrusterTortugaNode : public TortugaNode {
   std_msgs::Float64MultiArray msg;
   
   ros::Subscriber subscriber;
- 
-  int fd;
+
 };
 
 #endif
