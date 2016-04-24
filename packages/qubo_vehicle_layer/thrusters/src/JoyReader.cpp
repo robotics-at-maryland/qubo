@@ -22,13 +22,13 @@ void JoyReader::joyPub(const std_msgs::Float64MultiArray joyInput){
 	float mag = (joyInput.data.axes[3]+1)/2; /* Magnitude, from 0 to +1 */
 
 	msg.layout.dim[0].label = "Input";
-    msg.layout.dim[0].size = 4;
-    msg.layout.dim[0].stride = 4;
-    msg.data[0] = x;
-    msg.data[1] = y;
-    msg.data[2] = z;
-    msg.data[3] = mag;
+    	msg.layout.dim[0].size = 4;
+    	msg.layout.dim[0].stride = 4;
+	msg.data[0] = x;
+	msg.data[1] = y;
+    	msg.data[2] = z;
+    	msg.data[3] = mag;
     
-    publisher.publish(msg);
+    	publisher.publish(msg);
 }
 
