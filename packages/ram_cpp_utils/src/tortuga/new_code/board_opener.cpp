@@ -18,8 +18,8 @@ bool checkError(int, char*);
 //USB2 = DVL
 //USB3 = 
 
-std::string imu_file = "dev/USB1"; //"/dev/magboom";
-std::string sensor_file = "dev/USB3"; //"/dev/sensor";
+std::string imu_file = "/dev/ttyUSB1"; //"/dev/magboom";
+std::string sensor_file = "/dev/ttyUSB3"; //"/dev/sensor";
 
 
 int main(int argc, char **argv){
