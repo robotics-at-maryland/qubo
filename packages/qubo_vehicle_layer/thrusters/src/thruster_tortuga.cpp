@@ -17,7 +17,8 @@ void ThrusterTortugaNode::update(){
     ros::spinOnce();
     // setSpeeds(sensor_fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
     // printf("fd = %x\n",fd); 
-    setSpeeds(sensor_fd, 1, 1, 1, 1, 1, 1);
+    setSpeeds(sensor_fd, 128, 128, 128, 128, 128, 128);
+    ROS_ERROR("thruster state = %x\n", readThrusterState(sensor_fd)); 
 }
 
 void ThrusterTortugaNode::publish(){
