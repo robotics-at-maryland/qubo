@@ -42,6 +42,7 @@ include_directories(
 set(DEPTH_SRC_FILES
   depth_sensor/src/main.cpp
   depth_sensor/src/depth_sensor_sim.cpp
+  depth_sensor/src/depth_sensor_tortuga.cpp
   )
 
 set(DVL_SRC_FILES

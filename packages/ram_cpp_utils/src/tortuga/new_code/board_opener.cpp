@@ -6,6 +6,7 @@
 #include <thread>
 #include "tortuga/imuapi.h"
 #include "tortuga/sensorapi.h"
+#include "tortuga/dvlapi.h"
 
 bool checkError(int, char*);
 
@@ -15,6 +16,7 @@ bool checkError(int, char*);
 
 std::string imu_file = "/dev/magboom";
 std::string sensor_file = "/dev/sensor";
+
 
 int main(int argc, char **argv){
 

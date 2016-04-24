@@ -16,7 +16,6 @@ public:
 protected:
 	underwater_sensor_msgs::DVL msg;
 	ros::Subscriber subscriber;
-
 };
 
 #endif

@@ -17,8 +17,8 @@
    so each node can get the value.
 */
 
-#define IMU_FD "t/imu_fd"
-#define SENSOR_FD "t/sensor_fd"
+#define IMU_FD "imu_file_descriptor"
+#define SENSOR_FD "sensor_board_file_descriptor"
 
 
 #include "qubo_node.h"
