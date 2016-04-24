@@ -60,6 +60,7 @@ set(IMU_SRC_FILES
 set(POWER_SRC_FILES
   power_source/src/main.cpp
   power_source/src/power_sensor_sim.cpp
+  power_source/src/power_sensor_tortuga.cpp
   )
 
 set(LED_SRC_FILES
