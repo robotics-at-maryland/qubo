@@ -8,7 +8,6 @@
 #define IMU_1_FILE "/dev/ttyUSB4"
 
 int main(int argc, char **argv){
-  ROS_ERROR("begining of main");
 	if(argc != 4){
 		ROS_ERROR("The IMU node received %i arguments which is not right\n", argc);
 		exit(1);
