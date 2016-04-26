@@ -4,9 +4,13 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     ros::Rate loop_rate(rate);
     subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
  
-    sensor_file = "/dev/sensor";
+
+    printf("got here!1\n");
+    sensor_file = "/dev/ttyUSB1";
     fd = openSensorBoard(sensor_file.c_str());
+    printf("got here!2\n");
     syncBoard(fd);
+    printf("got here!3\n");
     checkError(fd);
     
     
