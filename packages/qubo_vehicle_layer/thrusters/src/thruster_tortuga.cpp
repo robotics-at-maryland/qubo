@@ -16,6 +16,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
     setSpeeds(sensor_fd, 0, 0, 0, 0, 0, 0);
+    // fclose(fd);
     //SG: does close make sense there?
 }
 
