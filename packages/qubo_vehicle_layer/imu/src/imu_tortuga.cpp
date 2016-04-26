@@ -78,5 +78,6 @@ void ImuTortugaNode::update(){
 void ImuTortugaNode::publish(){
 	publisher.publish(msg);
 	temp.publish(temperature);
+	quaternionP.publish(quaternion);
 }
 

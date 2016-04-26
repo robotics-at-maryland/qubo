@@ -13,9 +13,13 @@ bool checkError(int, char*);
 // This is the code used to open and publish all of the 
 // file descriptors for tortuga device boards
 
+//USB0 = Jesus1
+//USB1 = Jesus2 (IMU)
+//USB2 = DVL
+//USB3 = 
 
-std::string imu_file = "/dev/magboom";
-std::string sensor_file = "/dev/sensor";
+std::string imu_file = "/dev/ttyUSB1"; //"/dev/magboom";
+std::string sensor_file = "/dev/ttyUSB3"; //"/dev/sensor";
 
 
 int main(int argc, char **argv){
