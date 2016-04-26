@@ -53,7 +53,8 @@ class ThrusterTortugaNode : public TortugaNode {
   //this is the DESIRED relative power, since our thrusters our nonlinear
   //we'll need to map these to another vector eventually. 
   std_msgs::Float64MultiArray msg;
-  
+  int fd;
+  std::string sensor_file;
   ros::Subscriber subscriber;
 
 };

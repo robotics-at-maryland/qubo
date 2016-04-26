@@ -3,8 +3,15 @@
 ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): TortugaNode(){
     ros::Rate loop_rate(rate);
     subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
-    setThrusterSafety(sensor_fd, 11); //no idea that the second argument needs to be.
+ 
+    sensor_file = "/dev/sensor";
+    fd = openSensorBoard(sensor_file.c_str());
+    syncBoard(fd);
+    checkError(fd);
     
+    
+    setThrusterSafety(sensor_fd, 11); //no idea that the second argument needs to be.
+  
 }
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
@@ -34,6 +41,10 @@ void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray new
     //SG: TODO change this shit
     msg.data = new_vector.data;
 }
+
+//USB1 = IMU
+//USB2 = dvl
+//USB0 = jesus1? 
 
 //ssh robot@192.168.10.12
 
