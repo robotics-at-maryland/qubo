@@ -6,14 +6,12 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
  
 
     printf("got here!1\n");
-    sensor_file = "/dev/ttyUSB1";
+    sensor_file = "/dev/sensor";
     fd = openSensorBoard(sensor_file.c_str());
     printf("got here!2\n");
     syncBoard(fd);
     printf("got here!3\n");
     checkError(fd);
-    
-    
     setThrusterSafety(sensor_fd, 11); //no idea that the second argument needs to be.
   
 }
