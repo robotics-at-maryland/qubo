@@ -7,6 +7,8 @@
 
 
 int main(int argc, char **argv){
+    
+    printf("got here0\n");
 
     //SG: argc may need to be different idk 
     /*  if(argc != 4){
@@ -35,6 +37,7 @@ int main(int argc, char **argv){
         node.reset(new ThrusterTortugaNode(argc, argv, 10));
     }else{
         ROS_ERROR("the passed in arguments to thruster node (%s) doesn't match anything that makes sense..\n", argv[1]); 
+        exit(1);
     }
 
     while (ros::ok()){
