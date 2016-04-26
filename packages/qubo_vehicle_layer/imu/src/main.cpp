@@ -4,8 +4,8 @@
 /* Main method for the imu node
  * Follows the style initally defined in the main.cpp of the thrusters
  */
-#define IMU_0_FILE "/dev/ttyUSB3"
-#define IMU_1_FILE "/dev/ttyUSB4"
+#define IMU_0_FILE "/dev/imu"
+#define IMU_1_FILE "/dev/magboom"
 
 int main(int argc, char **argv){
 	if(argc != 4){
