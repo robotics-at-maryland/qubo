@@ -1,19 +1,19 @@
 #include "movement_core.h"
 
 /*--------------------------------------------------------------------
- * NodeExample()
+ * moveNode()
  * Constructor.
  *------------------------------------------------------------------*/
 
 moveNode::moveNode(int argc, char **argv, int inputRate, std::string name) {
 	ros::Rate loop_rate(rate);
-	thrust_pub = n.advertise</*thruster message*/>("file location", 1);
-	joystick_sub = n.subscribe<sensor_msgs::Joy>("/joy", 1000, &moveNode::messageCallback, this);  
+	thrust_pub = n.advertise<std_msgs::Int64MultiArray>("/thrust_pub", 1);
+	joystick_sub = n.subscribe<std_msgs::Float64MultiArray>("/joy_pub", 1000, &moveNode::messageCallback, this);  
 
-} // end NodeExample()
+} // end moveNode()
 
 /*--------------------------------------------------------------------
- * ~NodeExample()
+ * ~moveNode()
  * Destructor.
  *------------------------------------------------------------------*/
 
@@ -23,52 +23,48 @@ moveNode::~moveNode() {
 
 /*--------------------------------------------------------------------
  * Update()
+ * Update the state of the robot.
  * Publish the message.
  *------------------------------------------------------------------*/
 void moveNode::update() {
 	ros::spinOnce();
+
+	final_thrust.layout.dim[0].label = "Thrust";
+	final_thrust.layout.dim[0].size = 8;
+	final_thrust.layout.dim[0].stride = 8;
 	
+	std_msgs::Int64MultiArray final_thrust;
+  	final_thrust.data[0] = thrstr_1_spd;
+  	final_thrust.data[1] = thrstr_2_spd;
+	final_thrust.data[2] = thrstr_3_spd;
+	final_thrust.data[3] = thrstr_4_spd;
+	final_thrust.data[4] = thrstr_5_spd;
+	final_thrust.data[5] = thrstr_6_spd;
+	final_thrust.data[6] = thrstr_7_spd;
+	final_thrust.data[7] = thrstr_8_spd;
+
+  	pub_message->publish(msg);	
 } //end update()
 
 /*--------------------------------------------------------------------
- * publishMessage()
- * Publish the message.
- *------------------------------------------------------------------*/
-
-void moveNode::publishMessage(ros::Publisher *pub_message) {
-  node_example::node_example_data msg;
-  msg.message = message;
-  msg.a = a;
-  msg.b = b;
-
-  pub_message->publish(msg);
-} // end publishMessage()
-
-/*--------------------------------------------------------------------
- * messageCallback()
+ * messageCallbacki()
+ * REMEMBER CHANGE CONSTANTS 
  * Callback function for subscriber.
  *------------------------------------------------------------------*/
+void moveNode::messageCallback(const std_msgs::Float64MultiArray::ConstPtr &msg) {
+	float x_dir = msg->data[0];
+	float y_dir = msg->data[1];
+	float z_dir = msg->data[2];
+	float mag = msg->data[3];
 
-void moveNode::messageCallback(const sensor_msgs::Joy::ConstPtr &msg) {
-  
-	message = msg->message;
-	a = msg->a;
-	b = msg->b;
-
-	// Note that these are only set to INFO so they will print to a terminal for example purposes.
-  	// Typically, they should be DEBUG.
-  	ROS_INFO("message is %s", message.c_str());
-  	ROS_INFO("sum of a + b = %d", a + b);
-} // end publishCallback()
-
-/*--------------------------------------------------------------------
- * configCallback()
- * Callback function for dynamic reconfigure server.
- *------------------------------------------------------------------*/
-
-void moveNode::configCallback(node_example::node_example_paramsConfig &config, uint32_t level) {
-  // Set class variables to new values. They should match what is input at the dynamic reconfigure GUI.
-  message = config.message.c_str();
-  a = config.a;
-  b = config.b;
-} // end configCallback()
+	if (z_dir = 0) {
+		thrstr_1_spd = 75
+		thrstr_2_spd = 75
+		
+		
+	} else if (z_dir > 0) {
+		
+	} else {
+		
+	}
+} // end messageCallback
