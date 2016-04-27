@@ -12,7 +12,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     syncBoard(fd);
     printf("got here!3\n");
     checkError(fd);
-    setThrusterSafety(sensor_fd, 11); //no idea that the second argument needs to be.
+    setThrusterSafety(fd, 6); //no idea that the second argument needs to be.
   
 }
 
