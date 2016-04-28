@@ -37,7 +37,7 @@ ThrusterTortugaNode::~ThrusterTortugaNode(){
     }
     printf("Safed thrusters\n");
     //Close the sensorboard
-    fclose(fd);
+    close(fd);
 }
 
 void ThrusterTortugaNode::update(){
