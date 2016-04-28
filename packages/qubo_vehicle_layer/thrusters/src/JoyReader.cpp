@@ -24,8 +24,8 @@ void JoyReader::joyPub(const std_msgs::Float64MultiArray joyInput){
    	msg.layout.dim[0].stride = 4;
 	msg.data[0] = x;
 	msg.data[1] = y;
-    	msg.data[2] = z;
-    	msg.data[3] = mag;
+    msg.data[2] = z;
+    msg.data[3] = mag;
     
     publisher.publish(msg);
 }

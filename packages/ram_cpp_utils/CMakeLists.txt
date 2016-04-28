@@ -29,8 +29,6 @@ set(SRC_FILES
     src/math/Conversion.cpp
     src/tortuga/old_code/sensorapi.c
     src/tortuga/old_code/imuapi.c
-    src/tortuga/old_code/thrusterapi.c
-    src/tortuga/old_code/thrusterstop.c
     )
 
 set(BOARD_OPENER_FILES
