@@ -21,8 +21,13 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     for (int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
     }
+
     ROS_DEBUG("Unsafed all thrusters");
-  
+    
+    for(int i = 0; i < NUM_THRUSTERS; i++){
+      thruster_powers.data[i] = 0;
+    }
+
 }
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
@@ -64,9 +69,11 @@ void ThrusterTortugaNode::publish(){
     // setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
 }
 
-void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray new_vector){
+void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Int64MultiArray new_powers){
     //SG: TODO change this shit
-    msg.data = new_vector.data;
+  for(int i = 0 ;i < NUM_THRUSTERS; i++){
+    thruster_powers.data[i] = new_powers.data[i];
+  }
 }
 
 //ssh robot@192.168.10.12
