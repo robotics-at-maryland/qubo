@@ -31,6 +31,7 @@ set(SRC_FILES
     src/tortuga/old_code/imuapi.c
     src/tortuga/old_code/thrusterapi.c
     src/tortuga/old_code/thrusterstop.c
+	src/tortuga/old_code/lcdshow.c
     )
 
 set(BOARD_OPENER_FILES
