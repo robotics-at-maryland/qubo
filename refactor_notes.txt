@@ -7,3 +7,4 @@
 6. We need to make sure we have really good error detection for all of the nodes we've written so far.
 7. We should really go through and remove any use of raw pointers, I know many of us have a EE or cmpE backround
    but it'll probably come back to bite us..
+8. consistent variable/function/class naming conventions are a must
