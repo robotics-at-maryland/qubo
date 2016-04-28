@@ -55,9 +55,9 @@ void ThrusterTortugaNode::update(){
     int retA = readSpeedResponses(fd);
     printf("Read speed after: %x\n", retA);
       
-    ROS_ERROR("thruster state = %x\n", readThrusterState(fd)); 
-    ROS_ERROR("set speed returns %x\n", retS);
-    ROS_ERROR("read speed returns %x\n", retR);
+    //ROS_ERROR("thruster state = %x\n", readThrusterState(fd)); 
+    // ROS_ERROR("set speed returns %x\n", retS);
+    // ROS_ERROR("read speed returns %x\n", retR);
 }
 
 void ThrusterTortugaNode::publish(){
