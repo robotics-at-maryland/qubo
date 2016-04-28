@@ -22,7 +22,12 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
         checkError(setThrusterSafety(fd, i));
     }
     ROS_DEBUG("Unsafed all thrusters");
-  
+    
+    for(int i = 0 ;i < NUM_THRUSTERS; i++){
+      thruster_powers.data[i] = 0;
+    }
+}
+
 }
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
