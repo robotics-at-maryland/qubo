@@ -3,7 +3,7 @@
 JoyReader::ThrusterTortugaNode(int argc, char **argv, int rate): TortugaNode(){
     ros::Rate loop_rate(rate);
     subscriber = n.subscribe("/joy", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
-    publisher = n.advertise<std_msgs::Float64MultiArray>("/g500/thrusters_input", 1000); //change /g500/thrusters_input to wherever it publishes to
+    publisher = n.advertise<std_msgs::Float64MultiArray>("/qubo/thrusters_input", 1000);
 }
 
 JoyReader::~ThrusterTortugaNode(){}
@@ -24,8 +24,8 @@ void JoyReader::joyPub(const std_msgs::Float64MultiArray joyInput){
    	msg.layout.dim[0].stride = 4;
 	msg.data[0] = x;
 	msg.data[1] = y;
-    	msg.data[2] = z;
-    	msg.data[3] = mag;
+    msg.data[2] = z;
+    msg.data[3] = mag;
     
     publisher.publish(msg);
 }
