@@ -3,7 +3,7 @@
 ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): TortugaNode(){
     ros::Rate loop_rate(rate);
     subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
- 
+
 
     ROS_DEBUG("Opening sensorboard");
     sensor_file = "/dev/sensor";
@@ -23,7 +23,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     }
 
     ROS_DEBUG("Unsafed all thrusters");
-    
+    thruster_power.layout.dim.push_back(std_msgs::MultiArrayDimension());
     for(int i = 0; i < NUM_THRUSTERS; i++){
       thruster_powers.data[i] = 0;
     }
@@ -46,11 +46,11 @@ ThrusterTortugaNode::~ThrusterTortugaNode(){
 }
 
 void ThrusterTortugaNode::update(){
-    //I think we need to initialize thrusters and stuff before this will work 
+    //I think we need to initialize thrusters and stuff before this will work
     ros::spinOnce();
     // setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
-    // ROS_DEBUG("fd = %x",fd); 
-   
+    // ROS_DEBUG("fd = %x",fd);
+
     ROS_DEBUG("Setting thruster speeds");
     int retR = readSpeedResponses(fd);
     ROS_DEBUG("Read speed before: %x", retR);
@@ -59,8 +59,8 @@ void ThrusterTortugaNode::update(){
     usleep(20*1000);
     int retA = readSpeedResponses(fd);
     ROS_DEBUG("Read speed after: %x", retA);
-      
-    ROS_DEBUG("thruster state = %x", readThrusterState(fd)); 
+
+    ROS_DEBUG("thruster state = %x", readThrusterState(fd));
     ROS_DEBUG("set speed returns %x", retS);
     ROS_DEBUG("read speed returns %x", retR);
 }
