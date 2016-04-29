@@ -60,7 +60,7 @@ void ThrusterTortugaNode::update(){
     for(int i = 0 ;i < NUM_THRUSTERS; i++){
       ROS_DEBUG("thruster value %i = %i\n" i, thruster_powers.data[i])
     }
-    int retS = setSpeeds(fd, thruster_powers.data[0], , thruster_powers.data[1], thruster_powers.data[2], thruster_powers[3], thruster_powers[4]);
+    int retS = setSpeeds(fd, thruster_powers.data[0], , thruster_powers.data[1], thruster_powers.data[2], thruster_powers[3], thruster_powers[4], thruster_powers[5]);
     ROS_DEBUG("Set speed status: %x", retS);
     usleep(20*1000);
     int retA = readSpeedResponses(fd);
