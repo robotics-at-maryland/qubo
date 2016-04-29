@@ -37,6 +37,7 @@ include_directories(
   temperature/include
   camera/include
   thrusters/include
+  sensor_board/include
   )
 
 set(DEPTH_SRC_FILES
@@ -84,6 +85,10 @@ set(THRUSTER_SRC_FILES
   thrusters/src/thruster_tortuga.cpp
   )
 
+set(SENSOR_BOARD_SRC_FILES
+  sensor_board/src/main.cpp
+  sensor_board/src/sensor_board_tortuga.cpp
+  )
 
 set(TEST_FILES
   
@@ -118,8 +123,8 @@ target_link_libraries(camera_node ${catkin_LIBRARIES})
 add_executable(thruster_node ${THRUSTER_SRC_FILES})
 target_link_libraries(thruster_node ${catkin_LIBRARIES})
 
-
-
+add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
+target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
 
 ##############################
