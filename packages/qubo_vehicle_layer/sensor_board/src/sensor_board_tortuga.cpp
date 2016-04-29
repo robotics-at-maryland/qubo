@@ -25,6 +25,9 @@ SensorBoardTortugaNode::SensorBoardTortugaNode(int argc, char **argv, int rate):
         checkError(setThrusterSafety(sensor_fd, i));
     }
     ROS_DEBUG("Unsafed all thrusters");
+    
+    // Temperature initialization
+    temperature_publisher = n.advertise<ram_msgs::Temperature>("qubo/temp/", 1000);
 }
 
 SensorBoardTortugaNode::~SensorBoardTortugaNode() {
@@ -44,6 +47,7 @@ SensorBoardTortugaNode::~SensorBoardTortugaNode() {
 void SensorBoardTortugaNode::update() {
     ros::spinOnce();
     updateThrusters();
+    updateTemperature();
 } 
 
 void SensorBoardTortugaNode::publish() {
@@ -63,6 +67,12 @@ void SensorBoardTortugaNode::updateThrusters() {
     ROS_DEBUG("    thruster state = %x", readThrusterState(sensor_fd));
     ROS_DEBUG("    set speed returns %x", retS);
     ROS_DEBUG("    read speed returns %x", retR);
+}
+
+void SensorBoardTortugaNode::updateTemperature() {
+    unsigned char temps[NUM_TEMP_SENSORS];
+    readTemp(sensor_fd, temps);
+    temp_msg.temp1 = temps[0];
 }
 
 void SensorBoardTortugaNode::thrusterCallBack(const std_msgs::Int64MultiArray new_vector) {
