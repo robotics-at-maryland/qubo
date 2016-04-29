@@ -33,6 +33,10 @@ set(SRC_FILES
     src/tortuga/old_code/thrusterstop.c
     )
 
+set(LCDSHOW_FILES
+	src/tortuga/old_code/lcdshow.c
+	)
+
 set(BOARD_OPENER_FILES
     src/tortuga/new_code/board_opener.cpp)
     
@@ -62,6 +66,13 @@ target_link_libraries(board_opener
     ${catkin_LIBRARIES}
     ${PROJECT_NAME}
 )
+
+add_executable(lcdshow ${LCDSHOW_FILES}) 
+target_link_libraries(lcdshow
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}
+)
+
 
 ##############################
 # Unit Tests #################
