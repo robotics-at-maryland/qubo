@@ -9,6 +9,8 @@ find_package(catkin
     REQUIRED COMPONENTS
     ram_msgs
     roscpp
+    cv_bridge
+    image_transport
 )
 
 catkin_package(
@@ -24,8 +26,19 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
-    src/ram_cpp_utils/math/Conversion.cpp
+    src/math/Conversion.cpp
+    src/tortuga/old_code/sensorapi.c
+    src/tortuga/old_code/imuapi.c
+    src/tortuga/old_code/thrusterapi.c
+    src/tortuga/old_code/thrusterstop.c
     )
+
+set(LCDSHOW_FILES
+	src/tortuga/old_code/lcdshow.c
+	)
+
+set(BOARD_OPENER_FILES
+    src/tortuga/new_code/board_opener.cpp)
     
 set(TEST_FILES
     test/ConversionTests.cpp
@@ -43,6 +56,23 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
+
+##############################
+# Add Executables ############
+##############################
+
+add_executable(board_opener ${BOARD_OPENER_FILES}) 
+target_link_libraries(board_opener 
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}
+)
+
+add_executable(lcdshow ${LCDSHOW_FILES}) 
+target_link_libraries(lcdshow
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}
+)
+
 
 ##############################
 # Unit Tests #################

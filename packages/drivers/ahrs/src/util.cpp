@@ -8,30 +8,30 @@
 
 void printUsage()
 {
-   printf("Usage: <imu-tty> <imu-baud>\n");
+   printf("Usage: <ahrs-tty> <ahrs-baud>\n");
    exit(EX_USAGE);
 }
 
-IMU::IMUSpeed getBaudrate(const char* arg)
+AHRS::AHRSSpeed getBaudrate(const char* arg)
 {
    switch (atoi(arg))
    {
       case 2400:
-         return IMU::k2400;
+         return AHRS::k2400;
       case 4800:
-         return IMU::k4800;
+         return AHRS::k4800;
       case 9600:
-         return IMU::k9600;
+         return AHRS::k9600;
       case 19200:
-         return IMU::k19200;
+         return AHRS::k19200;
       case 38400:
-         return IMU::k38400;
+         return AHRS::k38400;
       case 57600:
-         return IMU::k57600;
+         return AHRS::k57600;
       case 115200:
-         return IMU::k115200;
+         return AHRS::k115200;
       default:
-         return IMU::k0;
+         return AHRS::k0;
    }
 }
 
