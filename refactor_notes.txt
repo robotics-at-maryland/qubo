@@ -1,4 +1,4 @@
-1. Should move qubo/packages/drivers to just qubo/drivers, keep packages for things that need to be ROS packages.
+1. Probably want additional toplevel directories for embedded software and things other than just the device drivers.
 2. let's move the tortuga code to drivers as well, same logic, we'll have to write/add to a make file but that's ok.We should put the binaries wherever
        Greg has put his. 
 3. Let's move most of the variables in the qubo_node superclass to the individual class definitions. I think that will improve readability and make it easier to do sanity checks
