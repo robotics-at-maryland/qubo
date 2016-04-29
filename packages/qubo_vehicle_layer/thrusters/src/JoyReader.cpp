@@ -3,7 +3,7 @@
 JoyReader::ThrusterTortugaNode(int argc, char **argv, int rate): TortugaNode(){
     ros::Rate loop_rate(rate);
     subscriber = n.subscribe("/joy", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
-    publisher = n.advertise<std_msgs::Float64MultiArray>("/qubo/thrusters_input", 1000);
+    publisher = n.advertise<std_msgs::Float64MultiArray>("/g500/thrusters_input", 1000); //change /g500/thrusters_input to wherever it publishes to
 }
 
 JoyReader::~ThrusterTortugaNode(){}
