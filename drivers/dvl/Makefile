@@ -32,5 +32,5 @@ bin/test: src/test.cpp $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(OBJS)
 
 clean:
-	rm -rf bin/*
+	rm -rf bin
 
