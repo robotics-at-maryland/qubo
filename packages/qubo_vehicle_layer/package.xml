@@ -12,7 +12,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
- 
+
   <build_depend>ram_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>image_transport</build_depend>
@@ -25,5 +25,6 @@
   <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>opencv2</run_depend>
-  
+  <run_depend>rosconsole.conf</run_depend>
+
 </package>

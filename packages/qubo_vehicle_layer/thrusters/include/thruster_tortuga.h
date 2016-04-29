@@ -2,11 +2,14 @@
 
 #define THRUSTER_TORTUGA_H
 
+
+#define NUM_THRUSTERS 6
+
 #include "tortuga_node.h"
 #include "sensor_msgs/Joy.h"
-#include "std_msgs/Float64MultiArray.h"
-//#include "tortuga/sensorapi.h"
-#include "tortuga/thrusterapi.h"
+#include "std_msgs/Int64MultiArray.h"
+#include "tortuga/sensorapi.h"
+
 
 class ThrusterTortugaNode : public TortugaNode {
   
@@ -16,7 +19,7 @@ class ThrusterTortugaNode : public TortugaNode {
   
   void update();
   void publish();
-  void thrusterCallBack(const std_msgs::Float64MultiArray msg);
+  void thrusterCallBack(const std_msgs::Int64MultiArray msg);
   
     protected:
     
@@ -52,7 +55,7 @@ class ThrusterTortugaNode : public TortugaNode {
   //contains the current powers we want the thrusters to be operating at
   //this is the DESIRED relative power, since our thrusters our nonlinear
   //we'll need to map these to another vector eventually. 
-  std_msgs::Float64MultiArray msg;
+  std_msgs::Int64MultiArray thruster_powers;
   int fd;
   std::string sensor_file;
   ros::Subscriber subscriber;

@@ -5,37 +5,42 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
  
 
-    printf("Opening sensorboard\n");
+    ROS_DEBUG("Opening sensorboard");
     sensor_file = "/dev/sensor";
     fd = openSensorBoard(sensor_file.c_str());
-    printf("Opened sensorboard with fd %d.\n", fd);
+    ROS_DEBUG("Opened sensorboard with fd %d.", fd);
     checkError(syncBoard(fd));
-    printf("Synced with the Board\n");
+    ROS_DEBUG("Synced with the Board");
 
     //GH: This is not the correct use of checkError.
     //It should be called on the return value of a function call, not on the file descriptor.
     //checkError(fd);
 
     // Unsafe all the thrusters
-    printf("Unsafing all thrusters\n");
+    ROS_DEBUG("Unsafing all thrusters");
     for (int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
     }
-    printf("Unsafed all thrusters\n");
-  
+
+    ROS_DEBUG("Unsafed all thrusters");
+    
+    for(int i = 0; i < NUM_THRUSTERS; i++){
+      thruster_powers.data[i] = 0;
+    }
+
 }
 
 ThrusterTortugaNode::~ThrusterTortugaNode(){
     //Stop all the thrusters
-    printf("Stopping thrusters\n");
+    ROS_DEBUG("Stopping thrusters");
     readSpeedResponses(fd);
     setSpeeds(fd, 0, 0, 0, 0, 0, 0);
-    printf("Safing thrusters\n");
+    ROS_DEBUG("Safing thrusters");
     // Safe all the thrusters
     for (int i = 0; i <= 5; i++) {
         checkError(setThrusterSafety(fd, i));
     }
-    printf("Safed thrusters\n");
+    ROS_DEBUG("Safed thrusters");
     //Close the sensorboard
     close(fd);
 }
@@ -44,29 +49,31 @@ void ThrusterTortugaNode::update(){
     //I think we need to initialize thrusters and stuff before this will work 
     ros::spinOnce();
     // setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
-    // printf("fd = %x\n",fd); 
+    // ROS_DEBUG("fd = %x",fd); 
    
-    printf("Setting thruster speeds\n");
+    ROS_DEBUG("Setting thruster speeds");
     int retR = readSpeedResponses(fd);
-    printf("Read speed before: %x\n", retR);
+    ROS_DEBUG("Read speed before: %x", retR);
     int retS = setSpeeds(fd, 128, 128, 128, 128, 128, 128);
-    printf("Set speed status: %x\n", retS);
+    ROS_DEBUG("Set speed status: %x", retS);
     usleep(20*1000);
     int retA = readSpeedResponses(fd);
-    printf("Read speed after: %x\n", retA);
+    ROS_DEBUG("Read speed after: %x", retA);
       
-    ROS_ERROR("thruster state = %x\n", readThrusterState(fd)); 
-    ROS_ERROR("set speed returns %x\n", retS);
-    ROS_ERROR("read speed returns %x\n", retR);
+    ROS_DEBUG("thruster state = %x", readThrusterState(fd)); 
+    ROS_DEBUG("set speed returns %x", retS);
+    ROS_DEBUG("read speed returns %x", retR);
 }
 
 void ThrusterTortugaNode::publish(){
     // setSpeeds(fd, msg.data[0], msg.data[1], msg.data[2], msg.data[3], msg.data[4], msg.data[5]);
 }
 
-void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Float64MultiArray new_vector){
+void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Int64MultiArray new_powers){
     //SG: TODO change this shit
-    msg.data = new_vector.data;
+  for(int i = 0 ;i < NUM_THRUSTERS; i++){
+    thruster_powers.data[i] = new_powers.data[i];
+  }
 }
 
 //ssh robot@192.168.10.12

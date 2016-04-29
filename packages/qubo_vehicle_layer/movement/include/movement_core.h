@@ -13,32 +13,39 @@
 // Auto-generated from cfg/ directory.
 #include <node_example/node_example_paramsConfig.h>
 
-class moveNode
-{
-public:
-  //! Constructor.
-  moveNode();
+class moveNode {
 
-  //! Destructor.
-  ~moveNode();
+	public:
+		//! Constructor.
+  		moveNode();
 
-  //! Callback function for dynamic reconfigure server.
-  void configCallback(const sensor_msgs::Joy::ConstPtr& joy);
+  		//! Destructor.
+  		~moveNode();
 
-  //! Publish the message.
-  void publishMessage(ros::Publisher *pub_message);
+	private:
 
-  //! Callback function for subscriber.
-  void messageCallback(const node_example::node_example_data::ConstPtr &msg);
+  		//! Callback function for dynamic reconfigure server.
+  		void configCallback(const sensor_msgs::Joy::ConstPtr& joy);
 
-  //! The actual message.
-  std::string message;
+  		//! Publish the message.
+  		void publishMessage(ros::Publisher *pub_message);
 
-  //! The first integer to use in addition.
-  int a;
+  		//! Callback function for subscriber.
+  		void messageCallback(const std_msgs::Float64MultiArray::ConstPtr &msg);
 
-  //! The second integer to use in addition.
-  int b;
+		ros::NodeHandle nh
+		int thrstr_1_spd, thrstr_2_spd, thrstr_3_spd, thrstr_4_spd, thrstr_5_spd, thrstr_6_spd, thrstr_7_spd, thrstr_8_spd;
+
+	
+  		//! The actual message.
+  		std::string message;
+
+  		//! The first integer to use in addition.
+  		int a;
+
+  		//! The second integer to use in addition.
+  		int b;
+
 };
 
 #endif // MOVE_CORE_H
