@@ -23,7 +23,10 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     }
 
     ROS_DEBUG("Unsafed all thrusters");
-    thruster_power.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    thruster_powers.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    thruster_powers.layout.dim[0].size = 6;
+    thruster_powers.data.reserve(thruster_powers.layout.dim[0].size);
+
     for(int i = 0; i < NUM_THRUSTERS; i++){
       thruster_powers.data[i] = 0;
     }
