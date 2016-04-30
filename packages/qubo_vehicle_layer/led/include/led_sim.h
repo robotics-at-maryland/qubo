@@ -19,8 +19,6 @@ class LedSimNode : public QuboNode {
 
   //update: provides any info from other nodes that is needed for this node's operation
   void update();
-  //publish: puts information from this node into the ram_msg
-  void publish();
   //enable: turns the LED on
   void enable();
   //disable: turns the LED off

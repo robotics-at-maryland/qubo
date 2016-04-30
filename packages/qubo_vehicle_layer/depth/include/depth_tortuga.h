@@ -12,7 +12,6 @@ public:
   ~DepthTortugaNode();
 
   void update();
-  void publish();
   void depthCallBack(const underwater_sensor_msgs::Pressure msg);
 
  protected:

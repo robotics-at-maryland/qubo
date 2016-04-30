@@ -1,4 +1,4 @@
-#include "depth_sensor_sim.h"
+#include "depth_sim.h"
 
 
 DepthSimNode::DepthSimNode(int argc, char **argv, int rate){

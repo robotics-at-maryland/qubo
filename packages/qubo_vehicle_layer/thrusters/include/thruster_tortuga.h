@@ -15,10 +15,10 @@ class ThrusterTortugaNode : public TortugaNode {
   
  public:
   ThrusterTortugaNode(int, char**, int);
+  ThrusterTortugaNode(int, char**, int, int, std::string);
   ~ThrusterTortugaNode();
   
   void update();
-  void publish();
   void thrusterCallBack(const std_msgs::Int64MultiArray msg);
   
     protected:
