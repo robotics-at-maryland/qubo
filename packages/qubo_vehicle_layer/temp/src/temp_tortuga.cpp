@@ -29,9 +29,8 @@ void TempTortugaNode::update() {
 	readTemp(fd, temps);
     for(int i = 0; i < NUM_TEMP_SENSORS; i++) {
     	msg.temp = temps[i];
+        publishers[i].publish(msg);
     }
-
-    publisher.publish(msg);
 
 	ros::spinOnce(); //magic method always included in update
 }
