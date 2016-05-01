@@ -1,6 +1,3 @@
-1. Probably want additional toplevel directories for embedded software and things other than just the device drivers.
-2. let's move the tortuga code to drivers as well, same logic, we'll have to write/add to a make file but that's ok.We should put the binaries wherever
-       Greg has put his. 
 3. Let's move most of the variables in the qubo_node superclass to the individual class definitions. I think that will improve readability and make it easier to do sanity checks
 4. We can get rid of the publish method, we'll take care of publishing inside of update, I agree with most of you guys that it makes more sense.
 5. I REALLY don't like the way ram_cpp_utils is layed out.
