@@ -21,7 +21,7 @@
 
 #include "impl.cpp"
 
-   AHRS::AHRS(std::string deviceFile, AHRSSpeed speed) 
+AHRS::AHRS(std::string deviceFile, AHRSSpeed speed) 
 : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({1,0})
 { }
 

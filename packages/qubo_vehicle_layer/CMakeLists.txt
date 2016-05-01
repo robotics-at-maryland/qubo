@@ -100,7 +100,7 @@ set(TEST_FILES
 
 
 add_executable(depth_node ${DEPTH_SRC_FILES}) 
-target_link_libraries(depth_node ${catkin_LIBRARIES})
+target_link_libraries(depth_node ${catkin_LIBRARIES} tortuga)
 
 add_executable(dvl_node ${DVL_SRC_FILES})
 target_link_libraries(dvl_node ${catkin_LIBRARIES})
