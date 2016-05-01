@@ -14,7 +14,7 @@ find_package(catkin
 )
 
 catkin_package(
-    INCLUDE_DIRS include
+    INCLUDE_DIRS
     LIBRARIES ${PROJECT_NAME}
     CATKIN_DEPENDS roscpp
 )
