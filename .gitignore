@@ -25,4 +25,5 @@ packages/CMakeLists.txt
 *.pcd
 *.pyc
 *.user
-
+*#
+.#*
