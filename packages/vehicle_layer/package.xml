@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>qubo_vehicle_layer</name>
+  <name>vehicle_layer</name>
   <version>0.1.0</version>
   <description>An abstraction layer for the AUV qubo </description>
   <author email="software@ram.umd.edu">Robotics @ Maryland</author>

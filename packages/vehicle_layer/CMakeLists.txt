@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(qubo_vehicle_layer)
+project(vehicle_layer)
 
 ##############################
 # Catkin Setup ###############
