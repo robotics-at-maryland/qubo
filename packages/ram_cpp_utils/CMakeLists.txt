@@ -23,10 +23,10 @@ catkin_package(
 # File List ##################
 ##############################
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(math/include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
-    src/math/Conversion.cpp
+    math/src/Conversion.cpp
     )
 
 
