@@ -16,8 +16,15 @@
 #include <fcntl.h>
 #include <endian.h>
 
+
 // Header include
 #include "../include/AHRS.h"
+
+//SG: previously in util, but I'm putting them here
+#include <stdio.h>
+#include <exception>
+#include <sysexits.h>
+#include <stdlib.h>
 
 #include "impl.cpp"
 
@@ -461,6 +468,47 @@ void AHRS::sendCommand(Command send, const void* payload, Command resp, void* ta
    writeCommand(send, payload);
    readCommand(resp, target);
 }
+
+
+
+//SG:added the following, these were previously in util.h/cpp but I moved them here to avoid conflicts with the dvl version of utils 
+void AHRS::printUsage()
+{
+   printf("Usage: <ahrs-tty> <ahrs-baud>\n");
+   exit(EX_USAGE);
+}
+
+//SG:added the following, these were previously in util.h/cpp but I moved them here to avoid conflicts with the dvl version of utils 
+AHRS::AHRSSpeed AHRS::getBaudrate(const char* arg)
+{
+   switch (atoi(arg))
+   {
+      case 2400:
+         return AHRS::k2400;
+      case 4800:
+         return AHRS::k4800;
+      case 9600:
+         return AHRS::k9600;
+      case 19200:
+         return AHRS::k19200;
+      case 38400:
+         return AHRS::k38400;
+      case 57600:
+         return AHRS::k57600;
+      case 115200:
+         return AHRS::k115200;
+      default:
+         return AHRS::k0;
+   }
+}
+
+//SG:added the following, these were previously in util.h/cpp but I moved them here to avoid conflicts with the dvl version of utils 
+void AHRS::printError(std::exception& e)
+{
+   printf("Error occured: %s\n", e.what());
+}
+
+
 
 constexpr AHRS::Command AHRS::kGetModInfo;
 constexpr AHRS::Command AHRS::kGetModInfoResp;

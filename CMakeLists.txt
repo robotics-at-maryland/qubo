@@ -62,5 +62,4 @@ if(CMAKE_ECLIPSE_VERSION)
     configure_file(${CMAKE_MODULE_PATH}/templates/.pydevproject.in ${RAM_BIN_DIR}/.pydevproject @ONLY)
 endif()
 
-add_subdirectory(drivers)
 add_subdirectory(packages)

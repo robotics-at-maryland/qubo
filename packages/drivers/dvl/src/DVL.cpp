@@ -17,6 +17,13 @@
 // Header include
 #include "../include/DVL.h"
 
+
+//SG: moved from utils
+#include <stdio.h>
+#include <exception>
+#include <sysexits.h>
+#include <stdlib.h>
+
 #include "statics.cpp"
 #include "impl.cpp"
 
@@ -548,5 +555,51 @@ DVL::Message DVL::sendCommand(Command cmd, ...)
     writeFormatted(cmd, argv);
     va_end(argv);
     return readMessage();
+}
+
+
+
+
+//SG: moved these over from utils to avoid naming conflicts,
+//though I just realized we can probably just use one util file
+//since all these functions are basically identical. maybe keep 
+//the print usage here though.. 
+
+void DVL::printUsage()
+{
+   printf("Usage: <dvl-tty> <dvl-baud>\n");
+   exit(EX_USAGE);
+}
+
+DVL::DVLSpeed DVL::getBaudrate(const char* arg)
+{
+   switch (atoi(arg))
+   {
+      case 300:
+         return DVL::k300;
+      case 1200:
+         return DVL::k1200;
+      case 2400:
+         return DVL::k2400;
+      case 4800:
+         return DVL::k4800;
+      case 9600:
+         return DVL::k9600;
+      case 19200:
+         return DVL::k19200;
+      case 38400:
+         return DVL::k38400;
+      case 57600:
+         return DVL::k57600;
+      case 115200:
+         return DVL::k115200;
+      default:
+         throw DVLException("Unknown baudrate specified");
+   }
+}
+
+void DVL::printError(std::exception& e)
+{
+   printf("Error occured: %s\n", e.what());
 }
 

@@ -13,6 +13,7 @@ find_package(catkin
     cv_bridge #these two are used in the camera node
     image_transport
     ram_cpp_utils
+    ram_drivers
 )
 
 catkin_package(
@@ -100,7 +101,7 @@ set(TEST_FILES
 
 
 add_executable(depth_node ${DEPTH_SRC_FILES}) 
-target_link_libraries(depth_node ${catkin_LIBRARIES} tortuga)
+target_link_libraries(depth_node ${catkin_LIBRARIES})
 
 add_executable(dvl_node ${DVL_SRC_FILES})
 target_link_libraries(dvl_node ${catkin_LIBRARIES})

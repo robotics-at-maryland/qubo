@@ -71,6 +71,15 @@ class DVL
         void assertOpen();
         /** Disconnectes from the device and closes the teriminal. */
         void closeDevice();
+
+        /** SG: moved the following in from util.h to avoid name conflicts
+        /** Prints the script usage arguments. */
+        void printUsage();
+        /** Converts a string into an IMUSpeed */
+        DVL::DVLSpeed getBaudrate(const char*);
+        /** Prints an exception and kills the program. */
+        void printError(std::exception& e);
+
     private: // Internal functionality.
         /** Unix file name to connect to */
         std::string _deviceFile;
@@ -110,5 +119,7 @@ class DVL
         void writeCommand(Command cmd, ...);
         /** Write a command with variable args and read something back */
         Message sendCommand(Command cmd, ...);
+
+
 };
 #endif
