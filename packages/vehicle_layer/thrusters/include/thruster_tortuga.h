@@ -8,7 +8,7 @@
 #include "tortuga_node.h"
 #include "sensor_msgs/Joy.h"
 #include "std_msgs/Int64MultiArray.h"
-#include "tortuga/sensorapi.h"
+#include "sensorapi.h"
 
 
 class ThrusterTortugaNode : public TortugaNode {

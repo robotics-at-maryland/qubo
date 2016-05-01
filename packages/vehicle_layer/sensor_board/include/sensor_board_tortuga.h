@@ -2,7 +2,7 @@
 #define SENSOR_BOARD_TORTUGA_H
 
 #include "tortuga_node.h"
-#include "tortuga/sensorapi.h"
+#include "sensorapi.h"
 
 /*
  * Dependencies for thrusters  

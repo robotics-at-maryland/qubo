@@ -22,8 +22,8 @@
 
 
 #include "qubo_node.h"
-#include "tortuga/sensorapi.h"
-#include "tortuga/imuapi.h"
+#include "sensorapi.h"
+#include "imuapi.h"
 
 class TortugaNode : public QuboNode {
     protected:
