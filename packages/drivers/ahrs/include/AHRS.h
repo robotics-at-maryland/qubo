@@ -29,10 +29,6 @@
 // shared_ptr type
 #include <memory>
 
-
-/** UNIX error code to return to the OS. */
-#define AHRS_ERR 44
-
 /**
  * Exception class for handling IO/Data integrity errors.
  */
@@ -77,16 +73,6 @@ class AHRS
       void assertOpen();
       /** Disconnectes from the device and closes the teriminal. */
       void closeDevice();
-
-
-      /** These next three I moved over from utils to avoid name conflicts **/
-      /** Prints the script usage arguments. */
-      void printUsage();
-      /** Converts a string into an IMUSpeed */
-      AHRS::AHRSSpeed getBaudrate(const char* arg);
-      /** Prints an exception and kills the program. */
-      void printError(std::exception& e);
-
    private: // Internal functionality.
       /** Unix file name to connect to */
       std::string _deviceFile;
@@ -123,7 +109,5 @@ class AHRS
       void writeCommand(Command cmd, const void* payload);
       /** Send a command and wait for a response. */
       void sendCommand(Command cmd, const void* payload, Command resp, void* target);
-      
-   
 };
 #endif

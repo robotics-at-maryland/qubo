@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
             return -1;
          }
          // Read in the baudrate and change the device speed.
-         config.speed = dvl->getBaudrate(buffer);
-         
+         config.speed = getBaudrate(buffer);
+
 
          // Clean up and close resources.
          free(buffer);

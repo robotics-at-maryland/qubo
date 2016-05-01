@@ -1,4 +1,4 @@
-CXX = clang
+CXX = g++
 CXXFLAGS = -std=c++11 -Wall -pedantic -O3
 HEADS = include/AHRS.h include/types.h include/statics.h include/functions.h
 OBJS = bin/AHRS.o bin/util.o

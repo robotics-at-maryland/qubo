@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
             return -1;
          }
          // Attempt to read in a baudrate and change to it.
-         imu->setBaudrate(imu->getBaudrate(buffer));
+         imu->setBaudrate(getBaudrate(buffer));
          // Clean up and close resources.
          free(buffer);
          imu->closeDevice();
