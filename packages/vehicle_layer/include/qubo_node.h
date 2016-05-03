@@ -29,7 +29,6 @@ class QuboNode {
 
  
   virtual void update() = 0;
-  virtual void publish() = 0;
   //void sendAction(){};  // this isn't a pure function because sub classes won't necessarily use it.
   void sleep() {
     ros::Rate loop_rate(rate);
