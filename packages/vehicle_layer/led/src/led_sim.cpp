@@ -11,14 +11,11 @@ LedSimNode::LedSimNode(int argc, char **argv, int rate, std::string name) {
 LedSimNode::~LedSimNode() {}
 
 void LedSimNode::update() {
-  ros::spinOnce(); //magic method thats always included in update
-}
-
-//set fields in the ram message to match what you want
-void LedSimNode::publish() {
   msg.led_name = ledName;
   msg.enabled = enabled;
   publisher.publish(msg);
+
+  ros::spinOnce(); //magic method thats always included in update
 }
 
 void LedSimNode::enable() {

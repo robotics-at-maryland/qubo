@@ -42,8 +42,6 @@ int main(int argc, char **argv){
 
     while (ros::ok()){
         node->update();
-        node->publish();
-        
     }
         
 }

@@ -18,7 +18,6 @@ public:
 	~ImuTortugaNode();
 
 	void update();
-	void publish();
 	void imuCallBack(const sensor_msgs::Imu sim_msg);
 
 protected:

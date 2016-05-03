@@ -1,5 +1,5 @@
-#include "depth_sensor_sim.h"
-#include "depth_sensor_tortuga.h"
+#include "depth_sim.h"
+#include "depth_tortuga.h"
 /**
 This is the main method for our depth_sensor node
 **/
@@ -34,7 +34,6 @@ int main(int argc, char **argv){
 
   while (ros::ok()){
     node->update();
-    node->publish();
   }
 
 }

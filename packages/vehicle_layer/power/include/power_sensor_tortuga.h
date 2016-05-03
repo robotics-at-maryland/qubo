@@ -24,7 +24,6 @@ class PowerNodeTortuga : public TortugaNode {
         ~PowerNodeTortuga();
 
         void update();
-        void publish();
 };
 
 #endif

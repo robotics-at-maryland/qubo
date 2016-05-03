@@ -10,7 +10,6 @@ public:
 	~DVLTortugaNode();
 
 	void update();
-	void publish();
 	void dvlCallBack(const underwater_sensor_msgs::DVL msg);
 
 protected:
