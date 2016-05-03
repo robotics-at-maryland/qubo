@@ -14,7 +14,7 @@ find_package(catkin
 )
 
 catkin_package(
-    INCLUDE_DIRS include
+    INCLUDE_DIRS
     LIBRARIES ${PROJECT_NAME}
     CATKIN_DEPENDS roscpp
 )
@@ -23,23 +23,13 @@ catkin_package(
 # File List ##################
 ##############################
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(math/include ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
-    src/math/Conversion.cpp
-    src/tortuga/old_code/sensorapi.c
-    src/tortuga/old_code/imuapi.c
-	#    src/tortuga/old_code/thrusterapi.c
-	#src/tortuga/old_code/thrusterstop.c
+    math/src/Conversion.cpp
     )
 
-set(LCDSHOW_FILES
-	src/tortuga/old_code/lcdshow.c
-	)
 
-set(BOARD_OPENER_FILES
-    src/tortuga/new_code/board_opener.cpp)
-    
 set(TEST_FILES
     test/ConversionTests.cpp
     test/TestMain.cpp
@@ -60,18 +50,6 @@ target_link_libraries(${PROJECT_NAME}
 ##############################
 # Add Executables ############
 ##############################
-
-add_executable(board_opener ${BOARD_OPENER_FILES}) 
-target_link_libraries(board_opener 
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}
-)
-
-add_executable(lcdshow ${LCDSHOW_FILES}) 
-target_link_libraries(lcdshow
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}
-)
 
 
 ##############################
