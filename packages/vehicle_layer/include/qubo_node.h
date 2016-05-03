@@ -22,33 +22,32 @@
 #include <thread>
 
 class QuboNode {
- public:
- 
-  QuboNode(){}; /**<Constructor, you should really never call this directly */
-  ~QuboNode(){}; //Destructor 
+public:
+
+	QuboNode(){}; /**<Constructor, you should really never call this directly */
+	~QuboNode(){}; //Destructor 
 
  
-  virtual void update() = 0;
-  virtual void publish() = 0;
-  //void sendAction(){};  // this isn't a pure function because sub classes won't necessarily use it.
-  void sleep() {
-    ros::Rate loop_rate(rate);
-    loop_rate.sleep();
-  }
+	virtual void update() = 0;
+	virtual void publish() = 0;
+	//void sendAction(){};  // this isn't a pure function because sub classes won't necessarily use it.
+	void sleep() {
+		ros::Rate loop_rate(rate);
+		loop_rate.sleep();
+	}
   
-  static void runThread(QuboNode *node) {
-    while (ros::ok()) {
-      node->update();
-      node->publish();
-      node->sleep();
-    }
-  }
+	static void runThread(QuboNode *node) {
+		while (ros::ok()) {
+			node->update();
+			node->publish();
+			node->sleep();
+		}
+	}
 
-  //We'll probably need a few more things 
- protected:
-  ros::NodeHandle n; /**< the handle for the whole node */
-  ros::Publisher publisher; /** simulated or real, we'll need a subscriber either way. */
-  int rate;
+	//We'll probably need a few more things 
+protected:
+	ros::NodeHandle n; /**< the handle for the whole node */
+	int rate;
   
 };
 

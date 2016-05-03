@@ -4,10 +4,10 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate, std::string name
 	ROS_DEBUG("beginning constructor");
 
 	ros::Rate loop_rate(rate);
-	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu/" + name, 1000);
-	temp = n.advertise<std_msgs::Float64MultiArray>("qubo/imu/"+ name + "/temperature", 1000);
-	quaternionP = n.advertise<geometry_msgs::Quaternion>("qubo/imu/" + name + "/quaternion", 1000);
-	magnets = n.advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
+	imuPub = n.advertise<sensor_msgs::Imu>("qubo/imu/" + name, 1000);
+	tempPub = n.advertise<std_msgs::Float64MultiArray>("qubo/imu/"+ name + "/temperature", 1000);
+	quaternionPub = n.advertise<geometry_msgs::Quaternion>("qubo/imu/" + name + "/quaternion", 1000);
+	magnetsPub = n.advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
 
 	fd = openIMU(device.c_str());
 	ROS_ERROR("fd found: %d", fd);
@@ -34,7 +34,7 @@ void ImuTortugaNode::update(){
 
 	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
 	ROS_DEBUG("does read hang?");
-	checkError(readIMUData(imu_fd, data));
+	checkError(readIMUData(imu_fd, data.get()));
 	ROS_DEBUG("nope");
 	double time_current = ros::Time::now().toSec();
 
@@ -88,14 +88,15 @@ void ImuTortugaNode::update(){
 	//quaternion - probably 
 	quaternion = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
 
+	imu.publish(msg);
+	temp.publish(temperature);
+	quaternionP.publish(quaternion);
+	magnets.publish(mag);
 
 	ros::spinOnce();
 }
 
 void ImuTortugaNode::publish(){
-	publisher.publish(msg);
-	temp.publish(temperature);
-	quaternionP.publish(quaternion);
-	magnets.publish(mag);
+	
 }
 
