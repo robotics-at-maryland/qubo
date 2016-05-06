@@ -52,7 +52,7 @@ set(AHRS_BAUDRATE_SRC_FILES
 
 
 add_library(${PROJECT_NAME} ${DVL_SRC_FILES} ${AHRS_SRC_FILES} ${TORTUGA_SRC_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C++) 
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX) 
 
 
 ##############################
