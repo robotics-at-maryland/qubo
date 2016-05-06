@@ -16,6 +16,7 @@ public:
 
  protected:
   underwater_sensor_msgs::Pressure msg;
+  ros::Publisher publisher;
   //int fd; //the file descriptor, established by the a call to openSensorBoard
 
 

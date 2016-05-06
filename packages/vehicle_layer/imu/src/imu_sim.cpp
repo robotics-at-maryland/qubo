@@ -10,11 +10,9 @@ ImuSimNode::~ImuSimNode(){};
 
 void ImuSimNode::update(){
 	ros::spinOnce();
-}
-
-void ImuSimNode::publish(){
 	publisher.publish(msg);
 }
+
 
 void ImuSimNode::imuCallBack(const sensor_msgs::Imu sim_msg){
 	msg.header = sim_msg.header;

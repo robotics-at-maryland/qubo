@@ -9,17 +9,18 @@ class DVLSimNode : public QuboNode {
  public:
   DVLSimNode(int,char**,int);
   ~DVLSimNode();
-  
+
   void update();
   void publish();
   void dvlCallBack(const underwater_sensor_msgs::DVL msg);
-  
+
  protected:
 
   underwater_sensor_msgs::DVL msg;
   ros::Subscriber subscriber;
- 
-  
+  ros::Publisher publisher;
+
+
 };
 
 

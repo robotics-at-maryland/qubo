@@ -16,6 +16,7 @@ public:
 protected:
 	sensor_msgs::Imu msg;
 	ros::Subscriber subscriber;
+	ros::Publisher publisher;
 
 };
 
