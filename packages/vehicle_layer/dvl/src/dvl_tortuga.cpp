@@ -9,11 +9,8 @@ DVLTortugaNode::DVLTortugaNode(int argc, char **argv, int rate){
 DVLTortugaNode::~DVLTortugaNode(){}
 
 void DVLTortugaNode::update(){
+    publisher.publish(msg);
 	ros::spinOnce();
-}
-
-void DVLTortugaNode::publish(){
-	publisher.publish(msg);
 }
 
 void DVLTortugaNode::dvlCallBack(const underwater_sensor_msgs::DVL sim_msg){

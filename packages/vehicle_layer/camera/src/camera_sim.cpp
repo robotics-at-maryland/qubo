@@ -20,10 +20,6 @@ void CameraSimNode::update(){
 	ros::spinOnce();
 }
 
-void CameraSimNode::publish(){
-	//this doesn't need to be called, this node publishes everytime it subscribes
-	//publisher.publish(msg);
-}
 
 //this shouldn't ever be used or called
 void CameraSimNode::cameraCallBack(const sensor_msgs::Image sim_msg){

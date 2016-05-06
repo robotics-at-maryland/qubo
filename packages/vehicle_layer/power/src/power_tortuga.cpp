@@ -30,11 +30,13 @@ void PowerNodeTortuga::update() {
     msg[i].current = info.battCurrents[i];
     msg[i].life = life;
   }
-  ros::spinOnce();
-}
-
-void PowerNodeTortuga::publish() {
-  for ( int i = 0; i < 6; i++ ) {
+    
+  // Publishes the data.
+  for( int i = 0; i < 6; i++ ) {
     publisher[i].publish(msg[i]);
   }
+
+
+  ros::spinOnce();
+
 }

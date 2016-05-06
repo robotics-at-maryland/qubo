@@ -4,7 +4,8 @@ project(ram_drivers)
 
 catkin_package(
     LIBRARIES ${PROJECT_NAME}
-    INCLUDE_DIRS ahrs/include
+    INCLUDE_DIRS 
+    ahrs/include
     dvl/include
     tortuga/include
 )
@@ -19,6 +20,7 @@ include_directories(
   dvl/include
   tortuga/include
 )
+SET(CMAKE_C++_CREATE_SHARED_LIBRARY 1)
 
 set(AHRS_SRC_FILES
         ahrs/src/AHRS.cpp  
@@ -34,8 +36,6 @@ set(TORTUGA_SRC_FILES
         tortuga/src/lcdshow.c
         tortuga/src/sensorapi.c
 )            
-      
-
      
 set(AHRS_CONFIG_SRC_FILES
         ahrs/src/config.cpp
@@ -53,6 +53,7 @@ set(AHRS_BAUDRATE_SRC_FILES
 
 add_library(${PROJECT_NAME} ${DVL_SRC_FILES} ${AHRS_SRC_FILES} ${TORTUGA_SRC_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C++) 
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 
 ##############################
@@ -64,7 +65,7 @@ add_executable(ahrs_config ${AHRS_CONFIG_SRC_FILES})
 target_link_libraries(ahrs_config ${PROJECT_NAME})
 
 add_executable(ahrs_baudrate ${AHRS_BAUDRATE_SRC_FILES})
-target_link_libraries(ahrs_baudrate ${PROJECT_NAME})
+#target_link_libraries(ahrs_baudrate ${PROJECT_NAME})
 
 
 ##############################

@@ -87,6 +87,12 @@ void ImuTortugaNode::update(){
 
 	//quaternion - probably 
 	quaternion = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
+    
+    // publish data
+    publisher.publish(msg);
+    temp.publish(temperature);
+    quaternionP.publish(quaternion);
+    magnets.publish(mag);
 
 	imu.publish(msg);
 	temp.publish(temperature);
@@ -96,7 +102,4 @@ void ImuTortugaNode::update(){
 	ros::spinOnce();
 }
 
-void ImuTortugaNode::publish(){
-	
-}
 

@@ -20,7 +20,6 @@ public:
 	~CameraSimNode();
 
 	void update();
-	void publish();
 	void cameraCallBack(const sensor_msgs::Image msg);
 	ros::NodeHandle getNode(){ return n; };
 

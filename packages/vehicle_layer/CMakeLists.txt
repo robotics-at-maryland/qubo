@@ -8,7 +8,7 @@ project(vehicle_layer)
 
 find_package(catkin 
     REQUIRED COMPONENTS
-   # qubo_vehicle_layer
+#    qubo_vehicle_layer
     roscpp
     cv_bridge #these two are used in the camera node
     image_transport
@@ -30,21 +30,21 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   include 
-  depth_sensor/include
+  depth/include
   dvl/include
   imu/include
-  power_source/include
+  power/include
   led/include
-  temperature/include
+  temp/include
   camera/include
   thrusters/include
   sensor_board/include
   )
 
 set(DEPTH_SRC_FILES
-  depth_sensor/src/main.cpp
-  depth_sensor/src/depth_sensor_sim.cpp
-  depth_sensor/src/depth_sensor_tortuga.cpp
+  depth/src/main.cpp
+  depth/src/depth_sim.cpp
+  depth/src/depth_tortuga.cpp
   )
 
 set(DVL_SRC_FILES
@@ -60,9 +60,9 @@ set(IMU_SRC_FILES
   )
 
 set(POWER_SRC_FILES
-  power_source/src/main.cpp
-  power_source/src/power_sensor_sim.cpp
-  power_source/src/power_sensor_tortuga.cpp
+  power/src/main.cpp
+  power/src/power_sim.cpp
+  power/src/power_tortuga.cpp
   )
 
 set(LED_SRC_FILES
@@ -71,8 +71,9 @@ set(LED_SRC_FILES
   )
 
 set(TEMP_SRC_FILES
-  temperature/src/main.cpp
-  temperature/src/temp_sensor_sim.cpp
+  temp/src/main.cpp
+  temp/src/temp_sim.cpp
+  temp/src/temp_tortuga.cpp
   )
 
 set(CAMERA_SRC_FILES
@@ -87,6 +88,9 @@ set(THRUSTER_SRC_FILES
   )
 
 set(SENSOR_BOARD_SRC_FILES
+  temp/src/temp_tortuga.cpp
+  thrusters/src/thruster_tortuga.cpp
+
   sensor_board/src/main.cpp
   sensor_board/src/sensor_board_tortuga.cpp
   )

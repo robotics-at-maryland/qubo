@@ -1,7 +1,7 @@
-#include "temp_sensor_sim.h"
+#include "temp_sim.h"
 
 TempSimNode::TempSimNode(int argc, char **argv, int inputRate, std::string name) {
-    publisher = n.advertise<ram_msgs::Temperature>("qubo/temp/" + name, 1000);
+    publisher = n.advertise<ram_msgs::Temp>("qubo/temp/" + name, 1000);
     rate = inputRate;
     sensorName = name;
     real_temp = DEFAULT_TEMP;

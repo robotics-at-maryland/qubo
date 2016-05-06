@@ -25,6 +25,7 @@ protected:
 	double g_in_ms2 = 9.80665;
 	unsigned int id = 0;
 	int fd = -1;
+	
 	//struct used to retrieve data from IMU
 	std::unique_ptr<RawIMUData> data;
 

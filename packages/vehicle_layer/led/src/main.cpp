@@ -12,6 +12,5 @@ int main(int argc, char **argv){
   //loops while the program runs. update and publish both necessary for all nodes.
   while (ros::ok()) {
     test->update();
-    test->publish();
   }
 }
