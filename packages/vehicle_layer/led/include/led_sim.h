@@ -11,7 +11,8 @@ class LedSimNode : public QuboNode {
  protected: //fields and private methods
   std::string ledName;
   ram_msgs::Led msg; //creates an instance of the message to put info in
-  bool enabled; //any 
+  bool enabled; //any
+  ros::Publisher publisher;
 
  public: //public methods
   LedSimNode(int,char**,int,std::string); //first 3 fields are mandatory; 4th for any node-specific fields

@@ -3,8 +3,8 @@
 std::string PowerSimNode::currentSource;
 
 PowerSimNode::PowerSimNode(int argc, char **argv, int inputRate, std::string name) {
-    publisher = n.advertise<ram_msgs::PowerSource>("qubo/power_source/" + name, 1000);
-    rate = inputRate; 
+    //publisher = n.advertise<ram_msgs::PowerSource>("qubo/power_source/" + name, 1000);
+    rate = inputRate;
     currentSource = "";
     sourceName = name;
     enabled = DEFAULT_STATUS;
@@ -21,8 +21,9 @@ PowerSimNode::PowerSimNode(int argc, char **argv, int inputRate, std::string nam
     n.setParam("qubo/source_current_" + name, DEFAULT_CURRENT);
     n.setParam("qubo/source_life_" + name, DEFAULT_LIFE);
     */
-    
+
 }
+
 
 PowerSimNode::~PowerSimNode() {}
 
@@ -33,7 +34,7 @@ void PowerSimNode::update() {
     prevTime = currTime;
 
     n.param("qubo/current_source", specifiedSource, currentSource);
-    
+
     if (sourceName.compare(currentSource) == 0) {
         enabled = true;
         voltage -= deltaTime * voltageDrainRate;
@@ -52,9 +53,9 @@ void PowerSimNode::publish() {
     msg.voltage = voltage;
     msg.current = current;
     msg.life = life;
-    publisher.publish(msg);
+    //publisher.publish(msg);
 }
 
 void PowerSimNode::setCurrentSource(std::string name) {
-    currentSource = name; 
+    currentSource = name;
 }
