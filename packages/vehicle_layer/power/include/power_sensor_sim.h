@@ -23,7 +23,8 @@ class PowerSimNode : public QuboNode {
         double voltageDrainRate = DEFAULT_VOLTAGE / DEFAULT_LIFE;
         double currentDrainRate = DEFAULT_CURRENT / DEFAULT_LIFE;
         std::time_t prevTime;
-    
+        ros::Publisher publisher;
+
     public:
         PowerSimNode(int, char **, int, std::string);
         ~PowerSimNode();

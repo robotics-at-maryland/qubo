@@ -3,7 +3,7 @@
 std::string PowerSimNode::currentSource;
 
 PowerSimNode::PowerSimNode(int argc, char **argv, int inputRate, std::string name) {
-    //publisher = n.advertise<ram_msgs::PowerSource>("qubo/power_source/" + name, 1000);
+    publisher = n.advertise<ram_msgs::PowerSource>("qubo/power_source/" + name, 1000);
     rate = inputRate;
     currentSource = "";
     sourceName = name;
@@ -42,7 +42,7 @@ void PowerSimNode::update() {
     } else {
         enabled = false;
     }
-
+    publish();
     ros::spinOnce();
 }
 
@@ -53,7 +53,7 @@ void PowerSimNode::publish() {
     msg.voltage = voltage;
     msg.current = current;
     msg.life = life;
-    //publisher.publish(msg);
+    publisher.publish(msg);
 }
 
 void PowerSimNode::setCurrentSource(std::string name) {
