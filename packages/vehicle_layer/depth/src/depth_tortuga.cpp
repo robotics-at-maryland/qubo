@@ -14,7 +14,6 @@ DepthTortugaNode::~DepthTortugaNode(){};
 void DepthTortugaNode::update(){
   msg.pressure = readDepth(sensor_fd);
 
-  //the only thing we care about is depth here which updated whenever we get a depth call back, on a real node we may need to do something else.
   publisher.publish(msg);
 }
 

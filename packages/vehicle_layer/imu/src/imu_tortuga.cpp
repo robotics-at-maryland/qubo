@@ -30,7 +30,7 @@ ImuTortugaNode::~ImuTortugaNode(){
 }
 
 void ImuTortugaNode::update(){
-	ROS_DEBUG("in update method");
+	ROS_DEBUG("updating imu method");
 
 	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
 	ROS_DEBUG("does read hang?");

@@ -34,10 +34,7 @@ class TortugaNode : public QuboNode {
       Returns if an error happened and logs it
     */
 
-    //SG: should we try and handle some of there errors here?
-    //we should look into how sensor api handles some of these,
-    //for example on some errors we may want to panic immediately
-    //and quit/shutdown.
+
     bool checkError(int e) {
         switch(e) {
         case SB_IOERROR:
@@ -51,9 +48,11 @@ class TortugaNode : public QuboNode {
             return true;
         case SB_ERROR:
             ROS_DEBUG("SB ERROR in node %s", name.c_str());
-
+            
         }
     }
+
+   
 
     //We'll probably need a few more things
 };
