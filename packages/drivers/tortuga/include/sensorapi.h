@@ -173,11 +173,14 @@
 #define CMD_CAM_RELAY_ON 0x6C
 #define CMD_CAM_RELAY_OFF 0x6D
 
+namespace Tortuga
+{
 // If we are compiling as C++ code we need to use extern "C" linkage
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
+ 
 enum partialUpdateType_
 {
     NO_UPDATE,
@@ -645,6 +648,8 @@ int stopDerpy(int fd);
 kanga - 7/3/2013*/
 int camConnect(int fd);
 int camDisconnect(int fd);
+
+    }
 
 // If we are compiling as C++ code we need to use extern "C" linkage
 #ifdef __cplusplus
