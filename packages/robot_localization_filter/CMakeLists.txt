@@ -99,9 +99,6 @@ add_dependencies(navsat_transform robot_localization_gencpp)
 add_executable(ekf_localization_node src/ekf_localization_node.cpp)
 add_executable(ukf_localization_node src/ukf_localization_node.cpp)
 add_executable(navsat_transform_node src/navsat_transform_node.cpp)
-add_executable(dummy_ahrs src/dummy_ahrs.cpp)
-add_executable(dummy_dvl src/dummy_dvl.cpp)
-add_executable(dummy_imu src/dummy_imu.cpp)
 add_executable(map_baselink_transform src/map_baselink_transform.cpp)
 
 # Linking
@@ -115,9 +112,6 @@ target_link_libraries(ekf_localization_node ros_filter ${catkin_LIBRARIES})
 target_link_libraries(ukf_localization_node ros_filter ${catkin_LIBRARIES})
 target_link_libraries(navsat_transform filter_utilities ros_filter_utilities ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES})
 target_link_libraries(navsat_transform_node navsat_transform ${catkin_LIBRARIES})
-target_link_libraries(dummy_ahrs ${catkin_LIBRARIES})
-target_link_libraries(dummy_dvl ${catkin_LIBRARIES})
-target_link_libraries(dummy_imu ${catkin_LIBRARIES})
 target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
 
 #############
@@ -136,9 +130,6 @@ install(TARGETS
   ekf_localization_node
   navsat_transform_node
   ukf_localization_node
-  dummy_ahrs
-  dummy_dvl
-  dummy_imu
   map_baselink_transform
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
