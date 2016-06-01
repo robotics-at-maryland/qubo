@@ -10,6 +10,8 @@ class SensorBoardTortugaNode : public TortugaNode {
         SensorBoardTortugaNode(int, char**, int);
         ~SensorBoardTortugaNode();
         
+        class TortugaThrusters
+
         void update();
         
 
@@ -23,7 +25,7 @@ class SensorBoardTortugaNode : public TortugaNode {
     std::unique_ptr<QuboNode> temperature;
 
 
-     //SG: should we try and handle some of there errors here?
+    //SG: should we try and handle some of there errors here?
     //we should look into how sensor api handles some of these,
     //for example on some errors we may want to panic immediately
     //and quit/shutdown.

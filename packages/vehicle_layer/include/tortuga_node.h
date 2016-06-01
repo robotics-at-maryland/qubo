@@ -1,4 +1,3 @@
-//!  This is the abstract base class that all our vehicle nodes should inherit from
 
 /*!
  * Tortuga node is a subclass of Qubo Node that will do the same thing but includes
@@ -52,9 +51,6 @@ class TortugaNode : public QuboNode {
         }
     }
 
-   
-
-    //We'll probably need a few more things
 };
 
 #endif

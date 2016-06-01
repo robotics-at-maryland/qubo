@@ -11,12 +11,12 @@
 #include "sensorapi.h"
 
 
-class TortugaThrusters : public VehicleNode {
+class SensorBoardTortugaNode:TortugaThrusters {
 
  public:
-  ThrusterTortugaNode(int, char**, int);
-  ThrusterTortugaNode(int, char**, int, int, std::string);
-  ~ThrusterTortugaNode();
+    // TortugaThrusters(int, char**, int);
+  TortugaThrusters(int, char**, int, int, std::string);
+  TortugaThrusters();
 
   void update();
   void thrusterCallBack(const std_msgs::Int64MultiArray msg);
@@ -56,8 +56,6 @@ class TortugaThrusters : public VehicleNode {
   //this is the DESIRED relative power, since our thrusters our nonlinear
   //we'll need to map these to another vector eventually.
   std_msgs::Int64MultiArray thruster_powers;
-  int fd;
-  std::string sensor_file;
   ros::Subscriber subscriber;
 
 };
