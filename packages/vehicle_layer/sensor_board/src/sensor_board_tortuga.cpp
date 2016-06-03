@@ -11,8 +11,6 @@ SensorBoardTortugaNode::SensorBoardTortugaNode(int argc, char **argv, int rate):
     checkError(syncBoard(sensor_fd)); // Function from sensorapi.h
     ROS_DEBUG("Synced with the Board");
 
-
-    TortugaThrusters thrusters = new TortugaThrusters();
 }
 
 SensorBoardTortugaNode::~SensorBoardTortugaNode() {
@@ -21,7 +19,6 @@ SensorBoardTortugaNode::~SensorBoardTortugaNode() {
 }
 
 void SensorBoardTortugaNode::update() {
-    thrusters->update();
     //ros::spinOnce();
 } 
 

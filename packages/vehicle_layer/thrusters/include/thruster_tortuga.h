@@ -14,7 +14,7 @@
 class ThrusterTortugaNode : public TortugaNode {
 
  public:
-  ThrusterTortugaNode(int, char**, int);
+  ThrusterTortugaNode();
   ThrusterTortugaNode(int, char**, int, int, std::string);
   ~ThrusterTortugaNode();
 

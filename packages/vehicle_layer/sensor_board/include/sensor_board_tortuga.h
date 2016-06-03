@@ -9,9 +9,7 @@ class SensorBoardTortugaNode : public TortugaNode {
 	public:
         SensorBoardTortugaNode(int, char**, int);
         ~SensorBoardTortugaNode();
-        
-        class TortugaThrusters
-
+     
         void update();
         
 

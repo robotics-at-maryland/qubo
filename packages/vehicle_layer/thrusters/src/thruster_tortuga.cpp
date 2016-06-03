@@ -2,8 +2,11 @@
 
 
 //This constructor should ONLY be called when you want to launch the thruster node independent of the rest of the sensor board
-ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): TortugaNode(){
-    ros::Rate loop_rate(rate);
+ThrusterTortugaNode::ThrusterTortugaNode(): TortugaNode(){
+    
+    //ros::Rate loop_rate(rate); //SG can we get rid of this? let's find out..
+
+
     subscriber = n.subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
 
 
@@ -23,14 +26,14 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate): Tortu
     for (int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
     }
-
+    
     ROS_DEBUG("Unsafed all thrusters");
     thruster_powers.layout.dim.push_back(std_msgs::MultiArrayDimension());
     thruster_powers.layout.dim[0].size = 6;
     thruster_powers.data.reserve(thruster_powers.layout.dim[0].size);
 
     for(int i = 0; i < NUM_THRUSTERS; i++){
-      thruster_powers.data[i] = 0;
+        thruster_powers.data[i] = 0;
     }
 }
 
@@ -48,7 +51,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(int argc, char **argv, int rate, int bo
     thruster_powers.layout.dim.push_back(std_msgs::MultiArrayDimension());
     thruster_powers.layout.dim[0].size = 6;
     thruster_powers.data.reserve(thruster_powers.layout.dim[0].size);
-
+    
     for(int i = 0; i < NUM_THRUSTERS; i++){
         thruster_powers.data[i] = 0;
     }
