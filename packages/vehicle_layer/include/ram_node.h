@@ -24,15 +24,15 @@
 class RamNode {
     public:
     
+    /**<Constructor, you should really never call this directly, all it does is set our version of the node handle the the passed in node handle. */
     RamNode(std::shared_ptr<ros::NodeHandle> n ){
         this->n = n; 
-    }; /**<Constructor, you should really never call this directly */
+    }; 
     
     ~RamNode(){}; //Destructor 
     
     
     virtual void update() = 0;
-    //void sendAction(){};  // this isn't a pure function because sub classes won't necessarily use it.
     
     void sleep() {
         ros::Rate loop_rate(rate);
@@ -46,10 +46,9 @@ class RamNode {
         }
     }
     
-    //We'll probably need a few more things 
     protected:
     std::shared_ptr<ros::NodeHandle> n; /**< the handle for the whole node */
-    int rate;
+    int rate; 
     
 };
 
