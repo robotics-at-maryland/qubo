@@ -4,13 +4,13 @@
 #ifndef THRUSTER_SIM_HEADER //I don't really see anybody needing to inherit this class, but better safe than sorry. 
 #define THRUSTER_SIM_HEADER
 
-#include "qubo_node.h"
+#include "ram_node.h"
 #include "std_msgs/Float64MultiArray.h"
 
-class ThrusterSimNode : public QuboNode {
+class ThrusterSimNode : public RamNode {
     
     public:
-    ThrusterSimNode(int,char**,int);
+    ThrusterSimNode(std::shared_ptr<ros::NodeHandle>  ,int);
     ~ThrusterSimNode();
     
     void update();

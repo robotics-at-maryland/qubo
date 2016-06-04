@@ -1,5 +1,4 @@
 #include "thruster_sim.h"
-#include "thruster_tortuga.h"
 
 int main(int argc, char **argv){
     
