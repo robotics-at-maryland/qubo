@@ -37,7 +37,7 @@ include_directories(
   led/include
   temp/include
   camera/include
-  thrusters/include
+ thrusters/include
   sensor_board/include
   )
 
@@ -82,7 +82,7 @@ set(CAMERA_SRC_FILES
   )
 
 set(THRUSTER_SRC_FILES
-  thrusters/src/main.cpp
+#  thrusters/src/main.cpp
   thrusters/src/thruster_sim.cpp
   thrusters/src/thruster_tortuga.cpp
   )
@@ -125,8 +125,8 @@ target_link_libraries(temp_node ${catkin_LIBRARIES})
 add_executable(camera_node ${CAMERA_SRC_FILES})
 target_link_libraries(camera_node ${catkin_LIBRARIES})
 
-add_executable(thruster_node ${THRUSTER_SRC_FILES})
-target_link_libraries(thruster_node ${catkin_LIBRARIES})
+#add_executable(thruster_node ${THRUSTER_SRC_FILES})
+#target_link_libraries(thruster_node ${catkin_LIBRARIES})
 
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})

@@ -25,7 +25,7 @@ class RamNode {
     public:
     
     RamNode(std::shared_ptr<ros::NodeHandle> n ){
-        this.n = n; 
+        this->n = n; 
     }; /**<Constructor, you should really never call this directly */
     
     ~RamNode(){}; //Destructor 

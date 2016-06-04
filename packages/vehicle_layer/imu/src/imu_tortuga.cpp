@@ -12,7 +12,7 @@ ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate, std::string name
 	fd = openIMU(device.c_str());
 	ROS_ERROR("fd found: %d", fd);
 	if(fd <= 0){
-		ROS_ERROR("(%s) Unable to open IMU board at: %s", name.c_str(), device.c_str());
+            ROS_ERROR("(%s) Unable to open IMU board at: %s", name.c_str(), device.c_str());
 	}
 
 	ROS_DEBUG("end of publishers");

@@ -21,7 +21,8 @@ public:
 	void imuCallBack(const sensor_msgs::Imu sim_msg);
 
 protected:
-
+        
+        //SG: may want to make a macro.
 	double g_in_ms2 = 9.80665;
 	unsigned int id = 0;
 	int fd = -1;
