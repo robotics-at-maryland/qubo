@@ -2,12 +2,11 @@
 #define JOY_CORE_H
 
 #include "ros/ros.h"
-#include "tortuga_node.h"
 #include "sensor_msgs/Joy.h"
 #include "std_msgs/Float64MultiArray.h"
 
 
-class JoyReader : public TortugaNode {
+class JoyReader  {
 
  	public:
   		JoyReader(int, char**, int);

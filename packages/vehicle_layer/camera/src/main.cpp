@@ -1,7 +1,5 @@
 #include "camera_sim.h"
 
-
-
 int main(int argc, char **argv){
 
     if(argc != 4){

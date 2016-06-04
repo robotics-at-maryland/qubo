@@ -1,6 +1,6 @@
-#include "JoyReader.h"
+#include "joy_reader.h"
 
-JoyReader::JoyReader(int argc, char **argv, int rate):TortugaNode() {
+JoyReader::JoyReader(int argc, char **argv, int rate) {
     //loop_rate = new ros::Rate(rate);
     subscriber = n.subscribe<sensor_msgs::Joy>("/joy", 10, &JoyReader::joyPub, this);
     publisher = n.advertise<std_msgs::Float64MultiArray>("/joy_pub", 10);
@@ -20,7 +20,6 @@ void JoyReader::update(){
         msg.data[1] = y;
         msg.data[2] = z;
         msg.data[3] = mag;
-	ROS_DEBUG("sup\n");
         publisher.publish(msg);
 
 	ros::spinOnce();
@@ -36,6 +35,3 @@ void JoyReader::joyPub(const sensor_msgs::Joy::ConstPtr &joyInput) {
 	mag = (joyInput->axes[3]+1)/2; /* Magnitude, from 0 to +1 */
 }
 
-void JoyReader::publish() {
-
-}
