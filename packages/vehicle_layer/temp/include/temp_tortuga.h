@@ -3,26 +3,27 @@
 
 //#include <string>
 //#include <random>
-#include "tortuga_node.h" //always included
 #include "sensorapi.h"
-#include "ram_msgs/Temp.h"
+#include "sensor_board_tortuga.h"
+//#include "ram_msgs/Temp.h"
+#include "std_msgs/Char.h"
 
-#define DEFAULT_TEMP 23.0
 
-class TempTortugaNode : public TortugaNode {
+class TempTortugaNode : public SensorBoardTortugaNode {
+
     public: //public methods
-        TempTortugaNode(int, char **, int); //constructor: first three fields mandatory, then specific fields to the node
-        TempTortugaNode(int, char **, int, int, std::string);
-        ~TempTortugaNode(); //destructor, necessary
-  
+
+        TempTortugaNode(std::shared_ptr<ros::NodeHandle>, int rate, int fd, std::string file_name);
+        ~TempTortugaNode();
+
         //update: retrieves data from any other node needed for operation.
         void update();
 
     protected: //fields 
-        ram_msgs::Temp msg; //always include this, used to create specific message file for this node
-		int fd;
+        std_msgs::Char msg; //always include this, used to create specific message file for this node
+        int fd;
         std::string sensor_file;
-		ros::Publisher publishers[NUM_TEMP_SENSORS];
+        ros::Publisher publishers[NUM_TEMP_SENSORS];
 };
 
 #endif
