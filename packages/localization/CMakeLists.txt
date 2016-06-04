@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(robot_localization)
+project(localization)
 
 find_package(catkin REQUIRED COMPONENTS
   diagnostic_msgs
@@ -100,6 +100,7 @@ add_executable(ekf_localization_node src/ekf_localization_node.cpp)
 add_executable(ukf_localization_node src/ukf_localization_node.cpp)
 add_executable(navsat_transform_node src/navsat_transform_node.cpp)
 add_executable(map_baselink_transform src/map_baselink_transform.cpp)
+add_executable(trans_dvl src/trans_dvl.cpp)
 
 # Linking
 target_link_libraries(ros_filter_utilities ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES})
@@ -113,6 +114,7 @@ target_link_libraries(ukf_localization_node ros_filter ${catkin_LIBRARIES})
 target_link_libraries(navsat_transform filter_utilities ros_filter_utilities ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES})
 target_link_libraries(navsat_transform_node navsat_transform ${catkin_LIBRARIES})
 target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
+target_link_libraries(trans_dvl ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -131,6 +133,7 @@ install(TARGETS
   navsat_transform_node
   ukf_localization_node
   map_baselink_transform
+  trans_dvl
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

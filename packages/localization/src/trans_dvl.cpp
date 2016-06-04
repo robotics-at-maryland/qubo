@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <geometry_msgs/TwistWithCovarianceStamped.h>
+#include <underwater_sensor_msgs/DVL.h>
 
 ros::Publisher pub;
 geometry_msgs::TwistWithCovarianceStamped msg;
@@ -19,7 +20,7 @@ void convertMessage(const underwater_sensor_msgs::DVL underwater_msg) {
                           0, 0, 0, 0, 1e-9, 0,
                           0, 0, 0, 0, 0, 1e-9};
         
-  dvl_data.publish(msg);
+  pub.publish(msg);
 }
 
 int main(int argc, char **argv) {
