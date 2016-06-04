@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "trans_dvl");
   ros::NodeHandle n;
   
-  pub = n.advertise<geometry_msgs::TwistWithCovarianceStamped>("dvl/twist", 1000);
+  pub = n.advertise<geometry_msgs::TwistWithCovarianceStamped>("qubo/twist", 1000);
   
   ros::Subscriber sub = n.subscribe("qubo/dvl", 1000, convertMessage);
   ros::spin();

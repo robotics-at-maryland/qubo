@@ -2,13 +2,14 @@
 
 <launch>
 
-    <node pkg="robot_localization" type="map_baselink_transform" name="map_baselink_transformer"></node>
+    <node pkg="localization" type="trans_dvl" name="trans_dvl"></node>
+    <node pkg="localization" type="map_baselink_transform" name="map_baselink_transformer"></node>
 
     <!-- This node will take in measurements from odometry, IMU, stamped pose, and stamped twist messages. It tracks
          the state of the robot, with the state vector being defined as X position, Y position, Z position,
          roll, pitch, yaw, their respective velocites, and linear acceleration. Units for all measurements are assumed
          to conform to the SI standard as specified in REP-103. -->
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true">
+    <node pkg="localization" type="ekf_localization_node" name="ekf_localization" clear_params="true">
 
       <!-- ======== STANDARD PARAMETERS ======== -->
 
@@ -66,9 +67,9 @@
            TwistStamped, Imu). To add a new one, simply append the next number in the sequence to its base name,
            e.g., odom0, odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These
            parameters obviously have no default values, and must be specified. -->
-      <param name="twist0" value="qubo/dvl"/>
+      <param name="twist0" value="dvl/twist"/>
       <param name="imu0" value="qubo/imu"/>
-      <param name="pose0" value="qubo/ahrs"/>
+      <!-- <param name="pose0" value="qubo/ahrs"/> -->
       
       <!-- Each sensor reading updates some or all of the filter's state. These options give you greater control over
            which values from each measurement are fed to the filter. For example, if you have an odometry message as input,
@@ -89,11 +90,11 @@
                                      false, false, false,
                                      true, true, true]</rosparam>
 
-      <rosparam param="pose0_config">[false, false, false,
+      <!-- <rosparam param="pose0_config">[false, false, false,
                                       true, true, true,
                                       false, false, false,
                                       false, false, false,
-                                      false, false, false]</rosparam>
+                                      false, false, false]</rosparam> -->
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity
            measurements and let the nodes integrate them. However, this isn't always feasible, and so the state estimation
@@ -113,7 +114,7 @@
            variables have at least one source of absolute measurement. -->
       <param name="twist0_differential" value="false"/>
       <param name="imu0_differential" value="false"/>
-      <param name="pose0_differential" value="false"/>     
+      <!-- <param name="pose0_differential" value="false"/> -->  
 
       <!-- When the node starts, if this parameter is true, then the first measurement is treated as a "zero point" for all
            future measurements. While you can achieve the same effect with the differential paremeter, the key difference is
@@ -121,7 +122,7 @@
            you simply want your measurements to start at 0 for a given sensor, set this to true. -->
       <param name="twist0_relative" value="false"/>
       <param name="imu0_relative" value="false"/>
-      <param name="pose0_relative" value="false"/>
+      <!-- <param name="pose0_relative" value="false"/> -->
 
       <!-- If we're including accelerations in our state estimate, then we'll probably want to remove any acceleration that
            is due to gravity for each IMU. If you don't want to, then set this to false. Defaults to false if unspecified. -->
@@ -141,14 +142,14 @@
            miss any messages (even if your frequency is set to a relatively small value), increase these. -->
       <param name="twist0_queue_size" value="10"/>
       <param name="imu0_queue_size" value="10"/>
-      <param name="pose0_queue_size" value="10"/>
+      <!-- <param name="pose0_queue_size" value="10"/> -->
       
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
            how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to
            numeric_limits<double>::max() if unspecified. -->
       <param name="odom0_pose_rejection_threshold" value="100"/>
       <param name="odom0_twist_rejection_threshold" value="100"/>
-      <param name="pose0_rejection_threshold" value="100"/>
+      <!-- <param name="pose0_rejection_threshold" value="100"/> -->
       <param name="twist0_rejection_threshold" value="100"/>
       <param name="imu0_pose_rejection_threshold" value="100"/>
       <param name="imu0_twist_rejection_threshold" value="100"/>
