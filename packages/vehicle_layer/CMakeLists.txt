@@ -73,7 +73,6 @@ set(LED_SRC_FILES
 set(TEMP_SRC_FILES
   temp/src/main.cpp
   temp/src/temp_sim.cpp
-  temp/src/temp_tortuga.cpp
   )
 
 set(CAMERA_SRC_FILES
@@ -90,7 +89,7 @@ set(THRUSTER_SRC_FILES
 set(SENSOR_BOARD_SRC_FILES
   temp/src/temp_tortuga.cpp
   thrusters/src/thruster_tortuga.cpp
-
+  
   sensor_board/src/main.cpp
   sensor_board/src/sensor_board_tortuga.cpp
   )

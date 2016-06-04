@@ -2,7 +2,8 @@
 #define SENSOR_BOARD_TORTUGA_H
 
 #include "ram_node.h"
-#include "temp_tortuga.h"
+#include "sensorapi.h"
+
 
 
 class SensorBoardTortugaNode : public RamNode {

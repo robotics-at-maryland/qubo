@@ -29,12 +29,12 @@ TempTortugaNode::~TempTortugaNode() {}
 void TempTortugaNode::update() {
   ros::spinOnce();
 
-	unsigned char temps[NUM_TEMP_SENSORS];
+  unsigned char temps[NUM_TEMP_SENSORS];
   ROS_DEBUG("Reading temperatures");
-	checkError(readTemp(fd, temps));
-    for(int i = 0; i < NUM_TEMP_SENSORS; i++) {
+  checkError(readTemp(fd, temps));
+  for(int i = 0; i < NUM_TEMP_SENSORS; i++) {
     	msg.data = temps[i];
-      publishers[i].publish(msg);
-    }
-
+        publishers[i].publish(msg);
+  }
+  
 }

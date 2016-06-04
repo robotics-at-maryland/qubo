@@ -1,5 +1,4 @@
 #include "sensor_board_tortuga.h"
-
 #include "thruster_tortuga.h"
 //include your header here, no need to relocate it.
 
@@ -22,7 +21,7 @@ int main(int argc, char **argv) {
 
     //open the sensor board
     std::string sensor_file = "/dev/sensor";
-    int fd = openIMU(sensor_file.c_str());
+    int fd = openSensorBoard(sensor_file.c_str());
 
 
     //we don't know what type of node we want until we look at the input arguments. 
