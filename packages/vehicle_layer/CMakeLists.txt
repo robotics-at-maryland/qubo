@@ -8,7 +8,6 @@ project(vehicle_layer)
 
 find_package(catkin 
     REQUIRED COMPONENTS
-#    qubo_vehicle_layer
     roscpp
     cv_bridge #these two are used in the camera node
     image_transport
@@ -83,7 +82,7 @@ set(CAMERA_SRC_FILES
   )
 
 set(THRUSTER_SRC_FILES
-#  thrusters/src/main.cpp
+  thrusters/src/main.cpp
   thrusters/src/thruster_sim.cpp
   thrusters/src/thruster_tortuga.cpp
   )

@@ -1,20 +1,15 @@
 #include "thruster_sim.h"
 #include "std_msgs/Float64MultiArray.h"
 
-ThrusterSimNode::ThrusterSimNode(int argc, char **argv, int rate){
+ThrusterSimNode::ThrusterSimNode(std::shared_ptr<ros::NodeHandle> n , int rate) : RamNode(n){
     ros::Rate  loop_rate(rate);
-    subscriber = n.subscribe("/qubo/thrusters_input", 1000, &ThrusterSimNode::thrusterCallBack,this);
-    //publisher = n.advertise<std_msgs::Float64MultiArray>("/g500/thrusters_input", 1000);
-
+    subscriber = n->subscribe("/qubo/thrusters_input", 1000, &ThrusterSimNode::thrusterCallBack,this);
 };
 
 ThrusterSimNode::~ThrusterSimNode(){};
 
-
 /*We need to read the subscriber information and pass it as a parameter in update */
 /*Turns a R3 cartesian vector into a Float64MultiArray.*/
-
-
 
 void ThrusterSimNode::cartesianToVelocity(double velocity []){
     /*This is the data that will be contained in the velocity vector */

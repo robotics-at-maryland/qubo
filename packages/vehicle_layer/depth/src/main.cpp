@@ -14,15 +14,12 @@ int main(int argc, char **argv){
   ros::init(argc, argv, "depth_sensor_node"); /** basically always needs to be called first */
 
 
-
   /**
      The basic idea here is to pass in a boolean from a launch script that determines if our class is 
      a real one or a simulated one. after that they behave exactly the same as far as main is concerned
      right now though we don't have a real depth sensor, hence the comments
   **/
 
-
-  // if(simulated){
   std::unique_ptr<QuboNode> node;
   if(strcmp(argv[1], "simulated") == 0){
     node.reset(new DepthSimNode(argc, argv, 10)); /** 10 (the rate) is completely arbitrary */
