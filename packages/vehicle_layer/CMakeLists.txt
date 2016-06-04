@@ -37,8 +37,9 @@ include_directories(
   led/include
   temp/include
   camera/include
- thrusters/include
+  thrusters/include
   sensor_board/include
+  movement/include
   )
 
 set(DEPTH_SRC_FILES
@@ -95,6 +96,10 @@ set(SENSOR_BOARD_SRC_FILES
   sensor_board/src/sensor_board_tortuga.cpp
   )
 
+set(MOVEMENT_NODE_SRC_FILES
+  movement/src/movement_tortuga.cpp
+  movement/src/main.cpp
+)
 set(TEST_FILES
   
     )
@@ -131,6 +136,8 @@ target_link_libraries(camera_node ${catkin_LIBRARIES})
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
+add_executable(movement_node ${MOVEMENT_NODE_SRC_FILES})
+target_link_libraries(movement_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################

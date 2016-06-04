@@ -1,15 +1,14 @@
 #include "movement_core.h"
 
-
 /*--------------------------------------------------------------------
  * moveNode()
  * Constructor.
  *------------------------------------------------------------------*/
 
-moveNode::moveNode(int argc, char **argv, int inputRate):TortugaNode() {
+moveNode::moveNode(std::shared_ptr<ros::NodeHandle> n, int inputRate):RamNode(n) {
 	//ros::Rate loop_rate(rate);
-	thrust_pub = n.advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", 10);
-	joystick_sub = n.subscribe<std_msgs::Float64MultiArray>("/joy_pub", 10, &moveNode::messageCallback, this);  
+	thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
+	joystick_sub = n->subscribe<std_msgs::Float64MultiArray>("/joy_pub", inputRate, &moveNode::messageCallback, this);  
 
 } // end moveNode()
 
@@ -81,4 +80,4 @@ void moveNode::messageCallback(const std_msgs::Float64MultiArray::ConstPtr &msg)
 	thrstr_2_spd = MAX_THRUSTER * y_dir / mag;
 } // end messageCallback
 
-void moveNode::publish() {}
+

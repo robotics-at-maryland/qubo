@@ -7,10 +7,9 @@
  * Constructor.
  *------------------------------------------------------------------*/
 
-moveNode::moveNode(int argc, char **argv, int inputRate, std::string name) {
-	ros::Rate loop_rate(rate);
-	thrust_pub = n.advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", 1);
-	joystick_sub = n.subscribe<std_msgs::Float64MultiArray>("/joy_pub", 1000, &moveNode::messageCallback, this);  
+moveNode::moveNode(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
+    thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
+    joystick_sub = n->subscribe<std_msgs::Float64MultiArray>("/joy_pub", inputRate, &moveNode::messageCallback, this);  
 
 } // end moveNode()
 
