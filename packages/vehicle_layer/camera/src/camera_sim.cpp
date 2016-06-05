@@ -1,7 +1,7 @@
 #include "camera_sim.h"
 
 
-CameraSimNode::CameraSimNode(int argc, char **argv, int rate){
+CameraSimNode::CameraSimNode(std::shared_ptr<ros::NodeHandle> n, int rate) : RamNode(n) {
 	ros::Rate loop_rate(rate);
 	CameraSimNode::ImageConverter image_con(*this);
 
@@ -33,7 +33,7 @@ void CameraSimNode::cameraCallBack(const sensor_msgs::Image sim_msg){
 }
 
 //constructor for the converter internal class
-CameraSimNode::ImageConverter::ImageConverter(const CameraSimNode& c_node) : image_tran(c_node.n){
+CameraSimNode::ImageConverter::ImageConverter(const CameraSimNode& c_node) : image_tran(*(c_node.n)){
 	image_sub = image_tran.subscribe("uwsim/camera1", 1000, &CameraSimNode::ImageConverter::imageCallBack, this);
 	image_pub = image_tran.advertise("qubo/cv_camera", 1000);
 }
