@@ -1,0 +1,6 @@
+<launch>
+  <node name="joy_node" pkg="joy" type="joy_node" />
+  <node name="JoyReader" pkg="joystick" type="joy_reader" />
+ <!-- <node name="move_node" pkg="joystick" type="move_node" /> -->
+ <!-- <node name="thruster_node" pkg="qubo_vehicle_layer" type="thruster_node" args="tortuga" output="log"/> -->
+</launch>
