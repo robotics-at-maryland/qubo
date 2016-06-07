@@ -28,7 +28,6 @@ void JoyReader::update(){
 }
 
 void JoyReader::joyPub(const sensor_msgs::Joy::ConstPtr &joyInput) {
-	ROS_DEBUG("here\n");
 	x = joyInput->axes[0]; /* Side-to-side, between -1 and +1 */
 	y = joyInput->axes[1]; 	
 	z = -1*joyInput->axes[5]; 

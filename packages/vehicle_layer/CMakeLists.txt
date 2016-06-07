@@ -39,6 +39,7 @@ include_directories(
   thrusters/include
   sensor_board/include
   movement/include
+  controller/include
   )
 
 set(DEPTH_SRC_FILES
@@ -95,8 +96,13 @@ set(SENSOR_BOARD_SRC_FILES
   )
 
 set(MOVEMENT_NODE_SRC_FILES
-  movement/src/movement_tortuga.cpp
+  movement/src/movement_node.cpp
   movement/src/main.cpp
+)
+
+set(CONTROLLER_NODE_SRC_FILES
+  controller/src/controller_node.cpp
+  controller/src/main.cpp
 )
 
 set(TEST_FILES
@@ -137,6 +143,9 @@ target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
 add_executable(movement_node ${MOVEMENT_NODE_SRC_FILES})
 target_link_libraries(movement_node ${catkin_LIBRARIES})
+
+add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
+target_link_libraries(controller_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
