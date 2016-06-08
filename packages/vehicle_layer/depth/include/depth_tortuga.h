@@ -3,6 +3,7 @@
 #define DEPTHT_HEADER
 
 #include "sensor_board_tortuga.h"
+#include "sensorapi.h"
 #include "underwater_sensor_msgs/Pressure.h"
 
 class DepthTortugaNode : public SensorBoardTortugaNode {
@@ -17,6 +18,8 @@ class DepthTortugaNode : public SensorBoardTortugaNode {
 	protected:
 	underwater_sensor_msgs::Pressure msg;
 	ros::Publisher publisher;
+  int fd;
+  std::string sensor_file;
 	//int fd; //the file descriptor, established by the a call to openSensorBoard
 	
 };

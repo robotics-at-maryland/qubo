@@ -6,12 +6,14 @@ DepthTortugaNode::DepthTortugaNode(std::shared_ptr<ros::NodeHandle> n,  int rate
 	SensorBoardTortugaNode(n, rate, board_fd, board_file){
 	ros::Rate  loop_rate(rate);
 	publisher = n->advertise< underwater_sensor_msgs::Pressure>("qubo/depth", 1000);
-};
+}
 
 DepthTortugaNode::~DepthTortugaNode(){};
 
 void DepthTortugaNode::update(){
-	msg.pressure = readDepth(fd);	
+  ros::spinOnce();
+
+	msg.pressure = checkError(readDepth(fd));
 	publisher.publish(msg);
 }
 
@@ -19,5 +21,5 @@ void DepthTortugaNode::update(){
 //TODO
 void DepthTortugaNode::depthCallBack(const underwater_sensor_msgs::Pressure sim_msg)
 {
-  msg.pressure = sim_msg.pressure;
+  //msg.pressure = sim_msg.pressure;
 }
