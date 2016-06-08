@@ -4,7 +4,6 @@
  **/
 
 
-
 #ifndef DEPTHSIM_HEADER
 #define DEPTHSIM_HEADER
 

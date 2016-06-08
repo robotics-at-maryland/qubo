@@ -7,7 +7,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int
     for(int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
     }
-
+	
     ROS_DEBUG("Unsafed all thrusters");
     thruster_powers.layout.dim.push_back(std_msgs::MultiArrayDimension());
     thruster_powers.layout.dim[0].size = 6;
