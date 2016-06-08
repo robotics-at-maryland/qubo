@@ -1,9 +1,11 @@
 
 #include "dvl_tortuga.h"
 
-DVLTortugaNode::DVLTortugaNode(int argc, char **argv, int rate){
+DVLTortugaNode::DVLTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, int board_fd, std::string board_file) : 
+    SensorBoardTortugaNode(n, rate, board_fd, board_file){
 	ros::Rate loop_rate(rate);
-	publisher = n.advertise<underwater_sensor_msgs::DVL>("qubo/dvl", 1000);
+    //SG: TODO gotta make the name not hardcoded..
+	publisher = n->advertise<underwater_sensor_msgs::DVL>("qubo/dvl", 1000);
 }
 
 DVLTortugaNode::~DVLTortugaNode(){}

@@ -45,13 +45,12 @@ include_directories(
 set(DEPTH_SRC_FILES
   depth/src/main.cpp
   depth/src/depth_sim.cpp
-  depth/src/depth_tortuga.cpp
   )
 
 set(DVL_SRC_FILES
   dvl/src/main.cpp
   dvl/src/dvl_sim.cpp
-  dvl/src/dvl_tortuga.cpp
+
   )
 
 set(IMU_SRC_FILES
@@ -90,6 +89,8 @@ set(THRUSTER_SRC_FILES
 set(SENSOR_BOARD_SRC_FILES
   temp/src/temp_tortuga.cpp
   thrusters/src/thruster_tortuga.cpp
+  depth/src/depth_tortuga.cpp
+  dvl/src/dvl_tortuga.cpp
   
   sensor_board/src/main.cpp
   sensor_board/src/sensor_board_tortuga.cpp
