@@ -27,6 +27,7 @@ void ThrusterTortugaNode::update(){
     ROS_DEBUG("Setting thruster speeds");
     int retR = readSpeedResponses(fd);
     ROS_DEBUG("Read speed before: %x", retR);
+
     int retS = setSpeeds(fd, thruster_powers.data[0], thruster_powers.data[1], thruster_powers.data[2], thruster_powers.data[3], thruster_powers.data[4], thruster_powers.data[5]);
     ROS_DEBUG("Set speed status: %x", retS);
     usleep(20*1000);

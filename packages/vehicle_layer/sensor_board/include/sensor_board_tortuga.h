@@ -5,12 +5,12 @@
 #include "sensorapi.h"
 
 
-
 class SensorBoardTortugaNode : public RamNode {
     public:
     SensorBoardTortugaNode(std::shared_ptr<ros::NodeHandle>, int , int, std::string);
     ~SensorBoardTortugaNode();
-    
+   
+
         void update();
         
 
