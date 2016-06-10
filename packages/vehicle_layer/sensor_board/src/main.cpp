@@ -1,5 +1,9 @@
 #include "sensor_board_tortuga.h"
+
 #include "thruster_tortuga.h"
+#include "depth_tortuga.h"
+#include "power_sensor_tortuga.h"
+#include "temp_tortuga.h"
 //include your header here, no need to relocate it.
 
 //Sean wrote most of this, direct questions to him
@@ -25,7 +29,11 @@ int main(int argc, char **argv) {
 
 
     //we don't know what type of node we want until we look at the input arguments. 
-    std::unique_ptr<SensorBoardTortugaNode> thruster_node;
+    std::unique_ptr<SensorBoardTortugaNode> thrusters;
+    std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
+    std::unique_ptr<SensorBoardTortugaNode> power_sensor;
+    std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
+    
     //SG: add a unique_ptr to your node as well
 
     
@@ -34,19 +42,24 @@ int main(int argc, char **argv) {
     //to specify which sensors are real vs simlated, for now we'll just make sure it works in the case where everything is the real tortuga version
     
     if(strcmp(argv[1], "simulated") == 0) {
-        //TODO
+        //TODO, may actually just want to throw an error and tell the user to launch this shit individually
     } else if (strcmp(argv[1], "tortuga") == 0) {
-        thruster_node.reset(new ThrusterTortugaNode(n, 10, fd, sensor_file));
-
+        thrusters.reset(new ThrusterTortugaNode(n, 10, fd, sensor_file));
+        depth_sensor.reset(new DepthTortugaNode(n, 10, fd, sensor_file));
+        power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
+        temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
         //copy the above with your node, just make sure n, fd and sensor_file are the same, not sure if we need rate honestly and I'd like to remove it if possible
-
+        
     } else {
         ROS_ERROR("the pased in arguments to sensor board node (%s) doesn't match anything that makes sense...", argv[1]);
         exit(1);
     }
     
     while (ros::ok()) {
-        thruster_node->update();
+        thrusters->update();
+        depth_sensor->update();
+        power_sensor->update();
+        temp_sensor->update();
         //make sure you run your nodes update here.
     }
 }
