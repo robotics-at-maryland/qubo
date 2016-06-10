@@ -51,7 +51,7 @@ set(DEPTH_SRC_FILES
 set(DVL_SRC_FILES
   dvl/src/main.cpp
   dvl/src/dvl_sim.cpp
-
+  
   )
 
 set(IMU_SRC_FILES
@@ -89,14 +89,15 @@ set(THRUSTER_SRC_FILES
   )
 
 set(SENSOR_BOARD_SRC_FILES
-  temp/src/temp_tortuga.cpp
-  thrusters/src/thruster_tortuga.cpp
-  depth/src/depth_tortuga.cpp
-  dvl/src/dvl_tortuga.cpp
-  power/src/power_tortuga.cpp
-  
-  sensor_board/src/main.cpp
-  sensor_board/src/sensor_board_tortuga.cpp
+  sensor_board/src/temp_tortuga.cpp
+  sensor_board/src/thruster_tortuga.cpp
+  sensor_board/src/depth_tortuga.cpp
+  sensor_board/src/power_tortuga.cpp
+#SG: pretty sure this shouldn't be here. 
+# dvl/src/dvl_tortuga.cpp
+
+sensor_board/src/main.cpp
+sensor_board/src/sensor_board_tortuga.cpp
   )
 
 set(MOVEMENT_NODE_SRC_FILES
