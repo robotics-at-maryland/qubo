@@ -41,7 +41,7 @@ void JoyReader::update(){
 void JoyReader::joyPub(const sensor_msgs::Joy::ConstPtr &joyInput) {
 	x = joyInput->axes[0]; /* Side-to-side, between -1 and +1 */
 	y = joyInput->axes[1]; 	
-	z = -1*joyInput->axes[5]; 
+	z = joyInput->axes[3]; 
 	mag = joyInput->axes[2];//(joyInput->axes[3]+1)/2; /* Magnitude, from 0 to +1 */
 }
 

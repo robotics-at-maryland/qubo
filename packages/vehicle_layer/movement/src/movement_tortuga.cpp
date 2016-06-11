@@ -26,7 +26,7 @@ void moveNode::update() {
   thrust_pub.publish(final_thrust);
 
   ros::spinOnce();
-  ros::Duration(0.1).sleep();	
+  // ros::Duration(0.1).sleep();	
 }
 
 void moveNode::messageCallback(const nav_msgs::Odometry::ConstPtr &msg) {

@@ -45,7 +45,7 @@ void controlNode::messageCallback(const std_msgs::Float64MultiArray::ConstPtr &m
   
   vx = a_x * dt;
   vy = a_y * dt;
-  vz = a_y * dt;
+  vz = a_z * dt;
 
   vth = twist * dt;
 
