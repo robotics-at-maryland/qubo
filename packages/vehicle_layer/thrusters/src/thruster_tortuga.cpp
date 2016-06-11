@@ -2,6 +2,10 @@
 
 ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, int board_fd, std::string board_file):
     SensorBoardTortugaNode(n, rate, board_fd, board_file) {
+
+    ros::Rate loop_rate(rate);
+    
+    subscriber = n->subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
     
     ROS_DEBUG("Unsafing all thrusters");
     for(int i = 6; i <= 11; i++) {
@@ -23,7 +27,6 @@ void ThrusterTortugaNode::update(){
     //I think we need to initialize thrusters and stuff before this will work
     ros::spinOnce();
    
-
     ROS_DEBUG("Setting thruster speeds");
     int retR = readSpeedResponses(fd);
     ROS_DEBUG("Read speed before: %x", retR);
