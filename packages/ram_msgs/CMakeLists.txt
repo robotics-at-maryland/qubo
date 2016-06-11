@@ -33,6 +33,7 @@ add_message_files(
     Sim_Temperature.msg
     Sim_Led.msg
     Led.msg
+	DVL.msg
 
 )
 

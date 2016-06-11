@@ -1,0 +1,27 @@
+# All this data is from the dvlapi.h struct _CompleteDVLPacket
+Header header
+uint8 sysconf
+int16 xvel_btm
+int16 yvel_btm
+int16 zvel_btm
+int16 evel_btm
+uint16 beam1_range
+uint16 beam2_range
+uint16 beam3_range
+uint16 beam4_range
+uint8 btm_status
+int16 xvel_ref
+int16 yvel_ref
+int16 zvel_ref
+int16 evel_ref
+uint16 ref_lyr_start
+uint16 ref_lyr_end
+uint8 ref_lyr_status
+uint8 TOFP_hour
+uint8 TOFP_min
+uint8 TOFP_sec
+uint8 TOFP_hnd
+uint16 BIT_results
+uint16 speed_of_sound
+int16 temperature
+uint16 checksum
