@@ -8,4 +8,5 @@
   <node name="power_node" pkg="qubo_vehicle_layer" type="power_node" args="qubo"/>
   <node name="temp_node" pkg="qubo_vehicle_layer" type="thruster_node" args="qubo"/>
   <node name="thruster_node" pkg="qubo_vehicle_layer" type="thruster_node" args="qubo"/>
+
 </launch>
