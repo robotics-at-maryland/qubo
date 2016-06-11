@@ -3,28 +3,32 @@
 
 int main(int argc, char **argv){
 
-	if(argc != 4){
-        ROS_ERROR("The DVL node received %i arguments which is not right\n", argc);
-        exit(1);
-    }
-
-    std::shared_ptr<ros::NodeHandle> n;
-    ros::init(argc, argv, "dvl_node"); /** basically always needs to be called first */
-
+  // initialize ros node for the DVL
+	ros::init(argc, argv, "dvl_node");
+    std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     
-    std::unique_ptr<RamNode> node;
-     
-    if(strcmp(argv[1], "simulated") == 0){
-        node.reset(new DVLSimNode(n, 10)); /** 10 (the rate) is completely arbitrary */
-    }else if(strcmp(argv[1], "tortuga") == 0) {
-        ROS_ERROR("you tried to launch the torgua dvl node independently but you need to do so through the sensor board now");
-        exit(1);
-    }else{
-        ROS_ERROR("the passed in arguments to DVL node (%s) doesn't match anything that makes sense..\n", argv[1]); 
-    }
-       
-    while (ros::ok()){
-        node->update();
+  // open the DVL
+    ROS_ERROR("Starting to open file");
+    std::string dvl_file = "/dev/dvl";
+    int fd = openDVL(dvl_file.c_str());
+	ROS_ERROR("Opened file");
+
+    std::unique_ptr<DVLTortugaNode> dvl_node;
+	ROS_ERROR("Initialized pointer");
+
+    if(strcmp(argv[1], "simulated") == 0) {
+      //TODO
+    } else if (strcmp(argv[1], "tortuga") == 0) {
+	  ROS_ERROR("In tortuga cmp");
+      dvl_node.reset(new DVLTortugaNode(n, 10, fd, dvl_file));
+	  ROS_ERROR("Set pointer");
+
+    } else {
+      ROS_ERROR("the pased in arguments to sensor board node (%s) doesn't match anything that makes sense...", argv[1]);
+      exit(1);
     }
 
+    while (ros::ok()) {
+      dvl_node->update();
+    }
 }
