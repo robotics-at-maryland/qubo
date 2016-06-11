@@ -64,15 +64,15 @@ void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
 
   /* Thrusters need to be changed to represent the actual vehicle*/
   /*Z-Direction*/
-  thrstr_1_spd = total_error_z / MAX_THRUSTER_SPEED;
-  thrstr_2_spd = total_error_z / MAX_THRUSTER_SPEED;
+  thrstr_1_spd = (vz_t1 + total_error_z) / MAX_THRUSTER_SPEED;
+  thrstr_2_spd = (vz_t1 + total_error_z) / MAX_THRUSTER_SPEED;
 
   /*X-Direction*/
-  thrstr_3_spd = total_error_x / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = total_error_x / MAX_THRUSTER_SPEED;
+  thrstr_3_spd = (vx_t1 + total_error_x) / MAX_THRUSTER_SPEED;
+  thrstr_4_spd = (vx_t1 + total_error_x) / MAX_THRUSTER_SPEED;
 
   /*Y-Direction*/
-  thrstr_5_spd =  total_error_y / MAX_THRUSTER_SPEED;
-  thrstr_6_spd =  -1 * total_error_y / MAX_THRUSTER_SPEED;
+  thrstr_5_spd = (vy_t1 + total_error_y) / MAX_THRUSTER_SPEED;
+  thrstr_6_spd = (vy_t1 + total_error_y) / MAX_THRUSTER_SPEED;
 }
 
