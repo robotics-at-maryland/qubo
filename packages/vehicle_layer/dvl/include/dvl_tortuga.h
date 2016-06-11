@@ -1,21 +1,27 @@
 #ifndef DVL_TORTUGA_HEADER
 #define DVL_TORTUGA_HEADER
 
-#include "sensor_board_tortuga.h"
-#include "underwater_sensor_msgs/DVL.h"
+#include "ram_node.h"
+#include "ram_msgs/DVL.h"
+#include "dvlapi.h"
 
-class DVLTortugaNode : public SensorBoardTortugaNode {
-    public:
-	DVLTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate , int fd, std::string board_file);
-	~DVLTortugaNode();
-    
+class DVLTortugaNode : public RamNode {
+  public:
+    DVLTortugaNode(std::shared_ptr<ros::NodeHandle>, int rate, int fd ,  std::string file_name);
+    ~DVLTortugaNode();
+
 	void update();
-	void dvlCallBack(const underwater_sensor_msgs::DVL msg);
-    
-    protected:
-	underwater_sensor_msgs::DVL msg;
-	ros::Subscriber subscriber;
+	bool checkError(int e);
+
+
+protected:
+	int fd;
+	std::string file;
+	ram_msgs::DVL msg;
 	ros::Publisher publisher;
+  // What the dvl api gives
+	RawDVLData raw;
+	CompleteDVLPacket *pkt;
 };
 
 #endif
