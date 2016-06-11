@@ -13,6 +13,7 @@ find_package(catkin
     image_transport
     ram_cpp_utils
     ram_drivers
+    tf2_ros
 )
 
 catkin_package(
@@ -40,6 +41,7 @@ include_directories(
   sensor_board/include
   movement/include
   controller/include
+  localization/include
   )
 
 set(DEPTH_SRC_FILES
@@ -51,7 +53,7 @@ set(DEPTH_SRC_FILES
 set(DVL_SRC_FILES
   dvl/src/main.cpp
   dvl/src/dvl_sim.cpp
-  
+  dvl/src/dvl_tortuga.cpp 
   )
 
 set(IMU_SRC_FILES
@@ -151,6 +153,12 @@ target_link_libraries(movement_node ${catkin_LIBRARIES})
 
 add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
 target_link_libraries(controller_node ${catkin_LIBRARIES})
+
+add_executable(map_baselink_transform localization/src/map_baselink_transform.cpp)
+target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
+
+add_executable(trans_dvl localization/src/trans_dvl.cpp)
+target_link_libraries(trans_dvl ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
