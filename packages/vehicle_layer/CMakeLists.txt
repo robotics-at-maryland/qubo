@@ -53,7 +53,7 @@ set(DEPTH_SRC_FILES
 set(DVL_SRC_FILES
   dvl/src/main.cpp
   dvl/src/dvl_sim.cpp
-  
+  dvl/src/dvl_tortuga.cpp 
   )
 
 set(IMU_SRC_FILES
