@@ -1,7 +1,7 @@
 #include "controller_core.h"
 
 int main(int argc, char **argv) {
-    std::shared_ptr<ros::NodeHandle> n; 
+  std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle); 
     ros::init(argc, argv, "controller_node");
     
     //TODO make work for tortuga node?

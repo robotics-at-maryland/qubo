@@ -9,6 +9,7 @@ controlNode::~controlNode() {}
 
 void controlNode::update() {
   ros::spinOnce();
+
   current_time = ros::Time::now();
 
   nav_msgs::Odometry next_state;
@@ -56,4 +57,6 @@ void controlNode::messageCallback(const std_msgs::Float64MultiArray::ConstPtr &m
   dz = 0.5 * vz * dt;
   
   next_state_orient = tf::createQuaternionMsgFromYaw(th);
+
+  ROS_DEBUG("stopped here");
 }
