@@ -48,7 +48,7 @@ void controlNode::messageCallback(const std_msgs::Float64MultiArray::ConstPtr &m
 
   vth = twist * dt;
 
-  /* This only includes 2D rotations 3D will be added later and will involve quaternions. These are just eulter angles*/
+  /* This only includes 2D rotations 3D will be added later and will involve quaternions.*/
   th = 0.5 * th * dt;
 
   dx = (vx * cos(th) - vy * sin(th)) * dt;
