@@ -44,8 +44,8 @@ set(TEST_FILES
 # Add Executables ############
 ##############################
 
-add_executable(joy_node ${JOY_SRC_FILES}) 
-target_link_libraries(joy_node ${catkin_LIBRARIES})
+add_executable(joy_reader ${JOY_SRC_FILES}) 
+target_link_libraries(joy_reader ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########
