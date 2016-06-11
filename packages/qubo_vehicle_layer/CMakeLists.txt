@@ -13,6 +13,7 @@ find_package(catkin
     cv_bridge #these two are used in the camera node
     image_transport
     ram_cpp_utils
+    tf2_ros
 )
 
 catkin_package(
@@ -37,6 +38,7 @@ include_directories(
   temperature/include
   camera/include
   thrusters/include
+  localization/include
   )
 
 set(DEPTH_SRC_FILES
@@ -82,8 +84,7 @@ set(THRUSTER_SRC_FILES
   thrusters/src/thruster_sim.cpp
   thrusters/src/thruster_tortuga.cpp
   )
-
-
+  
 set(TEST_FILES
   
     )
@@ -117,8 +118,11 @@ target_link_libraries(camera_node ${catkin_LIBRARIES})
 add_executable(thruster_node ${THRUSTER_SRC_FILES})
 target_link_libraries(thruster_node ${catkin_LIBRARIES})
 
+add_executable(map_baselink_transform localization/src/map_baselink_transform.cpp)
+target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
 
-
+add_executable(trans_dvl localization/src/trans_dvl.cpp)
+target_link_libraries(trans_dvl ${catkin_LIBRARIES})
 
 
 ##############################

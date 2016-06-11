@@ -1,4 +1,5 @@
 #!/bin/sh
 
 rosrun ram_cpp_utils board_opener
-roslaunch tortuga.launch 
+roslaunch tortuga.launch
+roslaunch localization.launch 
