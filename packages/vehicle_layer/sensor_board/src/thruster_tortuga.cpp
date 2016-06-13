@@ -2,7 +2,12 @@
 
 ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, int board_fd, std::string board_file):
     SensorBoardTortugaNode(n, rate, board_fd, board_file) {
+
+    //SG: should we make qubo/thruster_input a variable or macro? yes, but this is the only place it shows up, we're going to need
+    //to come back and change it anyway, and I don't want to fix it so there.
+    subscriber = n->subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
     
+
     ROS_DEBUG("Unsafing all thrusters");
     for(int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
