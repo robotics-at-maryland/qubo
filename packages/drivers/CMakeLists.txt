@@ -26,6 +26,10 @@ set(AHRS_SRC_FILES
         ahrs/src/AHRS.cpp
 )
 
+set(LCDSHOW_SRC_FILES
+		tortuga/src/lcdshow.c
+)
+
 set(DVL_SRC_FILES
          dvl/src/DVL.cpp
 )
@@ -59,6 +63,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 # Add Executables ############
 ##############################
 
+add_executable(lcdshow ${LCDSHOW_SRC_FILES})
+target_link_libraries(lcdshow ${PROJECT_NAME})
 
 add_executable(ahrs_config ${AHRS_CONFIG_SRC_FILES})
 target_link_libraries(ahrs_config ${PROJECT_NAME})
