@@ -21,8 +21,6 @@ int main(int argc, char **argv) {
 
     //initialize the ros node we'll use for anything wanting to talk to the sensor board. 
 
-    ROS_DEBUG("in main at least...\n");
-    
     ros::init(argc, argv, "sensor_board_node");
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     
@@ -33,6 +31,8 @@ int main(int argc, char **argv) {
     //open the sensor board
     std::string sensor_file = "/dev/sensor";
     int fd = openSensorBoard(sensor_file.c_str());
+    checkError(fd, "Sensor Board");
+
 
     ROS_DEBUG("opened the sensor board, fd  =  %i" ,fd );
    
