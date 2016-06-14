@@ -25,14 +25,10 @@ int main(int argc, char **argv) {
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     
 
-    ROS_DEBUG("made a node\n");
-
-
     //open the sensor board
     std::string sensor_file = "/dev/sensor";
     int fd = openSensorBoard(sensor_file.c_str());
-    checkError(fd, "Sensor Board");
-
+    
 
     ROS_DEBUG("opened the sensor board, fd  =  %i" ,fd );
    
@@ -42,8 +38,6 @@ int main(int argc, char **argv) {
     std::unique_ptr<SensorBoardTortugaNode> power_sensor;
     std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
 
-    ROS_DEBUG("made a pointer to each node we'll want\n");
-    
     //SG: add a unique_ptr to your node as well
 
     
