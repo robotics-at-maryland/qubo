@@ -21,20 +21,20 @@ int main(int argc, char **argv) {
 
     //initialize the ros node we'll use for anything wanting to talk to the sensor board. 
 
-    ROS_ERROR("in main at least...\n");
+    ROS_DEBUG("in main at least...\n");
     
     ros::init(argc, argv, "sensor_board_node");
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     
 
-    ROS_ERROR("made a node\n");
+    ROS_DEBUG("made a node\n");
 
 
     //open the sensor board
     std::string sensor_file = "/dev/sensor";
     int fd = openSensorBoard(sensor_file.c_str());
 
-    ROS_ERROR("opened the sensor board, fd  =  %i" ,fd );
+    ROS_DEBUG("opened the sensor board, fd  =  %i" ,fd );
    
     //we don't know what type of node we want until we look at the input arguments. 
     std::unique_ptr<SensorBoardTortugaNode> thrusters;
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     std::unique_ptr<SensorBoardTortugaNode> power_sensor;
     std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
 
-    ROS_ERROR("made a pointer to each node we'll want\n");
+    ROS_DEBUG("made a pointer to each node we'll want\n");
     
     //SG: add a unique_ptr to your node as well
 
@@ -62,15 +62,15 @@ int main(int argc, char **argv) {
     // if(strcmp(string(argv[1])., "simulated") == 0) {
     //TODO, may actually just want to throw an error and tell the user to launch this shit individually
     //  } else if (strcmp(argv[1], "tortuga") == 0) {
-    ROS_ERROR("attempting to initialize nodes\n");
+    ROS_DEBUG("attempting to initialize nodes\n");
     thrusters.reset(new ThrusterTortugaNode(n, 10, fd, sensor_file));
     depth_sensor.reset(new DepthTortugaNode(n, 10, fd, sensor_file));
     power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
     temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
-    ROS_ERROR("nodes initialized, nice!\n");
+    ROS_DEBUG("nodes initialized, nice!\n");
     //copy the above with your node, just make sure n, fd and sensor_file are the same, not sure if we need rate honestly and I'd like to remove it if possible
     // } else {
-    //   ROS_ERROR("the pased in arguments to sensor board node (%s) doesn't match anything that makes sense...", argv[1]);
+    //   ROS_DEBUG("the pased in arguments to sensor board node (%s) doesn't match anything that makes sense...", argv[1]);
     // exit(1);
     // }
     
