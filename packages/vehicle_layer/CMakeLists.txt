@@ -34,7 +34,6 @@ include_directories(
   dvl/include
   imu/include
   power/include
-  led/include
   temp/include
   camera/include
   thrusters/include
@@ -66,11 +65,6 @@ set(POWER_SRC_FILES
   power/src/main.cpp
   power/src/power_sim.cpp
 
-  )
-
-set(LED_SRC_FILES
-  led/src/main.cpp
-  led/src/led_sim.cpp
   )
 
 set(TEMP_SRC_FILES
@@ -132,9 +126,6 @@ target_link_libraries(imu_node ${catkin_LIBRARIES})
   
 add_executable(power_node ${POWER_SRC_FILES})
 target_link_libraries(power_node ${catkin_LIBRARIES})
-
-add_executable(led_node ${LED_SRC_FILES})
-target_link_libraries(led_node ${catkin_LIBRARIES})
 
 add_executable(temp_node ${TEMP_SRC_FILES})
 target_link_libraries(temp_node ${catkin_LIBRARIES})
