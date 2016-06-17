@@ -1,9 +1,0 @@
-3. Let's move most of the variables in the qubo_node superclass to the individual class definitions.
-   I think that will improve readability and make it easier to do sanity checks
-4. We can get rid of the publish method, we'll take care of publishing inside of update,
-   I agree with most of you guys that it makes more sense.
-5. I REALLY don't like the way ram_cpp_utils is layed out.
-6. We need to make sure we have really good error detection for all of the nodes we've written so far.
-7. We should really go through and remove any use of raw pointers, I know many of us have a EE or cmpE backround
-   but it'll probably come back to bite us..
-8. consistent variable/function/class naming conventions are a must

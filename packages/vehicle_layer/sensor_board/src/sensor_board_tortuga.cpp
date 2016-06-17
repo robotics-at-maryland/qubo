@@ -2,10 +2,10 @@
 
 
 //construtor for sensor board, you need to open the sensor board before making an instance of this class. This is to allow multiple instances to talk to the same board. 
-SensorBoardTortugaNode::SensorBoardTortugaNode(std::shared_ptr<ros::NodeHandle> n , int rate, int board_fd, std::string board_file): RamNode(n) {
+SensorBoardTortugaNode::SensorBoardTortugaNode(std::shared_ptr<ros::NodeHandle> n , int rate, int fd, std::string sensor_file): RamNode(n) {
     ros::Rate loop_rate(rate);
-    fd = board_fd;
-    sensor_file = board_file;
+    this.fd = fd;
+    this.sensor_file = sensor_file;
 }
 
 SensorBoardTortugaNode::~SensorBoardTortugaNode() {

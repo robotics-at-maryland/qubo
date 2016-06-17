@@ -29,6 +29,9 @@ int main(int argc, char **argv) {
     std::string sensor_file = "/dev/sensor";
     int fd = openSensorBoard(sensor_file.c_str());
     
+    //todo make a static reference to checkerror and call it here
+    syncBoard(fd);
+    
 
     ROS_DEBUG("opened the sensor board, fd  =  %i" ,fd );
    
@@ -38,7 +41,7 @@ int main(int argc, char **argv) {
     std::unique_ptr<SensorBoardTortugaNode> power_sensor;
     std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
 
-    //SG: add a unique_ptr to your node as well
+   //SG: add a unique_ptr to your node as well
 
     
     //TODO:
@@ -58,7 +61,7 @@ int main(int argc, char **argv) {
     //  } else if (strcmp(argv[1], "tortuga") == 0) {
     ROS_DEBUG("attempting to initialize nodes\n");
     thrusters.reset(new ThrusterTortugaNode(n, 10, fd, sensor_file));
-    //depth_sensor.reset(new DepthTortugaNode(n, 10, fd, sensor_file));
+    //depth_sensor.reset(new DepthTortugaNoxde(n, 10, fd, sensor_file));
     // power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
     //temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
     ROS_DEBUG("nodes initialized, nice!\n");
