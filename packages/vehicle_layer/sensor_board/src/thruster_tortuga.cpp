@@ -26,7 +26,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int
 
 void ThrusterTortugaNode::update(){
     //I think we need to initialize thrusters and stuff before this will work
-    ros::spinOnce();
+    //ros::spinOnce();
    
 
     // ROS_DEBUG("Setting thruster speeds");
