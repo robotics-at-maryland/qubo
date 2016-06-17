@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
     // exit(1);
     // }
     
-    ros::spin()
+    ros::spin();
 
     // while (ros::ok()) {
         // thrusters->update();

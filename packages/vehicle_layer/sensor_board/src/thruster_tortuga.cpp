@@ -48,9 +48,11 @@ void ThrusterTortugaNode::update(){
 void ThrusterTortugaNode::thrusterCallBack(const std_msgs::Int64MultiArray new_powers){
   for(int i = 0 ;i < NUM_THRUSTERS; i++){
       ROS_DEBUG("received a message!");
-    thruster_powers.data[i] = new_powers.data[i];
-
-
+      thruster_powers.data[i] = new_powers.data[i];
+      
+      for(int i = 0; i < NUM_THRUSTERS; i++){
+          ROS_DEBUG("thruster_powers.data[%i] = %i" , i, thruster_powers.data[i]);
+      }
     update();
   }
 }
