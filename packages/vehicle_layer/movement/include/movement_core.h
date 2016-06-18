@@ -32,7 +32,7 @@ class moveNode : public RamNode {
     //SG: why not an array ?
     int thrstr_1_spd, thrstr_2_spd, thrstr_3_spd, thrstr_4_spd, thrstr_5_spd, thrstr_6_spd;
     float x_t, y_t, z_t, vx_t, vy_t, vz_t;
-    float K_p = 1, K_d = 1, dt = 0.1;
+    float K_p = 1, K_d = 1, K_i = 1, dt = 0.1;
 };
 
 #endif // MOVE_CORE_H
