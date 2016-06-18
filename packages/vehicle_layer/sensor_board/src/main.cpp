@@ -37,9 +37,9 @@ int main(int argc, char **argv) {
    
     //we don't know what type of node we want until we look at the input arguments. 
     std::unique_ptr<SensorBoardTortugaNode> thrusters;
-    std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
-    std::unique_ptr<SensorBoardTortugaNode> power_sensor;
-    std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
+    // std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
+    // std::unique_ptr<SensorBoardTortugaNode> power_sensor;
+    // std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
 
    //SG: add a unique_ptr to your node as well
 
