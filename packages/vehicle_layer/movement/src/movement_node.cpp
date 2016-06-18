@@ -69,7 +69,7 @@ void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
 
   /*X-Direction*/
   thrstr_3_spd = (total_error_x) / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = (total_error_x) / MAX_THRUSTER_SPEED;
+  thrstr_4_spd = -(total_error_x) / MAX_THRUSTER_SPEED;
 
   /*Y-Direction*/
   thrstr_5_spd = (total_error_y) / MAX_THRUSTER_SPEED;
