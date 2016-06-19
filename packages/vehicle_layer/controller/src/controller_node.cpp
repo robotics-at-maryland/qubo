@@ -26,7 +26,9 @@ void controlNode::update() {
   next_state.child_frame_id = "base_link";
   next_state.twist.twist.linear.x = vx;
   next_state.twist.twist.linear.y = vy;
-  next_state.twist.twist.angular.z = vth;
+  next_state.twist.twist.linear.z = vz;
+
+  next_state.twist.twist.angular.y = vth;
  
   next_state_pub.publish(next_state);
 }

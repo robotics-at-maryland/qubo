@@ -48,7 +48,7 @@ void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
   float vy_t1 = next->twist.twist.linear.y;
   float vz_t1 = next->twist.twist.linear.z;
 
-  /*PD Controller for Each of the Values */
+  /*PID Controller for Each of the Values */
   float error_x = x_t1 - x_t;
   float error_y = y_t1 - y_t;
   float error_z = z_t1 - z_t;
