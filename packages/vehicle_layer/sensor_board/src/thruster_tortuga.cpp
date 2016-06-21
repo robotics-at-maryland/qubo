@@ -8,7 +8,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int
     subscriber = n->subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
     
 
-    ROS_DEBUG("Unsafing all thrusters");
+    ROS_DEBUG("Unsafing all thrusters, fd = %i", fd);
     for(int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
     }
@@ -28,7 +28,7 @@ void ThrusterTortugaNode::update(){
     //I think we need to initialize thrusters and stuff before this will work
     //ros::spinOnce();
    
-
+    ROS_DEBUG("setting thruster speed , fd  =  %i" ,fd );
     // ROS_DEBUG("Setting thruster speeds");
     int retR = readSpeedResponses(fd);
     // ROS_DEBUG("Read speed before: %x", retR);
