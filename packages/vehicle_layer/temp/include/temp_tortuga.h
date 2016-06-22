@@ -21,8 +21,6 @@ class TempTortugaNode : public SensorBoardTortugaNode {
 
     protected: //fields 
         std_msgs::Char msg; //always include this, used to create specific message file for this node
-        int fd;
-        std::string sensor_file;
         ros::Publisher publishers[NUM_TEMP_SENSORS];
 };
 

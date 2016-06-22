@@ -18,8 +18,6 @@ class DepthTortugaNode : public SensorBoardTortugaNode {
 	protected:
 	underwater_sensor_msgs::Pressure msg;
 	ros::Publisher publisher;
-  int fd;
-  std::string sensor_file;
 	//int fd; //the file descriptor, established by the a call to openSensorBoard
 	
 };

@@ -17,7 +17,7 @@ class PowerNodeTortuga : public SensorBoardTortugaNode {
   /* Tortuga has 6 Batteries, so this node will have 6 publishers and 6 messages
      instead of the single publisher and message
    */
-	int fd;
+
 	ros::Publisher publisher[6];
 	ram_msgs::PowerSource msg;
 	struct powerInfo info;
