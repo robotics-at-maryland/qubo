@@ -65,18 +65,24 @@ void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
   float total_error_vy = K_p * error_vy + K_i * sum_error_y + K_d * (error_vy - previous_error_y) / dt;
   float total_error_vz = K_p * error_vz + K_i * sum_error_z + K_d * (error_vz - previous_error_z) / dt;
 
+  float t1_rotation_speed = 0;
+  float t2_rotation_speed = 0;
+  float t3_rotation_speed = 0;
+  float t4_rotation_speed = 0;
+  float t5_rotation_speed = 0;
+  float t6_rotation_speed = 0;
 
   /* Thrusters need to be changed to represent the actual vehicle*/
   /*Z-Direction*/
-  thrstr_1_spd = (total_error_vz) / MAX_THRUSTER_SPEED;
-  thrstr_2_spd = (total_error_vz) / MAX_THRUSTER_SPEED;
+  thrstr_1_spd = (total_error_vz + t1_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_2_spd = (total_error_vz + t2_rotation_speed) / MAX_THRUSTER_SPEED;
 
   /*X-Direction*/
-  thrstr_3_spd = (total_error_vx) / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = -(total_error_vx) / MAX_THRUSTER_SPEED;
+  thrstr_3_spd = (total_error_vx + t3_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_4_spd = -(total_error_vx + t4_rotation_speed) / MAX_THRUSTER_SPEED;
 
   /*Y-Direction*/
-  thrstr_5_spd = (total_error_vy) / MAX_THRUSTER_SPEED;
-  thrstr_6_spd = (total_error_vy) / MAX_THRUSTER_SPEED;
+  thrstr_5_spd = (total_error_vy + t5_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_6_spd = (total_error_vy + t6_rotation_speed) / MAX_THRUSTER_SPEED;
 }
 
