@@ -12,6 +12,7 @@ find_package(catkin
     cv_bridge #these two are used in the camera node
     image_transport
     ram_cpp_utils
+    ram_msgs
     ram_drivers
     tf2_ros
 )
@@ -29,7 +30,7 @@ catkin_package(
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  include 
+  include  
   depth/include
   dvl/include
   imu/include
