@@ -27,14 +27,15 @@ add_message_files(
     Vector4.msg
 
     # New messages added in 2015
+    DVL.msg
+
     PowerSource.msg
     Temp.msg
     Sim_Power_Source.msg
     Sim_Temperature.msg
     Sim_Led.msg
     Led.msg
-	DVL.msg
-
+    
 )
 
 generate_messages(
