@@ -8,11 +8,16 @@ ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int
     subscriber = n->subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
     
 
+    //TODO, learn why this need to be here
+    this->fd = board_fd;
+
     ROS_DEBUG("Unsafing all thrusters, fd = %i", fd);
     for(int i = 6; i <= 11; i++) {
         checkError(setThrusterSafety(fd, i));
     }
-	
+    
+
+
     ROS_DEBUG("Unsafed all thrusters");
     thruster_powers.layout.dim.push_back(std_msgs::MultiArrayDimension());
     thruster_powers.layout.dim[0].size = 6;

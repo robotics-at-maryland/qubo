@@ -27,8 +27,6 @@ class ThrusterTortugaNode : public SensorBoardTortugaNode {
     //this is the DESIRED relative power, since our thrusters our nonlinear
     //we'll need to map these to another vector eventually.
     std_msgs::Int64MultiArray thruster_powers;
-    int fd;
-    std::string sensor_file;
     ros::Subscriber subscriber;
     
 };
