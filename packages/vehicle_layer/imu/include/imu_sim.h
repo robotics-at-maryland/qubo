@@ -1,13 +1,13 @@
 #ifndef IMU_SIM_HEADER
 #define IMU_SIM_HEADER
 
-#include "qubo_node.h"
+#include "ram_node.h"
 #include "sensor_msgs/Imu.h"
 
-class ImuSimNode : public QuboNode{
+class ImuSimNode : public RamNode{
 
 public:
-	ImuSimNode(int, char**, int);
+	ImuSimNode(std::shared_ptr<ros::NodeHandle>, int);
 	~ImuSimNode();
 
 	void update();
