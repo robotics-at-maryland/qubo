@@ -1,16 +1,23 @@
 #include "imu_tortuga.h"
 //written by Jeremy Weed
-ImuTortugaNode::ImuTortugaNode(int argc, char** argv, int rate, std::string name, std::string device){
+
+ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string name, std::string device) : RamNode(n){
+	// JW: There are a lot of debug/error messages here, I'm not sure
+	// if we want to leave them in or not
 	ROS_DEBUG("beginning constructor");
 
+	this->name = name;
+
+	// JW: do I need this here?
 	ros::Rate loop_rate(rate);
-	imuPub = n.advertise<sensor_msgs::Imu>("qubo/imu/" + name, 1000);
-	tempPub = n.advertise<std_msgs::Float64MultiArray>("qubo/imu/"+ name + "/temperature", 1000);
-	quaternionPub = n.advertise<geometry_msgs::Quaternion>("qubo/imu/" + name + "/quaternion", 1000);
-	magnetsPub = n.advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
+
+	imuPub = n->advertise<sensor_msgs::Imu>("qubo/imu/" + name, 1000);
+	tempPub = n->advertise<std_msgs::Float64MultiArray>("qubo/imu/"+ name + "/temperature", 1000);
+	quaternionPub = n->advertise<geometry_msgs::Quaternion>("qubo/imu/" + name + "/quaternion", 1000);
+	magnetsPub = n->advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
 
 	fd = openIMU(device.c_str());
-	ROS_ERROR("fd found: %d", fd);
+	ROS_DEBUG("fd found: %d", fd);
 	if(fd <= 0){
             ROS_ERROR("(%s) Unable to open IMU board at: %s", name.c_str(), device.c_str());
 	}
@@ -34,7 +41,7 @@ void ImuTortugaNode::update(){
 
 	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
 	ROS_DEBUG("does read hang?");
-	checkError(readIMUData(imu_fd, data.get()));
+	checkError(readIMUData(fd, data.get()));
 	ROS_DEBUG("nope");
 	double time_current = ros::Time::now().toSec();
 
@@ -47,9 +54,9 @@ void ImuTortugaNode::update(){
 	msg.linear_acceleration_covariance[0] = -1;
 
 	// Our IMU returns values in G's, but we should be publishing in m/s^2
-	msg.linear_acceleration.x = data->accelX * g_in_ms2;
-	msg.linear_acceleration.y = data->accelY * g_in_ms2;
-	msg.linear_acceleration.z = data->accelZ * g_in_ms2;
+	msg.linear_acceleration.x = data->accelX * G_IN_MS2;
+	msg.linear_acceleration.y = data->accelY * G_IN_MS2;
+	msg.linear_acceleration.z = data->accelZ * G_IN_MS2;
 
 	msg.angular_velocity_covariance[0] = -1;
 

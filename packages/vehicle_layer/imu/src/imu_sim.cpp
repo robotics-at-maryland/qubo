@@ -1,9 +1,9 @@
 #include "imu_sim.h"
 
-ImuSimNode::ImuSimNode(int argc, char** argv, int rate){
+ImuSimNode::ImuSimNode(std::shared_ptr<ros::NodeHandle> n, int rate) : RamNode(n){
 	ros::Rate loop_rate(rate);
-	subscriber = n.subscribe("/g500/imu", 1000,  &ImuSimNode::imuCallBack, this);
-	publisher = n.advertise<sensor_msgs::Imu>("qubo/imu", 1000);
+	subscriber = n->subscribe("/g500/imu", 1000,  &ImuSimNode::imuCallBack, this);
+	publisher = n->advertise<sensor_msgs::Imu>("qubo/imu", 1000);
 };
 
 ImuSimNode::~ImuSimNode(){};
@@ -21,5 +21,4 @@ void ImuSimNode::imuCallBack(const sensor_msgs::Imu sim_msg){
 	msg.angular_velocity = sim_msg.angular_velocity;
 	msg.linear_acceleration = sim_msg.linear_acceleration;
 	msg.linear_acceleration_covariance = sim_msg.linear_acceleration_covariance;
-	//this doesn't exist, I need to find what the actual msg is
 }

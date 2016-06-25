@@ -10,7 +10,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     cv::cvtColor(raw_image, edge_image, CV_BGR2GRAY);
     cv::blur(edge_image, edge_image, cv::Size(blur_number, blur_number));
     cv::Canny(edge_image, edge_image, canny_low, canny_high, 3);
-    dst = Scalar::all(0);
+    dst = cv::Scalar::all(0);
     raw_image.copyTo(dst, edge_image);
 
     // HSV thresholding

@@ -37,9 +37,9 @@ int main(int argc, char **argv) {
    
     //we don't know what type of node we want until we look at the input arguments. 
     std::unique_ptr<SensorBoardTortugaNode> thrusters;
-    // std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
-    // std::unique_ptr<SensorBoardTortugaNode> power_sensor;
-    // std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
+    std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
+    std::unique_ptr<SensorBoardTortugaNode> power_sensor;
+    std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
 
    //SG: add a unique_ptr to your node as well
 
@@ -61,9 +61,9 @@ int main(int argc, char **argv) {
     //  } else if (strcmp(argv[1], "tortuga") == 0) {
     ROS_DEBUG("attempting to initialize nodes\n");
     thrusters.reset(new ThrusterTortugaNode(n, 10, fd, sensor_file));
-    //depth_sensor.reset(new DepthTortugaNoxde(n, 10, fd, sensor_file));
-    // power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
-    //temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
+    depth_sensor.reset(new DepthTortugaNode(n, 10, fd, sensor_file));
+    power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
+    temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
     ROS_DEBUG("nodes initialized, nice!\n");
     //copy the above with your node, just make sure n, fd and sensor_file are the same, not sure if we need rate honestly and I'd like to remove it if possible
     // } else {
@@ -71,14 +71,14 @@ int main(int argc, char **argv) {
     // exit(1);
     // }
     
-    ros::spin();
+  //  ros::spin();
 
-    // while (ros::ok()) {
-        // thrusters->update();
-        //        depth_sensor->update();
-        //  power_sensor->update();
-        //  temp_sensor->update();
+    while (ros::ok()) {
+         thrusters->update();
+         depth_sensor->update();
+         power_sensor->update();
+         temp_sensor->update();
         //make sure you run your nodes update here.
-    // }
+    }
 }
 
