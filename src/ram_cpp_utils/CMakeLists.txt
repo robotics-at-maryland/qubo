@@ -7,6 +7,7 @@ project(ram_cpp_utils)
 
 find_package(catkin 
     REQUIRED COMPONENTS
+    message_generation
     ram_msgs
     roscpp
     cv_bridge
@@ -16,14 +17,14 @@ find_package(catkin
 catkin_package(
     INCLUDE_DIRS
     LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS roscpp
+    CATKIN_DEPENDS roscpp ram_msgs message_runtime
 )
 
 ##############################
 # File List ##################
 ##############################
 
-include_directories(math/include ${catkin_INCLUDE_DIRS})
+include_directories(math/include include   ${catkin_INCLUDE_DIRS})
 
 set(SRC_FILES
     math/src/Conversion.cpp
@@ -46,6 +47,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
+
+add_dependencies(${PROJECT_NAME}  ram_msgs)
+
 
 ##############################
 # Add Executables ############
