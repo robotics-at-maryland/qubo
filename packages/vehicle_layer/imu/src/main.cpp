@@ -16,8 +16,8 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 
-	std::shared_ptr<ros::NodeHandle> n;
 	ros::init(argc, argv, "imu_node"); //basically always needs to be called first
+	std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
 
 	// JW: For controls, this is where it gets interesting when switching
 	// between simulated and tortuga.  Currently we only have one simulated
