@@ -17,7 +17,7 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	magnetsPub = n->advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
 
 	fd = openIMU(device.c_str());
-	ROS_ERROR("fd found: %d", fd);
+	ROS_DEBUG("fd found: %d", fd);
 	if(fd <= 0){
             ROS_ERROR("(%s) Unable to open IMU board at: %s", name.c_str(), device.c_str());
 	}
