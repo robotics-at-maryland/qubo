@@ -20,6 +20,9 @@ include_directories(
   dvl/include
   tortuga/include
 )
+
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 SET(CMAKE_C++_CREATE_SHARED_LIBRARY 1)
 
 set(AHRS_SRC_FILES
