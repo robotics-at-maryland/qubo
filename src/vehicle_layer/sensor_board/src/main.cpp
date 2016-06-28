@@ -75,9 +75,9 @@ int main(int argc, char **argv) {
 
     while (ros::ok()) {
          thrusters->update();
-         depth_sensor->update();
-         power_sensor->update();
-         temp_sensor->update();
+         //depth_sensor->update();
+         //power_sensor->update();
+         //temp_sensor->update();
         //make sure you run your nodes update here.
     }
 }
