@@ -17,7 +17,7 @@ find_package(catkin
 catkin_package(
     INCLUDE_DIRS
     LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS roscpp ram_msgs message_runtime
+    CATKIN_DEPENDS roscpp #ram_msgs message_runtime
 )
 
 ##############################
@@ -48,7 +48,8 @@ target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
 
-add_dependencies(${PROJECT_NAME}  ram_msgs)
+add_dependencies(${PROJECT_NAME}  ${catkin_EXPORTED_TARGETS})
+
 
 
 ##############################
