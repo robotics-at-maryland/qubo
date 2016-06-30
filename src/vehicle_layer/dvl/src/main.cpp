@@ -9,7 +9,7 @@ int main(int argc, char **argv){
     
   // open the DVL
     ROS_ERROR("Starting to open file");
-    std::string dvl_file = "/dev/dvl";
+   std::string dvl_file = "/dev/dvl";
     int fd = openDVL(dvl_file.c_str());
 	ROS_ERROR("Opened file");
 
@@ -29,6 +29,9 @@ int main(int argc, char **argv){
     }
 
     while (ros::ok()) {
-      dvl_node->update();
+      
+	ros::Duration(.5).sleep();
+	ROS_DEBUG("DVLMAIN: calling update");
+	dvl_node->update();
     }
 }
