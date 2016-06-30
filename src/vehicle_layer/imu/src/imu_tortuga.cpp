@@ -30,6 +30,7 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	temperature.layout.dim[0].stride = 3;
 
 	ROS_DEBUG("finished constructor on %s", name.c_str());
+  ros::Time::init();
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
