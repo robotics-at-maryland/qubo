@@ -16,7 +16,7 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 
-	std::shared_ptr<ros::NodeHandle> n;
+	std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
 	ros::init(argc, argv, "imu_node"); //basically always needs to be called first
 
 	// JW: For controls, this is where it gets interesting when switching
