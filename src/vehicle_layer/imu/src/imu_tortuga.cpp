@@ -17,19 +17,29 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	magnetsPub = n->advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
 
 	fd = openIMU(device.c_str());
-	ROS_DEBUG("fd found: %d on %s", fd, device.c_str());
+
+
+
+	ROS_DEBUG("fd found: %d on %s", fd, name.c_str());
 	if(fd <= 0){
             ROS_ERROR("(%s) Unable to open IMU board at: %s", name.c_str(), device.c_str());
 	}
 
-	ROS_DEBUG("end of publishers on %s", device.c_str());
+
+
+
+	ROS_DEBUG("end of publishers on %s", name.c_str());
+
 	temperature.layout.dim.push_back(std_msgs::MultiArrayDimension());
 	temperature.layout.data_offset = 0;
 	temperature.layout.dim[0].label = "IMU Temperature";
 	temperature.layout.dim[0].size = 3;
 	temperature.layout.dim[0].stride = 3;
 
-	ROS_DEBUG("finished constructor on %s", device.c_str());
+
+	ROS_DEBUG("finished constructor on %s", name.c_str());
+    ros::Time::init();
+
 }
 
 ImuTortugaNode::~ImuTortugaNode(){
@@ -37,6 +47,7 @@ ImuTortugaNode::~ImuTortugaNode(){
 }
 
 void ImuTortugaNode::update(){
+
 	//ROS_DEBUG("updating imu method on %s", device.c_str());
 
 	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
@@ -64,7 +75,7 @@ void ImuTortugaNode::update(){
 	msg.angular_velocity.y = data->gyroY;
 	msg.angular_velocity.z = data->gyroZ;
 
-	//ROS_DEBUG("end of imu read on %s", device.c_str());
+
 
 
 	//temperature data
