@@ -1,8 +1,10 @@
+/*
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <sstream> // for converting the command line parameter to integer
+
 
 int main(int argc, char** argv)
 {
@@ -40,3 +42,4 @@ int main(int argc, char** argv)
     loop_rate.sleep();
   }
 }
+*/
