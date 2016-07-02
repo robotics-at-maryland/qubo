@@ -138,34 +138,39 @@ include_directories(
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(vision_node src/main.cpp)
-target_link_libraries(vision_node ${catkin_LIBRARIES})
-target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+# EN -- All of the examples needed for types of detection TODO (Can probably delete)
+add_executable(DisplayVideo src/DisplayVideo.cpp)
+target_link_libraries(DisplayVideo ${catkin_LIBRARIES})
+target_link_libraries(DisplayVideo ${OpenCV_LIBRARIES})
 
-add_executable(pipe_detector src/examples/pipe_detector.cpp)
-target_link_libraries(pipe_detector ${catkin_LIBRARIES})
-target_link_libraries(pipe_detector ${OpenCV_LIBRARIES})
-
-add_executable(hsv_thresholding_example src/examples/segmentation/hsv_thresholding_example.cpp)
-target_link_libraries(hsv_thresholding_example ${catkin_LIBRARIES})
-target_link_libraries(hsv_thresholding_example ${OpenCV_LIBRARIES})
-
-add_executable(histogram_example src/examples/segmentation/histogram_example.cpp)
-target_link_libraries(histogram_example ${catkin_LIBRARIES})
-target_link_libraries(histogram_example ${OpenCV_LIBRARIES})
-
-add_executable(adaptive_threshold_example src/examples/segmentation/adaptive_threshold_example.cpp)
-target_link_libraries(adaptive_threshold_example ${catkin_LIBRARIES})
-target_link_libraries(adaptive_threshold_example ${OpenCV_LIBRARIES})
-
-add_executable(watershed_example src/examples/segmentation/watershed_example.cpp)
-target_link_libraries(watershed_example ${catkin_LIBRARIES})
-target_link_libraries(watershed_example ${OpenCV_LIBRARIES})
-
-add_executable(blob_detection src/examples/segmentation/blob_detection.cpp)
-target_link_libraries(blob_detection ${catkin_LIBRARIES})
-target_link_libraries(blob_detection ${OpenCV_LIBRARIES})
-
+##add_executable(pipe_detector src/examples/pipe_detector.cpp)
+##target_link_libraries(pipe_detector ${catkin_LIBRARIES})
+##target_link_libraries(pipe_detector ${OpenCV_LIBRARIES})
+##
+##add_executable(vision_node src/main.cpp)
+##target_link_libraries(vision_node ${catkin_LIBRARIES})
+##target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+##
+##add_executable(hsv_thresholding_example src/examples/segmentation/hsv_thresholding_example.cpp)
+##target_link_libraries(hsv_thresholding_example ${catkin_LIBRARIES})
+##target_link_libraries(hsv_thresholding_example ${OpenCV_LIBRARIES})
+##
+##add_executable(histogram_example src/examples/segmentation/histogram_example.cpp)
+##target_link_libraries(histogram_example ${catkin_LIBRARIES})
+##target_link_libraries(histogram_example ${OpenCV_LIBRARIES})
+##
+##add_executable(adaptive_threshold_example src/examples/segmentation/adaptive_threshold_example.cpp)
+##target_link_libraries(adaptive_threshold_example ${catkin_LIBRARIES})
+##target_link_libraries(adaptive_threshold_example ${OpenCV_LIBRARIES})
+##
+##add_executable(watershed_example src/examples/segmentation/watershed_example.cpp)
+##target_link_libraries(watershed_example ${catkin_LIBRARIES})
+##target_link_libraries(watershed_example ${OpenCV_LIBRARIES})
+##
+##add_executable(blob_detection src/examples/segmentation/blob_detection.cpp)
+##target_link_libraries(blob_detection ${catkin_LIBRARIES})
+##target_link_libraries(blob_detection ${OpenCV_LIBRARIES})
+##
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

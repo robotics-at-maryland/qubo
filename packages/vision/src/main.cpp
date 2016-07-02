@@ -5,6 +5,7 @@
 #include <opencv2/contrib/contrib.hpp>
 #include <opencv2/core/core.hpp>
 #include <vector>
+#include "opencv2/opencv.hpp"
 
 using namespace cv;
 
