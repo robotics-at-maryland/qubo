@@ -123,8 +123,9 @@ target_link_libraries(depth_node ${catkin_LIBRARIES})
 add_executable(dvl_node ${DVL_SRC_FILES})
 target_link_libraries(dvl_node ${catkin_LIBRARIES})
 
-add_executable(imu_node ${IMU_SRC_FILES})
-target_link_libraries(imu_node ${catkin_LIBRARIES})
+#SG: temporary comment so I can build
+#add_executable(imu_node ${IMU_SRC_FILES})
+#target_link_libraries(imu_node ${catkin_LIBRARIES})
   
 add_executable(power_node ${POWER_SRC_FILES})
 target_link_libraries(power_node ${catkin_LIBRARIES})
