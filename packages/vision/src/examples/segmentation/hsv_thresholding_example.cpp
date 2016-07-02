@@ -2,6 +2,7 @@
 #include "ros/package.h"
 #include "cv.h"
 #include "highgui.h"
+#include "opencv2/opencv.hpp"
 
 using namespace cv;
 
@@ -10,8 +11,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
 
   // open up the video
-  // VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
-  VideoCapture stream("/home/michael/Documents/ram/data/buoy/20090926063810.avi");
+  VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
+  //VideoCapture stream("/home/michael/Documents/ram/data/buoy/20090926063810.avi");
 
   // VideoCapture stream(0);
 

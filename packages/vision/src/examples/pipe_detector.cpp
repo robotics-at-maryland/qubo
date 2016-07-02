@@ -45,8 +45,9 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
 
   // open up the video
-  VideoCapture stream("/home/michael/Documents/ram/data/misc/20100715100703.avi");
+  //VideoCapture stream("/home/michael/Documents/ram/data/misc/20100715100703.avi");
   // VideoCapture stream(0);
+	VideoCapture stream(ros::package::getPath("vision") + "/data/buoy_backing_up.avi");
 
   if (!stream.isOpened()) {
     ROS_ERROR("Cannot connect a camera or file! Shuting down...");

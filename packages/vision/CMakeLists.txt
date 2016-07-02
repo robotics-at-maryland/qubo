@@ -8,8 +8,10 @@ find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   roslib
-  OpenCV
 )
+
+# Seems to be necessary to include this package separately -- not in catkin
+find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -133,8 +135,8 @@ include_directories(
 # add_dependencies(vision ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-#find_package(OpenCV)
-#include_directories(${OpenCV_INCLUDE_DIRS})
+find_package(OpenCV)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(vision_node src/main.cpp)
 target_link_libraries(vision_node ${catkin_LIBRARIES})
