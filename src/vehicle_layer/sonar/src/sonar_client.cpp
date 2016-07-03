@@ -9,7 +9,7 @@ int main(int argc, char **argv)
   std::map<std::string, std::string> header;
   header["val1"] = "";
   header["val2"] = "";
-  ros::ServiceClient client = n.serviceClient("sonar_data",false,header);
+  ros::ServiceClient client = n.serviceClient<ram_msgs::sonar_data>("sonar_data",false,header);
   ram_msgs::sonar_data srv;
   strcpy(srv.request.req,"data");
   if (client.call(srv))
