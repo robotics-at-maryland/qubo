@@ -1,0 +1,7 @@
+string req
+---
+float64[3] vectorXYZ
+int32 status
+uint64 range
+uint64 timestamp
+uint64 sample_number
