@@ -1,5 +1,6 @@
 #include "ros/ros.h"
-#include "include/sensorapi.h"
+#include "qubo/src/drivers/tortuga/include/sensorapi.h"
+#include "ram_msgs/sonar_data.h"
 
 bool sonar(vehicle_layer::sonar_data::Request &req, vehicle_layer::sonar_data::Response &res){
   struct sonarData sd;
@@ -12,8 +13,8 @@ bool sonar(vehicle_layer::sonar_data::Request &req, vehicle_layer::sonar_data::R
     res.vectorXYZ[2] = sd.vectorZ;
     res.status = sd.status;
     res.range = sd.range;
-    res.timestamp = sd.timeStampSec;
-    res.sample_number = sd.timeStampUSec;
+    res.timestamp_sec = sd.timeStampSec;
+    res.timestamp_usec = sd.timeStampUSec;
   }
   else{
     ROS_ERROR("Request contents wrong");
