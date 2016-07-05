@@ -65,15 +65,15 @@ void ImuTortugaNode::update(){
 	msg.linear_acceleration_covariance[0] = -1;
 
 	// Our IMU returns values in G's, but we should be publishing in m/s^2
-	msg.linear_acceleration.x = data->accelX * G_IN_MS2;
-	msg.linear_acceleration.y = data->accelY * G_IN_MS2;
-	msg.linear_acceleration.z = data->accelZ * G_IN_MS2;
+	msg.linear_acceleration.x = data.accelX * G_IN_MS2;
+	msg.linear_acceleration.y = data.accelY * G_IN_MS2;
+	msg.linear_acceleration.z = data.accelZ * G_IN_MS2;
 
 	msg.angular_velocity_covariance[0] = -1;
 
-	msg.angular_velocity.x = data->gyroX;
-	msg.angular_velocity.y = data->gyroY;
-	msg.angular_velocity.z = data->gyroZ;
+	msg.angular_velocity.x = data.gyroX;
+	msg.angular_velocity.y = data.gyroY;
+	msg.angular_velocity.z = data.gyroZ;
 
 
 
@@ -81,27 +81,27 @@ void ImuTortugaNode::update(){
 	//temperature data
 	//its a float 64 array, in x, y, z order
 
-	temperature.data[0] = data->tempX;
-	temperature.data[1] = data->tempY;
-	temperature.data[2] = data->tempZ;
+	temperature.data[0] = data.tempX;
+	temperature.data[1] = data.tempY;
+	temperature.data[2] = data.tempZ;
 
 	//magnetometer data
 	mag.header.stamp = ros::Time::now();
 	mag.header.seq = id;
 	mag.header.frame_id = "0";
 
-	mag.magnetic_field.x = data->magX;
-	mag.magnetic_field.y = data->magY;
-	mag.magnetic_field.z = data->magZ;
+	mag.magnetic_field.x = data.magX;
+	mag.magnetic_field.y = data.magY;
+	mag.magnetic_field.z = data.magZ;
 
 	double time_delta = time_current - time_last;
 
 /*~~~This is gross and I don't like it~~~*/
 
 	//normalize about 2pi radians
-	roll += fmod(data->gyroX / time_delta, 2 * M_PI);
-	pitch += fmod(data->gyroY / time_delta, 2 * M_PI);
-	yaw += fmod(data->gyroZ / time_delta, 2 * M_PI);
+	roll += fmod(data.gyroX / time_delta, 2 * M_PI);
+	pitch += fmod(data.gyroY / time_delta, 2 * M_PI);
+	yaw += fmod(data.gyroZ / time_delta, 2 * M_PI);
 
 	//quaternion - probably
 	quaternion = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
