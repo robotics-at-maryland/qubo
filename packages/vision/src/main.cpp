@@ -1,4 +1,15 @@
+<<<<<<< HEAD
 #include "vision_core.h"
+=======
+#include "ros/ros.h"
+#include "ros/package.h"
+#include "cv.h"
+#include "highgui.h"
+#include <opencv2/contrib/contrib.hpp>
+#include <opencv2/core/core.hpp>
+#include <vector>
+#include "opencv2/opencv.hpp"
+>>>>>>> 7601d10797bbb4c52b3ac2903bd318493c5b2ea6
 
 
 int main(int argc, char **argv) {  
