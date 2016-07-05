@@ -5,7 +5,15 @@ find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   roslib
-  OpenCV
+  image_transport
+  cv_bridge
+)
+
+find_package(OpenCV REQUIRED)
+
+find_package(
+  Boost
+#  REQUIRED COMPONENTS algorithm
 )
 
 catkin_package(
