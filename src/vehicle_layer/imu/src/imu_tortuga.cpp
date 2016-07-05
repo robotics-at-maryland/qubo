@@ -52,7 +52,7 @@ void ImuTortugaNode::update(){
 
 	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
 	ROS_DEBUG("does read hang?");
-	checkError(readIMUData(fd, data.get()));
+	checkError(readIMUData(fd, &data));
 	ROS_DEBUG("nope");
 	double time_current = ros::Time::now().toSec();
 
