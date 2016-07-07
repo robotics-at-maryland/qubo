@@ -1,6 +1,4 @@
 #include "camera_sim.h"
-
-
 /**
    The basic idea here is to pass in a boolean from a launch script that determines if our class is 
    a real one or a simulated one. after that they behave exactly the same as far as main is concerned

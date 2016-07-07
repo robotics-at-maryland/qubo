@@ -98,7 +98,8 @@ sensor_board/src/sensor_board_tortuga.cpp
   )
 
 set(MOVEMENT_NODE_SRC_FILES
-  movement/src/movement_node.cpp
+  movement/src/linear_controller.cpp
+  movement/src/angular_controller.cpp
   movement/src/main.cpp
 )
 
