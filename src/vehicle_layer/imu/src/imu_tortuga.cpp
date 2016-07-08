@@ -7,8 +7,8 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	ROS_DEBUG("beginning constructor");
 
 	this->name = name;
-
 	// JW: do I need this here?
+	// SG: I think we do actually. could be completely wrong though. 
 	ros::Rate loop_rate(rate);
 
 	imuPub = n->advertise<sensor_msgs::Imu>("qubo/imu/" + name, 1000);
@@ -16,12 +16,14 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	quaternionPub = n->advertise<geometry_msgs::Quaternion>("qubo/imu/" + name + "/quaternion", 1000);
 	magnetsPub = n->advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
 
-	fd = openIMU(device.c_str());
+
+	ROS_DEBUG("MADE IT HERE YES!");
+	this->fd = openIMU(device.c_str());
 
 
 
 	ROS_DEBUG("fd found: %d on %s", fd, name.c_str());
-	if(fd <= 0){
+	if(this->fd <= 0){
             ROS_ERROR("(%s) Unable to open IMU board at: %s", name.c_str(), device.c_str());
 	}
 
@@ -48,18 +50,18 @@ ImuTortugaNode::~ImuTortugaNode(){
 
 void ImuTortugaNode::update(){
 
-	//ROS_DEBUG("updating imu method on %s", device.c_str());
+	ROS_DEBUG("updating imu method on %s", name.c_str());
 
 	static double roll = 0, pitch = 0, yaw = 0, time_last = 0;
-	ROS_DEBUG("does read hang?");
-	checkError(readIMUData(fd, &data));
+	ROS_DEBUG("does read hang?, FD: %i", fd);
+	checkError(readIMUData(this->fd, &data));
 	ROS_DEBUG("nope");
 	double time_current = ros::Time::now().toSec();
 
 	msg.header.stamp = ros::Time::now();
 	msg.header.seq = ++id;
 	msg.header.frame_id = "0";
-
+	
 	msg.orientation_covariance[0] = -1;
 
 	msg.linear_acceleration_covariance[0] = -1;
@@ -80,10 +82,13 @@ void ImuTortugaNode::update(){
 
 	//temperature data
 	//its a float 64 array, in x, y, z order
+	ROS_DEBUG("I BET WE DONT HAVE DATTA!\n");
 
-	temperature.data[0] = data.tempX;
-	temperature.data[1] = data.tempY;
-	temperature.data[2] = data.tempZ;
+//	temperature.data[0] = data.tempX;
+//	temperature.data[1] = data.tempY;
+//	temperature.data[2] = data.tempZ;
+
+	ROS_DEBUG("YUP");
 
 	//magnetometer data
 	mag.header.stamp = ros::Time::now();

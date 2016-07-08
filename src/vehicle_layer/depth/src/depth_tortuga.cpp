@@ -12,8 +12,9 @@ DepthTortugaNode::~DepthTortugaNode(){};
 
 void DepthTortugaNode::update(){
   ros::spinOnce();
+	ROS_DEBUG("READING DEPTH");
 
-	msg.pressure = checkError(readDepth(fd));
+	msg.pressure = readDepth(fd);
 	publisher.publish(msg);
 }
 
