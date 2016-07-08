@@ -11,10 +11,10 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	// SG: I think we do actually. could be completely wrong though. 
 	ros::Rate loop_rate(rate);
 
-	imuPub = n->advertise<sensor_msgs::Imu>("qubo/imu/" + name, 1000);
-	tempPub = n->advertise<std_msgs::Float64MultiArray>("qubo/imu/"+ name + "/temperature", 1000);
-	quaternionPub = n->advertise<geometry_msgs::Quaternion>("qubo/imu/" + name + "/quaternion", 1000);
-	magnetsPub = n->advertise<sensor_msgs::MagneticField>("qubo/imu/" + name + "/magnetometer", 1000);
+	imuPub = n->advertise<sensor_msgs::Imu>("tortuga/imu/" + name, 1000);
+	tempPub = n->advertise<std_msgs::Float64MultiArray>("tortuga/imu/"+ name + "/temperature", 1000);
+	quaternionPub = n->advertise<geometry_msgs::Quaternion>("tortuga/imu/" + name + "/quaternion", 1000);
+	magnetsPub = n->advertise<sensor_msgs::MagneticField>("tortuga/imu/" + name + "/magnetometer", 1000);
 
 
 	ROS_DEBUG("MADE IT HERE YES!");

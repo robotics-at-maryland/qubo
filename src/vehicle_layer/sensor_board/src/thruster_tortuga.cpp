@@ -5,7 +5,7 @@ ThrusterTortugaNode::ThrusterTortugaNode(std::shared_ptr<ros::NodeHandle> n, int
 
     ros::Rate loop_rate(rate);
     
-    subscriber = n->subscribe("/qubo/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
+    subscriber = n->subscribe("/tortuga/thruster_input", 1000, &ThrusterTortugaNode::thrusterCallBack, this);
     
     ROS_DEBUG("Unsafing all thrusters");
     for(int i = 6; i <= 11; i++) {
