@@ -1,5 +1,5 @@
-#ifndef MOVE_CORE_H
-#define MOVE_CORE_H
+#ifndef ROTATIONAL_CONTROLLER_H
+#define ROTATIONAL_CONTROLLER_H
 
 // ROS includes.
 #include "ram_node.h"
@@ -11,24 +11,26 @@
 // Custom message includes. Auto-generated from msg/ directory.
 #include <sensor_msgs/Joy.h>
 
-class moveNode : public RamNode {
+#define MAX_THRUSTER_SPEED 255
+
+class RotationalController : public RamNode {
     
     public:
     //! Constructor.
-    moveNode(std::shared_ptr<ros::NodeHandle>  , int);
+    RotationalController(std::shared_ptr<ros::NodeHandle>, int);
 		
     void update();
     //! Destructor.
-    ~moveNode();
+    ~RotationalController();
     
     private:
     
     //! Callback function for subscriber.
-    void messageCallbackCurrent(const nav_msgs::OdometryConstPtr &current);
-    void messageCallbackNext(const nav_msgs::OdometryConstPtr &next);
+    void currentStateCallback(const nav_msgs::OdometryConstPtr &current);
+    void nextStateCallback(const nav_msgs::OdometryConstPtr &next);
     ros::Subscriber current_state_sub;
     ros::Subscriber next_state_sub;
-    ros::Publisher thrust_pub;
+    ros::Publisher thruster_pub;
     //SG: why not an array ?
     int thrstr_1_spd, thrstr_2_spd, thrstr_3_spd, thrstr_4_spd, thrstr_5_spd, thrstr_6_spd;
     float x_t, y_t, z_t, vx_t, vy_t, vz_t;
@@ -37,5 +39,5 @@ class moveNode : public RamNode {
     float previous_error_x = 0, previous_error_y = 0, previous_error_z = 0;
 };
 
-#endif // MOVE_CORE_H
+#endif // ROTATIONAL_CONTROLLER_H
 
