@@ -42,6 +42,8 @@ include_directories(
   movement/include
   controller/include
   localization/include
+  angular_controller/include
+  translational_controller/include
   )
 
 set(DEPTH_SRC_FILES
@@ -99,7 +101,7 @@ sensor_board/src/sensor_board_tortuga.cpp
 
 set(MOVEMENT_NODE_SRC_FILES
   movement/src/linear_controller.cpp
-  movement/src/angular_controller.cpp
+  movement/src/rotational_controller.cpp
   movement/src/main.cpp
 )
 
@@ -109,7 +111,7 @@ set(TRANSLATION_SRC_FILES
 )
 
 set(ANGULAR_SRC_FILES
-  angular_controller/src/angular_controller.cpp
+  angular_controller/src/rotational_controller.cpp
   angular_controller/src/main.cpp
 )
 
