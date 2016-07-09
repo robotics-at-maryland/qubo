@@ -11,18 +11,20 @@ DVLTortugaNode::DVLTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, int
 DVLTortugaNode::~DVLTortugaNode(){}
 
 void DVLTortugaNode::update(){
-	ros::spinOnce();
+//	ros::spinOnce();
 
     checkError(readDVLData(fd, &raw));
 	ROS_ERROR("Read DVL Data");
     // Raw data has a pointer to complete packet
     pkt = raw.privDbgInf;
 
+    ROS_ERROR("pkt->xvel_btm = %i", pkt->xvel_btm);
+    ROS_ERROR("raw->dvl_btm = %i", raw.xvel_btm);
     // Set all the message's data
     msg.sysconf = pkt->sysconf;
-    msg.xvel_btm = pkt->xvel_btm;
-    msg.yvel_btm = pkt->yvel_btm;
-    msg.zvel_btm = pkt->zvel_btm;
+    msg.xvel_btm = raw.xvel_btm;
+    msg.yvel_btm = raw.yvel_btm;
+    msg.zvel_btm = raw.zvel_btm;
     msg.evel_btm = pkt->evel_btm;
     msg.beam1_range = pkt->beam1_range;
     msg.beam2_range = pkt->beam2_range;
