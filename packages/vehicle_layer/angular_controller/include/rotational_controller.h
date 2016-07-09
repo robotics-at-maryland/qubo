@@ -30,8 +30,7 @@ class RotationalController : public RamNode {
     //! Callback function for subscriber.
     void currentStateCallback(const nav_msgs::OdometryConstPtr &current);
     void nextStateCallback(const nav_msgs::OdometryConstPtr &next);
-    ros::Subscriber current_state_sub;
-    ros::Subscriber next_state_sub;
+    ros::Subscriber current_state_sub, next_state_sub;
     ros::Publisher thruster_pub;
     //SG: why not an array ?
     int thrstr_1_spd, thrstr_2_spd, thrstr_3_spd, thrstr_4_spd, thrstr_5_spd, thrstr_6_spd;

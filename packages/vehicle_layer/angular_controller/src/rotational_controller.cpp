@@ -3,7 +3,7 @@
 RotationalController::RotationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
   thruster_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
   next_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/next_state", inputRate, &RotationalController::nextStateCallback, this);
-  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &RotationalController::currentStateCallback, this);  
+  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &RotationalController::currentStateCallback, this); 
 }
 
 RotationalController::~RotationalController() {} 
@@ -12,8 +12,10 @@ void RotationalController::update() {
   ros::spinOnce();
   
   std_msgs::Int64MultiArray final_thrust;
+  final_thrust.layout.dim.resize(1);
+  final_thrust.data.resize(6);
 
-  final_thrust.layout.dim[0].label = "Thrust";
+  final_thrust.layout.dim[0].label = "Thrusters";
   final_thrust.layout.dim[0].size = 6;
   final_thrust.layout.dim[0].stride = 6;
 	
