@@ -1,14 +1,14 @@
 #include "translational_controller.h"
 
-translationalNode::translationalNode(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
+TranslationalController::TranslationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
   thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
-  next_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/next_state", inputRate, &moveNode::messageCallbackNext, this);
-  current_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/current_state", inputRate, &moveNode::messageCallbackCurrent, this);  
+  next_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/next_state", inputRate, &TranslationalController::nextStateCallback, this);
+  current_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/current_state", inputRate, &TranslationalController::currentStateCallback, this);  
 }
 
-translationalNode::~translationalNode() {} 
+TranslationalController::~TranslationalController() {} 
 
-void moveNode::update() {
+void TranslationalController::update() {
   ros::spinOnce();
   
   std_msgs::Int64MultiArray final_thrust;
@@ -27,7 +27,7 @@ void moveNode::update() {
   thrust_pub.publish(final_thrust);	
 }
 
-void translationalNode::messageCallbackCurrent(const nav_msgs::OdometryConstPtr &current) {
+void TranslationalController::currentStateCallback(const nav_msgs::OdometryConstPtr &current) {
   x_t = current->pose.pose.position.x;
   y_t = current->pose.pose.position.y;
   z_t = current->pose.pose.position.z;
@@ -37,9 +37,7 @@ void translationalNode::messageCallbackCurrent(const nav_msgs::OdometryConstPtr 
   vz_t = current->twist.twist.linear.z;
 }
 
-void translationalNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
-  float MAX_THRUSTER_SPEED = 255;
-
+void TranslationalController::nextStateCallback(const nav_msgs::OdometryConstPtr &next) {
   float x_t1 = next->pose.pose.position.x;
   float y_t1 = next->pose.pose.position.y;
   float z_t1 = next->pose.pose.position.z;
