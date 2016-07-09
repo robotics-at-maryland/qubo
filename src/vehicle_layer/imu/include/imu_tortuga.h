@@ -34,7 +34,7 @@ protected:
 	std::string name;
 
 	//struct used to retrieve data from IMU
-	std::unique_ptr<RawIMUData> data;
+	RawIMUData data;
 
 	//messages
 	sensor_msgs::Imu msg;
