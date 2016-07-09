@@ -5,6 +5,8 @@
 #include "ram_msgs/DVL.h"
 #include "dvlapi.h"
 
+#define DVL_BAD_DATA -32768
+
 class DVLTortugaNode : public RamNode {
   public:
     DVLTortugaNode(std::shared_ptr<ros::NodeHandle>, int rate, int fd ,  std::string file_name);
