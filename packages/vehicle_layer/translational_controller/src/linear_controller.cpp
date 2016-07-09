@@ -73,15 +73,15 @@ void TranslationalController::nextStateCallback(const nav_msgs::OdometryConstPtr
 
   /* Thrusters need to be changed to represent the actual vehicle*/
   /*Z-Direction*/
-  thrstr_1_spd = (total_error_vz + t1_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_2_spd = (total_error_vz + t2_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_4_spd = (total_error_vz + t1_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_6_spd = (total_error_vz + t2_rotation_speed) / MAX_THRUSTER_SPEED;
 
   /*X-Direction*/
-  thrstr_3_spd = (total_error_vx + t3_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = -(total_error_vx + t4_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_1_spd = (total_error_vx + t3_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_2_spd = -(total_error_vx + t4_rotation_speed) / MAX_THRUSTER_SPEED;
 
   /*Y-Direction*/
-  thrstr_5_spd = (total_error_vy + t5_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_6_spd = (total_error_vy + t6_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_3_spd = (total_error_vy + t5_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_5_spd = (total_error_vy + t6_rotation_speed) / MAX_THRUSTER_SPEED;
 }
 

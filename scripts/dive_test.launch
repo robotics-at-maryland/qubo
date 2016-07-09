@@ -14,8 +14,6 @@
   <!-- <node name="angular_control_node" pkg="vehicle_layer" type="angular_control_node" args="tortuga" /> -->
   <node name="translational_control_node" pkg="vehicle_layer" type="translational_control_node" args="tortuga" />
   <node name="controller_node" pkg="vehicle_layer" type="controller_node" args="tortuga" />
-  <node name="map_baselink_transform" pkg="vehicle_layer" type="map_baselink_transform" args="tortuga" />
-  <node name="trans_dvl" pkg="vehicle_layer" type="trans_dvl" args="tortuga" />
   
   <!-- JOYSTICK -->
   <node name="joy_reader" pkg="joystick" type="joy_reader" args="tortuga" />
