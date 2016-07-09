@@ -27,48 +27,29 @@ void RotationalController::update() {
   thruster_pub.publish(final_thrust);	
 }
 
+/* Converts quaternion published by current state to yaw */
 void RotationalController::currentStateCallback(const nav_msgs::OdometryConstPtr &current) {
-  // GET ORIENTATION DATA
+  current_yaw = tf::getYaw(current->pose.pose.orientation);
 }
 
 void RotationalController::nextStateCallback(const nav_msgs::OdometryConstPtr &next) {
-  float x_t1 = next->pose.pose.position.x;
-  float y_t1 = next->pose.pose.position.y;
-  float z_t1 = next->pose.pose.position.z;
+  /* Calculate difference between desired and current yaw. Order of the 
+     subtraction may need to be changed depending on the values that
+     get published to the thrusters */
+  current_error_yaw = tf::getYaw(next->pose.pose.orientation) - current_yaw;
 
-  float vx_t1 = next->twist.twist.linear.x;
-  float vy_t1 = next->twist.twist.linear.y;
-  float vz_t1 = next->twist.twist.linear.z;
+  /* Maintain a sum of all previous yaw errors for Ki term */
+  integral_error_yaw += current_error_yaw * dt;
 
-  /*PD Controller for Each of the Values */
-  float error_x = x_t1 - x_t;
-  float error_y = y_t1 - y_t;
-  float error_z = z_t1 - z_t;
+  /* Calculate a discrete derivative between the current and previous errors */
+  derivative_error_yaw = (current_error_yaw - previous_error_yaw) / dt;
 
-  float error_vx = vx_t1 - vx_t;
-  float error_vy = vy_t1 - vy_t;
-  float error_vz = vz_t1 - vz_t;
-  
-  sum_error_x = sum_error_x + error_vx * dt;
-  sum_error_y = sum_error_y + error_vy * dt;
-  sum_error_z = sum_error_z + error_vz * dt;
+  /* PID controller only for yaw to generate output to thrusters */
+  control_output = Kp * current_error_yaw + Ki * integral_error_yaw + Kd * derivative_error_yaw;
 
-  float total_error_vx = K_p * error_vx + K_i * sum_error_x + K_d * (error_vx - previous_error_x) / dt;
-  float total_error_vy = K_p * error_vy + K_i * sum_error_y + K_d * (error_vy - previous_error_y) / dt;
-  float total_error_vz = K_p * error_vz + K_i * sum_error_z + K_d * (error_vz - previous_error_z) / dt;
+  /* Update previous error */
+  previous_error_yaw = current_error_yaw;
 
-
-  /* Thrusters need to be changed to represent the actual vehicle*/
-  /*Z-Direction*/
-  thrstr_1_spd = (total_error_vz) / MAX_THRUSTER_SPEED;
-  thrstr_2_spd = (total_error_vz) / MAX_THRUSTER_SPEED;
-
-  /*X-Direction*/
-  thrstr_3_spd = (total_error_vx) / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = -(total_error_vx) / MAX_THRUSTER_SPEED;
-
-  /*Y-Direction*/
-  thrstr_5_spd = (total_error_vy) / MAX_THRUSTER_SPEED;
-  thrstr_6_spd = (total_error_vy) / MAX_THRUSTER_SPEED;
+  /* WORK SOME MAGIC TO SET THRUSTERS */
 }
 
