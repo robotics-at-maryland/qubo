@@ -78,7 +78,8 @@ int main(int argc, char **argv) {
          //depth_sensor->update();
          //power_sensor->update();
          //temp_sensor->update();
-        //make sure you run your nodes update here.
+       // ros::spinonce();   //this might be spelled wrong
+	//make sure you run your nodes update here.
     }
 }
 
