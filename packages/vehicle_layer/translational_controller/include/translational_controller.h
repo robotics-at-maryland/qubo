@@ -1,5 +1,5 @@
-#ifndef MOVE_CORE_H
-#define MOVE_CORE_H
+#ifndef TRANSLATION_H
+#define TRANSLATION_H
 
 // ROS includes.
 #include "ram_node.h"
