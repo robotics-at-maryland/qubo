@@ -80,7 +80,8 @@ int main(int argc, char **argv) {
 	ROS_ERROR("depth updated");
          //power_sensor->update();
          //temp_sensor->update();
-        //make sure you run your nodes update here.
+         ros::spinOnce();   //this might be spelled wrong
+	//make sure you run your nodes update here.
     }
 }
 
