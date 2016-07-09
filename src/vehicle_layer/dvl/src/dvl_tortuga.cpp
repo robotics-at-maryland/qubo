@@ -11,7 +11,7 @@ DVLTortugaNode::DVLTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, int
 DVLTortugaNode::~DVLTortugaNode(){}
 
 void DVLTortugaNode::update(){
-	ros::spinOnce();
+//	ros::spinOnce();
 
     checkError(readDVLData(fd, &raw));
 	ROS_DEBUG("Read DVL Data");
