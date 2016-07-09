@@ -11,15 +11,15 @@
 // Custom message includes. Auto-generated from msg/ directory.
 #include <sensor_msgs/Joy.h>
 
-class moveNode : public RamNode {
+class translationalNode : public RamNode {
     
     public:
     //! Constructor.
-    moveNode(std::shared_ptr<ros::NodeHandle>  , int);
+    translationalNode(std::shared_ptr<ros::NodeHandle>  , int);
 		
     void update();
     //! Destructor.
-    ~moveNode();
+    ~translationalNode();
     
     private:
     

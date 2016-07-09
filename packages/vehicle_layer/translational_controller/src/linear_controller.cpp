@@ -1,12 +1,12 @@
-#include "movement_core.h"
+#include "translational_controller.h"
 
-moveNode::moveNode(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
+translationalNode::translationalNode(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
   thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
   next_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/next_state", inputRate, &moveNode::messageCallbackNext, this);
   current_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/current_state", inputRate, &moveNode::messageCallbackCurrent, this);  
 }
 
-moveNode::~moveNode() {} 
+translationalNode::~translationalNode() {} 
 
 void moveNode::update() {
   ros::spinOnce();
@@ -27,7 +27,7 @@ void moveNode::update() {
   thrust_pub.publish(final_thrust);	
 }
 
-void moveNode::messageCallbackCurrent(const nav_msgs::OdometryConstPtr &current) {
+void translationalNode::messageCallbackCurrent(const nav_msgs::OdometryConstPtr &current) {
   x_t = current->pose.pose.position.x;
   y_t = current->pose.pose.position.y;
   z_t = current->pose.pose.position.z;
@@ -37,7 +37,7 @@ void moveNode::messageCallbackCurrent(const nav_msgs::OdometryConstPtr &current)
   vz_t = current->twist.twist.linear.z;
 }
 
-void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
+void translationalNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
   float MAX_THRUSTER_SPEED = 255;
 
   float x_t1 = next->pose.pose.position.x;

@@ -39,7 +39,6 @@ include_directories(
   camera/include
   thrusters/include
   sensor_board/include
-  movement/include
   controller/include
   localization/include
   angular_controller/include
@@ -99,12 +98,6 @@ sensor_board/src/main.cpp
 sensor_board/src/sensor_board_tortuga.cpp
   )
 
-set(MOVEMENT_NODE_SRC_FILES
-  movement/src/linear_controller.cpp
-  movement/src/rotational_controller.cpp
-  movement/src/main.cpp
-)
-
 set(TRANSLATION_SRC_FILES
   translational_controller/src/linear_controller.cpp
   translational_controller/src/main.cpp
@@ -153,8 +146,11 @@ target_link_libraries(thruster_node ${catkin_LIBRARIES})
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
-add_executable(movement_node ${MOVEMENT_NODE_SRC_FILES})
-target_link_libraries(movement_node ${catkin_LIBRARIES})
+add_executable(angular_control_node ${ANGULAR_SRC_FILES})
+target_link_libraries(angular_control_node ${catkin_LIBRARIES})
+
+add_executable(translational_control_node ${TRANSLATION_SRC_FILES})
+target_link_libraries(translational_control_node ${catkin_LIBRARIES})
 
 add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
 target_link_libraries(controller_node ${catkin_LIBRARIES})
