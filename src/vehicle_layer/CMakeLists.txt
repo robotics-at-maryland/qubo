@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.3) 
 project(vehicle_layer)
 
 ##############################
@@ -44,6 +44,7 @@ include_directories(
   localization/include
   angular_controller/include
   translational_controller/include
+  sonar/include
   )
 
 set(DEPTH_SRC_FILES
@@ -114,6 +115,14 @@ set(CONTROLLER_NODE_SRC_FILES
   controller/src/main.cpp
 )
 
+set(SONAR_CLIENT_NODE_SRC_FILES
+  sonar/src/sonar_client.cpp
+)
+
+set(SONAR_SERVER_NODE_SRC_FILES
+  sonar/src/sonar_server.cpp
+)
+
 set(TEST_FILES
   
     )
@@ -161,6 +170,12 @@ target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
 
 add_executable(trans_dvl localization/src/trans_dvl.cpp)
 target_link_libraries(trans_dvl ${catkin_LIBRARIES})
+
+add_executable(sonar_client_node ${SONAR_CLIENT_NODE_SRC_FILES})
+target_link_libraries(sonar_client_node ${catkin_LIBRARIES})
+
+add_executable(sonar_server_node ${SONAR_SERVER_NODE_SRC_FILES})
+target_link_libraries(sonar_server_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################

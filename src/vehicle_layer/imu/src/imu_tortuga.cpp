@@ -2,6 +2,8 @@
 //written by Jeremy Weed
 
 ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string name, std::string device) : RamNode(n){
+
+  ros::Time::init();
 	// JW: There are a lot of debug/error messages here, I'm not sure
 	// if we want to leave them in or not
 	ROS_DEBUG("beginning constructor");

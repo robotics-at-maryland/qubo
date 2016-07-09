@@ -11,7 +11,7 @@ int main(int argc, char **argv){
     ROS_ERROR("Starting to open file");
    std::string dvl_file = "/dev/dvl";
     int fd = openDVL(dvl_file.c_str());
-	ROS_ERROR("Opened file");
+	ROS_ERROR("Opened file, fd = %i", fd);
 
     std::unique_ptr<DVLTortugaNode> dvl_node;
 	ROS_ERROR("Initialized pointer");

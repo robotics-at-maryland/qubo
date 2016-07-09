@@ -10,7 +10,9 @@ JoyReader::~JoyReader(){}
 
 /* This sets the JoyStick reader to a standard message */
 void JoyReader::update(){
-	
+
+	//ROS_ERROR("Can you see me?");
+	//printf("heyyo");	
 	/* The standard message format that needs to be published */
   	std_msgs::Float64MultiArray msg;
 
@@ -39,9 +41,10 @@ void JoyReader::update(){
 
 /* Parses the data from the joystick's raw input choosing the inputs that we care about */
 void JoyReader::joyPub(const sensor_msgs::Joy::ConstPtr &joyInput) {
+	ROS_ERROR("Callback");
 	x = joyInput->axes[0]; /* Side-to-side, between -1 and +1 */
 	y = joyInput->axes[1]; 	
 	z = joyInput->axes[3]; 
 	mag = joyInput->axes[2];//(joyInput->axes[3]+1)/2; /* Magnitude, from 0 to +1 */
+	ROS_ERROR("SUP");
 }
-
