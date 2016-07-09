@@ -3,8 +3,7 @@
 TranslationalController::TranslationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
   thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
   next_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/next_state", inputRate, &TranslationalController::nextStateCallback, this);
-  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &TranslationalController::currentStateCallback, this);  
-}
+  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &TranslationalController::currentStateCallback, this); }
 
 TranslationalController::~TranslationalController() {} 
 
@@ -18,7 +17,7 @@ void TranslationalController::update() {
   final_thrust.layout.dim[0].label = "Thrusters";
   final_thrust.layout.dim[0].size = 6;
   final_thrust.layout.dim[0].stride = 6;
-	
+
   final_thrust.data[0] = thrstr_1_spd;
   final_thrust.data[1] = thrstr_2_spd;
   final_thrust.data[2] = thrstr_3_spd;
