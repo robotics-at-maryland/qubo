@@ -52,6 +52,15 @@ void RotationalController::nextStateCallback(const nav_msgs::OdometryConstPtr &n
   /* Update previous error */
   previous_error_yaw = current_error_yaw;
 
-  /* WORK SOME MAGIC TO SET THRUSTERS */
+  /* Set thrusters */
+  /* ***NOTE*** THESE VALUES ARE COMPLETELY ARBITRARY AND WILL LIKELY
+     NEED TO BE FIXED */
+  if (current_error_yaw < 0) {
+    thrstr_1_spd = control_output / MAX_THRUSTER_SPEED;
+    thrstr_2_spd = -thrstr_1_spd;
+  } else {
+    thrstr_1_spd = -control_output / MAX_THRUSTER_SPEED;
+    thrstr_2_spd = -thrstr_1_spd;
+  }
 }
 
