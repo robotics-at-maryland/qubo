@@ -8,7 +8,7 @@ using namespace cv;
 
 int main(int argc, char** argv)
 {
-	VideoCapture cap (0);
+	VideoCapture cap ("dev/fw0");
 
 	if(!cap.isOpened()){
 		return -1;
