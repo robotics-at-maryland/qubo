@@ -110,7 +110,6 @@ set(CONTROLLER_NODE_SRC_FILES
 )
 
 set(SONAR_CLIENT_NODE_SRC_FILES
-  #sonar/src/main.cpp
   sonar/src/sonar_client.cpp
 )
 

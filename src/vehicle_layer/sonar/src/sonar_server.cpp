@@ -1,12 +1,12 @@
 #include "ros/ros.h"
-#include "qubo/src/drivers/tortuga/include/sensorapi.h"
 #include "ram_msgs/sonar_data.h"
+#include "/home/alex123/qubo/src/drivers/tortuga/include/sensorapi.h"
 
-bool sonar(vehicle_layer::sonar_data::Request &req, vehicle_layer::sonar_data::Response &res){
+bool sonar(ram_msgs::sonar_data::Request &req, ram_msgs::sonar_data::Response &res){
   struct sonarData sd;
   int fd = openSensorBoard("/dev/ttyUSB0");
 
-  if(!strcmp(req.req,"data")){
+  if(req.req == "data"){
     getSonarData(fd, &sd);
     res.vectorXYZ[0] = sd.vectorX;
     res.vectorXYZ[1] = sd.vectorY;
