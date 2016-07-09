@@ -8,7 +8,7 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 
 	this->name = name;
 	// JW: do I need this here?
-	// SG: I think we do actually. could be completely wrong though. 
+	// SG: I think we do actually. could be completely wrong though.
 	ros::Rate loop_rate(rate);
 
 	imuPub = n->advertise<sensor_msgs::Imu>("tortuga/imu/" + name, 1000);
@@ -37,6 +37,8 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	temperature.layout.dim[0].label = "IMU Temperature";
 	temperature.layout.dim[0].size = 3;
 	temperature.layout.dim[0].stride = 3;
+	// JW: This may fix the issues with the temp segfaults - forgot to actually reserve space for the temp on the node
+	temperature.data.reserve(temperature.layout.dim[0].size);
 
 
 	ROS_DEBUG("finished constructor on %s", name.c_str());
@@ -61,7 +63,7 @@ void ImuTortugaNode::update(){
 	msg.header.stamp = ros::Time::now();
 	msg.header.seq = ++id;
 	msg.header.frame_id = "0";
-	
+
 	msg.orientation_covariance[0] = -1;
 
 	msg.linear_acceleration_covariance[0] = -1;
