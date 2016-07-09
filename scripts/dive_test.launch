@@ -1,0 +1,26 @@
+<!-- This launch script was made for July 9th 2016 dive test --> 
+<launch>
+  
+  <!-- VEHICLE LAYER -->
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find vehicle_layer)/rosconsole.conf" />
+  <node name="depth_node" pkg="vehicle_layer" type="depth_node" args="tortuga" />
+  <node name="dvl_node" pkg="vehicle_layer" type="dvl_node" args="tortuga" />
+  <node name="imu_node" pkg="vehicle_layer" type="imu_node" args="tortuga" />
+  <node name="power_node" pkg="vehicle_layer" type="power_node" args="tortuga" />
+  <node name="temp_node" pkg="vehicle_layer" type="temp_node" args="tortuga" />
+  <node name="camera_node" pkg="vehicle_layer" type="camera_node" args="tortuga" />
+  <node name="thruster_node" pkg="vehicle_layer" type="thruster_node" args="tortuga" output="log" />
+  <node name="sensor_board_node" pkg="vehicle_layer" type="sensor_board_node" args="tortgua" output="screen" />
+  <!-- <node name="angular_control_node" pkg="vehicle_layer" type="angular_control_node" args="tortuga" /> -->
+  <node name="translational_control_node" pkg="vehicle_layer" type="translational_control_node" args="tortuga" />
+  <node name="controller_node" pkg="vehicle_layer" type="controller_node" args="tortuga" />
+  
+  <!-- JOYSTICK -->
+  <node name="joy_reader" pkg="joystick" type="joy_reader" args="tortuga" />
+  
+  <!-- DRIVERS -->
+  <node name="lcdshow" pkg="drivers" type="lcdshow" args="tortuga" />
+  <node name="ahrs_config" pkg="drivers" type="ahrs_config" args="tortuga" />
+  <node name="ahrs_baudrate" pkg="drivers" type="ahrs_baudrate" args="tortuga" />
+  
+</launch>
