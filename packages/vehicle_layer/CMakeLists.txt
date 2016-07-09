@@ -103,6 +103,16 @@ set(MOVEMENT_NODE_SRC_FILES
   movement/src/main.cpp
 )
 
+set(TRANSLATION_SRC_FILES
+  translational_controller/src/linear_controller.cpp
+  translational_controller/src/main.cpp
+)
+
+set(ANGULAR_SRC_FILES
+  angular_controller/src/angular_controller.cpp
+  angular_controller/src/main.cpp
+)
+
 set(CONTROLLER_NODE_SRC_FILES
   controller/src/controller_node.cpp
   controller/src/main.cpp
