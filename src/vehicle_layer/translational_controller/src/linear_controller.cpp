@@ -3,8 +3,7 @@
 TranslationalController::TranslationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
   thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
   next_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/next_state", inputRate, &TranslationalController::nextStateCallback, this);
-  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &TranslationalController::currentStateCallback, this);  
-}
+  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &TranslationalController::currentStateCallback, this); }
 
 TranslationalController::~TranslationalController() {} 
 
@@ -18,7 +17,7 @@ void TranslationalController::update() {
   final_thrust.layout.dim[0].label = "Thrusters";
   final_thrust.layout.dim[0].size = 6;
   final_thrust.layout.dim[0].stride = 6;
-	
+
   final_thrust.data[0] = thrstr_1_spd;
   final_thrust.data[1] = thrstr_2_spd;
   final_thrust.data[2] = thrstr_3_spd;
@@ -74,15 +73,15 @@ void TranslationalController::nextStateCallback(const nav_msgs::OdometryConstPtr
 
   /* Thrusters need to be changed to represent the actual vehicle*/
   /*Z-Direction*/
-  thrstr_1_spd = (total_error_vz + t1_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_2_spd = (total_error_vz + t2_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_4_spd = (total_error_vz + t1_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_6_spd = (total_error_vz + t2_rotation_speed) / MAX_THRUSTER_SPEED;
 
   /*X-Direction*/
-  thrstr_3_spd = (total_error_vx + t3_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = -(total_error_vx + t4_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_1_spd = (total_error_vx + t3_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_2_spd = -(total_error_vx + t4_rotation_speed) / MAX_THRUSTER_SPEED;
 
   /*Y-Direction*/
-  thrstr_5_spd = (total_error_vy + t5_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_6_spd = (total_error_vy + t6_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_3_spd = (total_error_vy + t5_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_5_spd = (total_error_vy + t6_rotation_speed) / MAX_THRUSTER_SPEED;
 }
 
