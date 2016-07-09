@@ -1,14 +1,14 @@
-#include "movement_core.h"
+#include "rotational_controller.h"
 
-moveNode::moveNode(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
+RotationalController::RotationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
   thrust_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
-  next_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/next_state", inputRate, &moveNode::messageCallbackNext, this);
-  current_state_sub = n->subscribe< nav_msgs::Odometry>("/qubo/current_state", inputRate, &moveNode::messageCallbackCurrent, this);  
+  next_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/next_state", inputRate, &RotationalController::nextStateCallback, this);
+  current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &RotationalController::currentStateCallback, this);  
 }
 
-moveNode::~moveNode() {} 
+RotationalController::~RotationalController() {} 
 
-void moveNode::update() {
+void RotationalController::update() {
   ros::spinOnce();
   
   std_msgs::Int64MultiArray final_thrust;
@@ -27,19 +27,11 @@ void moveNode::update() {
   thrust_pub.publish(final_thrust);	
 }
 
-void moveNode::messageCallbackCurrent(const nav_msgs::OdometryConstPtr &current) {
-  x_t = current->pose.pose.position.x;
-  y_t = current->pose.pose.position.y;
-  z_t = current->pose.pose.position.z;
-
-  vx_t = current->twist.twist.linear.x;
-  vy_t = current->twist.twist.linear.y;
-  vz_t = current->twist.twist.linear.z;
+void RotationalController::currentStateCallback(const nav_msgs::OdometryConstPtr &current) {
+  // GET ORIENTATION DATA
 }
 
-void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
-  float MAX_THRUSTER_SPEED = 255;
-
+void RotationalController::nextStateCallback(const nav_msgs::OdometryConstPtr &next) {
   float x_t1 = next->pose.pose.position.x;
   float y_t1 = next->pose.pose.position.y;
   float z_t1 = next->pose.pose.position.z;
@@ -48,7 +40,7 @@ void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
   float vy_t1 = next->twist.twist.linear.y;
   float vz_t1 = next->twist.twist.linear.z;
 
-  /*PID Controller for Each of the Values */
+  /*PD Controller for Each of the Values */
   float error_x = x_t1 - x_t;
   float error_y = y_t1 - y_t;
   float error_z = z_t1 - z_t;
@@ -65,24 +57,18 @@ void moveNode::messageCallbackNext(const nav_msgs::OdometryConstPtr &next) {
   float total_error_vy = K_p * error_vy + K_i * sum_error_y + K_d * (error_vy - previous_error_y) / dt;
   float total_error_vz = K_p * error_vz + K_i * sum_error_z + K_d * (error_vz - previous_error_z) / dt;
 
-  float t1_rotation_speed = 0;
-  float t2_rotation_speed = 0;
-  float t3_rotation_speed = 0;
-  float t4_rotation_speed = 0;
-  float t5_rotation_speed = 0;
-  float t6_rotation_speed = 0;
 
   /* Thrusters need to be changed to represent the actual vehicle*/
   /*Z-Direction*/
-  thrstr_1_spd = (total_error_vz + t1_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_2_spd = (total_error_vz + t2_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_1_spd = (total_error_vz) / MAX_THRUSTER_SPEED;
+  thrstr_2_spd = (total_error_vz) / MAX_THRUSTER_SPEED;
 
   /*X-Direction*/
-  thrstr_3_spd = (total_error_vx + t3_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_4_spd = -(total_error_vx + t4_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_3_spd = (total_error_vx) / MAX_THRUSTER_SPEED;
+  thrstr_4_spd = -(total_error_vx) / MAX_THRUSTER_SPEED;
 
   /*Y-Direction*/
-  thrstr_5_spd = (total_error_vy + t5_rotation_speed) / MAX_THRUSTER_SPEED;
-  thrstr_6_spd = (total_error_vy + t6_rotation_speed) / MAX_THRUSTER_SPEED;
+  thrstr_5_spd = (total_error_vy) / MAX_THRUSTER_SPEED;
+  thrstr_6_spd = (total_error_vy) / MAX_THRUSTER_SPEED;
 }
 
