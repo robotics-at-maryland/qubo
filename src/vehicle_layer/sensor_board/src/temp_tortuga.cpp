@@ -12,7 +12,7 @@ TempTortugaNode::TempTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, i
   */
 
     for(int i = 0; i < NUM_TEMP_SENSORS; i++) {
-        publishers[i] = n->advertise<std_msgs::Char>("qubo/temp/" + std::to_string(i), 1000);
+        publishers[i] = n->advertise<std_msgs::Char>("tortuga/temp" + std::to_string(i), 1000);
     }
 
 } 
