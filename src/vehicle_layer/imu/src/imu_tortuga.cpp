@@ -64,7 +64,7 @@ void ImuTortugaNode::update(){
 
 	msg.header.stamp = ros::Time::now();
 	msg.header.seq = ++id;
-	msg.header.frame_id = "0";
+	msg.header.frame_id = "odom";
 
 	msg.orientation_covariance[0] = -1;
 
