@@ -28,11 +28,15 @@ include_directories(
   include/
 )
 
+add_executable(DisplayFeed src/DisplayVideo.cpp)
 
-add_executable(vision_node src/my_subscriber.cpp
-  src/my_publisher.cpp
-  src/main.cpp)
+target_link_libraries(DisplayFeed ${catkin_LIBRARIES})
+target_link_libraries(DisplayFeed ${OpenCV_LIBRARIES})
 
-target_link_libraries(vision_node ${catkin_LIBRARIES})
-target_link_libraries(vision_node ${OpenCV_LIBRARIES})
-
+#add_executable(vision_node src/my_subscriber.cpp
+#  src/my_publisher.cpp
+#  src/main.cpp)
+#
+#target_link_libraries(vision_node ${catkin_LIBRARIES})
+#target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+#

@@ -2,7 +2,7 @@
 
 vision_node::vision_node(int argc, char **argv, int rate) {
 	image_transport::ImageTransport it(nh);
-	camera_sub = it.subscribe("in_image_base_topic", 1, &vision_node::imageCallback, this);
+	camera_sub = it.subscribe("camera/image", 1, &vision_node::imageCallback, this);
 }
 
 vision_node::~vision_node() {} 
