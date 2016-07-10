@@ -18,6 +18,11 @@ void DVLTortugaNode::update(){
     // Raw data has a pointer to complete packet
     pkt = raw.privDbgInf;
     if(raw.xvel_btm == DVL_BAD_DATA || raw.yvel_btm == DVL_BAD_DATA || raw.zvel_btm == DVL_BAD_DATA){
+	ROS_ERROR("Bad Data");
+
+    }
+    
+    else{
        
     	// Set all the message's data
     	msg.sysconf = pkt->sysconf;
@@ -49,10 +54,7 @@ void DVLTortugaNode::update(){
     	publisher.publish(msg);
 
 	ROS_DEBUG("Published msg");
-    }
-    
-    else{
-    	ROS_ERROR("Bad Data");
+
     }
 }
 

@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 
     while (ros::ok()) {
       
-	ros::Duration(.5).sleep();
+	ros::Duration(.1).sleep();
 	ROS_DEBUG("DVLMAIN: calling update");
 	dvl_node->update();
     }
