@@ -34,9 +34,10 @@ target_link_libraries(DisplayVideo ${catkin_LIBRARIES})
 target_link_libraries(DisplayVideo ${OpenCV_LIBRARIES})
 
 #add_executable(vision_node src/my_subscriber.cpp
-#  src/my_publisher.cpp
-#  src/main.cpp)
-#
+ # src/my_publisher.cpp
+ # src/main.cpp)
+
+
 #target_link_libraries(vision_node ${catkin_LIBRARIES})
 #target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 #
