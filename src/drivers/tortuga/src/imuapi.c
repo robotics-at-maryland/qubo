@@ -37,7 +37,6 @@ static const double DEGS_TO_RADIANS = M_PI / 180;
 unsigned char imu_waitByte(int fd)
 {
     unsigned char rxb[1];
-	printf("WAITING FOR BYTE\n\n");
     while(read(fd, rxb, 1) != 1);
     return rxb[0];
 }
@@ -48,7 +47,6 @@ void imu_waitSync(int fd)
     int syncLen=0;
     while(fs != 4)
     {
-	printf("SYNCING BYTE\n\n");
         if(imu_waitByte(fd) == 0xFF)
             fs++;
         else
@@ -72,21 +70,17 @@ double imu_convertData(unsigned char msb, unsigned char lsb, double range)
 
 int readIMUData(int fd, RawIMUData* imu)
 {
-	printf("STARTING READ\n\n");
     unsigned char imuData[34];
 
     imu_waitSync(fd);
-	printf("GOT PAST SYNC\n\n");
 
     int len = 0;
     int i=0, sum=0;
     while(len < 34)
         len += read(fd, imuData+len, 34-len);
-
-	printf("READ ALL DATA\n\n");
-	printf("PREPARING TO SEGFAULT\n\n");	
+    
     imu->messageID = imuData[0];
-
+    
     imu->sampleTimer = (imuData[3]<<8) | imuData[4];
 
     imu->gyroX = imu_convertData(imuData[9],imuData[10],600) * DEGS_TO_RADIANS;
