@@ -1,0 +1,12 @@
+<launch>
+<!-- This launch script was made for June 6th 2016 dive test --> 
+<env name="ROSCONSOLE_CONFIG_FILE" value="$(find vehicle_layer)/rosconsole.conf"/>
+
+
+<!-- Not sure if ROS (the person) is done with dvl yet --> 
+
+<node name="dvl_node" pkg="vehicle_layer" type="dvl_node" args="tortuga" />
+<!-- node name="imu_node" pkg="vehicle_layer" type="imu_node" args="tortuga" / -->
+<node name="sensor_board" pkg="vehicle_layer" type="sensor_board_node" args="tortgua" output="screen" />
+</launch>
+<!--change "log" to "screen" to move debug to stdout.-->
