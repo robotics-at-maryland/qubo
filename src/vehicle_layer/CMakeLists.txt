@@ -91,6 +91,8 @@ set(SENSOR_BOARD_SRC_FILES
   sensor_board/src/thruster_tortuga.cpp
   sensor_board/src/depth_tortuga.cpp
   sensor_board/src/power_tortuga.cpp
+  sensor_board/src/sonar_client.cpp
+  sensor_board/src/sonar_server.cpp
 #SG: pretty sure this shouldn't be here. 
 # dvl/src/dvl_tortuga.cpp
 

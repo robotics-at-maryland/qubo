@@ -4,6 +4,8 @@
 #include "depth_tortuga.h"
 #include "power_sensor_tortuga.h"
 #include "temp_tortuga.h"
+#include "sonar_server.h"
+#include "sonar_client.h"
 //include your header here, no need to relocate it.
 
 //Sean wrote most of this, direct questions to him
@@ -40,7 +42,8 @@ int main(int argc, char **argv) {
     std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
     std::unique_ptr<SensorBoardTortugaNode> power_sensor;
     std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
-
+    std::unique_ptr<SensorBoardTortugaNode> sonar_client;
+    std::unique_ptr<SensorBoardTortugaNode> sonar_server;
    //SG: add a unique_ptr to your node as well
 
     
@@ -64,6 +67,8 @@ int main(int argc, char **argv) {
     depth_sensor.reset(new DepthTortugaNode(n, 10, fd, sensor_file));
     power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
     temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
+    sonar_client.reset(new SonarClientNode(n,10,fd,sensor_file));
+    sonar_server.reset(new SonarServerNode(n,10,fd,sensor_file));
     ROS_DEBUG("nodes initialized, nice!\n");
     //copy the above with your node, just make sure n, fd and sensor_file are the same, not sure if we need rate honestly and I'd like to remove it if possible
     // } else {
@@ -78,6 +83,7 @@ int main(int argc, char **argv) {
          //depth_sensor->update();
          //power_sensor->update();
          //temp_sensor->update();
+         ros::spinOnce();
         //make sure you run your nodes update here.
     }
 }
