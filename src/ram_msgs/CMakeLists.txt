@@ -10,6 +10,8 @@ find_package(
     std_msgs
     sensor_msgs
     message_generation
+    roscpp
+    rospy
 )
 
 ##############################
@@ -36,6 +38,14 @@ add_message_files(
     Sim_Led.msg
     Led.msg
     
+)
+
+##############################
+# Service Generation##########
+##############################
+add_service_files(
+    FILES
+    sonar_data.srv
 )
 
 generate_messages(

@@ -78,8 +78,9 @@ int readIMUData(int fd, RawIMUData* imu)
     int i=0, sum=0;
     while(len < 34)
         len += read(fd, imuData+len, 34-len);
-
+    
     imu->messageID = imuData[0];
+    
     imu->sampleTimer = (imuData[3]<<8) | imuData[4];
 
     imu->gyroX = imu_convertData(imuData[9],imuData[10],600) * DEGS_TO_RADIANS;
@@ -106,7 +107,6 @@ int readIMUData(int fd, RawIMUData* imu)
     imu->checksumValid = (imuData[33] == (sum&0xFF));
 
     if(!imu->checksumValid)
-        printf("WARNING! IMU Checksum Bad!\n");
 
     return imu->checksumValid;
 }

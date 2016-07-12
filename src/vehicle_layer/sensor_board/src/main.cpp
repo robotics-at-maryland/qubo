@@ -19,6 +19,8 @@
     which makes our life a lot easier. 
 **/
 
+
+
 int main(int argc, char **argv) {
 
     //initialize the ros node we'll use for anything wanting to talk to the sensor board. 
@@ -33,10 +35,13 @@ int main(int argc, char **argv) {
     
     //todo make a static reference to checkerror and call it here
     syncBoard(fd);
-    
 
+    //todo, turn these off at some point.
+    camConnect(fd);
+    DVLOn(fd, 1);
+    
     ROS_DEBUG("opened the sensor board, fd  =  %i" ,fd );
-   
+    
     //we don't know what type of node we want until we look at the input arguments. 
     std::unique_ptr<SensorBoardTortugaNode> thrusters;
     std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
@@ -50,7 +55,6 @@ int main(int argc, char **argv) {
     //TODO:
     //SG: This part may have to be a little different for this node, we may want to read from a config file, or just pass in more arguments
     //to specify which sensors are real vs simlated, for now we'll just make sure it works in the case where everything is the real tortuga version
-    
 
     //TODO SG: honestly we can put this next bit into a ramnode function, also probably don't want to
     //be using C-strings for this, segfaults or no fun. I'll hack something today but let's clean this up soon ok?
@@ -58,7 +62,7 @@ int main(int argc, char **argv) {
     //ALSO TODO think of the best way to handlde this, do we really want to pass "tortuga" as an argument if the sensor board is
     //unique to this robot, we could also honestly abandon the whole passing in argument thing and just launch a different node in the 
     //launch file... 
-
+    
     // if(strcmp(string(argv[1])., "simulated") == 0) {
     //TODO, may actually just want to throw an error and tell the user to launch this shit individually
     //  } else if (strcmp(argv[1], "tortuga") == 0) {
@@ -76,14 +80,16 @@ int main(int argc, char **argv) {
     // exit(1);
     // }
     
-  //  ros::spin();
-
+    //  ros::spin();
+    
     while (ros::ok()) {
-         thrusters->update();
-         //depth_sensor->update();
-         //power_sensor->update();
-         //temp_sensor->update();
-         ros::spinOnce();
+        thrusters->update();
+        ROS_ERROR("thrusters UPDATED");
+        depth_sensor->update();
+        ROS_ERROR("depth updated");
+        //power_sensor->update();
+        //temp_sensor->update();
+        ros::spinOnce();   //this might be spelled wrong
         //make sure you run your nodes update here.
     }
 }

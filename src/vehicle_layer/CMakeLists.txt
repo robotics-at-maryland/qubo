@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.3) 
 project(vehicle_layer)
 
 ##############################
@@ -40,9 +40,11 @@ include_directories(
   camera/include
   thrusters/include
   sensor_board/include
-  movement/include
   controller/include
   localization/include
+  angular_controller/include
+  translational_controller/include
+  sonar/include
   )
 
 set(DEPTH_SRC_FILES
@@ -100,14 +102,27 @@ sensor_board/src/main.cpp
 sensor_board/src/sensor_board_tortuga.cpp
   )
 
-set(MOVEMENT_NODE_SRC_FILES
-  movement/src/movement_node.cpp
-  movement/src/main.cpp
+set(TRANSLATION_SRC_FILES
+  translational_controller/src/linear_controller.cpp
+  translational_controller/src/main.cpp
+)
+
+set(ANGULAR_SRC_FILES
+  angular_controller/src/rotational_controller.cpp
+  angular_controller/src/main.cpp
 )
 
 set(CONTROLLER_NODE_SRC_FILES
   controller/src/controller_node.cpp
   controller/src/main.cpp
+)
+
+set(SONAR_CLIENT_NODE_SRC_FILES
+  sonar/src/sonar_client.cpp
+)
+
+set(SONAR_SERVER_NODE_SRC_FILES
+  sonar/src/sonar_server.cpp
 )
 
 set(TEST_FILES
@@ -143,8 +158,11 @@ target_link_libraries(thruster_node ${catkin_LIBRARIES})
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
-add_executable(movement_node ${MOVEMENT_NODE_SRC_FILES})
-target_link_libraries(movement_node ${catkin_LIBRARIES})
+add_executable(angular_control_node ${ANGULAR_SRC_FILES})
+target_link_libraries(angular_control_node ${catkin_LIBRARIES})
+
+add_executable(translational_control_node ${TRANSLATION_SRC_FILES})
+target_link_libraries(translational_control_node ${catkin_LIBRARIES})
 
 add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
 target_link_libraries(controller_node ${catkin_LIBRARIES})
@@ -154,6 +172,12 @@ target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
 
 add_executable(trans_dvl localization/src/trans_dvl.cpp)
 target_link_libraries(trans_dvl ${catkin_LIBRARIES})
+
+add_executable(sonar_client_node ${SONAR_CLIENT_NODE_SRC_FILES})
+target_link_libraries(sonar_client_node ${catkin_LIBRARIES})
+
+add_executable(sonar_server_node ${SONAR_SERVER_NODE_SRC_FILES})
+target_link_libraries(sonar_server_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################

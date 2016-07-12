@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 	// calculations.
 
 	//There are two IMUs on tortuga, so two nodes
-		node0.reset(new ImuTortugaNode(n, 10, "IMU_0", IMU_0_FILE));
+	node0.reset(new ImuTortugaNode(n, 10, "IMU_0", IMU_0_FILE));
 	node1.reset(new ImuTortugaNode(n, 10, "MAGBOOM_IMU_1", IMU_1_FILE));
 	}else{
 		ROS_ERROR("the passed in arguments to IMU node (%s) doesn't match anything that makes sense...\n", argv[1]);
@@ -44,8 +44,8 @@ int main(int argc, char **argv){
 
 
 	while (ros::ok()){
-	node0->update();
-	node1->update();
+		node0->update();
+		node1->update();
 	}
 
 }
