@@ -47,8 +47,8 @@ int main(int argc, char **argv) {
     std::unique_ptr<SensorBoardTortugaNode> depth_sensor;
     std::unique_ptr<SensorBoardTortugaNode> power_sensor;
     std::unique_ptr<SensorBoardTortugaNode> temp_sensor;
-    std::unique_ptr<SensorBoardTortugaNode> sonar_client;
-    std::unique_ptr<SensorBoardTortugaNode> sonar_server;
+ //   std::unique_ptr<SensorBoardTortugaNode> sonar_client;
+//    std::unique_ptr<SensorBoardTortugaNode> sonar_server;
    //SG: add a unique_ptr to your node as well
 
     
