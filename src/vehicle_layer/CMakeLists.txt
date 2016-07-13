@@ -44,7 +44,7 @@ include_directories(
   localization/include
   angular_controller/include
   translational_controller/include
-  sonar/include
+  #  sonar/include
   )
 
 set(DEPTH_SRC_FILES
