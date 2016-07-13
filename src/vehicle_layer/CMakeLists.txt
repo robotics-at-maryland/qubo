@@ -173,11 +173,11 @@ target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
 add_executable(trans_dvl localization/src/trans_dvl.cpp)
 target_link_libraries(trans_dvl ${catkin_LIBRARIES})
 
-add_executable(sonar_client_node ${SONAR_CLIENT_NODE_SRC_FILES})
-target_link_libraries(sonar_client_node ${catkin_LIBRARIES})
+#add_executable(sonar_client_node ${SONAR_CLIENT_NODE_SRC_FILES})
+#target_link_libraries(sonar_client_node ${catkin_LIBRARIES})
 
-add_executable(sonar_server_node ${SONAR_SERVER_NODE_SRC_FILES})
-target_link_libraries(sonar_server_node ${catkin_LIBRARIES})
+#add_executable(sonar_server_node ${SONAR_SERVER_NODE_SRC_FILES})
+#target_link_libraries(sonar_server_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
