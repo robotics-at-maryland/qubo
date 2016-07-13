@@ -71,8 +71,8 @@ int main(int argc, char **argv) {
     depth_sensor.reset(new DepthTortugaNode(n, 10, fd, sensor_file));
     power_sensor.reset(new PowerNodeTortuga(n,10,fd,sensor_file));
     temp_sensor.reset(new TempTortugaNode(n,10,fd,sensor_file));
-    sonar_client.reset(new SonarClientNode(n,10,fd,sensor_file));
-    sonar_server.reset(new SonarServerNode(n,10,fd,sensor_file));
+//    sonar_client.reset(new SonarClientNode(n,10,fd,sensor_file));
+//    sonar_server.reset(new SonarServerNode(n,10,fd,sensor_file));
     ROS_DEBUG("nodes initialized, nice!\n");
     //copy the above with your node, just make sure n, fd and sensor_file are the same, not sure if we need rate honestly and I'd like to remove it if possible
     // } else {
