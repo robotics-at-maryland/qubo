@@ -2,7 +2,10 @@
      directly connected to it via USB. -->
 
 <launch>
-    <param name="joy_node/dev" value="/dev/input/js2" />
+    <!-- Tell joy_node which joystick device to use -->
+    <param name="joy_node/dev" value="/dev/input/js1" />
+
+    <!-- Start joy_node which reads raw input from joystick and publishes to /joy_input -->
     <node name="joy_node" pkg="joy" type="joy_node">
         <remap from="joy" to="joy_input" />
     </node>

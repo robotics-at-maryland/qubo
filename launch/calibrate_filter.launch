@@ -1,14 +1,11 @@
-<!-- Launch file for ekf_localization_node -->
+<!-- Launch script for calibrating the Kalman filter from bag files -->
 
 <launch>
-
-    <node name="trans_dvl" pkg="vehicle_layer" type="trans_dvl"></node>
-    <node name="map_baselink_transformer" pkg="vehicle_layer" type="map_baselink_transform"></node>
-
-    <!-- This node will take in measurements from odometry, IMU, stamped pose, and stamped twist messages. It tracks
-         the state of the robot, with the state vector being defined as X position, Y position, Z position,
-         roll, pitch, yaw, their respective velocites, and linear acceleration. Units for all measurements are assumed
-         to conform to the SI standard as specified in REP-103. -->
+    <!-- Play back DVL and IMU data using rosbag -->    
+    <node pkg="rosbag" name="play_dvl" type="play" args="dvl_data.bag"/>
+    <node pkg="rosbag" name="play_imu" type="play" args="imu_data.bag"/>
+  
+    <!-- Launch Extended Kalman filter localization node -->
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true">
 
       <!-- ======== STANDARD PARAMETERS ======== -->
@@ -67,9 +64,8 @@
            TwistStamped, Imu). To add a new one, simply append the next number in the sequence to its base name,
            e.g., odom0, odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These
            parameters obviously have no default values, and must be specified. -->
-      <param name="twist0" value="dvl/twist"/>
-      <param name="imu0" value="qubo/imu"/>
-      <!-- <param name="pose0" value="qubo/ahrs"/> -->
+      <param name="twist0" value="/tortuga/dvl"/>       <!-- DVL -->
+      <param name="imu0" value="/tortuga/imu/IMU_0"/>   <!-- IMU -->
       
       <!-- Each sensor reading updates some or all of the filter's state. These options give you greater control over
            which values from each measurement are fed to the filter. For example, if you have an odometry message as input,
@@ -87,14 +83,8 @@
       <rosparam param="imu0_config">[false, false, false,
                                      false, false, false,
                                      false, false, false,
-                                     false, false, false,
+                                     true, true, true,
                                      true, true, true]</rosparam>
-
-      <!-- <rosparam param="pose0_config">[false, false, false,
-                                      true, true, true,
-                                      false, false, false,
-                                      false, false, false,
-                                      false, false, false]</rosparam> -->
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity
            measurements and let the nodes integrate them. However, this isn't always feasible, and so the state estimation
@@ -104,7 +94,7 @@
            either increase the covariances for the variables in question, or you can simply set the sensor's differential
            parameter to true. When differential mode is enabled, all absolute pose data is converted to velocity data by
            differentiating the absolute pose measurements. These velocities are then integrated as usual. NOTE: this only
-           applies to sensors that provide absolute measurements, so setting differential to true for twit measurements has
+           applies to sensors that provide absolute measurements, so setting differential to true for twist measurements has
            no effect.
 
            Users should take care when setting this to true for orientation variables: if you have only one source of
@@ -114,7 +104,6 @@
            variables have at least one source of absolute measurement. -->
       <param name="twist0_differential" value="false"/>
       <param name="imu0_differential" value="false"/>
-      <!-- <param name="pose0_differential" value="false"/> -->  
 
       <!-- When the node starts, if this parameter is true, then the first measurement is treated as a "zero point" for all
            future measurements. While you can achieve the same effect with the differential paremeter, the key difference is
@@ -122,7 +111,6 @@
            you simply want your measurements to start at 0 for a given sensor, set this to true. -->
       <param name="twist0_relative" value="false"/>
       <param name="imu0_relative" value="false"/>
-      <!-- <param name="pose0_relative" value="false"/> -->
 
       <!-- If we're including accelerations in our state estimate, then we'll probably want to remove any acceleration that
            is due to gravity for each IMU. If you don't want to, then set this to false. Defaults to false if unspecified. -->
@@ -142,14 +130,12 @@
            miss any messages (even if your frequency is set to a relatively small value), increase these. -->
       <param name="twist0_queue_size" value="10"/>
       <param name="imu0_queue_size" value="10"/>
-      <!-- <param name="pose0_queue_size" value="10"/> -->
       
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
            how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to
            numeric_limits<double>::max() if unspecified. -->
       <param name="odom0_pose_rejection_threshold" value="100"/>
       <param name="odom0_twist_rejection_threshold" value="100"/>
-      <!-- <param name="pose0_rejection_threshold" value="100"/> -->
       <param name="twist0_rejection_threshold" value="100"/>
       <param name="imu0_pose_rejection_threshold" value="100"/>
       <param name="imu0_twist_rejection_threshold" value="100"/>
@@ -157,7 +143,7 @@
 
       <!-- Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file
            specified by debug_out_file. I hope you like matrices! Defaults to false if unspecified. -->
-      <param name="debug"           value="false"/>
+      <param name="debug"           value="true"/>
       <!-- Defaults to "robot_localization_debug.txt" if unspecified. -->
       <param name="debug_out_file"  value="debug_ekf_localization.txt"/>
 
@@ -200,9 +186,8 @@
                                                           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
                                                           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]</rosparam>
 
-
+      <!-- Rename output topic of filter -->
       <remap from="odometry/filtered" to="tortuga/current_state"/>
 
     </node>
-
 </launch>
