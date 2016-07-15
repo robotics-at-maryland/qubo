@@ -1,0 +1,13 @@
+<!-- Launch script for teleoperating the robot. Run this script on the machine that has the joystick
+     directly connected to it via USB. -->
+
+<launch>
+    <param name="joy_node/dev" value="/dev/input/js2" />
+    <node name="joy_node" pkg="joy" type="joy_node">
+        <remap from="joy" to="joy_input" />
+    </node>
+
+    <!-- Uncomment the line below to record raw input from the joystick -->
+    <!-- <node name="record_joystick" pkg="rosbag" type="record" args="-O joy_in.bag /joy_input" /> -->
+</launch>
+
