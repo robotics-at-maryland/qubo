@@ -1,7 +1,3 @@
 <launch>
-    <param name="joy_node/dev" value="/dev/input/js2" />
-    <node name="joy_node" pkg="joy" type="joy_node">
-        <remap from="joy" to="joy_input" />
-    </node>
     <node name="record_joystick" pkg="rosbag" type="record" args="-O joy_in.bag /joy_input" />
 </launch>

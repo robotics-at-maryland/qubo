@@ -5,7 +5,6 @@ project(teleop)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  joy
   roscpp
 )
 
@@ -99,10 +98,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES teleop
-#  CATKIN_DEPENDS joy roscpp
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp
 )
 
 ###########
@@ -114,6 +112,11 @@ catkin_package(
 # include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  include
+)
+
+set (SRC_FILES
+  src/open_loop_teleop.cpp
 )
 
 ## Declare a C++ library
@@ -128,6 +131,7 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(teleop_node src/teleop_node.cpp)
+add_executable(open_loop_teleop ${SRC_FILES})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -137,6 +141,7 @@ include_directories(
 # target_link_libraries(teleop_node
 #   ${catkin_LIBRARIES}
 # )
+target_link_libraries(open_loop_teleop ${catkin_LIBRARIES})
 
 #############
 ## Install ##
