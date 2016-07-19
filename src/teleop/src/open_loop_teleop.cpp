@@ -40,10 +40,13 @@ void OpenLoopTeleop::update() {
  * TODO: Add mappings so the robot can dive.
  */
 void OpenLoopTeleop::joyInputCallback(const sensor_msgs::Joy::ConstPtr &joy_input) {
-    // Set the two forward thrusters for now
-    // Note: Need to set correct addition/subtraction for joy_input->axes[0]
-    thruster_input.data[0] = (-joy_input->axes[1] - joy_input->axes[0]) / 2 * MAX_THRUSTER_INPUT;
-    thruster_input.data[1] = (-joy_input->axes[1] + joy_input->axes[0]) / 2 * MAX_THRUSTER_INPUT;
+    // Set the two forward thrusters for translating and turning
+    thruster_input.data[0] = (joy_input->axes[1] - joy_input->axes[2]) / 2 * MAX_THRUSTER_INPUT;
+    thruster_input.data[1] = (joy_input->axes[1] + joy_input->axes[2]) / 2 * MAX_THRUSTER_INPUT;
+
+    // Set top and bottom thrusters for strafing
+    thruster_input.data[2] = joy_input->axes[0] * MAX_THRUSTER_INPUT;
+    thruster_input.data[4] = joy_input->axes[0] * MAX_THRUSTER_INPUT;
 }
 
 /*
