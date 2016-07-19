@@ -1,3 +1,11 @@
+<!-- Launch script for teleoperating the robot. Launch this script on the robot itself. See
+     teleop_local.launch for directions on how to teleoperate the robot. -->
+
 <launch>
-    <node name="record_joystick" pkg="rosbag" type="record" args="-O joy_in.bag /joy_input" />
+    <!-- Open loop teleoperation node that maps raw joystick input to thruster output -->
+    <node name="open_loop_teleop" pkg="teleop" type="open_loop_teleop" />
+
+    <!-- Sensor board turns on the thrusters -->
+    <node name="sensor_board_node" pkg="vehicle_layer" type="sensor_board_node" args="tortuga" output="screen" />
 </launch>
+

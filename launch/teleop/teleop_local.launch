@@ -1,9 +1,15 @@
 <!-- Launch script for teleoperating the robot. Run this script on the machine that has the joystick
      directly connected to it via USB. -->
 
+<!-- Step 1: Run roscore on the robot -->
+<!-- Step 2: Run the following command on the robot: export ROS_MASTER_URI=http://TODO:11311 -->
+<!-- Step 3: Launch teleop_robot.launch on the robot -->
+<!-- Step 4: Repeat Step 2 on the desktop computer -->
+<!-- Step 5: Launch teleop_local.launch on the desktop computer -->
+
 <launch>
     <!-- Tell joy_node which joystick device to use -->
-    <param name="joy_node/dev" value="/dev/input/js1" />
+    <param name="joy_node/dev" value="/dev/input/js2" />
 
     <!-- Start joy_node which reads raw input from joystick and publishes to /joy_input -->
     <node name="joy_node" pkg="joy" type="joy_node">
