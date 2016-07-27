@@ -1,4 +1,4 @@
-# qubo dfs
+# qubo
 
 ## Setup Instructions
 
