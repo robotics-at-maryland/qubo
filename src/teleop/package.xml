@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>teleop</name>
+  <version>0.1.0</version>
+  <description>A package for teleoperating Tortuga IV.</description>
+
+  <maintainer email="wittmerkevinr@gmail.com">Kevin Wittmer</maintainer>
+  <author email="wittmerkevinr@gmail.com">Kevin Wittmer</author>
+
+  <license>TODO</license>
+
+  <url type="website">http://ram.umd.edu</url>
+
+  <!-- The *_depend tags are used to specify dependencies -->
+  <!-- Dependencies can be catkin packages or system dependencies -->
+  <!-- Examples: -->
+  <!-- Use build_depend for packages you need at compile time: -->
+  <!--   <build_depend>message_generation</build_depend> -->
+  <!-- Use buildtool_depend for build tool packages: -->
+  <!--   <buildtool_depend>catkin</buildtool_depend> -->
+  <!-- Use run_depend for packages you need at runtime: -->
+  <!--   <run_depend>message_runtime</run_depend> -->
+  <!-- Use test_depend for packages you need only for testing: -->
+  <!--   <test_depend>gtest</test_depend> -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>joy</build_depend>
+  <build_depend>roscpp</build_depend>
+  
+  <run_depend>joy</run_depend>
+  <run_depend>roscpp</run_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export></export>
+</package>

@@ -27,3 +27,7 @@ packages/CMakeLists.txt
 *.user
 *#
 .#*
+
+# Ignore bag files
+*.bag
+

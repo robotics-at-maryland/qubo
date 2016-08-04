@@ -201,7 +201,7 @@
                                                           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]</rosparam>
 
 
-      <remap from="odometry/filtered" to="qubo/current_state"/>
+      <remap from="odometry/filtered" to="tortuga/current_state"/>
 
     </node>
 
