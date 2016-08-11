@@ -8,7 +8,6 @@ SensorBoardTortugaNode::SensorBoardTortugaNode(std::shared_ptr<ros::NodeHandle> 
 
     this->fd = fd;
     this->sensor_file = sensor_file;
-
 }
 
 SensorBoardTortugaNode::~SensorBoardTortugaNode() {
@@ -21,7 +20,7 @@ void SensorBoardTortugaNode::update() {
     //ros::spinOnce();
 } 
 
-//and quit/shutdown.
+//This function just checks if the return value from a sensor board call is one of the errors, and prints the error
 bool SensorBoardTortugaNode::checkError(int e) {
     switch(e) {
     case SB_IOERROR:

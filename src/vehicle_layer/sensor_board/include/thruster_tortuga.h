@@ -7,7 +7,6 @@
 
 #define NUM_THRUSTERS 6
 
-//SG: change this ASAP
 #include "sensor_board_tortuga.h"
 #include "std_msgs/Int64MultiArray.h"
 #include "sensorapi.h"

@@ -11,16 +11,10 @@ DepthTortugaNode::DepthTortugaNode(std::shared_ptr<ros::NodeHandle> n,  int rate
 DepthTortugaNode::~DepthTortugaNode(){};
 
 void DepthTortugaNode::update(){
+  //SG: I don't think we need this spinOnce here
   ros::spinOnce();
 	ROS_DEBUG("READING DEPTH");
 
 	msg.pressure = readDepth(fd);
 	publisher.publish(msg);
-}
-
-
-//TODO
-void DepthTortugaNode::depthCallBack(const underwater_sensor_msgs::Pressure sim_msg)
-{
-  //msg.pressure = sim_msg.pressure;
 }

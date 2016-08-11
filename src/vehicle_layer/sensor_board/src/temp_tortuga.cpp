@@ -20,7 +20,7 @@ TempTortugaNode::TempTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, i
 /* TempTortugaNode::TempTortugaNode(int argc, char **argv, int rate, int board_fd, std::string board_file) : TortugaNode() {
     fd = board_fd;
     sensor_file = board_file;
-
+x
 }
 */
 
