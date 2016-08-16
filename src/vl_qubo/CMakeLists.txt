@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(qubo_vl)
+project(vl_qubo)
 
 
 catkin_package(

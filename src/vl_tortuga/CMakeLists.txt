@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3) 
-project(uwsim_vl)
+project(vl_tortuga)
 
 ##############################
 # Catkin Setup ###############
 ##############################
-
 
 find_package(catkin 
     REQUIRED COMPONENTS
@@ -17,10 +16,10 @@ find_package(catkin
 )
 
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp
-  )
+    INCLUDE_DIRS include
+    LIBRARIES ${PROJECT_NAME}
+    CATKIN_DEPENDS roscpp
+)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
@@ -30,79 +29,73 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  include  
-  depth/include
+  include
+
+  drivers/include
+  
   dvl/include
   imu/include
-  power/include
-  temp/include
-  camera/include
-  thrusters/include
-  )
 
-set(DEPTH_SRC_FILES
-  depth/src/main.cpp
-  depth/src/depth_sim.cpp
-  )
+  sensor_board/include
+)
 
 set(DVL_SRC_FILES
   dvl/src/main.cpp
-  dvl/src/dvl_sim.cpp
+  dvl/src/dvl_tortuga.cpp
+
+  drivers/src/dvlapi.c #OLD TEAMS DRIVER CODE 
   )
 
 set(IMU_SRC_FILES
   imu/src/main.cpp
-  imu/src/imu_sim.cpp
+  imu/src/imu_tortuga.cpp
+
+  drivers/src/imuapi.c #OLD TEAMS DRIVER CODE
   )
 
-set(POWER_SRC_FILES
-  power/src/main.cpp
-  power/src/power_sim.cpp
+
+set(SENSOR_BOARD_SRC_FILES
+  sensor_board/src/temp_tortuga.cpp
+  sensor_board/src/thruster_tortuga.cpp
+  sensor_board/src/depth_tortuga.cpp
+  sensor_board/src/power_tortuga.cpp
+  #  sensor_board/src/sonar_client.cpp
+  #  sensor_board/src/sonar_server.cpp
+  sensor_board/src/sensor_board_tortuga.cpp
+  sensor_board/src/main.cpp
+
+  drivers/src/sensorapi.c #OLD TEAMS DRIVER CODE
   )
 
-set(TEMP_SRC_FILES
-  temp/src/main.cpp
-  temp/src/temp_sim.cpp
 
+#### OLD TEAMS CODE ####
+set(LCDSHOW_SRC_FILES
+		tortuga/src/lcdshow.c
+)
+### END OF OLD TEAMS CODE ###
+
+#SG: maybe one day..
+set(TEST_FILES
+  
   )
-
-set(CAMERA_SRC_FILES
-  camera/src/main.cpp
-  camera/src/camera_sim.cpp
-  )
-
-set(THRUSTER_SRC_FILES
-  thrusters/src/main.cpp
-  thrusters/src/thruster_sim.cpp
-  )
-
 
 ##############################
 # Add Executables ############
 ##############################
 
 
-add_executable(depth_node ${DEPTH_SRC_FILES}) 
-target_link_libraries(depth_node ${catkin_LIBRARIES})
 
-#SG: these get special names uwsim specfic names because there's a conflict otherwise
-add_executable(uwsim_dvl_node ${DVL_SRC_FILES})
-target_link_libraries(uwsim_dvl_node ${catkin_LIBRARIES})
 
-add_executable(uwsim_imu_node ${IMU_SRC_FILES})
-target_link_libraries(uwsim_imu_node ${catkin_LIBRARIES})
+#these get tortuga specific names to prevent conflicts with other vehicle layers
+add_executable(tortuga_dvl_node_torguga ${DVL_SRC_FILES})
+target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
+
+add_executable(tortuga_imu_node ${IMU_SRC_FILES})
+target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
+
   
-add_executable(power_node ${POWER_SRC_FILES})
-target_link_libraries(power_node ${catkin_LIBRARIES})
-
-add_executable(temp_node ${TEMP_SRC_FILES})
-target_link_libraries(temp_node ${catkin_LIBRARIES})
-
-add_executable(camera_node ${CAMERA_SRC_FILES})
-target_link_libraries(camera_node ${catkin_LIBRARIES})
-
-add_executable(thruster_node ${THRUSTER_SRC_FILES})
-target_link_libraries(thruster_node ${catkin_LIBRARIES})
+add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
+target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
 
 ##############################

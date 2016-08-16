@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>tortuga_vl</name>
+  <name>vl_tortuga</name>
   <version>0.1.0</version>
   <description>An abstraction layer for the AUV tortuga </description>
   <author email="software@ram.umd.edu">Robotics @ Maryland</author>

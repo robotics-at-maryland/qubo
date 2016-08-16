@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>uwsim_vl</name>
+  <name>vl_uwsim</name>
   <version>0.1.0</version>
   <description>An abstraction layer for the AUV tortuga </description>
   <author email="software@ram.umd.edu">Robotics @ Maryland</author>

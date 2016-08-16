@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>qubo_vl</name>
+  <name>vl_qubo</name>
   <version>0.1.0</version>
   <description>vehicle layer for the AUV qubo</description>
   <author email="software@ram.umd.edu">Robotics @ Maryland</author>
