@@ -1,5 +1,9 @@
 //!  This is the abstract base class that all our vehicle nodes should inherit from
 
+
+//SG 160816: this class has basically been deprecated, but a few older nodes still use is and I haven't 
+//gone back to fix them, since basically all our uwsim work is deprecated I figure that's ok, just want to avoid any confusion
+
 /*! 
  * The basic idea to have a real and a simulated version of every sensor, BOTH will inherit 
  * From this class, which means we call both the real and the simulated nodes in exactly the same manner.

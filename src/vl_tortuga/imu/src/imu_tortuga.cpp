@@ -1,5 +1,5 @@
 #include "imu_tortuga.h"
-//written by Jeremy Weed
+//written by Jeremy Weed (mostly)
 
 ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string name, std::string device) : RamNode(n){
 
@@ -18,10 +18,7 @@ ImuTortugaNode::ImuTortugaNode(std::shared_ptr<ros::NodeHandle> n, int rate, std
 	quaternionPub = n->advertise<geometry_msgs::Quaternion>("tortuga/imu/" + name + "/quaternion", 1000);
 	magnetsPub = n->advertise<sensor_msgs::MagneticField>("tortuga/imu/" + name + "/magnetometer", 1000);
 
-
-	ROS_DEBUG("MADE IT HERE YES!");
-	this->fd = openIMU(device.c_str());
-
+    this->fd = openIMU(device.c_str());
 
 
 	ROS_DEBUG("fd found: %d on %s", fd, name.c_str());
