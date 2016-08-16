@@ -13,7 +13,7 @@ class SonarClientNode : public SensorBoardTortugaNode {
     
     public:
     SonarClientNode(std::shared_ptr<ros::NodeHandle>, int rate, int fd ,  std::string file_name);
-    ~SonarServerNode();
+    ~SonarClientNode();
     
     //void update();
     //void thrusterCallBack(const std_msgs::Int64MultiArray msg);
