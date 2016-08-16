@@ -1,4 +1,3 @@
-#include "dvl_sim.h"
 #include "dvl_tortuga.h"
 
 int main(int argc, char **argv){

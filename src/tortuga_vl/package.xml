@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>vehicle_layer</name>
+  <name>tortuga_vl</name>
   <version>0.1.0</version>
-  <description>An abstraction layer for the AUV qubo </description>
+  <description>An abstraction layer for the AUV tortuga </description>
   <author email="software@ram.umd.edu">Robotics @ Maryland</author>
   <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
 
@@ -11,8 +11,9 @@
   <url>http://ram.umd.edu</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-
-
+  
+  <!-- TODO: remove unrequired dependencies -->
+  
   <build_depend>ram_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>image_transport</build_depend>

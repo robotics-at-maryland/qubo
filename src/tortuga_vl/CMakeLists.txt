@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3) 
-project(vehicle_layer)
+project(tortuga_vl)
 
 ##############################
 # Catkin Setup ###############
 ##############################
-
 
 find_package(catkin 
     REQUIRED COMPONENTS
@@ -31,75 +30,44 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  include  
-  depth/include
+  include
+  
   dvl/include
   imu/include
-  power/include
-  temp/include
-  camera/include
-  thrusters/include
+
   sensor_board/include
+
   controller/include
   localization/include
   angular_controller/include
   translational_controller/include
-  #  sonar/include
-  )
-
-set(DEPTH_SRC_FILES
-  depth/src/main.cpp
-  depth/src/depth_sim.cpp
 
   )
+
 
 set(DVL_SRC_FILES
   dvl/src/main.cpp
-  dvl/src/dvl_sim.cpp
   dvl/src/dvl_tortuga.cpp 
   )
 
 set(IMU_SRC_FILES
   imu/src/main.cpp
-  imu/src/imu_sim.cpp
   imu/src/imu_tortuga.cpp
   )
 
-set(POWER_SRC_FILES
-  power/src/main.cpp
-  power/src/power_sim.cpp
-
-  )
-
-set(TEMP_SRC_FILES
-  temp/src/main.cpp
-  temp/src/temp_sim.cpp
-
-  )
-
-set(CAMERA_SRC_FILES
-  camera/src/main.cpp
-  camera/src/camera_sim.cpp
-  )
-
-#Note since tortug thrusters are done through the sensor board we build them seperatley
-set(THRUSTER_SRC_FILES
-  thrusters/src/main.cpp
-  thrusters/src/thruster_sim.cpp
-  )
 
 set(SENSOR_BOARD_SRC_FILES
   sensor_board/src/temp_tortuga.cpp
   sensor_board/src/thruster_tortuga.cpp
   sensor_board/src/depth_tortuga.cpp
   sensor_board/src/power_tortuga.cpp
+
   #  sensor_board/src/sonar_client.cpp
   #  sensor_board/src/sonar_server.cpp
-#SG: pretty sure this shouldn't be here. 
-# dvl/src/dvl_tortuga.cpp
 
-sensor_board/src/main.cpp
-sensor_board/src/sensor_board_tortuga.cpp
+  sensor_board/src/sensor_board_tortuga.cpp
+  
+  sensor_board/src/main.cpp
   )
 
 set(TRANSLATION_SRC_FILES
@@ -117,14 +85,8 @@ set(CONTROLLER_NODE_SRC_FILES
   controller/src/main.cpp
 )
 
-#set(SONAR_CLIENT_NODE_SRC_FILES
-#  sonar/src/sonar_client.cpp
-#)
 
-#set(SONAR_SERVER_NODE_SRC_FILES
-#  sonar/src/sonar_server.cpp
-#)
-
+#SG: maybe one day..
 set(TEST_FILES
   
     )
@@ -134,29 +96,21 @@ set(TEST_FILES
 ##############################
 
 
-add_executable(depth_node ${DEPTH_SRC_FILES}) 
-target_link_libraries(depth_node ${catkin_LIBRARIES})
+
+
 
 add_executable(dvl_node ${DVL_SRC_FILES})
 target_link_libraries(dvl_node ${catkin_LIBRARIES})
 
 add_executable(imu_node ${IMU_SRC_FILES})
 target_link_libraries(imu_node ${catkin_LIBRARIES})
+
+
   
-add_executable(power_node ${POWER_SRC_FILES})
-target_link_libraries(power_node ${catkin_LIBRARIES})
-
-add_executable(temp_node ${TEMP_SRC_FILES})
-target_link_libraries(temp_node ${catkin_LIBRARIES})
-
-add_executable(camera_node ${CAMERA_SRC_FILES})
-target_link_libraries(camera_node ${catkin_LIBRARIES})
-
-add_executable(thruster_node ${THRUSTER_SRC_FILES})
-target_link_libraries(thruster_node ${catkin_LIBRARIES})
-
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
+
+
 
 add_executable(angular_control_node ${ANGULAR_SRC_FILES})
 target_link_libraries(angular_control_node ${catkin_LIBRARIES})
@@ -167,24 +121,21 @@ target_link_libraries(translational_control_node ${catkin_LIBRARIES})
 add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
 target_link_libraries(controller_node ${catkin_LIBRARIES})
 
+
+#SG: should make these conform to our other nodes
 add_executable(map_baselink_transform localization/src/map_baselink_transform.cpp)
 target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
 
 add_executable(trans_dvl localization/src/trans_dvl.cpp)
 target_link_libraries(trans_dvl ${catkin_LIBRARIES})
 
-#add_executable(sonar_client_node ${SONAR_CLIENT_NODE_SRC_FILES})
-#target_link_libraries(sonar_client_node ${catkin_LIBRARIES})
-
-#add_executable(sonar_server_node ${SONAR_SERVER_NODE_SRC_FILES})
-#target_link_libraries(sonar_server_node ${catkin_LIBRARIES})
 
 ##############################
 # Unit Tests #################
 ##############################
 
 
-##SG: PLEASE ADD THESE WHEN YOU MAKE SOMETHING FOR REAL
+##SG: maybe one day we'll have the time and inclination to make unit tests...
 
 #catkin_add_gtest(${PROJECT_NAME}_tests ${TEST_FILES})
 
