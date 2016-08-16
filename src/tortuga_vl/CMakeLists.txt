@@ -37,12 +37,6 @@ include_directories(
   imu/include
 
   sensor_board/include
-
-  controller/include
-  localization/include
-  angular_controller/include
-  translational_controller/include
-
 )
 
 set(DVL_SRC_FILES
@@ -73,36 +67,17 @@ set(SENSOR_BOARD_SRC_FILES
   drivers/src/sensorapi.c #OLD TEAMS DRIVER CODE
   )
 
-set(TRANSLATION_SRC_FILES
-  translational_controller/src/linear_controller.cpp
-  translational_controller/src/main.cpp
-)
-
-set(ANGULAR_SRC_FILES
-  angular_controller/src/rotational_controller.cpp
-  angular_controller/src/main.cpp
-)
-
-set(CONTROLLER_NODE_SRC_FILES
-  controller/src/controller_node.cpp
-  controller/src/main.cpp
-)
-
-
 
 #### OLD TEAMS CODE ####
-
 set(LCDSHOW_SRC_FILES
 		tortuga/src/lcdshow.c
 )
-
-
 ### END OF OLD TEAMS CODE ###
 
 #SG: maybe one day..
 set(TEST_FILES
   
-    )
+  )
 
 ##############################
 # Add Executables ############
@@ -121,24 +96,6 @@ target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
   
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
-
-
-add_executable(angular_control_node ${ANGULAR_SRC_FILES})
-target_link_libraries(angular_control_node ${catkin_LIBRARIES})
-
-add_executable(translational_control_node ${TRANSLATION_SRC_FILES})
-target_link_libraries(translational_control_node ${catkin_LIBRARIES})
-
-add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
-target_link_libraries(controller_node ${catkin_LIBRARIES})
-
-
-#SG: should make these conform to our other nodes
-add_executable(map_baselink_transform localization/src/map_baselink_transform.cpp)
-target_link_libraries(map_baselink_transform ${catkin_LIBRARIES})
-
-add_executable(trans_dvl localization/src/trans_dvl.cpp)
-target_link_libraries(trans_dvl ${catkin_LIBRARIES})
 
 
 ##############################

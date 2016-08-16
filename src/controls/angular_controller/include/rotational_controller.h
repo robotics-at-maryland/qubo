@@ -4,7 +4,6 @@
 // ROS includes.
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
-#include "ram_node.h"
 #include <nav_msgs/Odometry.h>
 #include "std_msgs/Int64MultiArray.h"
 //#include "tortuga/sensorapi.h"
@@ -15,7 +14,7 @@
 
 #define MAX_THRUSTER_SPEED 255
 
-class RotationalController : public RamNode {
+class RotationalController {
     
     public:
     //! Constructor.

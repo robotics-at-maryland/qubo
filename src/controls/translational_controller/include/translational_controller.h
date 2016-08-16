@@ -2,7 +2,7 @@
 #define TRANSLATIONAL_CONTROLLER_H
 
 // ROS includes.
-#include "ram_node.h"
+#include "ros/ros.h"
 #include <nav_msgs/Odometry.h>
 #include "std_msgs/Int64MultiArray.h"
 //#include "tortuga/sensorapi.h"
@@ -13,7 +13,7 @@
 
 #define MAX_THRUSTER_SPEED 255
 
-class TranslationalController : public RamNode {
+class TranslationalController  {
     
     public:
     //! Constructor.

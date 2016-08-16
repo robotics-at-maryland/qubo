@@ -1,6 +1,6 @@
 #include "controller_core.h"
 
-controlNode::controlNode(std::shared_ptr<ros::NodeHandle> n, int inputRate):RamNode(n){
+controlNode::controlNode(std::shared_ptr<ros::NodeHandle> n, int inputRate){
   next_state_pub = n->advertise<nav_msgs::Odometry>("/qubo/next_state", inputRate);
   joystick_sub = n->subscribe<std_msgs::Float64MultiArray>("/joy_pub", inputRate, &controlNode::messageCallback, this);  
 }

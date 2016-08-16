@@ -1,6 +1,6 @@
 #include "rotational_controller.h"
 
-RotationalController::RotationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) : RamNode(n) {
+RotationalController::RotationalController(std::shared_ptr<ros::NodeHandle> n, int inputRate) {
   thruster_pub = n->advertise<std_msgs::Int64MultiArray>("/qubo/thruster_input", inputRate);
   next_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/next_state", inputRate, &RotationalController::nextStateCallback, this);
   current_state_sub = n->subscribe<nav_msgs::Odometry>("/qubo/current_state", inputRate, &RotationalController::currentStateCallback, this); 

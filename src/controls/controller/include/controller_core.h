@@ -3,11 +3,10 @@
 
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
-#include "ram_node.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "nav_msgs/Odometry.h"
 
-class controlNode : public RamNode {
+class controlNode {
     
     public:
     //! Constructor.
