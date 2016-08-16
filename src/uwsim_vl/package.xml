@@ -20,7 +20,6 @@
   <build_depend>cv_bridge</build_depend>
   <build_depend>opencv2</build_depend>
   <build_depend>ram_cpp_utils</build_depend>
-  <build_depend>ram_drivers</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>nav_msgs</build_depend>
 
@@ -30,6 +29,5 @@
   <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>opencv2</run_depend>
-  <run_depend>rosconsole.conf</run_depend>
 
 </package>

@@ -12,7 +12,6 @@ find_package(catkin
     image_transport
     ram_cpp_utils
     ram_msgs
-    ram_drivers
     tf2_ros
 )
 
@@ -31,6 +30,8 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 include_directories(
   ${catkin_INCLUDE_DIRS}
   include
+
+  drivers/include
   
   dvl/include
   imu/include
@@ -42,17 +43,20 @@ include_directories(
   angular_controller/include
   translational_controller/include
 
-  )
-
+)
 
 set(DVL_SRC_FILES
   dvl/src/main.cpp
-  dvl/src/dvl_tortuga.cpp 
+  dvl/src/dvl_tortuga.cpp
+
+  drivers/src/dvlapi.c #OLD TEAMS DRIVER CODE 
   )
 
 set(IMU_SRC_FILES
   imu/src/main.cpp
   imu/src/imu_tortuga.cpp
+
+  drivers/src/imuapi.c #OLD TEAMS DRIVER CODE
   )
 
 
@@ -61,13 +65,12 @@ set(SENSOR_BOARD_SRC_FILES
   sensor_board/src/thruster_tortuga.cpp
   sensor_board/src/depth_tortuga.cpp
   sensor_board/src/power_tortuga.cpp
-
   #  sensor_board/src/sonar_client.cpp
   #  sensor_board/src/sonar_server.cpp
-
   sensor_board/src/sensor_board_tortuga.cpp
-  
   sensor_board/src/main.cpp
+
+  drivers/src/sensorapi.c #OLD TEAMS DRIVER CODE
   )
 
 set(TRANSLATION_SRC_FILES
@@ -86,6 +89,16 @@ set(CONTROLLER_NODE_SRC_FILES
 )
 
 
+
+#### OLD TEAMS CODE ####
+
+set(LCDSHOW_SRC_FILES
+		tortuga/src/lcdshow.c
+)
+
+
+### END OF OLD TEAMS CODE ###
+
 #SG: maybe one day..
 set(TEST_FILES
   
@@ -98,18 +111,16 @@ set(TEST_FILES
 
 
 
+#these get tortuga specific names to prevent conflicts with other vehicle layers
+add_executable(tortuga_dvl_node_torguga ${DVL_SRC_FILES})
+target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
 
-add_executable(dvl_node ${DVL_SRC_FILES})
-target_link_libraries(dvl_node ${catkin_LIBRARIES})
-
-add_executable(imu_node ${IMU_SRC_FILES})
-target_link_libraries(imu_node ${catkin_LIBRARIES})
-
+add_executable(tortuga_imu_node ${IMU_SRC_FILES})
+target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
 
   
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
-
 
 
 add_executable(angular_control_node ${ANGULAR_SRC_FILES})

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>ram_drivers</name>
+  <name>qubo_vl</name>
   <version>0.1.0</version>
-  <description>device drivers for tortuga and qubo</description>
+  <description>vehicle layer for the AUV qubo</description>
   <author email="software@ram.umd.edu">Robotics @ Maryland</author>
   <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
 

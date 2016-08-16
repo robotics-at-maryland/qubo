@@ -21,7 +21,6 @@ int main(int argc, char **argv){
   
   std::unique_ptr<RamNode> node;
 
-
   if(strcmp(argv[1], "simulated") == 0){
 	  node.reset(new DepthSimNode(n, 10)); /** 10 (the rate) is completely arbitrary */
   }else if(strcmp(argv[1], "tortuga") == 0) {

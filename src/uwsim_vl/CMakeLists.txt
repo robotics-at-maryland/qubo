@@ -13,7 +13,6 @@ find_package(catkin
     image_transport
     ram_cpp_utils
     ram_msgs
-    ram_drivers
     tf2_ros
 )
 
