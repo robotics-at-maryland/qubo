@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>uwsim_vl</name>
+  <version>0.1.0</version>
+  <description>An abstraction layer for the AUV tortuga </description>
+  <author email="software@ram.umd.edu">Robotics @ Maryland</author>
+  <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
+
+  <license>GPL</license>
+
+  <url>http://ram.umd.edu</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!-- TODO: remove unrequired dependencies -->
+  
+  <build_depend>ram_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>opencv2</build_depend>
+  <build_depend>ram_cpp_utils</build_depend>
+  <build_depend>ram_drivers</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>nav_msgs</build_depend>
+
+  <run_depend>ram_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>opencv2</run_depend>
+  <run_depend>rosconsole.conf</run_depend>
+
+</package>
