@@ -1,11 +1,9 @@
 <launch>
-  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find vehicle_layer)/rosconsole.conf"/>
-
   <node name="joy_node" pkg="joy" type="joy_node" />
   <node name="joy_reader" pkg="joystick" type="joy_reader" />
-  <node name="dvl_node" pkg="vehicle_layer" type="dvl_node" args="tortuga" />
-  <node name="imu_node" pkg="vehicle_layer" type="imu_node" args="tortuga" />
-  <node name="sensor_board" pkg="vehicle_layer" type="sensor_board_node" args="tortgua" />
-  <node name="controller_node" pkg="vehicle_layer" type="controller_node" />
-  <node name="movement_node" pkg="vehicle_layer" type="movement_node"/>
+  <node name="dvl_node" pkg="vl_tortuga" type="tortuga_dvl_node" args="tortuga" />
+  <node name="imu_node" pkg="vl_tortuga" type="tortuga_imu_node" args="tortuga" />
+  <node name="sensor_board" pkg="vl_tortuga" type="sensor_board_node" args="tortgua" />
+  <node name="controller_node" pkg="controls" type="controller_node" />
+  <node name="movement_node" pkg="controls" type="movement_node"/>
 </launch>

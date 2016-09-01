@@ -12,7 +12,6 @@ find_package(catkin
     cv_bridge #these two are used in the camera node
     image_transport
     ram_cpp_utils
-    ram_drivers
 )
 
 catkin_package(
