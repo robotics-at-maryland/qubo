@@ -28,6 +28,13 @@ include_directories(
   include/
 )
 
+add_executable(test src/test.cpp)
+target_link_libraries(test ${catkin_LIBRARIES})
+
+install(DIRECTORY include/${PROJECT_NAME}/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
 #target_link_libraries(vision_node ${catkin_LIBRARIES})
 #target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 #
+
