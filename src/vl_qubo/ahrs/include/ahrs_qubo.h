@@ -10,7 +10,8 @@
 class AhrsQuboNode : public RamNode {
 
 public:
-	AhrsQuboNode(std::shared_ptr<ros::NodeHandle>, int, std::string name, std::string device);
+	AhrsQuboNode(std::shared_ptr<ros::NodeHandle>,int, std::string name,
+		std::string device);
 	~AhrsQuboNode();
 
 	void update();
@@ -29,8 +30,7 @@ protected:
 
 	ros::Publisher ahrsPub;
 
-	//k115200 is the baud rate of the device.  Currently chosen arbitrarily
-	std::shared_ptr<AHRS> ahrs(new AHRS(device, k115200));
+	std::unique_ptr<AHRS> ahrs;
 
 }
 
