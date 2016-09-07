@@ -8,13 +8,16 @@ find_package(catkin
   image_transport
   cv_bridge
 )
-
+ 
 find_package(OpenCV REQUIRED)
 
 find_package(
   Boost
 #  REQUIRED COMPONENTS algorithm
 )
+
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 
 catkin_package(
    INCLUDE_DIRS
@@ -28,13 +31,23 @@ include_directories(
   include/
 )
 
-add_executable(test src/test.cpp)
-target_link_libraries(test ${catkin_LIBRARIES})
+
+set(VISION_SRC_FILES
+  src/main.cpp
+)
+
+add_executable(vision_node ${VISION_SRC_FILES})
+target_link_libraries(vision_node  ${catkin_LIBRARIES})
+target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+
 
 install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
 
 #target_link_libraries(vision_node ${catkin_LIBRARIES})
 #target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 #
+
+
 
