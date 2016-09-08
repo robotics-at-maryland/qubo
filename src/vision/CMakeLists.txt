@@ -18,7 +18,6 @@ find_package(
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-
 catkin_package(
    INCLUDE_DIRS
    LIBRARIES ${PROJECT_NAME}
@@ -34,20 +33,13 @@ include_directories(
 
 set(VISION_SRC_FILES
   src/main.cpp
+  src/vision_node.cpp
 )
 
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node  ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 
-
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
-
-#target_link_libraries(vision_node ${catkin_LIBRARIES})
-#target_link_libraries(vision_node ${OpenCV_LIBRARIES})
-#
-
-
-
