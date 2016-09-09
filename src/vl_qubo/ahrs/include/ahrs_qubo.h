@@ -23,7 +23,7 @@ protected:
 	std::string name;
 
 	//data retrieved from the sensor
-	AHRSData sensor_data;
+	AHRS::AHRSData sensor_data;
 	sensor_msgs::Imu msg;
 
 
@@ -32,6 +32,6 @@ protected:
 
 	std::unique_ptr<AHRS> ahrs;
 
-}
+};
 
 #endif

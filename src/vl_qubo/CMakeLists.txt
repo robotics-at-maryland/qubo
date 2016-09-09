@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vl_qubo)
 
+find_package(catkin
+    REQUIRED COMPONENTS
+    roscpp
+)
+
 
 catkin_package(
     LIBRARIES ${PROJECT_NAME}
     INCLUDE_DIRS
+    CATKIN_DEPENDS roscpp
 )
 
 
@@ -13,9 +19,13 @@ catkin_package(
 ##############################
 
 include_directories(
+  ${catkin_INCLUDE_DIRS}
   drivers/ahrs/include
   drivers/dvl/include
-  
+
+  ahrs/include
+  include
+
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -24,7 +34,8 @@ SET(CMAKE_C++_CREATE_SHARED_LIBRARY 1)
 
 #SG: currently unused, eventually we'll add a wrapper with a main and build them together.
 set(AHRS_SRC_FILES
-        drivers/ahrs/src/AHRS.cpp
+    ahrs/src/ahrs_qubo.cpp
+    drivers/ahrs/src/AHRS.cpp
 )
 
 #SG: ditto above
@@ -36,7 +47,7 @@ set(AHRS_CONFIG_SRC_FILES
         drivers/ahrs/src/config.cpp
         drivers/ahrs/src/util.cpp
 
-        drivers/ahrs/src/AHRS.cpp # SG: maybe putting this here is not the best way to do this, but it will work for now 
+        drivers/ahrs/src/AHRS.cpp # SG: maybe putting this here is not the best way to do this, but it will work for now
 )
 
 set(AHRS_BAUDRATE_SRC_FILES
@@ -57,6 +68,9 @@ add_executable(ahrs_config ${AHRS_CONFIG_SRC_FILES})
 
 add_executable(ahrs_baudrate ${AHRS_BAUDRATE_SRC_FILES})
 #target_link_libraries(ahrs_baudrate ${PROJECT_NAME})
+
+#add_executable(qubo_ahrs_node ${AHRS_SRC_FILES})
+#target_link_libraries(qubo_ahrs_node ${catkin_LIBRARIES})
 
 
 ##############################

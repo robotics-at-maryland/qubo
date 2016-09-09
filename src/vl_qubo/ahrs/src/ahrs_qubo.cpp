@@ -2,7 +2,7 @@
 //written by Jeremy Weed
 
 AhrsQuboNode::AhrsQuboNode(std::shared_ptr<ros::NodeHandle> n,
-	int rate, std::string name,std::string device) : RamNode(n){
+	int rate, std::string name, std::string device) : RamNode(n){
 
 	ros::Time::init();
 	this->name = name;
@@ -12,16 +12,16 @@ AhrsQuboNode::AhrsQuboNode(std::shared_ptr<ros::NodeHandle> n,
 
 	//create + open the device
 	//k115200 is the baud rate of the device.  Currently chosen arbitrarily
-	ahrs.reset(new AHRS(device, k115200));
+	ahrs.reset(new AHRS(device, AHRS::k115200));
 	ahrs->openDevice();
 
 	if(!ahrs->isOpen()){
-		ROS_ERROR("AHRS " + device + " didn't open succsesfully ");
+		ROS_ERROR("AHRS %s didn't open succsesfully", device.c_str());
 	}
 	//configs the device
-	sendAHRSDataFormat();
+	ahrs->sendAHRSDataFormat();
 
-	ROS_DEBUG("Device Info: " + ahrs->getInfo);
+	ROS_DEBUG("Device Info: %s", ahrs->getInfo().c_str());
 }
 
 
@@ -34,7 +34,7 @@ void AhrsQuboNode::update(){
 
 	ROS_DEBUG("Beginning to read data");
 	//sit and wait for an update
-	sensor_data = pollAHRSData();
+	sensor_data = ahrs->pollAHRSData();
 
 	ROS_DEBUG("Data has been read");
 	msg.header.stamp = ros::Time::now();
@@ -50,13 +50,13 @@ void AhrsQuboNode::update(){
 
 	msg.angular_velocity.x = sensor_data.gyroX;
 	msg.angular_velocity.y = sensor_data.gyroY;
-	msg.angular_velocity.z = sensor_data.guroZ;
-	msg.angular_velocity_covariance = -1;
+	msg.angular_velocity.z = sensor_data.gyroZ;
+	msg.angular_velocity_covariance[0] = -1;
 
 	msg.linear_acceleration.x = sensor_data.accelX;
 	msg.linear_acceleration.y = sensor_data.accelY;
 	msg.linear_acceleration.z = sensor_data.accelZ;
-	msg.linear_acceleration_covariance = -1;
+	msg.linear_acceleration_covariance[0] = -1;
 
 	ahrsPub.publish(msg);
 
