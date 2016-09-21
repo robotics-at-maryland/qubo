@@ -2,7 +2,11 @@
 #include <opencv2/opencv.hpp>
 #include "ros/ros.h"
 #include <iostream>
+
+
+
 #include "std_msgs/String.h"
+#include  "ram_msgs/bool_bool.h"
 
 
 class VisionNode{
@@ -12,6 +16,8 @@ class VisionNode{
     ~VisionNode();
     void update(); //this will just pull the next image in
     
+    static bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+
     protected:
     
     //cap is the object holding the video feed, either real or from an existing avi file    

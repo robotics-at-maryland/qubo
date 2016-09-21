@@ -7,9 +7,11 @@
 int main(int argc, char* argv[]){
 
     ros::init(argc,argv, "vision_node");
-    std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle); 
-    
+    std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
+
     VisionNode node(n,10,TEST_FEED);
+
+    ros::ServiceServer service = n->advertiseService("buoy_detect", VisionNode::buoy_detector);
 
     while(ros::ok()){
         node.update();

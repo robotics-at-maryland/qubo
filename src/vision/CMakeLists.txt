@@ -7,6 +7,7 @@ find_package(catkin
   roslib
   image_transport
   cv_bridge
+  ram_msgs
 )
  
 find_package(OpenCV REQUIRED)

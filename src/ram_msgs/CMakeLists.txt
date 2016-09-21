@@ -46,6 +46,8 @@ add_message_files(
 add_service_files(
     FILES
     sonar_data.srv
+
+    bool_bool.srv
 )
 
 generate_messages(
