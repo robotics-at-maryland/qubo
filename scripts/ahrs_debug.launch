@@ -1,0 +1,5 @@
+<launch>
+
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find vehicle_layer)/rosconsole.conf" />
+	<node name="ahrs_node" pkg="vl_qubo" type="ahrs_node" args="file arg2 arg3"
+</launch>
