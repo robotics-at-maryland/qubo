@@ -40,23 +40,9 @@ From the build directory:
 make run_tests
 ```
 
-##### To generate the documentation files using Doxygen:
-From the build directory:
-```sh
-make docs
-```
-The documentation can be viewed by opening ```build/docs/html/index.html``` in your favorite browser.
-
-##### To generate Eclipse project files :
-From the top level directory:
-```
-python scripts/make_eclipse_project.py <new directory>
-```
-NOTE: The new directory should be OUTSIDE the top level directory (Eclipse does not like out-of-source project files in the source directory).
-
 
 ## To setup the embedded tool chain
-You can skip everything below if you're not going to write embedded code 
+You can skip everything below if you're not going to write embedded code (if you don't know if you're writing embedded code you can safely ignore this)
 This page will go through the steps needed to compile and deploy code to run on the EK-TM4C123GXL devboard.
 
 ### Through the Commandline
