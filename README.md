@@ -40,14 +40,3 @@ From the build directory:
 make run_tests
 ```
 
-### Using gdb
-
-In the lm4tools repository downloaded earlier, there is a tool called "lmicdi". I will assume that you have compiled this tool and added it to your path. To run gdb, do
-
-```sh
-> lmicdi &
-> arm-none-eabi-gdb blinky.axf
-(gdb) target remote :7777
-```
-
-Specifing blinky.axf is not nessasary, but it will tell gdb to load debuging symbols from it. Adding -ggdb to the CFLAGS used to compile the program will give gdb more debug information.
