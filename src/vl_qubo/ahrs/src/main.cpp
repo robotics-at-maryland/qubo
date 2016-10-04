@@ -7,9 +7,12 @@ int main(int argc, char ** argv){
 	if (argc != 4){
 		ROS_ERROR("The AHRS node received %i arguments which is not correct"
 		" (should be 4)\n", argc);
+		for(int i = 0; i < argc; i++){
+			ROS_ERROR("found: %s", argv[i]);
+		}
 		exit(1);
 	}
-
+	ROS_DEBUG("Made it past the argument checks");
 	//needs to be called first
 	ros::init(argc, argv, "ahrs_node");
 	std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);

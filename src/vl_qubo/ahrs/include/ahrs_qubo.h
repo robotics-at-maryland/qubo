@@ -7,6 +7,7 @@
 #include "sensor_msgs/Imu.h"
 
 
+
 class AhrsQuboNode : public RamNode {
 
 public:
@@ -26,7 +27,9 @@ protected:
 	AHRS::AHRSData sensor_data;
 	sensor_msgs::Imu msg;
 
-
+	//determines how many times we should try to connect to the sensor
+	const int MAX_CONNECTION_ATTEMPTS = 10;
+	bool isConnected = false;
 
 	ros::Publisher ahrsPub;
 

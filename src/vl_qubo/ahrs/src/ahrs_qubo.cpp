@@ -13,7 +13,14 @@ AhrsQuboNode::AhrsQuboNode(std::shared_ptr<ros::NodeHandle> n,
 	//create + open the device
 	//k115200 is the baud rate of the device.  Currently chosen arbitrarily
 	ahrs.reset(new AHRS(device, AHRS::k115200));
-	ahrs->openDevice();
+	try{
+		ahrs->openDevice();
+		isConnected = true;
+	}catch(AHRSException& ex){
+		ROS_ERROR(ex.what());
+		isConnected = false;
+		return;
+	}
 
 	if(!ahrs->isOpen()){
 		ROS_ERROR("AHRS %s didn't open succsesfully", device.c_str());
@@ -31,10 +38,35 @@ AhrsQuboNode::~AhrsQuboNode(){
 
 void AhrsQuboNode::update(){
 	static int id = 0;
+	static int attmepts = 0;
+
+	//if we aren't connected yet, lets try a few more times
+	if(!isConnected){
+		try{
+			ahrs->openDevice();
+			isConnected = true;
+		}catch(AHRSException& ex){
+			ROS_ERROR("Attempt %i to connect to AHRS failed.", attmepts++);
+			ROS_ERROR("DEVICE NOT FOUND! ");
+			ROS_ERROR(ex.what());
+			if(attmepts > MAX_CONNECTION_ATTEMPTS){
+				ROS_ERROR("Failed to find device, exiting node.");
+				exit(-1);
+			}
+			return;
+		}
+	}
 
 	ROS_DEBUG("Beginning to read data");
 	//sit and wait for an update
-	sensor_data = ahrs->pollAHRSData();
+	try{
+		sensor_data = ahrs->pollAHRSData();
+	}catch(AHRSException& ex){
+		//every so often an exception gets thrown and hangs on my vm
+		//This might be solved by running ROS on actual hardware
+		ROS_WARN(ex.what());
+		return;
+	}
 
 	ROS_DEBUG("Data has been read");
 	msg.header.stamp = ros::Time::now();
@@ -59,6 +91,4 @@ void AhrsQuboNode::update(){
 	msg.linear_acceleration_covariance[0] = -1;
 
 	ahrsPub.publish(msg);
-
-	ros::spinOnce();
 }
