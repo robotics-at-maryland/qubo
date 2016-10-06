@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Install ROS if it is not already installed.
-if [ ! -d /opt/ros/indigo/ ]; then
+if [ ! -d /opt/ros/kinetic/ ]; then
     # This part very closely follows the instructions from:
-    #   http://wiki.ros.org/indigo/Installation/Ubuntu
-    ROS_DISTRO='indigo'
+    #   http://wiki.ros.org/kinetic/Installation/Ubuntu
+    ROS_DISTRO='kinetic'
 
     # The "codename" for this Ubuntu release (lucid, trusty, etc.).
     UBUNTU_CODENAME=`lsb_release -sc`
@@ -22,16 +22,16 @@ if [ ! -d /opt/ros/indigo/ ]; then
 
     # Finally, update our package lists and then install ROS.
     sudo apt-get update
-    sudo apt-get install ros-indigo-desktop
+    sudo apt-get install ros-kinetic-desktop
 fi
 
 # Installing additional packages.
-sudo apt-get install doxygen ros-indigo-uwsim ros-indigo-underwater-vehicle-dynamics  ros-indigo-robot-localization #if we change ros-indigo-desktop to ros-indigo-desktop-full we can remove the uwsim bit
+sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
 # Setup environment variables for ROS.
-echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 # Initialize rosdep if it is not already initialized.
@@ -41,6 +41,6 @@ if [ ! -d /etc/ros/rosdep/ ]; then
 fi
 
 # Finally, run rosdep to install all the dependencies for our packages.
-sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro indigo
+sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
 
 

@@ -4,7 +4,7 @@
 
 #include "sensor_board_tortuga.h"
 #include "sensorapi.h"
-#include "underwater_sensor_msgs/Pressure.h"
+#include "std_msgs/Float32.h"
 
 class DepthTortugaNode : public SensorBoardTortugaNode {
 	
@@ -13,12 +13,12 @@ class DepthTortugaNode : public SensorBoardTortugaNode {
     ~DepthTortugaNode();
 
 	void update();
-	void depthCallBack(const underwater_sensor_msgs::Pressure msg);
+	void depthCallBack(const std_msgs::Float32 msg);
 	
 	protected:
-	underwater_sensor_msgs::Pressure msg;
+	std_msgs::Float32 msg;
 	ros::Publisher publisher;
-  int fd;
+    int fd;
   std::string sensor_file;
 	//int fd; //the file descriptor, established by the a call to openSensorBoard
 	
