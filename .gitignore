@@ -2,6 +2,7 @@ build/
 devel/
 docs/
 install/
+embedded/obj
 
 # Exclude the Catkin generated symlink
 packages/CMakeLists.txt
@@ -27,3 +28,8 @@ packages/CMakeLists.txt
 *.user
 *#
 .#*
+
+*.o
+*.bin
+*.img
+*.elf
