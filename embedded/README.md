@@ -16,7 +16,8 @@ The port is still at an early development stage and includes only very basic
 demo tasks. More complex tasks will be included in the future.
 
 ##Build
-Toolchain(includes compiler, linker...) is under toolchain directory. The toolchain we're using is:  
+Run the `../scripts/embedded_install_deps.bash` to install the toolchain and flasher.  
+The toolchain we're using is:  
 https://launchpad.net/gcc-arm-embedded/+download  
 Version: gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2  
 
