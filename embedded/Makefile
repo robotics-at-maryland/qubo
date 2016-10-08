@@ -287,7 +287,7 @@ clean : clean_intermediate
 
 # Rule for flashing
 flash:
-	sudo ./lm4tools/lm4flash/lm4flash image.bin
+	sudo lm4flash image.bin
 
 # Short help instructions:
 
