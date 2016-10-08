@@ -1,0 +1,42 @@
+[
+{
+   "name" : "DK-TM4C123G",
+   "device" : [
+      "TM4C123GH6PGE"
+   ],
+   "description" : " The TM4C123G Development Kit is a compact and versatile engineering board for TM4C Series TM4C123G ARM® Cortex®-M4F-based microcontroller (MCU). The development kit design highlights the TM4C123G MCU integrated USB 2.0 On-the-Go/Host/Device interface, CAN, precision analog, sensor hub, and low-power capabilities. The development kit features a TM4C Series  TM4C123GH6PGE microcontroller in a 144-LQFP package, a color OLED® display, USB OTG connector, a microSD® card slot, a coin-cell battery for the low-power Hibernate mode, a CAN transceiver, a temperature sensor, a nine-axis sensor for motion tracking, and easy-access through-holes to all of the available device signals.</p><p>For more information, go to the <a target='_blank' href= 'http://www.ti.com/tool/dk-tm4c123g'>tools page</a>.",
+   "image" : ".metadata/images/dk-tm4c123g.jpg"
+}
+,{
+   "name" : "DK-TM4C129X",
+   "device" : [
+      "TM4C129XNCZAD"
+   ],
+   "description" : " The TM4C129x Connected Development Kit is a versatile and feature-rich engineering platform that highlights the 120-MHz TM4C Series TM4C129XNCZAD ARM® Cortex®-M4F based microcontroller, including an integrated 10/100 Ethernet MAC + PHY as well as many other key features.</p><p>For more information, go to the <a target='_blank' href='http://www.ti.com/tool/dk-tm4c129x'>tools page</a>.",
+   "image" : ".metadata/images/dk-tm4c129x.jpg"
+}
+,{
+   "name" : "EK-TM4C1294XL",
+   "device" : [
+      "TM4C1294NCPDT"
+   ],
+   "description" : " The TM4C1294 Connected LaunchPad™ board is a low-cost evaluation platform for ARM® Cortex®-M4F-based microcontrollers from Texas Instruments. The Connected LaunchPad design highlights the TM4C1294NCPDT microcontroller with its on-chip 10/100 Ethernet MAC and PHY, USB 2.0, hibernation module, motion control pulse- width modulation and a multitude of simultaneous serial connectivity.</p><p>The EK-TM4C1294XL features programmable user buttons and LEDs for custom applications. It also features dual BoosterPack™ XL Plug-in Module headers and a breadboard connector for additional connectivity that makes it easy and simple to expand the functionality of the TM4C1294 Connected LaunchPad when interfacing to other peripherals with Texas Instruments' MCU BoosterPacks. </p><p>For more information, go to the <a target='_blank' href= 'http://www.ti.com/tool/ek-tm4c1294xl'>tools page</a>.",
+   "image" : ".metadata/images/ek-tm4c1294xl.jpg"
+}
+,{
+   "name" : "EK-TM4C129EXL",
+   "device" : [
+      "TM4C129ENCPDT"
+   ],
+   "description" : " The TM4C129 Crypto Connected LaunchPad™ board is a low-cost evaluation platform for ARM® Cortex®-M4F-based microcontrollers from Texas Instruments. The Crypto Connected LaunchPad design highlights the TM4C129ENCPDT microcontroller with its on-chip 10/100 Ethernet MAC and PHY, Crypto Hardware blocks, USB 2.0, hibernation module, motion control pulse-width modulation and a multitude of simultaneous serial connectivity.</p><p>The EK-TM4C129EXL features programmable user buttons and LEDs for custom applications. It also features dual BoosterPack™ XL Plug-in Module headers and a breadboard connector for additional connectivity that makes it easy and simple to expand the functionality of the TM4C1294 Connected LaunchPad when interfacing to other peripherals with Texas Instruments' MCU BoosterPacks.</p><p>For more information, go to the <a target='_blank' href= 'http://www.ti.com/tool/ek-tm4c129exl'>tools page</a>.",
+   "image" : ".metadata/images/ek-tm4c1294xl.jpg"
+}
+,{
+   "name" : "EK-TM4C123GXL",
+   "device" : [
+      "TM4C123GH6PM"
+   ],
+   "description" : " The TM4C123G LaunchPad™ board is a low-cost evaluation platform for ARM® Cortex®-M4F-based microcontrollers from Texas Instruments. The design of the TM4C123G LaunchPad highlights the TM4C123GH6PM microcontroller with a USB 2.0 device interface and hibernation module.</p><p>The EK-TM4C123GXL also features programmable user buttons and an RGB LED for custom applications. The stackable headers of the TM4C Series TM4C123G LaunchPad BoosterPack™ XL Plug-in Module make it easy and simple to expand the functionality of the TM4C123G LaunchPad when interfacing to other peripherals with Texas Instruments' MCU BoosterPacks. </p><p>For more information, go to the <a target='_blank' href= 'http://www.ti.com/tool/ek-tm4c123gxl'>tools page</a>.",
+   "image" : ".metadata/images/ek-tm4c123gxl.jpg"
+}
+]

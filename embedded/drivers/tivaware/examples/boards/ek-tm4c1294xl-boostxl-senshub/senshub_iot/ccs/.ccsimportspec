@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<importSpec>
+    <source root="..">
+        <file name="bmp180_task.c"/>
+        <file name="bmp180_task.h"/>
+        <file name="cloud_task.c"/>
+        <file name="cloud_task.h"/>
+        <file name="command_task.c"/>
+        <file name="command_task.h"/>
+        <file name="compdcm_task.c"/>
+        <file name="compdcm_task.h"/>
+        <file name="FreeRTOSConfig.h"/>
+        <file name="isl29023_task.c"/>
+        <file name="isl29023_task.h"/>
+        <file name="lwipopts.h"/>
+        <file name="priorities.h"/>
+        <file name="senshub_iot.c"/>
+        <file name="sht21_task.c"/>
+        <file name="sht21_task.h"/>
+        <file name="tmp006_task.c"/>
+        <file name="tmp006_task.h"/>
+        <file regex=".*_ccs\.cmd"/>
+        <file name="startup_ccs.c"/>
+    </source>
+</importSpec>

@@ -1,0 +1,29 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/flash.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/uart.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_sysctl.h",
+         "-../../../../inc/hw_types.h",
+         "+boot_demo2.c -> boot_demo2.c",
+         "+boot_demo2_ccs.cmd -> boot_demo2_ccs.cmd",
+         "+startup_ccs.c -> startup_ccs.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

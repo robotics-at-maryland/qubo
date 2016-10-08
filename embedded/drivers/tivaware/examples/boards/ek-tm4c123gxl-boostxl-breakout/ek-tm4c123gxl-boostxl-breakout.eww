@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\..\..\..\driverlib\driverlib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\..\usblib\usblib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\usb_dev_cgamepad\usb_dev_cgamepad.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All Examples</name>
+      <member>
+        <project>driverlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>usblib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>usb_dev_cgamepad</project>
+        <configuration>Debug</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>

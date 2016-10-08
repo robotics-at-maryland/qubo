@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<importSpec>
+    <source root="..">
+        <file name="airmouse.c"/>
+        <file name="events.h"/>
+        <file name="lprf.c"/>
+        <file name="lprf.h"/>
+        <file name="motion.c"/>
+        <file name="motion.h"/>
+        <file name="remoti_npi.c"/>
+        <file name="remoti_npi.h"/>
+        <file name="remoti_rti.h"/>
+        <file name="remoti_rtis.c"/>
+        <file name="remoti_rtis.h"/>
+        <file name="remoti_uart.c"/>
+        <file name="remoti_uart.h"/>
+        <file name="remoti_zid.h"/>
+        <file name="usb_dev_comp_hid.c"/>
+        <file name="usb_structs.c"/>
+        <file name="usb_structs.h"/>
+        <file regex=".*_ccs\.cmd"/>
+        <file name="startup_ccs.c"/>
+    </source>
+</importSpec>

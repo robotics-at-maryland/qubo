@@ -1,0 +1,18 @@
+[
+{
+   "core" : [
+      {
+         "require" : "mandatory",
+         "packageId" : "tm4c",
+         "version" : "2.1.3.156",
+         "message" : "This package can only be made offline in its entirety."
+      }
+   ],
+   "version" : "2.1.3.156",
+   "name" : "TM4C ARM® Cortex®-M4F MCU",
+   "id" : "tm4c",
+   "license" : "./EULA.txt",
+   "description" : "Texas Instruments' TM4C12x MCUs offer the industry’s popular ARM® Cortex®-M4F core with scalable memory and package options, unparalleled connectivity peripherals, advanced application functions, industry-leading analog integration, and extensive software solutions. In addition, Texas Instruments offers a complete solution to get to market quickly, with evaluation and development boards, white papers, application notes, an easy-to-use peripheral driver library, and a strong support, sales, and distributor network.</p><p>For more information, go to <a target='_blank' href='http://www.ti.com/lsds/ti/microcontrollers_16-bit_32-bit/c2000_performance/control_automation/tm4c12x/overview.page'>TM4C12x MCUs</a>.</p><p><br><font size=2>LaunchPad, BoosterPack, and TivaWare are trademarks of Texas Instruments.<br>ARM and Cortex are registered trademarks of ARM Limited.<br>microSD is a registered trademark of SD-3C, LLC.<br>OLED is a registered trademark of LG Electronics Inc. Corporation.<br>All other trademarks are the property of their respective owners.</font></p>",
+   "image" : ".metadata/images/TivaWare.png"
+}
+]

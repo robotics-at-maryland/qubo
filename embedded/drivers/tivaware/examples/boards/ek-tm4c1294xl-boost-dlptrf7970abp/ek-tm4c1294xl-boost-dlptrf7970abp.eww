@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\..\..\..\driverlib\driverlib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\nfc_p2p_demo\nfc_p2p_demo.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All Examples</name>
+      <member>
+        <project>driverlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>nfc_p2p_demo</project>
+        <configuration>Debug</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>

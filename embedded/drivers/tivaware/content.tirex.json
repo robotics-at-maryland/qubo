@@ -1,0 +1,5850 @@
+[
+{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1230c3pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1230C3PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1230d5pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1230D5PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1230e6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1230E6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1230h6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1230H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231c3pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231C3PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231d5pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231D5PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231d5pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231D5PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231e6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231E6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231e6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231E6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231h6pge.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231H6PGE",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231h6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1231h6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1231H6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1232c3pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1232C3PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1232d5pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1232D5PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1232e6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1232E6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1232h6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1232H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233c3pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233C3PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233d5pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233D5PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233d5pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233D5PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233e6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233E6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233e6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233E6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233h6pge.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233H6PGE",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233h6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1233h6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1233H6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1236d5pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1236D5PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1236e6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1236E6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1236h6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1236H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237d5pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237D5PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237d5pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237D5PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237e6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237E6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237e6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237E6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237h6pge.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237H6PGE",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237h6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1237h6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1237H6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123ae6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123AE6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123ah6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123AH6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123be6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123BE6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123be6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123BE6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123bh6pge.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123BH6PGE",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123bh6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123BH6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123bh6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123BH6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123bh6zrb.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123BH6ZRB",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123fe6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123FE6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123fh6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123FH6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123ge6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GE6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123ge6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GE6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123gh6pge.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GH6PGE",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123gh6pm.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GH6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123gh6pz.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GH6PZ",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123gh6zrb.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GH6ZRB",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c123gh6zxr.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C123GH6ZXR",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1290ncpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1290NCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1290nczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1290NCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1292ncpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1292NCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1292nczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1292NCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1294kcpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1294KCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1294ncpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1294NCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1294nczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1294NCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1297nczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1297NCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1299kczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1299KCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c1299nczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C1299NCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129cncpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129CNCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129cnczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129CNCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129dncpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129DNCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129dnczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129DNCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129ekcpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129EKCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129encpdt.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129ENCPDT",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129enczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129ENCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129lnczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129LNCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129xkczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129XKCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/ds/symlink/tm4c129xnczad.pdf",
+   "resourceType" : "weblink",
+   "name" : "TM4C129XNCZAD",
+   "categories" : [
+      [
+         "Devices",
+         "Datasheets"
+      ]
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/bitband/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "bitband",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/blinky/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "blinky",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/boot_demo1/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "boot_demo1",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/boot_demo2/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "boot_demo2",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/boot_serial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "boot_serial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/boot_usb/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "boot_usb",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/can/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "can",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/grlib_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "grlib_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/hello/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "hello",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/hibernate/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "hibernate",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/interrupts/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "interrupts",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/mpu_fault/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "mpu_fault",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/project0/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "project0",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/qs-logger/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "qs-logger",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/sd_card/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "sd_card",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/sine_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "sine_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/softuart_echo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "softuart_echo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/timers/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "timers",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/uart_echo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "uart_echo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/udma_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "udma_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_dev_bulk/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_dev_bulk",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_dev_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_dev_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_dev_msc/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_dev_msc",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_dev_serial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_dev_serial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_host_audio/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_host_audio",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_host_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_host_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_host_mouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_host_mouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_host_msc/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_host_msc",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_stick_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_stick_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/usb_stick_update/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "usb_stick_update",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c123g/watchdog/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "watchdog",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-DK-TM4C123G-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-em-trf7970atb/nfc_p2p_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "nfc_p2p_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "em-trf7970atb"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-DK-TM4C129X-EM-TRF7970ATB-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "em-trf7970atb"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boost-dlp7970abp/nfc_p2p_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "nfc_p2p_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boost-dlp7970abp"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-DK-TM4C129X-BOOST-DLP7970ABP-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boost-dlp7970abp"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boostxl-senshub/airmouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "airmouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boostxl-senshub/compdcm_mpu9150/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "compdcm_mpu9150",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boostxl-senshub/humidity_sht21/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "humidity_sht21",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boostxl-senshub/light_isl29023/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "light_isl29023",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boostxl-senshub/pressure_bmp180/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "pressure_bmp180",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x-boostxl-senshub/temperature_tmp006/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "temperature_tmp006",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-DK-TM4C129X-BOOSTXL-SENSHUB-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_cbc_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_cbc_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_cbc_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_cbc_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_ccm_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_ccm_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_ccm_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_ccm_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_cmac/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_cmac",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_ecb_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_ecb_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_ecb_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_ecb_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_gcm_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_gcm_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/aes_gcm_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "aes_gcm_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/bitband/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "bitband",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/ble_btool/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "ble_btool",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/ble_central/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "ble_central",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/blinky/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "blinky",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/boot_demo_uart/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "boot_demo_uart",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/boot_demo_usb/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "boot_demo_usb",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/boot_demo_emac_flash/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "boot_demo_emac_flash",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/boot_demo_flash/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "boot_demo_flash",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/boot_emac_flash/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "boot_emac_flash",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/calibrate/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "calibrate",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/crc32/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "crc32",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/enet_io/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "enet_io",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/enet_lwip/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "enet_lwip",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/enet_uip/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "enet_uip",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/fontview/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "fontview",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/freertos_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "freertos_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/gpio_jtag/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "gpio_jtag",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/grlib_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "grlib_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/grlib_driver_test/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "grlib_driver_test",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/hello/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "hello",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/hello_widget/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "hello_widget",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/hibernate/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "hibernate",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/interrupts/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "interrupts",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/lang_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "lang_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/mpu_fault/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "mpu_fault",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/project0/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "project0",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/qs_weather/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "qs_weather",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/scribble/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "scribble",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/sd_card/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "sd_card",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/sha1_hash/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "sha1_hash",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/sha1_hmac/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "sha1_hmac",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/synth/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "synth",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/tamper/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "tamper",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/tdes_cbc_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "tdes_cbc_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/tdes_cbc_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "tdes_cbc_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/timers/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "timers",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/uart_echo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "uart_echo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/udma_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "udma_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_dev_bulk/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_dev_bulk",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_dev_chid/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_dev_chid",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_dev_gamepad/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_dev_gamepad",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_dev_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_dev_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_dev_msc/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_dev_msc",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_dev_serial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_dev_serial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_host_audio/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_host_audio",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_host_audio_in/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_host_audio_in",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_host_hub/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_host_hub",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_host_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_host_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_host_mouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_host_mouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_host_msc/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_host_msc",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_otg_mouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_otg_mouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_stick_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_stick_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/usb_stick_update/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "usb_stick_update",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/dk-tm4c129x/watchdog/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "watchdog",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-DK-TM4C129X-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-breakout/usb_dev_cgamepad/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "usb_dev_cgamepad",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-breakout"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-BOOSTXL-BREAKOUT-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-breakout"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boost-capsense/capsense/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "capsense",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boost-capsense"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-BOOST-CAPSENSE-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boost-capsense"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-kentec-s1/fontview/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "fontview",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-kentec-s1/grlib_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "grlib_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-kentec-s1/lang_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "lang_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-kentec-s1/scribble/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "scribble",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-BOOSTXL-KENTEC-S1-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-senshub/airmouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "airmouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-senshub/compdcm_mpu9150/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "compdcm_mpu9150",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-senshub/humidity_sht21/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "humidity_sht21",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-senshub/light_isl29023/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "light_isl29023",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-senshub/pressure_bmp180/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "pressure_bmp180",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-senshub/temperature_tmp006/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "temperature_tmp006",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-BOOSTXL-SENSHUB-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boostxl-battpack/boostxl_battpack/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "boostxl_battpack",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-battpack"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-BOOSTXL-BATTPACK-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-battpack"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl-boost-dlptrf7970abp/nfc_p2p_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "nfc_p2p_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boost-dlptrf7970abp"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-BOOST-DLPTRF7970ABP-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boost-dlptrf7970abp"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/bitband/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "bitband",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/blinky/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "blinky",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/freertos_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "freertos_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/gpio_jtag/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "gpio_jtag",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/hello/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "hello",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/interrupts/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "interrupts",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/mpu_fault/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "mpu_fault",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/project0/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "project0",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/qs-rgb/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "qs-rgb",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/timers/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "timers",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/uart_echo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "uart_echo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/udma_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "udma_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/usb_dev_bulk/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "usb_dev_bulk",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/usb_dev_gamepad/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "usb_dev_gamepad",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c123gxl/usb_dev_serial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "usb_dev_serial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C123GXL-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes_example/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes_example",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_cbc_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_cbc_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_cbc_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_cbc_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_ccm_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_ccm_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_ccm_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_ccm_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_cmac/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_cmac",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_ecb_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_ecb_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_ecb_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_ecb_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_gcm_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_gcm_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/aes128_gcm_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "aes128_gcm_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/bitband/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "bitband",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/blinky/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "blinky",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/boot_demo1/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "boot_demo1",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/boot_demo2/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "boot_demo2",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/boot_serial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "boot_serial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/crc32/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "crc32",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/enet_io/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "enet_io",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/enet_lwip/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "enet_lwip",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/enet_uip/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "enet_uip",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/enet_weather/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "enet_weather",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/gpio_jtag/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "gpio_jtag",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/hello/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "hello",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/hibernate/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "hibernate",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/interrupts/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "interrupts",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/mpu_fault/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "mpu_fault",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/project0/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "project0",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/sha1_hash/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "sha1_hash",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/sha1_hmac/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "sha1_hmac",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/shamd5_hmac_example/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "shamd5_hmac_example",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/sleep_modes/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "sleep_modes",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/tdes_cbc_decrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "tdes_cbc_decrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/tdes_cbc_encrypt/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "tdes_cbc_encrypt",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/timers/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "timers",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/uart_echo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "uart_echo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/udma_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "udma_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_dev_bulk/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_dev_bulk",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_dev_cserial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_dev_cserial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_dev_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_dev_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_host_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_host_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_host_mouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_host_mouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_host_msc/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_host_msc",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_stick_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_stick_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/usb_stick_update/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "usb_stick_update",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c129exl/watchdog/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "watchdog",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C129EXL-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-senshub/compdcm_mpu9150/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "compdcm_mpu9150",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-senshub/humidity_sht21/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "humidity_sht21",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-senshub/light_isl29023/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "light_isl29023",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-senshub/pressure_bmp180/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "pressure_bmp180",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-senshub/senshub_iot/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "senshub_iot",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-senshub/temperature_tmp006/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "temperature_tmp006",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C1294XL-BOOSTXL-SENSHUB-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-senshub"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-battpack/boostxl_battpack/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "boostxl_battpack",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-battpack"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C1294XL-BOOSTXL-BATTPACK-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-battpack"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boost-cc3100/cc3100_http_server/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "cc3100_http_server",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boost-cc3100"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C1294XL-BOOST-CC3100-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boost-cc3100"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-kentec-s1/fontview/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "fontview",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-kentec-s1/grlib_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "grlib_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-kentec-s1/lang_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "lang_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boostxl-kentec-s1/scribble/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "scribble",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C1294XL-BOOSTXL-KENTEC-S1-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boostxl-kentec"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl-boost-dlptrf7970abp/nfc_p2p_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "nfc_p2p_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Add-On Board Examples",
+         "boost-dlptrf7970abp"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C1294XL-BOOST-DLPTRF7970ABP-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents",
+         "boost-dlptrf7970abp"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/bitband/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "bitband",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/blinky/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "blinky",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/boot_demo1/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "boot_demo1",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/boot_demo2/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "boot_demo2",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/boot_serial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "boot_serial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/enet_io/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "enet_io",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/enet_lwip/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "enet_lwip",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/enet_uip/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "enet_uip",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/enet_weather/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "enet_weather",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/gpio_jtag/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "gpio_jtag",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/hello/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "hello",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/hibernate/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "hibernate",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/interrupts/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "interrupts",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/mpu_fault/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "mpu_fault",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/project0/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "project0",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/qs_iot/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "qs_iot",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/sleep_modes/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "sleep_modes",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/timers/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "timers",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/uart_echo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "uart_echo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/udma_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "udma_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_dev_bulk/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_dev_bulk",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_dev_cserial/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_dev_cserial",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_dev_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_dev_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_host_keyboard/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_host_keyboard",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_host_mouse/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_host_mouse",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_host_msc/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_host_msc",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_stick_demo/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_stick_demo",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/usb_stick_update/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "usb_stick_update",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "examples/boards/ek-tm4c1294xl/watchdog/ccs",
+   "actions" : "import",
+   "resourceType" : "project",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "watchdog",
+   "categories" : [
+      [
+         "Development Tools",
+         "Examples"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/docs/SW-EK-TM4C1294XL-UG-2.1.3.156.pdf",
+   "actions" : "import",
+   "resourceType" : "file",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Firmware Development Package User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "resourceType" : "overview",
+   "content" : " Texas Instruments' TivaWare™ Peripheral Driver Library is a set of drivers for accessing the peripherals found on the TM4C family of ARM® Cortex®-M4F based microcontrollers. Full API for configuring, enabling & using integrated peripherals are provided with support for multiple toolchains.</p>",
+   "name" : "Driver Library",
+   "categories" : [
+      [
+         "Libraries"
+      ]
+   ]
+}
+,{
+   "resourceType" : "overview",
+   "content" : " The Texas Instruments Graphics Library provides a set of graphics primitives and a widget set for creating graphical user interfaces on TM4C microcontroller-based boards that have a graphical display with support for multiple toolchains. Graphics library offers an easy to use API for rapid development with any LCD. The consistency across Graphics Library allows the same application code to be used across different LCD types.</p>",
+   "name" : "Graphics Library",
+   "categories" : [
+      [
+         "Libraries"
+      ]
+   ]
+}
+,{
+   "resourceType" : "overview",
+   "content" : " The Texas Instruments Sensor Library is a collection of functions and drivers for interacting with environmental sensors, such as accelerometers, gyroscopes, magnetometers, and so on with support for multiple toolchains. These sensors provide information about the environment in which the board is situated, allowing the application to make decisions based on its surroundings.</p>",
+   "name" : "Sensor Library",
+   "categories" : [
+      [
+         "Libraries"
+      ]
+   ]
+}
+,{
+   "resourceType" : "overview",
+   "content" : " The Texas Instruments USB Library is a set of data types and functions for creating USB device, host or On-The-Go (OTG) applications with support for multiple toolchains.</p>",
+   "name" : "USB Library",
+   "categories" : [
+      [
+         "Libraries"
+      ]
+   ]
+}
+,{
+   "link" : "/driverlib",
+   "resourceType" : "folder",
+   "name" : "driverlib",
+   "categories" : [
+      [
+         "Libraries",
+         "Driver Library"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/grlib",
+   "resourceType" : "folder",
+   "name" : "grlib",
+   "categories" : [
+      [
+         "Libraries",
+         "Graphics Library"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/sensorlib",
+   "resourceType" : "folder",
+   "name" : "sensorlib",
+   "categories" : [
+      [
+         "Libraries",
+         "Sensor Library"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "/usblib",
+   "resourceType" : "folder",
+   "name" : "usblib",
+   "categories" : [
+      [
+         "Libraries",
+         "USB Library"
+      ]
+   ],
+   "license" : "EULA.txt"
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmz849",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C123X"
+   ],
+   "name" : "Errata",
+   "categories" : [
+      [
+         "Devices"
+      ]
+   ],
+   "tags" : [
+      "errata",
+      "erratasheet",
+      "info"
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmz850",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Errata",
+   "categories" : [
+      [
+         "Devices"
+      ]
+   ],
+   "tags" : [
+      "errata",
+      "erratasheet",
+      "info"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma076",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Implementing OPUS Voice Code for TM4C129x Device",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma057",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "1-Wire Enumeration",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma074",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Implementation of Programmer for Serial Bootloaders on TM4C12x Microcontroller",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma041",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Using the CMSIS DSP Library in Code Composer Studio for TM4C MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma073",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Using Feature Set of I2C on TM4C129x Microcontrollers",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma072",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Serial to Ethernet Converter for TM4C129x Microcontrollers Using RTOS",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma071",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C123X"
+   ],
+   "name" : "Thermal Printer Reference Design Using TM4C1233H6PM",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma049",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X",
+      "TM4C123X"
+   ],
+   "name" : "Transitioning Designs From Stellaris LM3S Microcontrollers to Tiva C Series MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma065",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X",
+      "TM4C123X"
+   ],
+   "name" : "Differences Between Tiva C Series TM4C Microcontrollers",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma063",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "Differences Between Stellaris Tempest & Firestorm-Class MCUs and Tiva TM4C129x",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma035",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C123X"
+   ],
+   "name" : "Differences Among Stellaris® LM3S and Tiva™ C Series TM4C123x MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma059",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C123X"
+   ],
+   "name" : "System Design Guidelines for the TM4C123x Family of Tiva C Series MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma056",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X"
+   ],
+   "name" : "System Design Guidelines for the TM4C129x Family of Tiva C Series MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma053",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C123X"
+   ],
+   "name" : "Use Conditions for 5-V Tolerant GPIOs on Tiva™ C Series TM4C123x MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma003",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X",
+      "TM4C123X"
+   ],
+   "name" : "Stellaris Application Update Using Stellaris USB DFU Class",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma042",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C123X"
+   ],
+   "name" : "Dual-SPI Emulating I²S on Tiva™ C Series TM4C123x MCUs",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma050",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X",
+      "TM4C123X"
+   ],
+   "name" : "Migrating Software Projects from StellarisWare to TivaWare for C Series Software",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma066",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X",
+      "TM4C123X"
+   ],
+   "name" : "Powering Cortex-M4 MCUs Using the High Efficiency DCS-Control Topology",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spma043",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "TM4C129X",
+      "TM4C123X"
+   ],
+   "name" : "Diagnosing Software Faults in Stellaris® Microcontrollers",
+   "categories" : [
+      [
+         "Devices",
+         "Appnotes"
+      ]
+   ],
+   "tags" : [
+      "appnotes"
+   ],
+   "devices" : [
+      "TM4C129X",
+      "TM4C123X"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu358",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "Getting Started Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "guide",
+      "getting started",
+      "quick"
+   ],
+   "devices" : [
+      "dk-tm4c123g"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu357",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "DK-TM4C123G"
+   ],
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "dk-tm4c123g"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu361",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "Getting Started Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "guide",
+      "getting started",
+      "quick"
+   ],
+   "devices" : [
+      "dk-tm4c129x"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu360",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "DK-TM4C129X"
+   ],
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "dk-tm4c129x"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/zip/spmr240",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "EK-TM4C123GXL",
+   "categories" : [
+      [
+         "Development Tools",
+         "Design Files"
+      ]
+   ],
+   "tags" : [
+      "Design",
+      "Quick"
+   ],
+   "devices" : [
+      "ek-tm4c123gxl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu296",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C123GXL"
+   ],
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "ek-tm4c123gxl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/zip/spmr241",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "EK-TM4C1294XL",
+   "categories" : [
+      [
+         "Development Tools",
+         "Design Files"
+      ]
+   ],
+   "tags" : [
+      "Design",
+      "Quick"
+   ],
+   "devices" : [
+      "ek-tm4c1294xl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmz858",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "Getting Started Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "ek-tm4c1294xl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu365",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C1294XL"
+   ],
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "ek-tm4c1294xl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/zip/spmr242",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "EK-TM4C129EXL",
+   "categories" : [
+      [
+         "Development Tools",
+         "Design Files"
+      ]
+   ],
+   "tags" : [
+      "Design",
+      "Quick"
+   ],
+   "devices" : [
+      "ek-tm4c129exl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmz862",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "Getting Started Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "ek-tm4c129exl"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/lit/pdf/spmu372",
+   "resourceType" : "weblink",
+   "devtools" : [
+      "EK-TM4C129EXL"
+   ],
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Development Tools",
+         "Documents"
+      ]
+   ],
+   "tags" : [
+      "user's guide",
+      "users guide"
+   ],
+   "devices" : [
+      "ek-tm4c129exl"
+   ]
+}
+,{
+   "link" : "docs/SW-TM4C-DRL-UG-2.1.3.156.pdf",
+   "resourceType" : "file",
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Libraries",
+         "Driver Library"
+      ]
+   ],
+   "tags" : [
+      "user's guide"
+   ]
+}
+,{
+   "link" : "docs/SW-TM4C-GRL-UG-2.1.3.156.pdf",
+   "resourceType" : "file",
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Libraries",
+         "Graphics Library"
+      ]
+   ],
+   "tags" : [
+      "user's guide"
+   ]
+}
+,{
+   "link" : "docs/SW-TM4C-SENSORLIB-UG-2.1.3.156.pdf",
+   "resourceType" : "file",
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Libraries",
+         "Sensor Library"
+      ]
+   ],
+   "tags" : [
+      "user's guide"
+   ]
+}
+,{
+   "link" : "docs/SW-TM4C-USBL-UG-2.1.3.156.pdf",
+   "resourceType" : "file",
+   "name" : "User's Guide",
+   "categories" : [
+      [
+         "Libraries",
+         "USB Library"
+      ]
+   ],
+   "tags" : [
+      "user's guide"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/lmflashprogrammer",
+   "resourceType" : "weblink",
+   "name" : "LM Flash Programmer",
+   "categories" : [
+      [
+         "Tools"
+      ]
+   ],
+   "tags" : [
+      "utility"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/UNIFLASH",
+   "resourceType" : "weblink",
+   "name" : "UniFlash",
+   "categories" : [
+      [
+         "Tools"
+      ]
+   ],
+   "tags" : [
+      "utility"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/pinmuxtool",
+   "resourceType" : "weblink",
+   "name" : "PinMux",
+   "categories" : [
+      [
+         "Tools"
+      ]
+   ],
+   "tags" : [
+      "utility"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129XSDRAM",
+   "resourceType" : "weblink",
+   "name" : "Interfacing SDRAM Memory on High Performance MCU",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129SDRAMNVM",
+   "resourceType" : "weblink",
+   "name" : "Execute from SDRAM with code storage in NVM",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4CFLASHSRAM",
+   "resourceType" : "weblink",
+   "name" : "Concurrent Parallel XIP Flash and SRAM Design for code download & execution",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129XWIFI",
+   "resourceType" : "weblink",
+   "name" : "WIFI Enabled IoT Node with High Performance MCU",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129XNFC",
+   "resourceType" : "weblink",
+   "name" : "Wi-Fi Enabled IoT Node With NFC Connection Handover",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C123IOTSTEPPERMOTOR",
+   "resourceType" : "weblink",
+   "name" : "Microstepping Stepper Motor Control With MCU and Wi-Fi for IoT",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C123STEPPERMOTOR",
+   "resourceType" : "weblink",
+   "name" : "Driving a Stepper Motor Reference Design with High Performance MCU",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129XS2E",
+   "resourceType" : "weblink",
+   "name" : "RTOS-Based Configurable Serial-to-Ethernet Converter",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129XBLE",
+   "resourceType" : "weblink",
+   "name" : "BLE Enabled IoT Node With High Performance MCU",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDC-ZNP-HOST-SW3",
+   "resourceType" : "weblink",
+   "name" : "Portable ZigBee Plug-In Software Framework for any OS",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C123XSUB1GHZ",
+   "resourceType" : "weblink",
+   "name" : "Sub-1 GHz–Enabled IoT Node on High-Performance Microcontroller",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+,{
+   "link" : "http://www.ti.com/tool/TIDM-TM4C129POE",
+   "resourceType" : "weblink",
+   "name" : "TM4C129POE Power Over Ethernet (PoE) Reference Design for Connected IoT",
+   "categories" : [
+      [
+         "TI Designs"
+      ]
+   ],
+   "tags" : [
+      "reference"
+   ]
+}
+]

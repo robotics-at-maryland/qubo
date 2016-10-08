@@ -1,0 +1,40 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/crc.h",
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/uart.h",
+         "-../../../../driverlib/udma.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../../../../inc/hw_ccm.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_types.h",
+         "-../../../../inc/hw_uart.h",
+         "-../../../../utils/uartstdio.c",
+         "-../../../../utils/uartstdio.h",
+         "+crc32.c -> crc32.c",
+         "+crc32_ccs.cmd -> crc32_ccs.cmd",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../../../../utils/uartstdio.c -> utils/uartstdio.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

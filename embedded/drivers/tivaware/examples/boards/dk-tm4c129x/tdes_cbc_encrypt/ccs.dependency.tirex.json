@@ -1,0 +1,51 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/des.h",
+         "-../../../../driverlib/fpu.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/lcd.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/timer.h",
+         "-../../../../driverlib/uart.h",
+         "-../../../../driverlib/udma.h",
+         "-../drivers/frame.c",
+         "-../drivers/frame.h",
+         "-../drivers/kentec320x240x16_ssd2119.c",
+         "-../drivers/kentec320x240x16_ssd2119.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../../../../grlib/grlib.h",
+         "-../../../../inc/hw_des.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_sysctl.h",
+         "-../../../../inc/hw_types.h",
+         "-../../../../inc/hw_uart.h",
+         "-../../../../utils/uartstdio.c",
+         "-../../../../utils/uartstdio.h",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+tdes_cbc_encrypt.c -> tdes_cbc_encrypt.c",
+         "+tdes_cbc_encrypt_ccs.cmd -> tdes_cbc_encrypt_ccs.cmd",
+         "+../drivers/frame.c -> drivers/frame.c",
+         "+../drivers/kentec320x240x16_ssd2119.c -> drivers/kentec320x240x16_ssd2119.c",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../../../../utils/uartstdio.c -> utils/uartstdio.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

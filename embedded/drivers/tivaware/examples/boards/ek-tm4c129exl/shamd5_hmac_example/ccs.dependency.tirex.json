@@ -1,0 +1,45 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/shamd5.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/uart.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_sysctl.h",
+         "-../../../../inc/hw_types.h",
+         "-../../../../inc/hw_uart.h",
+         "-../../../../utils/cmdline.c",
+         "-../../../../utils/cmdline.h",
+         "-../../../../utils/uartstdio.c",
+         "-../../../../utils/uartstdio.h",
+         "-../../../../utils/ustdlib.c",
+         "-../../../../utils/ustdlib.h",
+         "+shamd5_hmac_example.c -> shamd5_hmac_example.c",
+         "+shamd5_hmac_example_ccs.cmd -> shamd5_hmac_example_ccs.cmd",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../../../../utils/cmdline.c -> utils/cmdline.c",
+         "+../../../../utils/uartstdio.c -> utils/uartstdio.c",
+         "+../../../../utils/ustdlib.c -> utils/ustdlib.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

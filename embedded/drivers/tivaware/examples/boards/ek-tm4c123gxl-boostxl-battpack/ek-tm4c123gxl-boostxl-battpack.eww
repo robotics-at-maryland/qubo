@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\..\..\..\driverlib\driverlib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\..\usblib\usblib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\..\sensorlib\sensorlib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\boostxl_battpack\boostxl_battpack.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All Examples</name>
+      <member>
+        <project>driverlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>usblib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>sensorlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>boostxl_battpack</project>
+        <configuration>Debug</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>

@@ -1,0 +1,38 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/fpu.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/ssi.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/watchdog.h",
+         "-../drivers/buttons.c",
+         "-../drivers/buttons.h",
+         "-../drivers/cfal96x64x16.c",
+         "-../drivers/cfal96x64x16.h",
+         "-../../../../grlib/grlib.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_types.h",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+watchdog.c -> watchdog.c",
+         "+watchdog_ccs.cmd -> watchdog_ccs.cmd",
+         "+../drivers/buttons.c -> drivers/buttons.c",
+         "+../drivers/cfal96x64x16.c -> drivers/cfal96x64x16.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

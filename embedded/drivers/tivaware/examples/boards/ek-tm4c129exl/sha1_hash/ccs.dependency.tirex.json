@@ -1,0 +1,40 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/shamd5.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/uart.h",
+         "-../../../../driverlib/udma.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_shamd5.h",
+         "-../../../../inc/hw_types.h",
+         "-../../../../inc/hw_uart.h",
+         "-../../../../utils/uartstdio.c",
+         "-../../../../utils/uartstdio.h",
+         "+sha1_hash.c -> sha1_hash.c",
+         "+sha1_hash_ccs.cmd -> sha1_hash_ccs.cmd",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../../../../utils/uartstdio.c -> utils/uartstdio.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

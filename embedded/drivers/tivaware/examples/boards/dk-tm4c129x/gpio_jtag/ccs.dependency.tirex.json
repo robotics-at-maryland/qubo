@@ -1,0 +1,49 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/adc.h",
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/lcd.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/timer.h",
+         "-../drivers/frame.c",
+         "-../drivers/frame.h",
+         "-../drivers/kentec320x240x16_ssd2119.c",
+         "-../drivers/kentec320x240x16_ssd2119.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../drivers/touch.c",
+         "-../drivers/touch.h",
+         "-../../../../grlib/grlib.h",
+         "-../../../../grlib/widget.h",
+         "-../../../../inc/hw_adc.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_sysctl.h",
+         "-../../../../inc/hw_timer.h",
+         "-../../../../inc/hw_types.h",
+         "+gpio_jtag.c -> gpio_jtag.c",
+         "+gpio_jtag_ccs.cmd -> gpio_jtag_ccs.cmd",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+../drivers/frame.c -> drivers/frame.c",
+         "+../drivers/kentec320x240x16_ssd2119.c -> drivers/kentec320x240x16_ssd2119.c",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../drivers/touch.c -> drivers/touch.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

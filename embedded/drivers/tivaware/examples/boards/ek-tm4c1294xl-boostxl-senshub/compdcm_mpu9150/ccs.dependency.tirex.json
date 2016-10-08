@@ -1,0 +1,46 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/uart.h",
+         "-../drivers/buttons.c",
+         "-../drivers/buttons.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_types.h",
+         "-../../../../inc/hw_uart.h",
+         "-../../../../sensorlib/ak8975.h",
+         "-../../../../sensorlib/comp_dcm.h",
+         "-../../../../sensorlib/hw_ak8975.h",
+         "-../../../../sensorlib/hw_mpu9150.h",
+         "-../../../../sensorlib/i2cm_drv.h",
+         "-../../../../sensorlib/mpu9150.h",
+         "-../../../../utils/uartstdio.c",
+         "-../../../../utils/uartstdio.h",
+         "+compdcm_mpu9150.c -> compdcm_mpu9150.c",
+         "+compdcm_mpu9150_ccs.cmd -> compdcm_mpu9150_ccs.cmd",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+../drivers/buttons.c -> drivers/buttons.c",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../../../../utils/uartstdio.c -> utils/uartstdio.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\..\..\..\driverlib\driverlib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\..\usblib\usblib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\..\grlib\grlib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\fontview\fontview.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\grlib_demo\grlib_demo.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\lang_demo\lang_demo.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\scribble\scribble.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All Examples</name>
+      <member>
+        <project>driverlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>usblib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>grlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>fontview</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>grlib_demo</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>lang_demo</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>scribble</project>
+        <configuration>Debug</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>

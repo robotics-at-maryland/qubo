@@ -1,0 +1,49 @@
+[
+   {
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "files" : [
+         "-../../../../driverlib/debug.h",
+         "-../../../../driverlib/gpio.h",
+         "-../../../../driverlib/interrupt.h",
+         "-../../../../driverlib/pin_map.h",
+         "-../../../../driverlib/rom.h",
+         "-../../../../driverlib/rom_map.h",
+         "-../../../../driverlib/sysctl.h",
+         "-../../../../driverlib/systick.h",
+         "-../../../../driverlib/uart.h",
+         "-../../../../driverlib/usb.h",
+         "-../drivers/pinout.c",
+         "-../drivers/pinout.h",
+         "-../../../../inc/hw_gpio.h",
+         "-../../../../inc/hw_ints.h",
+         "-../../../../inc/hw_memmap.h",
+         "-../../../../inc/hw_nvic.h",
+         "-../../../../inc/hw_types.h",
+         "-../../../../inc/hw_uart.h",
+         "-../../../../usblib/device/usbdbulk.h",
+         "-../../../../usblib/device/usbdevice.h",
+         "-../../../../usblib/device/usbdevicepriv.h",
+         "-../../../../usblib/usb-ids.h",
+         "-../../../../usblib/usblib.h",
+         "-../../../../utils/uartstdio.c",
+         "-../../../../utils/uartstdio.h",
+         "-../../../../utils/ustdlib.c",
+         "-../../../../utils/ustdlib.h",
+         "+startup_ccs.c -> startup_ccs.c",
+         "+usb_bulk_structs.c -> usb_bulk_structs.c",
+         "+usb_bulk_structs.h -> usb_bulk_structs.h",
+         "+usb_dev_bulk.c -> usb_dev_bulk.c",
+         "+usb_dev_bulk_ccs.cmd -> usb_dev_bulk_ccs.cmd",
+         "+../drivers/pinout.c -> drivers/pinout.c",
+         "+../../../../utils/uartstdio.c -> utils/uartstdio.c",
+         "+../../../../utils/ustdlib.c -> utils/ustdlib.c"
+      ],
+      "name" : "na",
+      "default" : "na"
+   }
+]

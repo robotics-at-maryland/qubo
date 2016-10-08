@@ -1,0 +1,69 @@
+[
+{
+   "name" : "TM4C129X",
+   "description" : " The TM4C129x MCUs are the industry’s first ARM® Cortex®-M4F based MCUs with integrated Ethernet MAC+PHY, enabling customers to create a new class of highly connected products bridging the cloud and amplifying the ever-growing Internet of Things (IoT). The TM4C129x MCUs offer a 120MHz CPU and many connectivity options, as well as on-chip data protection and an LCD controller to save board space and enable connected applications, such as IoT gateways, linked home/building automation controllers, factory control and automation, connected human-machine interface (HMI), networked sensor gateways, and many other industrial applications. </p><p>For more information, go to the <a target='_blank' href= 'http://www.ti.com/lsds/ti/microcontrollers_16-bit_32-bit/c2000_performance/control_automation/tm4c12x/products.page '>product page</a>.",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C129X"
+      }
+   ],
+   "image" : ".metadata/images/TM4C129X.png"
+}
+,{
+   "name" : "TM4C123X",
+   "description" : " The TM4C123x Series MCUs integrates ARM® Cortex®-M4F CPU with single-precision floating-point core operating at up to 80MHz and high-performance analog-to- digital converters while still providing low-power modes that consume as little as 1.6 μA. With up to 40 PWM outputs, a generous number of serial communication peripherals, USB OTG, and two CAN controllers, the TM4C123x series provides an excellent baseline for home, building, and industrial applications. </p><p>For more information, go to the <a target='_blank' href= 'http://www.ti.com/lsds/ti/microcontrollers_16-bit_32-bit/c2000_performance/control_automation/tm4c12x/products.page '>product page</a>.",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C123X"
+      }
+   ],
+   "image" : ".metadata/images/TM4C123X.png"
+}
+,{
+   "name" : "TM4C123GH6PGE",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C123GH6PGE"
+      }
+   ]
+}
+,{
+   "name" : "TM4C129XNCZAD",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C129XNCZAD"
+      }
+   ]
+}
+,{
+   "name" : "TM4C1294NCPDT",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C1294NCPDT"
+      }
+   ]
+}
+,{
+   "name" : "TM4C129ENCPDT",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C129ENCPDT"
+      }
+   ]
+}
+,{
+   "name" : "TM4C123GH6PM",
+   "coreTypes" : [
+      {
+         "name" : "Cortex M",
+         "id" : "Cortex M.TM4C123GH6PM"
+      }
+   ]
+}
+]

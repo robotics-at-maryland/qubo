@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<importSpec>
+    <source root="..">
+        <file name="nfc_p2p_demo_debug.c"/>
+        <file name="nfc_p2p_demo_debug.h"/>
+        <file name="screen.c"/>
+        <file name="screen.h"/>
+        <file name="images.c"/>
+        <file name="images.h"/>
+        <file name="trf79x0_hw.h"/>
+        <file name="nfc_p2p_demo.c"/>
+        <file regex=".*_ccs\.cmd"/>
+        <file name="startup_ccs.c"/>
+    </source>
+</importSpec>
