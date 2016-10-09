@@ -1,0 +1,106 @@
+/**
+ * Qubobus Message Definition File
+ * These Message types make up the core of the Qubobus Protocol.
+ *
+ * Copyright (C) 2016 Robotics at Maryland
+ * Copyright (C) 2016 Greg Harris <gharris1727@gmail.com>
+ * All rights reserved.
+ */
+
+#include <stdint.h>
+
+#ifndef QUBOBUS_MESSAGE_H
+#define QUBOBUS_MESSAGE_H
+
+/* 
+ * Message type values to distinguish broad categories of messages.
+ */
+#define MT_ANNOUNCE 1 /* ID for announce messages trying to synchronize the connection. */
+#define MT_PROTOCOL 2 /* ID for messages with details of the protocol implementation. */
+#define MT_KEEPALIVE 3 /* ID for message sent to monitor link state. */
+#define MT_ERROR 4 /* ID for messages about errors that have occurred. */
+#define MT_DATA 5 /* ID for messages with data payloads. */
+
+#define ERR_ID_PROTOCOL 1 /* Error sent when a protocol mismatch ocurrs. */
+#define ERR_ID_CHECKSUM 2 /* Error sent when a checksum mismatch ocurrs */
+#define ERR_ID_TIMEOUT 3 /* Error sent after a long period of recieve inactivity. */
+
+/**
+ * Header for all messages.
+ * This block should appear at the very beginning of every message.
+ * It contains various information about the message and how it should be interpreted.
+ */
+struct Message_Header {
+    /* 
+     * Number of bytes in this message.
+     * This total includes the whole header, the payload, and the footer.
+     */
+    uint16_t num_bytes;
+    
+    /* 
+     * Type of this message.
+     * This value should be one among the types #defined above.
+     */
+    uint16_t message_type;
+
+    /* 
+     * Sequence number of this message.
+     * This is used for referencing in later messages. 
+     */
+    uint16_t seq_num;
+};
+
+/**
+ * Footer for all messages.
+ * This block should appear after the message payload, as the last bytes in any Message.
+ */
+struct Message_Footer {
+    /* 
+     * Checksum of all bytes previous in the message.
+     * This does not include itself.
+     */
+    uint16_t checksum;
+};
+
+/**
+ * Protocol Information Block.
+ * Stores details about the protocol, and is sent in a Protocol Message.
+ */
+struct Protocol_Info {
+    /* 
+     * Version number of the protocol implemented by the client.
+     */
+    uint16_t version;
+};
+
+/**
+ * Header of an Error Message.
+ * This is expected to be at the very beginning of the payload in message that have MT_ERROR as the message_type.
+ */
+struct Error_Header {
+    /* 
+     * Error code of this Error Message.
+     */
+    uint16_t err_code;
+
+    /* 
+     * Reference to past message that may be the cause of this error. 
+     * This may not be relevant depending on the error id.
+     */
+    uint16_t cause_id;
+};
+
+/**
+ * Header of a Data Message.
+ * This is expected to be at the very beginning of the payload in messages that have MT_DATA as the message_type.
+ */
+struct Data_Header {
+    /* 
+     * ID of the data message being sent. 
+     * This determines how to interpret the rest of the data payload. 
+     */
+    uint16_t data_id;
+};
+
+
+#endif
