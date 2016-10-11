@@ -32,15 +32,15 @@ int main() {
             EMPTY);
     success &= error(
             "Protocol Mismatch Error", 
-            ERR_ID_PROTOCOL, 
+            E_ID_PROTOCOL, 
             EMPTY);
     success &= error(
             "Checksum Mismatch Error", 
-            ERR_ID_CHECKSUM, 
+            E_ID_CHECKSUM, 
             EMPTY);
     success &= error(
             "Connection Timeout Error", 
-            ERR_ID_TIMEOUT, 
+            E_ID_TIMEOUT, 
             EMPTY);
 
     /* Tests involving the embedded subsystem */
@@ -52,6 +52,22 @@ int main() {
             "Embedded Status", 
             D_ID_EMBEDDED_STATUS, 
             sizeof(struct Embedded_Status));
+    success &= error(
+            "Embedded Overload", 
+            E_ID_EMBEDDED_OVERLOAD, 
+            EMPTY);
+    success &= error(
+            "Embedded Memory", 
+            E_ID_EMBEDDED_MEMORY, 
+            EMPTY);
+    success &= error(
+            "Embedded Page Fault", 
+            E_ID_EMBEDDED_PAGE_FAULT, 
+            EMPTY);
+    success &= error(
+            "Embedded Assert", 
+            E_ID_EMBEDDED_ASSERT, 
+            EMPTY);
 
     /* Tests for messages involving the safety subsystem */
     success &= data(
@@ -81,12 +97,24 @@ int main() {
             D_ID_BATTERY_STATUS, 
             sizeof(struct Battery_Status));
     success &= data(
+            "Battery Config", 
+            D_ID_BATTERY_CONFIG, 
+            sizeof(struct Battery_Config));
+    success &= data(
             "Battery Shutdown", 
             D_ID_BATTERY_SHUTDOWN, 
             sizeof(struct Battery_Shutdown));
     success &= error(
             "Battery Unreachable", 
-            ERR_ID_BATTERY_UNREACHABLE, 
+            E_ID_BATTERY_UNREACHABLE, 
+            EMPTY);
+    success &= error(
+            "Battery Disconnect", 
+            E_ID_BATTERY_DISCONNECT, 
+            EMPTY);
+    success &= error(
+            "Battery Environment", 
+            E_ID_BATTERY_ENVIRONMENT, 
             EMPTY);
 
     /* Tests involving the power subsystem */
@@ -99,6 +127,10 @@ int main() {
             D_ID_POWER_STATUS, 
             sizeof(struct Power_Status));
     success &= data(
+            "Power Config", 
+            D_ID_POWER_CONFIG, 
+            sizeof(struct Power_Config));
+    success &= data(
             "Power Enable", 
             D_ID_POWER_ENABLE, 
             sizeof(struct Power_Enable));
@@ -108,7 +140,19 @@ int main() {
             sizeof(struct Power_Disable));
     success &= error(
             "Power Unreachable", 
-            ERR_ID_POWER_UNREACHABLE, 
+            E_ID_POWER_UNREACHABLE, 
+            EMPTY);
+    success &= error(
+            "Power Overvolt", 
+            E_ID_POWER_OVERVOLT, 
+            EMPTY);
+    success &= error(
+            "Power Undervolt", 
+            E_ID_POWER_UNDERVOLT, 
+            EMPTY);
+    success &= error(
+            "Power Overcurrent", 
+            E_ID_POWER_OVERCURRENT, 
             EMPTY);
 
     /* Tests involving the thruster subsystem */
@@ -124,9 +168,21 @@ int main() {
             "Thruster Current", 
             D_ID_THRUSTER_CURRENT, 
             sizeof(struct Thruster_Current));
+    success &= data(
+            "Thruster Config", 
+            D_ID_THRUSTER_CONFIG, 
+            sizeof(struct Thruster_Config));
     success &= error(
             "Thruster Unreachable", 
-            ERR_ID_THRUSTER_UNREACHABLE, 
+            E_ID_THRUSTER_UNREACHABLE, 
+            EMPTY);
+    success &= error(
+            "Thruster Overcurrent", 
+            E_ID_THRUSTER_OVERCURRENT, 
+            EMPTY);
+    success &= error(
+            "Thruster Watchdog", 
+            E_ID_THRUSTER_WATCHDOG, 
             EMPTY);
 
     /* Tests involving the pneumatics subsystem */
@@ -136,21 +192,29 @@ int main() {
             sizeof(struct Pneumatics_Set));
     success &= error(
             "Pneumatics Unreachable", 
-            ERR_ID_PNEUMATICS_UNREACHABLE, 
+            E_ID_PNEUMATICS_UNREACHABLE, 
             EMPTY);
 
     /* Tests involving the depth sensor subsystem */
     success &= data(
             "Depth Request", 
-            D_ID_DEPTH_REQUEST, 
+            D_ID_DEPTH_STATUS_REQUEST, 
             EMPTY);
     success &= data(
             "Depth Measurement", 
-            D_ID_DEPTH, 
-            sizeof(struct Depth_Reading));
+            D_ID_DEPTH_STATUS, 
+            sizeof(struct Depth_Status));
+    success &= data(
+            "Depth Config", 
+            D_ID_DEPTH_CONFIG, 
+            sizeof(struct Depth_Config));
     success &= error(
             "Depth Unreachable", 
-            ERR_ID_DEPTH_UNREACHABLE, 
+            E_ID_DEPTH_UNREACHABLE, 
+            EMPTY);
+    success &= error(
+            "Depth Warning", 
+            E_ID_DEPTH_WARNING, 
             EMPTY);
 
 

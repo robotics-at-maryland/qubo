@@ -11,6 +11,6 @@ struct Pneumatics_Set {
 };
 
 /* Error message sent when a thruster is not connected. */
-#define ERR_ID_PNEUMATICS_UNREACHABLE 60
+#define E_ID_PNEUMATICS_UNREACHABLE 60
 
 #endif

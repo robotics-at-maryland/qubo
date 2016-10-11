@@ -21,9 +21,9 @@
 #define MT_ERROR 4 /* ID for messages about errors that have occurred. */
 #define MT_DATA 5 /* ID for messages with data payloads. */
 
-#define ERR_ID_PROTOCOL 1 /* Error sent when a protocol mismatch ocurrs. */
-#define ERR_ID_CHECKSUM 2 /* Error sent when a checksum mismatch ocurrs */
-#define ERR_ID_TIMEOUT 3 /* Error sent after a long period of recieve inactivity. */
+#define E_ID_PROTOCOL 1 /* Error sent when a protocol mismatch ocurrs. */
+#define E_ID_CHECKSUM 2 /* Error sent when a checksum mismatch ocurrs */
+#define E_ID_TIMEOUT 3 /* Error sent after a long period of recieve inactivity. */
 
 /**
  * Header for all messages.
