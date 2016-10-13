@@ -37,7 +37,7 @@ bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool
 }
 
 
-void VisionNode::test_execute(const ram_msgs::bool_bool_intGoalConstPtr& goal, Server*as){
+void VisionNode::test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as){
     //    goal->test_feedback = 5;
     ROS_ERROR("You called the action well done!");
     as->setSucceeded();

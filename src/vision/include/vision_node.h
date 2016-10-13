@@ -3,14 +3,14 @@
 #include "ros/ros.h"
 #include <iostream>
 
-#include <ram_msgs/visionExampleAction.h>
+#include <ram_msgs/VisionExampleAction.h>
 #include <actionlib/server/simple_action_server.h>
 
 #include "std_msgs/String.h"
 #include  "ram_msgs/bool_bool.h"
 
 
-typedef actionlib::SimpleActionServer<ram_msgs::visionExampleAction> Server;
+typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
 
 
 class VisionNode{
@@ -22,7 +22,7 @@ class VisionNode{
     
 static bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
-static Vitest_execute(const ram_msgs::visionExampleGoalConstPtr& goal, Server*as);
+static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
 protected:
     
     //cap is the object holding the video feed, either real or from an existing avi file    
