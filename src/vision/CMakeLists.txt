@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
+#Find stuff we need
 find_package(catkin 
   REQUIRED COMPONENTS
   roscpp
@@ -8,22 +9,32 @@ find_package(catkin
   image_transport
   cv_bridge
   ram_msgs
+  OpenCV 
 )
  
-find_package(OpenCV REQUIRED)
 
-find_package(
-  Boost
+#sg: these used to be here but I have reason to believe they do not do anything, so I'm getting rid of them
+#find_package(OpenCV REQUIRED)
+
+#find_package(
+#  Boost
 #  REQUIRED COMPONENTS algorithm
-)
+#)
+
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
+#Stuff other packages that depend on us need
 catkin_package(
    INCLUDE_DIRS
    LIBRARIES ${PROJECT_NAME}
    CATKIN_DEPENDS roscpp roslib
 )
+
+
+##############################
+# File List ##################
+##############################
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
@@ -31,15 +42,23 @@ include_directories(
   include/
 )
 
-
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
 )
 
+##############################
+# Add Executables ############
+##############################
+
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node  ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+
+##############################
+# Installable Targets ########
+##############################
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

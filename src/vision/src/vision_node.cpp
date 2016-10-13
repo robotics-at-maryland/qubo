@@ -1,5 +1,4 @@
 //sg: this is going to be the primary vision node for qubo (or future robots whatever)
-
 #include "vision_node.h"
 
 //sg: I'm copying the pointer to a node handle scheme we used in the vehicle layer here 
@@ -15,7 +14,6 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string
         printf("couldn't open file/camera\n");
         exit(0);
     }
-
 }    
 
 VisionNode::~VisionNode(){}
@@ -26,11 +24,21 @@ void VisionNode::update(){
     //std::cout << img;
 }
 
+
+
+
+//==============================================================================
+//Past this point is a collection of services and actions that will be able to called from any other node
+
 bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
-    
     // code goes here
     ROS_ERROR("You called the service! nice!");
-    
     return 0;
+}
 
+
+void VisionNode::test_execute(const ram_msgs::bool_bool_intGoalConstPtr& goal, Server*as){
+    //    goal->test_feedback = 5;
+    ROS_ERROR("You called the action well done!");
+    as->setSucceeded();
 }

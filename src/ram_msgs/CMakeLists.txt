@@ -12,10 +12,15 @@ find_package(
     message_generation
     roscpp
     rospy
+
+    #sg: action lib tutorial  told me to add these
+     genmsg 
+     actionlib_msgs 
+     actionlib
 )
 
 ##############################
-# Message Generation #########
+# Messages #########
 ##############################
 
 add_message_files(
@@ -41,7 +46,7 @@ add_message_files(
 )
 
 ##############################
-# Service Generation##########
+# Services##########
 ##############################
 add_service_files(
     FILES
@@ -50,9 +55,25 @@ add_service_files(
     bool_bool.srv
 )
 
+
+##############################
+#Actions##########
+##############################
+
+add_action_files(DIRECTORY action
+
+  FILES 
+  visionExample.action
+)
+
+##############################
+#Generation##########
+##############################
+
 generate_messages(
     DEPENDENCIES
     std_msgs
+    actionlib_msgs
 )
 
 ##############################

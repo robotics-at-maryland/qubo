@@ -41,6 +41,6 @@ if [ ! -d /etc/ros/rosdep/ ]; then
 fi
 
 # Finally, run rosdep to install all the dependencies for our packages.
-sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../packages --rosdistro indigo
+sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro indigo
 
 
