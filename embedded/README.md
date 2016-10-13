@@ -30,6 +30,9 @@ the necessary paths, simply type:
 To build the image with the test application, just run `make` or `make rebuild`.
 If the build process is successful, the image file _image.bin_ will be ready to
 upload to the Launchpad.
+If make exists with the error that arm-none-eabi-gcc does not exist, and you have sourced setenv.sh the error may be because you are on a 64 bit system. In order to remedy the error you should 
+
+sudo apt-get install ia32-libs
 
 ##Drivers
 `drivers` directory has two subdirectories. `kovacic` includes the original drivers written by Jernej Kovacic. 
