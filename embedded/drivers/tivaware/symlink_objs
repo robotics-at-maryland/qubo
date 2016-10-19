@@ -6,3 +6,4 @@ ln -s $PWD/driverlib/gcc $PWD/../../obj/driverslib
 #ln -s $PWD/grlib/gcc $PWD/../../obj/grlib
 #ln -s $PWD/sensorlib/gcc $PWD/../../obj/sensorlib
 #ln -s $PWD/usblib/gcc $PWD/../../obj/usblib
+ln -s $PWD/utils/utils $PWD/../../obj/utils

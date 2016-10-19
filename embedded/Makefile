@@ -119,6 +119,7 @@ INC_FREERTOS = $(FREERTOS_SRC)include/
 KOVACIC_INC_DRIVERS = $(KOVACIC_DRIVERS_SRC)include/
 
 # Tivaware headers
+TIVAWARE_INC = drivers/tivaware/inc/
 TIVAWARE_INC_DRIVERLIB = drivers/tivaware/driverlib/
 TIVAWARE_INC_GRLIB = drivers/tivaware/grlib/
 TIVAWARE_INC_SENSORLIB = drivers/tivaware/sensorlib/
