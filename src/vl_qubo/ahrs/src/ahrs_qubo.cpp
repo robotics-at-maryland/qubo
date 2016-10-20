@@ -1,29 +1,38 @@
 #include "ahrs_qubo.h"
 //written by Jeremy Weed
 
+/**
+ * See the header file for actual method descriptions
+ */
 AhrsQuboNode::AhrsQuboNode(std::shared_ptr<ros::NodeHandle> n,
-	int rate, std::string name, std::string device) : RamNode(n){
+	int rate, std::string name, std::string device) : QuboNode(n){
 
+	// starts the timer for message time stamps
 	ros::Time::init();
 	this->name = name;
-	ros::Rate loop_rate(rate);
 
+	//creates a Rate object to sleep when not in use
+	loop_rate.reset(new ros::Rate(rate));
+
+	// initializes the publisher on this node to "qubo/ahrs/{name}"
 	ahrsPub = n->advertise<sensor_msgs::Imu>("qubo/ahrs/" + name, 1000);
 
 	//create + open the device
 	//k115200 is the baud rate of the device.  Currently chosen arbitrarily
 	ahrs.reset(new AHRS(device, AHRS::k115200));
+
+	//Try to open the AHRS, an error if it doesn't work
 	try{
 		ahrs->openDevice();
-		isConnected = true;
 	}catch(AHRSException& ex){
 		ROS_ERROR(ex.what());
-		isConnected = false;
 		return;
 	}
 
+	// make sure it's actually open
 	if(!ahrs->isOpen()){
 		ROS_ERROR("AHRS %s didn't open succsesfully", device.c_str());
+		return;
 	}
 	//configs the device
 	ahrs->sendAHRSDataFormat();
@@ -36,15 +45,15 @@ AhrsQuboNode::~AhrsQuboNode(){
 	ahrs->closeDevice();
 }
 
+
 void AhrsQuboNode::update(){
 	static int id = 0;
 	static int attmepts = 0;
 
 	//if we aren't connected yet, lets try a few more times
-	if(!isConnected){
+	if(!ahrs->isOpen()){
 		try{
 			ahrs->openDevice();
-			isConnected = true;
 		}catch(AHRSException& ex){
 			ROS_ERROR("Attempt %i to connect to AHRS failed.", attmepts++);
 			ROS_ERROR("DEVICE NOT FOUND! ");
@@ -68,6 +77,7 @@ void AhrsQuboNode::update(){
 		return;
 	}
 
+	//construct the imu data message
 	ROS_DEBUG("Data has been read");
 	msg.header.stamp = ros::Time::now();
 	msg.header.seq = ++id;
