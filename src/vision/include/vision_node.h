@@ -16,23 +16,49 @@ typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
 class VisionNode{
 
     public:
-    VisionNode(std::shared_ptr<ros::NodeHandle>, int rate, std::string feed);
+    
+    //you need to pass in a node handle, a rate to poll at, and two camera feeds, which should be a file path either to a physical device or to a video file
+    //note you always need to pass 3 feeds even if you're just testing monocualar tasks
+    VisionNode(std::shared_ptr<ros::NodeHandle>, int rate, std::string feed0, std::string feed1, std::string feedb);
     ~VisionNode();
     void update(); //this will just pull the next image in
-    
-static bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
-static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
-protected:
+
+    //all service prototypes should go below
+    //=================================================================================================================
     
+    static bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+
+    //function
+
+    //function
+
+    //... 
+
+    
+    //end service protypes
+    //sg: not entirely sure we'll keep action executes in here, may make every action server a seperate class not sure yet. 
+    //=================================================================================================================
+    
+    static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
+    protected:
+
+
+    std::shared_ptr<ros::NodeHandle> n;
     //cap is the object holding the video feed, either real or from an existing avi file    
     //img is the object reprenting the current image we're looking at, we'll keep pumping the next fram
     //from cap into img at every update
 
-    //sg: We'll need three of these for our three cameras, I'll need to think of a good general way 
-    //of doing that without tying us too much to the current configuration, I'll leave th
-    cv::VideoCapture cap;    
-    cv::Mat img;
+    //cap0 is our top most forward facing camera, cap1 is the bottom most forward facing camera, capb is our downards facing camera
+    //the images obviously correspond
+    cv::VideoCapture cap0;
+    cv::Mat img0;
+    
+    cv::VideoCapture cap1;
+    cv::Mat img1; 
+
+    cv::VideoCapture capb;
+    cv::Mat imgb;
     
 
 };
