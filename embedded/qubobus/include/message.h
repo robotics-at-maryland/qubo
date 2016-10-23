@@ -8,6 +8,7 @@
  */
 
 #include <stdint.h>
+#include "modules.h"
 
 #ifndef QUBOBUS_MESSAGE_H
 #define QUBOBUS_MESSAGE_H
@@ -15,15 +16,35 @@
 /* 
  * Message type values to distinguish broad categories of messages.
  */
-#define MT_ANNOUNCE 1 /* ID for announce messages trying to synchronize the connection. */
-#define MT_PROTOCOL 2 /* ID for messages with details of the protocol implementation. */
-#define MT_KEEPALIVE 3 /* ID for message sent to monitor link state. */
-#define MT_ERROR 4 /* ID for messages about errors that have occurred. */
-#define MT_DATA 5 /* ID for messages with data payloads. */
+enum {
+    /* INVALID ID for the lower limit of message types. */
+    MT_NULL,
+    /* ID for announce messages trying to synchronize the connection. */
+    MT_ANNOUNCE,
+    /* ID for messages with details of the protocol implementation. */
+    MT_PROTOCOL,
+    /* ID for message sent to monitor link state. */
+    MT_KEEPALIVE,
+    /* ID for messages about errors that have occurred. */
+    MT_ERROR,
+    /* ID for messages with data payloads. */
+    MT_DATA,
+    /* Invalid for message IDs, bookkeeping for the maximumof message types. */
+    MT_MAX,
+};
 
-#define E_ID_PROTOCOL 1 /* Error sent when a protocol mismatch ocurrs. */
-#define E_ID_CHECKSUM 2 /* Error sent when a checksum mismatch ocurrs */
-#define E_ID_TIMEOUT 3 /* Error sent after a long period of recieve inactivity. */
+#define IS_MESSAGE_TYPE(X) ((MT_NULL < (X)) && ((X) < MT_MAX))
+
+enum {
+    /* Error sent when a protocol mismatch ocurrs. */
+    E_ID_PROTOCOL = M_ID_OFFSET_CORE,
+
+    /* Error sent when a checksum mismatch ocurrs */
+    E_ID_CHECKSUM,
+
+    /* Error sent after a long period of recieve inactivity. */
+    E_ID_TIMEOUT
+};
 
 /**
  * Header for all messages.
@@ -36,7 +57,7 @@ struct Message_Header {
      * This total includes the whole header, the payload, and the footer.
      */
     uint16_t num_bytes;
-    
+
     /* 
      * Type of this message.
      * This value should be one among the types #defined above.
@@ -101,6 +122,5 @@ struct Data_Header {
      */
     uint16_t data_id;
 };
-
 
 #endif

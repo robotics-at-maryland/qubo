@@ -1,28 +1,45 @@
 
+# Directory structure information
 INCDIR = include/
 SRCDIR = src/
 OBJDIR = obj/
 BINDIR = bin/
+
+# List of object targets needed in building other modules
+OBJECTS = $(OBJDIR)test.o
+
+# List of executable targets needed
 TARGETS = $(BINDIR)test
 
-all: $(TARGETS)
+# Rule to make all external targets
+all: $(OBJECTS) $(TARGETS)
 
+# Rule to make just include objects for external modules
+include: $(OBJECTS)
+
+# Rule to run the tester program
 test: $(BINDIR)test
 	$(BINDIR)test
 
-$(OBJDIR)%.o: $(SRCDIR)%.c $(INCDIR)* $(OBJDIR)
+# Rule to make any object
+$(OBJDIR)%.o: $(SRCDIR)%.c $(INCDIR)* $(OBJDIR) 
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ -I$(INCDIR)
 
+# Rule to make any executable from a single object file
 $(BINDIR)%: $(OBJDIR)%.o $(BINDIR)
 	$(CC) $< -o $@
 
+# Rule to create a directory for object files
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
+# Rule to create a directory for binary files
 $(BINDIR):
 	mkdir $(BINDIR)
 
+# Rule to clean the object and binary files
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
 
-.PHONY: clean all test
+# List of targets without a backing file
+.PHONY: clean all include test

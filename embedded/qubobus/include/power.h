@@ -1,120 +1,91 @@
 #include <stdint.h>
+#include "modules.h"
 
 #ifndef QUBOBUS_POWER_H
 #define QUBOBUS_POWER_H
 
-/* Host -> QSCU requesting a power status message. */
-#define D_ID_POWER_STATUS_REQUEST 40
+enum {
+    /* Command requesting a status message about the power subsystem. */
+    D_ID_POWER_STATUS_REQUEST = M_ID_OFFSET_POWER,
 
-/* QSCU -> Host reply containing a power status struct. */
-#define D_ID_POWER_STATUS 41
-struct Power_Status {
-    /* Measurements for the 3.3-volt common rail. */
-    float rail_3_V;
-    float rail_3_A;
+    /* Reply with information about the status of the power system. */
+    D_ID_POWER_STATUS,
 
-    /* Measurements for the 5-volt common rail. */
-    float rail_5_V;
-    float rail_5_A;
+    /* Command to enable the power supply for a specified rail */
+    D_ID_POWER_ENABLE,
 
-    /* Measurements for the 9-volt common rail. */
-    float rail_9_V;
-    float rail_9_A;
+    /* Command to disable the power supply for a specified rail. */
+    D_ID_POWER_DISABLE,
 
-    /* Measurements for the 12-volt common rail. */
-    float rail_12_V;
-    float rail_12_A;
+    /* Command to enable background monitoring. */
+    D_ID_POWER_MONITOR_ENABLE,
 
-    /* Measurements for the 16-volt common rail. */
-    float rail_16_V;
-    float rail_16_A;
+    /* Command to disable background monitoring. */
+    D_ID_POWER_MONITOR_DISABLE,
 
-    /* Measurements for the first battery input. */
-    float batt_0_V;
-    float batt_0_A;
-    
-    /* Measurements for the second battery input. */
-    float batt_1_V;
-    float batt_1_A;
+    /* Command to set the software limits for determining when to send error messages. */
+    D_ID_POWER_MONITOR_CONFIG
 
-    /* Measurements for the shore power input. */
-    float shore_V;
-    float shore_A;
 };
 
-/* Host -> QSCU set the software limits for determining when to send error messages. */
-#define D_ID_POWER_CONFIG 42
-struct Power_Config {
-    /* Limits for the 3.3-volt common rail. */
-    float rail_3_low_V;
-    float rail_3_high_V;
-    float rail_3_high_A;
+enum {
+    /* Error sent when the power board is unreachable. */
+    E_ID_POWER_UNREACHABLE = M_ID_OFFSET_POWER,
 
-    /* Limits for the 5-volt common rail. */
-    float rail_5_low_V;
-    float rail_5_high_V;
-    float rail_5_high_A;
+    /* Error sent when a soft limit is exceeded. */
+    E_ID_POWER_MONITOR_SOFT_WARNING,
 
-    /* Limits for the 9-volt common rail. */
-    float rail_9_low_V;
-    float rail_9_high_V;
-    float rail_9_high_A;
-
-    /* Limits for the 12-volt common rail. */
-    float rail_12_low_V;
-    float rail_12_high_V;
-    float rail_12_high_A;
-
-    /* Limits for the 16-volt common rail. */
-    float rail_16_low_V;
-    float rail_16_high_V;
-    float rail_16_high_A;
-
-    /* Limits for the first battery input. */
-    float batt_0_low_V;
-    float batt_0_high_V;
-    float batt_0_high_A;
-
-    /* Limits for the second battery input. */
-    float batt_1_low_V;
-    float batt_1_high_V;
-    float batt_1_high_A;
-
-    /* Limits for the shore power input. */
-    float shore_low_V;
-    float shore_high_V;
-    float shore_high_A;
+    /* Error sent when a hard limit is exceeded. */
+    E_ID_POWER_MONITOR_HARD_WARNING,
 };
 
 /* Defintions for different rail IDs. */
-#define RAIL_ID_3V 0
-#define RAIL_ID_5V 1
-#define RAIL_ID_9V 2
-#define RAIL_ID_12V 3
-#define RAIL_ID_DVL 4
+enum {
+    RAIL_ID_3V,
+    RAIL_ID_5V,
+    RAIL_ID_9V,
+    RAIL_ID_12V,
+    RAIL_ID_DVL,
+    RAIL_ID_16V,
+    RAIL_ID_BATT_0,
+    RAIL_ID_BATT_1,
+    RAIL_ID_SHORE
+};
 
-/* Host -> QSCU command to enable the power supply for a specified rail */
-#define D_ID_POWER_ENABLE 43
+#define IS_POWER_RAIL_ID(X) ((RAIL_ID_3V <= (X)) && ((X) <= RAIL_ID_SHORE))
+
+struct Power_Status_Request {
+    uint8_t rail_id;
+};
+
+/* Payload of data about a single power rail */
+struct Power_Status {
+    /* Measurements for the requested common rail. */
+    float rail_V;
+    float rail_A;
+
+    uint8_t rail_id;
+};
+
 struct Power_Enable {
     uint8_t rail_id;   
 };
 
-/* Host -> QSCU command to disable the power supply for a specified rail. */
-#define D_ID_POWER_DISABLE 44
 struct Power_Disable {
     uint8_t rail_id;
 };
 
-/* Error sent when the power board is unreachable. */
-#define E_ID_POWER_UNREACHABLE 40
+struct Power_Monitor_Config {
+    /* Limits for the 3.3-volt common rail. */
+    float rail_soft_low_V;
+    float rail_soft_high_V;
+    float rail_soft_high_A;
+    
+    float rail_hard_low_V;
+    float rail_hard_high_V;
+    float rail_hard_high_A;
 
-/* Error sent when the power board notices an overvoltage condition. */
-#define E_ID_POWER_OVERVOLT 41
-
-/* Error sent when the powre board notices an undervoltage condition. */
-#define E_ID_POWER_UNDERVOLT 42
-
-/* Error sent when the power board notices excessive current draw. */
-#define E_ID_POWER_OVERCURRENT 43
+    uint8_t rail_id;
+};
 
 #endif

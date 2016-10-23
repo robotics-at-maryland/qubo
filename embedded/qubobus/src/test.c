@@ -4,7 +4,7 @@
 
 #include "../include/qubobus.h"
 
-#if QUBOBUS_PROTOCOL_VERSION != 1
+#if QUBOBUS_PROTOCOL_VERSION != 2
 #error Update me with new message defs!
 #endif
 
@@ -53,10 +53,6 @@ int main() {
             D_ID_EMBEDDED_STATUS, 
             sizeof(struct Embedded_Status));
     success &= error(
-            "Embedded Overload", 
-            E_ID_EMBEDDED_OVERLOAD, 
-            EMPTY);
-    success &= error(
             "Embedded Memory", 
             E_ID_EMBEDDED_MEMORY, 
             EMPTY);
@@ -97,13 +93,21 @@ int main() {
             D_ID_BATTERY_STATUS, 
             sizeof(struct Battery_Status));
     success &= data(
-            "Battery Config", 
-            D_ID_BATTERY_CONFIG, 
-            sizeof(struct Battery_Config));
-    success &= data(
             "Battery Shutdown", 
             D_ID_BATTERY_SHUTDOWN, 
             sizeof(struct Battery_Shutdown));
+    success &= data(
+            "Battery Monitor Enable", 
+            D_ID_BATTERY_MONITOR_ENABLE, 
+            EMPTY);
+    success &= data(
+            "Battery Monitor Disable", 
+            D_ID_BATTERY_MONITOR_DISABLE, 
+            EMPTY);
+    success &= data(
+            "Battery Monitor Config", 
+            D_ID_BATTERY_MONITOR_CONFIG, 
+            sizeof(struct Battery_Monitor_Config));
     success &= error(
             "Battery Unreachable", 
             E_ID_BATTERY_UNREACHABLE, 
@@ -113,23 +117,23 @@ int main() {
             E_ID_BATTERY_DISCONNECT, 
             EMPTY);
     success &= error(
-            "Battery Environment", 
-            E_ID_BATTERY_ENVIRONMENT, 
+            "Battery Soft Warning", 
+            E_ID_BATTERY_MONITOR_SOFT_WARNING, 
+            EMPTY);
+    success &= error(
+            "Battery Hard Warning", 
+            E_ID_BATTERY_MONITOR_HARD_WARNING, 
             EMPTY);
 
     /* Tests involving the power subsystem */
     success &= data(
             "Power Status Request", 
             D_ID_POWER_STATUS_REQUEST, 
-            EMPTY);
+            sizeof(struct Power_Status_Request));
     success &= data(
             "Power Status", 
             D_ID_POWER_STATUS, 
             sizeof(struct Power_Status));
-    success &= data(
-            "Power Config", 
-            D_ID_POWER_CONFIG, 
-            sizeof(struct Power_Config));
     success &= data(
             "Power Enable", 
             D_ID_POWER_ENABLE, 
@@ -138,21 +142,29 @@ int main() {
             "Power Disable", 
             D_ID_POWER_DISABLE, 
             sizeof(struct Power_Disable));
+    success &= data(
+            "Power Monitor Config", 
+            D_ID_POWER_MONITOR_CONFIG, 
+            sizeof(struct Power_Monitor_Config));
+    success &= data(
+            "Power Monitor Enable", 
+            D_ID_POWER_MONITOR_ENABLE, 
+            EMPTY);
+    success &= data(
+            "Power Monitor Disable", 
+            D_ID_POWER_MONITOR_DISABLE, 
+            EMPTY);
     success &= error(
             "Power Unreachable", 
             E_ID_POWER_UNREACHABLE, 
             EMPTY);
     success &= error(
-            "Power Overvolt", 
-            E_ID_POWER_OVERVOLT, 
+            "Power Monitor Soft Warning", 
+            E_ID_POWER_MONITOR_SOFT_WARNING, 
             EMPTY);
     success &= error(
-            "Power Undervolt", 
-            E_ID_POWER_UNDERVOLT, 
-            EMPTY);
-    success &= error(
-            "Power Overcurrent", 
-            E_ID_POWER_OVERCURRENT, 
+            "Power Monitor Hard Warning", 
+            E_ID_POWER_MONITOR_HARD_WARNING, 
             EMPTY);
 
     /* Tests involving the thruster subsystem */
@@ -161,28 +173,44 @@ int main() {
             D_ID_THRUSTER_SET, 
             sizeof(struct Thruster_Set));
     success &= data(
-            "Thruster Current Request", 
-            D_ID_THRUSTER_CURRENT_REQUEST, 
-            sizeof(struct Thruster_Current_Request));
+            "Thruster Status Request", 
+            D_ID_THRUSTER_STATUS_REQUEST, 
+            sizeof(struct Thruster_Status));
     success &= data(
-            "Thruster Current", 
-            D_ID_THRUSTER_CURRENT, 
-            sizeof(struct Thruster_Current));
+            "Thruster Status", 
+            D_ID_THRUSTER_STATUS, 
+            sizeof(struct Thruster_Status));
     success &= data(
             "Thruster Config", 
             D_ID_THRUSTER_CONFIG, 
             sizeof(struct Thruster_Config));
+    success &= data(
+            "Thruster Monitor Enable", 
+            D_ID_THRUSTER_MONITOR_ENABLE, 
+            EMPTY);
+    success &= data(
+            "Thruster Monitor Disable", 
+            D_ID_THRUSTER_MONITOR_DISABLE, 
+            EMPTY);
+    success &= data(
+            "Thruster Monitor Config", 
+            D_ID_THRUSTER_MONITOR_CONFIG, 
+            EMPTY);
     success &= error(
             "Thruster Unreachable", 
             E_ID_THRUSTER_UNREACHABLE, 
             EMPTY);
     success &= error(
-            "Thruster Overcurrent", 
-            E_ID_THRUSTER_OVERCURRENT, 
+            "Thruster Timeout", 
+            E_ID_THRUSTER_TIMEOUT, 
             EMPTY);
     success &= error(
-            "Thruster Watchdog", 
-            E_ID_THRUSTER_WATCHDOG, 
+            "Thruster Monitor Soft Warning", 
+            E_ID_THRUSTER_MONITOR_SOFT_WARNING, 
+            EMPTY);
+    success &= error(
+            "Thruster Monitor Hard Warning", 
+            E_ID_THRUSTER_MONITOR_HARD_WARNING, 
             EMPTY);
 
     /* Tests involving the pneumatics subsystem */
@@ -197,24 +225,36 @@ int main() {
 
     /* Tests involving the depth sensor subsystem */
     success &= data(
-            "Depth Request", 
+            "Depth Status Request", 
             D_ID_DEPTH_STATUS_REQUEST, 
             EMPTY);
     success &= data(
-            "Depth Measurement", 
+            "Depth Status", 
             D_ID_DEPTH_STATUS, 
             sizeof(struct Depth_Status));
     success &= data(
-            "Depth Config", 
-            D_ID_DEPTH_CONFIG, 
-            sizeof(struct Depth_Config));
+            "Depth Monitor Enable", 
+            D_ID_DEPTH_MONITOR_ENABLE, 
+            EMPTY);
+    success &= data(
+            "Depth Monitor Disable", 
+            D_ID_DEPTH_MONITOR_DISABLE, 
+            EMPTY);
+    success &= data(
+            "Depth Monitor Config", 
+            D_ID_DEPTH_MONITOR_CONFIG, 
+            sizeof(struct Depth_Monitor_Config));
     success &= error(
             "Depth Unreachable", 
             E_ID_DEPTH_UNREACHABLE, 
             EMPTY);
     success &= error(
-            "Depth Warning", 
-            E_ID_DEPTH_WARNING, 
+            "Depth Soft Warning", 
+            E_ID_DEPTH_MONITOR_SOFT_WARNING, 
+            EMPTY);
+    success &= error(
+            "Depth Hard Warning", 
+            E_ID_DEPTH_MONITOR_HARD_WARNING, 
             EMPTY);
 
 
@@ -238,10 +278,10 @@ int message(const char *name, uint16_t type, size_t size) {
 /* Function indicating the declaration of a single data message type. */
 int data(const char *name, uint16_t type, size_t size) {
     /* Table of data types that may be defined. */
-    static int types[QUBOBUS_DATA_TYPES] = {0};
+    static int types[M_ID_OFFSET_MAX] = {0};
 
     /* If the type indicated is garbage, error out and dont keep checking the type. */
-    if (type >= QUBOBUS_DATA_TYPES) {
+    if (!IS_MESSAGE_ID(type)) {
         printf("ERROR: IMPROPER DATA TYPE ID!\n");
         return 0;
     } 
@@ -259,10 +299,10 @@ int data(const char *name, uint16_t type, size_t size) {
 /* Function indicating the declaration of a single error message type. */
 int error(const char *name, uint16_t type, size_t size) {
     /* Table of error types that may be defined. */
-    static int types[QUBOBUS_ERROR_TYPES] = {0};
+    static int types[M_ID_OFFSET_MAX] = {0};
 
     /* If the type indicated is garbage, error out and dont keep checking the type. */
-    if (type >= QUBOBUS_ERROR_TYPES) {
+    if (!IS_MESSAGE_ID(type)) {
         printf("ERROR: IMPROPER ERROR TYPE ID!\n");
         return 0;
     } 

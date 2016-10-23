@@ -6,6 +6,7 @@
 /* Core protocol definitions */
 #include "params.h"
 #include "message.h"
+#include "modules.h"
 /* Subsystem message definitions. */
 #include "embedded.h"
 #include "safety.h"
