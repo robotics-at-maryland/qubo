@@ -1,7 +1,9 @@
 //sg: this is going to be the primary vision node for qubo (or future robots whatever)
 #include "vision_node.h"
 
-//sg: I'm copying the pointer to a node handle scheme we used in the vehicle layer here 
+//you need to pass in a node handle, a rate to poll at, and 3 camera feeds, which should be a file path either to a physical device or to a video file
+//feed0 and feed1 need to correspond to the two forward facing cameras, feedb is the bottom facing camera. 
+//note you always need to pass 3 feeds even if you're just testing monocualar tasks
 VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string feed0, std::string feed1, std::string feedb){
 
     //take in the node handle
@@ -36,20 +38,14 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string
         exit(0);
     }
 
-
-
     //Need to register all our services 
     ros::ServiceServer service = this->n->advertiseService("buoy_detect", this->buoy_detector);
-    
-    
 }
 
 
 
 VisionNode::~VisionNode(){
-
     //sg: may need to close the cameras here not sure..
-    
 }
 
 void VisionNode::update(){
@@ -59,8 +55,6 @@ void VisionNode::update(){
     ros::spinOnce();
     //std::cout << img;
 }
-
-
 
 //Past this point is a collection of services and actions that will be able to called from any other node
 //=================================================================================================================
@@ -72,8 +66,7 @@ bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool
     return 0;
 }
 
-
-//There are the defintions for all of our actionlib actions, may be moved to it's own class not sure yet. 
+//There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet. 
 //=================================================================================================================
 void VisionNode::test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as){
     //    goal->test_feedback = 5;
