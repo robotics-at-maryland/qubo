@@ -43,4 +43,10 @@ fi
 # Finally, run rosdep to install all the dependencies for our packages.
 sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
 
-
+# Install QtCreator and its ROS plugin.
+# Due to a quirk of the plugin, qtcreator MUST be installed twice.
+sudo apt install qtcreator
+sudo add-apt-repository ppa:beineri/opt-qt57-xenial
+sudo add-apt-repository ppa:levi-armstrong/ppa
+sudo apt-get update && sudo apt-get install qt57creator-plugin-ros
+sudo apt install qtcreator
