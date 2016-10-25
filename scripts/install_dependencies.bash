@@ -45,8 +45,14 @@ sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdis
 
 # Install QtCreator and its ROS plugin.
 # Due to a quirk of the plugin, qtcreator MUST be installed twice.
-sudo apt install qtcreator
-sudo add-apt-repository ppa:beineri/opt-qt57-xenial
-sudo add-apt-repository ppa:levi-armstrong/ppa
-sudo apt-get update && sudo apt-get install qt57creator-plugin-ros
-sudo apt install qtcreator
+echo "Do you want to install optional IDE QtCreator and associated ROS plugin?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) sudo apt install qtcreator; 
+sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
+sudo add-apt-repository ppa:levi-armstrong/ppa;
+sudo apt-get update && sudo apt-get install qt57creator-plugin-ros;
+sudo apt install qtcreator; break;;
+        No ) exit;;
+    esac
+done
