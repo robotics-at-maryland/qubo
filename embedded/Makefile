@@ -119,15 +119,10 @@ INC_FREERTOS = $(FREERTOS_SRC)include/
 KOVACIC_INC_DRIVERS = $(KOVACIC_DRIVERS_SRC)include/
 
 # Tivaware headers
-TIVAWARE_INC = drivers/tivaware/inc/
-TIVAWARE_INC_DRIVERLIB = drivers/tivaware/driverlib/
-TIVAWARE_INC_GRLIB = drivers/tivaware/grlib/
-TIVAWARE_INC_SENSORLIB = drivers/tivaware/sensorlib/
-TIVAWARE_INC_USBLIB = drivers/tivaware/usblib/
-
+INC_TIVAWARE = drivers/tivaware/
 
 # Complete include flags to be passed to $(CC) where necessary
-INC_FLAGS = $(INCLUDEFLAG)$(INC_FREERTOS) $(INCLUDEFLAG)$(APP_SRC) $(INCLUDEFLAG)$(FREERTOS_PORT_SRC) $(INCLUDEFLAG)$(KOVACIC_INC_DRIVERS)
+INC_FLAGS = $(INCLUDEFLAG)$(INC_FREERTOS) $(INCLUDEFLAG)$(APP_SRC) $(INCLUDEFLAG)$(FREERTOS_PORT_SRC) $(INCLUDEFLAG)$(KOVACIC_INC_DRIVERS) $(INCLUDEFLAG)$(INC_TIVAWARE)
 
 # Dependency on HW specific settings
 DEP_BSP = $(KOVACIC_INC_DRIVERS)bsp.h
@@ -272,6 +267,12 @@ $(OBJDIR)lightshow.o : $(APP_SRC)lightshow.c $(DEP_SETTINGS)
 
 $(OBJDIR)nostdlib.o : $(APP_SRC)nostdlib.c
 	$(CC) $(CFLAG) $(CFLAGS) $< $(OFLAG) $@
+
+# Our tasks:
+
+
+#$(OBJDIR)i2ctask.o : $(APP_SRC)/tasks/i2ctask.c $(DEP_SETTINGS)
+#	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@<F37>
 
 
 # Cleanup directives:
