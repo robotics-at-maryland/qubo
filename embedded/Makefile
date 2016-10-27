@@ -66,7 +66,7 @@ DRIVERS_SRC = drivers/
 KOVACIC_DRIVERS_SRC = $(DRIVERS_SRC)kovacic/
 
 # Directory with demo specific source (and header) files
-APP_SRC = app/
+APP_SRC = src/
 
 
 # Object files to be linked into an application
