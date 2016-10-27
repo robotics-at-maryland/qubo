@@ -9,9 +9,12 @@ find_package(catkin
   image_transport
   cv_bridge
   ram_msgs
+  genmsg
   OpenCV 
+  
+  actionlib_msgs
+  actionlib      
 )
- 
 
 #sg: these used to be here but I have reason to believe they do not do anything, so I'm getting rid of them
 #find_package(OpenCV REQUIRED)
@@ -47,12 +50,14 @@ set(VISION_SRC_FILES
   src/vision_node.cpp
 )
 
+
+
 ##############################
 # Add Executables ############
 ##############################
 
 add_executable(vision_node ${VISION_SRC_FILES})
-target_link_libraries(vision_node  ${catkin_LIBRARIES})
+target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
