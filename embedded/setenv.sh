@@ -24,11 +24,11 @@
 
 # toolchain is from: https://launchpad.net/gcc-arm-embedded/+download
 
-TOOLCHAIN=/opt/arm-none-eabi/
+TOOLCHAIN=/opt/arm-none-eabi/bin
 FLASHER=/opt/lm4tools/lm4flash/
 
 # Add a path to gnu-none-eabi-* executables:
-export PATH=$PATH:$TOOLCHAIN/bin:$FLASHER
+export PATH=$PATH:$TOOLCHAIN:$FLASHER
 
 # After the script completes, you may check that output of
 #    echo $PATH
