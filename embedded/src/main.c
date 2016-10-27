@@ -53,21 +53,6 @@ limitations under the License.
 #include <stdarg.h>
 #include <stdbool.h>
 
-#include "inc/hw_i2c.h"
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "inc/hw_gpio.h"
-
-#include "driverlib/rom.h"
-#include "driverlib/i2c.h"
-#include "driverlib/gpio.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/uart.h"
-#include "driverlib/sysctl.h"
-
-#include "utils/uartstdio.h"
-#include "utils/ustdlib.h"
-
 #define DEF_TIMER_DELAY_SEC            ( 5 )
 #define DEF_NR_TIMER_STR_BUFFERS       ( 3 )
 #define DEF_RECV_QUEUE_SIZE            ( 3 )
@@ -338,115 +323,13 @@ static void FreeRTOS_Error(const portCHAR* msg)
 
     for ( ; ; );
 }
-//---------------------------------------my stuff-----------------------
-//read specified register on slave device
-uint32_t I2CReceive(uint32_t slave_addr, uint8_t reg)
-{
-    //specify that we are writing (a register address) to the
-    //slave device
-    I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, false);
 
-    //specify register to be read
-    I2CMasterDataPut(I2C0_BASE, reg);
-
-    //send control byte and register address byte to slave device
-    I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_START);
-
-    //wait for MCU to finish transaction
-    while(I2CMasterBusy(I2C0_BASE));
-
-    //specify that we are going to read from slave device
-    I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, true);
-
-    //send control byte and read from the register we
-    //specified
-    I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
-
-    //wait for MCU to finish transaction
-    while(I2CMasterBusy(I2C0_BASE));
-
-    //return data pulled from the specified register
-    return I2CMasterDataGet(I2C0_BASE);
-}
-
-void initI2C0(void)
-{
-    //enable I2C module 0
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-
-    //reset module
-    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
-
-    //enable GPIO peripheral that contains I2C 0
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-
-    // Configure the pin muxing for I2C0 functions on port B2 and B3.
-    GPIOPinConfigure(GPIO_PB2_I2C0SCL);
-    GPIOPinConfigure(GPIO_PB3_I2C0SDA);
-
-    // Select the I2C function for these pins.
-    GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
-    GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
-
-    // Enable and initialize the I2C0 master module.  Use the system clock for
-    // the I2C0 module.  The last parameter sets the I2C data transfer rate.
-    // If false the data rate is set to 100kbps and if true the data rate will
-    // be set to 400kbps.
-    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
-
-    //clear I2C FIFOs
-    HWREG(I2C0_BASE + I2C_O_FIFOCTL) = 80008000;
-}
-
-static void vSenderTask(void* queue)
-{
-	int i = 0;
-	for (;;)
-	{
-		i = I2CReceive(0x77, 0x2E);
-		vPrintMsg(APP_DEBUG_UART, "Sent...");
-
-		//Send i to the queue, wait 1000 ticks
-		if (!xQueueSend(globalQueue, &i, 1000)) {
-			vPrintMsg(APP_DEBUG_UART, "Failed to send to queue");
-		}
-
-		vTaskDelay(100);
-	}
-	return (void) queue;
-}
-
-static void vReceiverTask(void* queue)
-{
-	int rx_int = 0;
-	char buffer [10];
-	for (;;)
-	{
-		//Wait up to 1000 ticks
-		if (xQueueReceive(globalQueue, &rx_int, 1000)) {
-			vPrintMsg(APP_DEBUG_UART, itoa(rx_int, buffer, 10));
-			vPrintMsg(APP_DEBUG_UART, "\r\n");
-		}
-		else {
-			vPrintMsg(APP_DEBUG_UART, "Failed to receive from queue");
-		}
-
-		vTaskDelay(100);
-	}
-	return (void) queue;
-}
 
 /* Startup function that creates and runs two FreeRTOS tasks */
 int main(void)
 {
-	initI2C0();
 	//ConfigureUART();
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-	ROM_GPIOPinConfigure(GPIO_PA0_U0RX);
-	ROM_GPIOPinConfigure(GPIO_PA1_U0TX);
-	ROM_GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-	UARTStdioConfig(0, 115200, SysCtlClockGet());
+	//UARTStdioConfig(0, 115200, SysCtlClockGet());
 
     /* Initialize the UART 0: */
     uart_config(
@@ -532,17 +415,6 @@ int main(void)
     //xQueueHandle testQueue = xQueueCreate(3, sizeof(int));
     globalQueue = xQueueCreate(3, sizeof(int));
 
-    /* And finally create sender task: */
-	if ( pdPASS != xTaskCreate(vSenderTask, "sender", 128, NULL, APP_PRIOR_TEST, NULL) )
-	{
-		FreeRTOS_Error("Could not create sender task\r\n");
-	}
-
-	/* And finally create receiver task: */
-	if ( pdPASS != xTaskCreate(vReceiverTask, "receiver", 128, NULL, APP_PRIOR_TEST, NULL) )
-	{
-		FreeRTOS_Error("Could not create receiver task\r\n");
-	}
 
     vDirectPrintMsg("Enter a text via UART 1.\r\n");
     vDirectPrintMsg("It will be displayed inverted when 'Enter' is pressed.\r\n\r\n");
