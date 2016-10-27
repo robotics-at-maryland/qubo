@@ -119,12 +119,8 @@ INC_FREERTOS = $(FREERTOS_SRC)include/
 KOVACIC_INC_DRIVERS = $(KOVACIC_DRIVERS_SRC)include/
 
 # Tivaware headers
-<<<<<<< Updated upstream
 TIVAWARE_INC = drivers/tivaware/
 
-# Complete include flags to be passed to $(CC) where necessary
-INC_FLAGS = $(INCLUDEFLAG)$(INC_FREERTOS) $(INCLUDEFLAG)$(APP_SRC) $(INCLUDEFLAG)$(FREERTOS_PORT_SRC) $(INCLUDEFLAG)$(KOVACIC_INC_DRIVERS) $(INCLUDEFLAG)$(TIVAWARE_INC)
-=======
 TIVAWARE_INC_DRIVERLIB = drivers/tivaware/driverlib/
 TIVAWARE_INC_GRLIB = drivers/tivaware/grlib/
 TIVAWARE_INC_SENSORLIB = drivers/tivaware/sensorlib/
@@ -133,7 +129,6 @@ TIVAWARE_INC_USBLIB = drivers/tivaware/usblib/
 
 # Complete include flags to be passed to $(CC) where necessary
 INC_FLAGS = $(INCLUDEFLAG)$(INC_FREERTOS) $(INCLUDEFLAG)$(APP_SRC) $(INCLUDEFLAG)$(FREERTOS_PORT_SRC) $(INCLUDEFLAG)$(KOVACIC_INC_DRIVERS) 
->>>>>>> Stashed changes
 
 # Dependency on HW specific settings
 DEP_BSP = $(KOVACIC_INC_DRIVERS)bsp.h
