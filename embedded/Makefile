@@ -274,8 +274,8 @@ $(OBJDIR)nostdlib.o : $(APP_SRC)nostdlib.c
 # Our tasks:
 
 
-#$(OBJDIR)i2ctask.o : $(APP_SRC)/tasks/i2ctask.c $(DEP_SETTINGS)
-#	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@<F37>
+$(OBJDIR)i2ctask.o : $(APP_SRC)tasks/i2ctask.c $(DEP_SETTINGS)
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
 
 
 # Cleanup directives:
