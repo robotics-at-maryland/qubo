@@ -27,7 +27,7 @@
 // Configure the I2C0 master and slave and connect them using loopback mode.
 //
 //*****************************************************************************
-int i2ctask_INIT(void);
+int init_i2ctask(void);
 
 void i2ctask(void* params);
 
