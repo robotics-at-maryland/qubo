@@ -68,7 +68,7 @@ struct Message_Header {
      * Sequence number of this message.
      * This is used for referencing in later messages. 
      */
-    uint16_t seq_num;
+    uint16_t sequence_number;
 };
 
 /**

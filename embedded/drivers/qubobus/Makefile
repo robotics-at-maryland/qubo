@@ -6,7 +6,7 @@ OBJDIR = obj/
 BINDIR = bin/
 
 # List of object targets needed in building other modules
-OBJECTS = $(OBJDIR)test.o
+OBJECTS = $(OBJDIR)test.o $(OBJDIR)io.o
 
 # List of executable targets needed
 TARGETS = $(BINDIR)test

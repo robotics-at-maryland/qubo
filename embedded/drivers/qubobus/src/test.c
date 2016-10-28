@@ -2,7 +2,7 @@
  * Simple diagnostic program that prints out the lengths of various Qubobus messages.
  */
 
-#include "../include/qubobus.h"
+#include <qubobus.h>
 
 #if QUBOBUS_PROTOCOL_VERSION != 2
 #error Update me with new message defs!
