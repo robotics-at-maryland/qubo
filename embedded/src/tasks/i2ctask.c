@@ -51,24 +51,22 @@
 //
 //*****************************************************************************
 
-#if defined(TARGET_IS_TM4C129_RA0) ||           \
-  defined(TARGET_IS_TM4C129_RA1) ||             \
-  defined(TARGET_IS_TM4C129_RA2)
-uint32_t ui32SysClock;
-#endif
-uint32_t pui32DataTx[NUM_I2C_DATA];
-uint32_t pui32DataRx[NUM_I2C_DATA];
-uint32_t ui32Index;
-
-
 
 //*****************************************************************************
 //
 // Configure the I2C0 master and slave and connect them using loopback mode.
 //
 //*****************************************************************************
-int init_i2ctask(void)
+int i2ctask_INIT(void)
 {
+#if defined(TARGET_IS_TM4C129_RA0) ||                                         \
+    defined(TARGET_IS_TM4C129_RA1) ||                                         \
+    defined(TARGET_IS_TM4C129_RA2)
+    uint32_t ui32SysClock;
+#endif
+    uint32_t pui32DataTx[NUM_I2C_DATA];
+    uint32_t pui32DataRx[NUM_I2C_DATA];
+    uint32_t ui32Index;
 
     //
     // Set the clocking to run directly from the external crystal/oscillator.
@@ -105,8 +103,8 @@ int init_i2ctask(void)
     // This step is not necessary if your part does not support pin muxing.
     // TODO: change this to select the port/pin you are using.
     //
-    //    GPIOPinConfigure(GPIO_PB2_I2C0SCL);
-    //    GPIOPinConfigure(GPIO_PB3_I2C0SDA);
+    GPIOPinConfigure(GPIO_PB2_I2C0SCL);
+    GPIOPinConfigure(GPIO_PB3_I2C0SDA);
 
     //
     // Select the I2C function for these pins.  This function will also
@@ -171,7 +169,7 @@ int init_i2ctask(void)
     // Set up the serial console to use for displaying messages.  This is
     // just for this example program and is not needed for I2C operation.
     //
-    //    InitConsole();
+    InitConsole();
 
     return 0;
 }
