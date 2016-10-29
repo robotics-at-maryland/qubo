@@ -6,10 +6,10 @@ OBJDIR = obj/
 BINDIR = bin/
 
 # List of object targets needed in building other modules
-OBJECTS = $(OBJDIR)test.o $(OBJDIR)io.o
+OBJECTS = $(addprefix $(OBJDIR), io.o)
 
 # List of executable targets needed
-TARGETS = $(BINDIR)test
+TARGETS = $(addprefix $(BINDIR), test_defs test_io)
 
 # Rule to make all external targets
 all: $(OBJECTS) $(TARGETS)
@@ -18,16 +18,17 @@ all: $(OBJECTS) $(TARGETS)
 include: $(OBJECTS)
 
 # Rule to run the tester program
-test: $(BINDIR)test
-	$(BINDIR)test
+test: $(TARGETS)
+	$(BINDIR)test_defs
+	$(BINDIR)test_io
 
 # Rule to make any object
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INCDIR)* $(OBJDIR) 
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ -I$(INCDIR)
 
 # Rule to make any executable from a single object file
-$(BINDIR)%: $(OBJDIR)%.o $(BINDIR)
-	$(CC) $< -o $@
+$(BINDIR)%: $(OBJDIR)%.o $(BINDIR) $(OBJECTS)
+	$(CC) $< -o $@  $(OBJECTS)
 
 # Rule to create a directory for object files
 $(OBJDIR):
