@@ -190,6 +190,7 @@ static Message read_announce(IO_State *state) {
         for (i = 1; i < ANNOUNCE_SIZE; i++) {
             buffer[i-1] = buffer[i];
         }
+        safe_io(state->read_raw, buffer + ANNOUNCE_SIZE - 1, 1);
     } while (
             header->num_bytes != ANNOUNCE_SIZE ||
             header->message_type != MT_ANNOUNCE ||
@@ -207,7 +208,11 @@ static Message read_announce(IO_State *state) {
 static void safe_io(raw_io_function raw_io, void *data, size_t size) {
     size_t bytes_transferred = 0;
     while (bytes_transferred != size) {
-        bytes_transferred += raw_io(data + bytes_transferred, size - bytes_transferred);
+        ssize_t ret = raw_io(data + bytes_transferred, size - bytes_transferred);
+        if (ret < 0) {
+            break;
+        }
+        bytes_transferred += ret;
     }
 }
 

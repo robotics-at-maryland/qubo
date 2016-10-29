@@ -1,10 +1,10 @@
-#include <stddef.h>
+#include <unistd.h>
 #include "qubobus.h"
 
 #ifndef QUBOBUS_IO_H
 #define QUBOBUS_IO_H
 
-typedef size_t (*raw_io_function)(void*, size_t);
+typedef ssize_t (*raw_io_function)(void*, size_t);
 typedef void* (*malloc_function)(size_t);
 typedef void (*free_function)(void*);
 
