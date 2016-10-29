@@ -42,6 +42,9 @@ enum {
     /* Error sent when a checksum mismatch ocurrs */
     E_ID_CHECKSUM,
 
+    /* Error sent when a sequence number mismatch occurrs. */
+    E_ID_SEQUENCE,
+
     /* Error sent after a long period of recieve inactivity. */
     E_ID_TIMEOUT
 };

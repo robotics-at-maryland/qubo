@@ -4,10 +4,8 @@
 #ifndef QUBOBUS_IO_H
 #define QUBOBUS_IO_H
 
-typedef uint16_t (*raw_io_function)(void*, uint16_t);
-
+typedef size_t (*raw_io_function)(void*, size_t);
 typedef void* (*malloc_function)(size_t);
-
 typedef void (*free_function)(void*);
 
 typedef struct _IO_State {
@@ -77,26 +75,26 @@ int connect(IO_State *state);
  * Function to create a message with given payload size.
  * If payload is NULL but the size is nonzero, a sufficient buffer will be allocated.
  */
-Message create_message(uint16_t message_type, void *payload, size_t payload_size);
+Message create_message(IO_State *state, uint16_t message_type, void *payload, size_t payload_size);
 
 /*
  * Function to destroy a Message object
  * This releases any dynamically allocated memory
  */
-void destroy_message(Message *message);
+void destroy_message(IO_State *state, Message *message);
 
 /*
  * Function to write a message to the data line.
  * This assembles the message based on the configuration of the message.
  * The message is modified to reflect the message that will be recieved on the other end.
  */
-void write_message(IO_State *state, Message *message);
+void send_message(IO_State *state, Message *message);
 
 /*
  * Function to read an incoming message from the data bus.
  * Takes a void* to buffer memory to use for storing the read payload
  * If the buffer is insufficient (NULL or too small), it will attempt to allocate memory for the message.
  */
-Message read_message(IO_State *state, void *buffer, size_t buffer_size);
+Message recieve_message(IO_State *state, void *buffer, size_t buffer_size);
 
 #endif
