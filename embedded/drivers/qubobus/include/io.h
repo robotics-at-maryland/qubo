@@ -24,7 +24,8 @@ typedef struct _IO_State {
     /*
      * State information for the connection itself.
      */
-    uint16_t next_seq_num;
+    uint16_t local_sequence_number;
+    uint16_t remote_sequence_number;
 
 } IO_State;
 

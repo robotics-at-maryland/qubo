@@ -15,10 +15,12 @@ void initialize(IO_State *state, raw_io_function read_raw, raw_io_function write
 
     state->read_raw = read_raw;
     state->write_raw = write_raw;
+
     state->malloc = malloc;
     state->free = free;
-    state->next_seq_num = priority;
 
+    state->local_sequence_number = priority;
+    state->remote_sequence_number = 0;
 }
 
 int connect(IO_State *state) {
@@ -53,12 +55,8 @@ int connect(IO_State *state) {
      */
     master = (our_announce.header.sequence_number < their_announce.header.sequence_number);
 
-    /* Clients agree to use the non-master sequence number */
-    if (master) {
-
-        state->next_seq_num = their_announce.header.sequence_number;
-
-    }
+    /* Save the other client's sequence number */
+    state->remote_sequence_number = their_announce.header.sequence_number;
 
     /* Destroy the announce messages; we dont need them any more. */
     destroy_message(state, &our_announce);
@@ -85,6 +83,7 @@ int connect(IO_State *state) {
 
         /* Check that we got a protocol message back from the other client. */
         success = (response.header.message_type == MT_PROTOCOL);
+
 
     } else {
 
@@ -156,17 +155,15 @@ Message recieve_message(IO_State *state, void *buffer, size_t buffer_size) {
 
     Message message = read_message(state, buffer, buffer_size);
 
-    if ((message.header.sequence_number + 1) != state->next_seq_num) {
-        Message response = create_message(state, MT_ERROR, NULL, 0);
-        response.error.err_code = E_ID_SEQUENCE;
-        response.error.cause_id = message.header.sequence_number;
-        write_message(state, &response);
-        destroy_message(state, &response);
-    }
-
     if (message.footer.checksum != checksum_message(&message)) {
         Message response = create_message(state, MT_ERROR, NULL, 0);
         response.error.err_code = E_ID_CHECKSUM;
+        response.error.cause_id = message.header.sequence_number;
+        write_message(state, &response);
+        destroy_message(state, &response);
+    } else if (message.header.sequence_number != state->remote_sequence_number) {
+        Message response = create_message(state, MT_ERROR, NULL, 0);
+        response.error.err_code = E_ID_SEQUENCE;
         response.error.cause_id = message.header.sequence_number;
         write_message(state, &response);
         destroy_message(state, &response);
@@ -259,7 +256,7 @@ static Message read_message(IO_State *state, void *buffer, size_t buffer_size) {
         - sizeof(struct Message_Footer);
 
     /* Subtract the payload header sizes. */
-    switch (message.header.message_type) {
+    switch (header.message_type) {
         case MT_ERROR:
             payload_size -= sizeof(struct Error_Header);
             break;
@@ -294,7 +291,9 @@ static Message read_message(IO_State *state, void *buffer, size_t buffer_size) {
     /* Read in the message footer. */
     safe_io(state->read_raw, &(message.footer), sizeof(struct Message_Footer));
 
-    state->next_seq_num++;
+    state->remote_sequence_number++;
+
+    return message;
 }
 
 static void write_message(IO_State *state, Message *message) {
@@ -321,7 +320,7 @@ static void write_message(IO_State *state, Message *message) {
     }
 
     /* Set the sequence number of the message from the state structure */
-    message->header.sequence_number = state->next_seq_num++;
+    message->header.sequence_number = ++state->local_sequence_number;
 
     /* Write the checksum into the message footer. */
     message->footer.checksum = checksum_message(message);

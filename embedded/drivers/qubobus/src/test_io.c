@@ -12,74 +12,164 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 int tx_fd[2]; // TO CHILD FROM PARENT
 int rx_fd[2]; // TO PARENT FROM CHILD
+int debug = 0;
 
 ssize_t parent_read(void *buffer, size_t size) {
     ssize_t transferred;
     transferred = read(rx_fd[0], buffer, size);
-    printf("parent read %d/%d\n", transferred, size);
+    if (debug) {
+        printf("parent read %d/%d\n", transferred, size);
+        sleep(1);
+    }
     return transferred;
 }
 
 ssize_t parent_write(void *buffer, size_t size) {
     ssize_t transferred;
     transferred = write(tx_fd[1], buffer, size);
-    printf("parent write %d/%d\n", transferred, size);
+    if (debug) {
+        printf("parent write %d/%d\n", transferred, size);
+        sleep(1);
+    }
     return transferred;
 }
 
 ssize_t child_read(void *buffer, size_t size) {
     ssize_t transferred;
     transferred = read(tx_fd[0], buffer, size);
-    printf("child read %d/%d\n", transferred, size);
+    if (debug) {
+        printf("child read %d/%d\n", transferred, size);
+        sleep(1);
+    }
     return transferred;
 }
 
 ssize_t child_write(void *buffer, size_t size) {
     ssize_t transferred;
     transferred = write(rx_fd[1], buffer, size);
-    printf("child write %d/%d\n", transferred, size);
+    if (debug) {
+        printf("child write %d/%d\n", transferred, size);
+        sleep(1);
+    }
     return transferred;
 }
 
+int parent_program() {
+    IO_State state_storage, *state = &state_storage;
+    int error = 0;
+
+    initialize(state, &parent_read, &parent_write, &malloc, &free, 40);
+
+    printf("Parent connecting...\n");
+
+    error |= connect(state);
+
+    printf("Parent connected!\n");
+
+    {
+        int data = 1337;
+        Message m = create_message(state, MT_DATA, &data, sizeof(int));
+        m.data.data_id = 13;
+        send_message(state, &m);
+        destroy_message(state, &m);
+    }
+
+    return error;
+}
+
+int child_program() {
+    IO_State state_storage, *state = &state_storage;
+    int error = 0;
+
+    initialize(state, &child_read, &child_write, &malloc, &free, 80);
+
+    printf("Child connecting...\n");
+
+    error |= connect(state);
+
+    printf("Child connected!\n");
+
+    {
+        int data = 1336;
+        Message m = recieve_message(state, &data, sizeof(int));
+
+        if (m.header.message_type != MT_DATA)
+            error = 4;
+        else if (m.data.data_id != 13)
+            error = 5;
+        else if (data != 1337)
+            error = 6;
+        destroy_message(state, &m);
+    }
+
+    return error;
+}
+
 int main() { 
-    int success = 1;
-    IO_State state;
+    int error = 0, child_pid;
 
+    if (pipe(tx_fd) < 0) {
 
-    pipe(tx_fd);
-    pipe(rx_fd);
-    switch (fork()) {
-        case 0: //CHILD
-            close(tx_fd[1]); // PARENT WRITE
-            close(rx_fd[0]); // PARENT READ
-            printf("Initializing child\n");
-            initialize(&state, &child_read, &child_write, &malloc, &free, 80);
+        printf("Unable to open transmit pipe!\n");
 
-            printf("Connecting in child\n");
-            success = !connect(&state);
+        error = 1;
 
-            printf("Child had success: %d\n", success);
+    } else if (pipe(rx_fd) < 0) {
 
-            break;
-        default: //PARENT
-            close(tx_fd[0]); // CHILD READ
-            close(rx_fd[1]); // CHILD WRITE
-            printf("Initializing parent\n");
-            initialize(&state, &parent_read, &parent_write, &malloc, &free, 40);
+        printf("Unable to open recieve pipe!\n");
 
-            printf("Connecting in parent\n");
-            success = !connect(&state);
+        close(tx_fd[0]); // CHILD READ
+        close(tx_fd[1]); // PARENT WRITE
 
-            printf("Parent had success: %d\n", success);
+        error = 2;
 
-            break;
+    } else if ((child_pid = fork()) < 0) {
+
+        printf("Unable to fork!\n");
+
+        close(tx_fd[0]); // CHILD READ
+        close(tx_fd[1]); // PARENT WRITE
+
+        close(rx_fd[0]); // PARENT READ
+        close(rx_fd[1]); // CHILD WRITE
+
+        error = 3;
+
+    } else if (child_pid > 0) {
+
+        int child_error;
+
+        close(tx_fd[0]); // CHILD READ
+        close(rx_fd[1]); // CHILD WRITE
+
+        error = parent_program();
+
+        close(tx_fd[1]); // PARENT WRITE
+        close(rx_fd[0]); // PARENT READ
+
+        wait(&child_error);
+
+        error |= child_error;
+
+        if (!error) {
+            printf("Protocol test successful!\n");
+        }
+
+    } else {
+
+        close(tx_fd[1]); // PARENT WRITE
+        close(rx_fd[0]); // PARENT READ
+
+        error = child_program();
+
+        close(tx_fd[0]); // CHILD READ
+        close(rx_fd[1]); // CHILD WRITE
+
     }
 
-    if (success) {
-        printf("No unrecoverable errors found!\n");
-    }
-    return !success;
+    return error;
 }

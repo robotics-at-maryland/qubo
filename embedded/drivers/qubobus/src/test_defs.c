@@ -269,9 +269,6 @@ int message(const char *name, uint16_t type, size_t size) {
     size += sizeof(struct Message_Header);
     size += sizeof(struct Message_Footer);
     printf("%s: %d\n",name, size);
-    if (size%4) {
-        printf("WARNING: not 4-byte aligned!\n");
-    }
     return 1;
 }
 
