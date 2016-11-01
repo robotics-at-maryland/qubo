@@ -41,7 +41,7 @@ DIRS=driverlib \
      grlib     \
      sensorlib \
      usblib    \
-     examples
+	 utils
 
 all::
 	@for i in ${DIRS};                  \
