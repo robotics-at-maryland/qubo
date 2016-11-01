@@ -17,7 +17,7 @@ FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 
 CFLAGS = $(CPUFLAG) $(WFLAG)
 
-OBJDIR = utils/
+OBJDIR = gcc/
 
 
 #
