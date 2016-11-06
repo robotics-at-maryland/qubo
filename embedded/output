@@ -1,0 +1,1673 @@
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i686-pc-linux-gnu
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -Wall -Wextra -Werror -mfpu=fpv4-sp-d16 -mfloat-abi=hard -IFreeRTOS/Source/include/ -IFreeRTOS/Source/portable/GCC/ARM_CM4F/ -Idrivers/ -Isrc/ FreeRTOS/Source/queue.c -o obj/queue.o
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -Wall -Wextra -Werror -mfpu=fpv4-sp-d16 -mfloat-abi=hard -IFreeRTOS/Source/include/ -IFreeRTOS/Source/portable/GCC/ARM_CM4F/ -Idrivers/ -Isrc/ FreeRTOS/Source/list.c -o obj/list.o
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -Wall -Wextra -Werror -mfpu=fpv4-sp-d16 -mfloat-abi=hard -IFreeRTOS/Source/include/ -IFreeRTOS/Source/portable/GCC/ARM_CM4F/ -Idrivers/ -Isrc/ FreeRTOS/Source/tasks.c -o obj/tasks.o
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -Wall -Wextra -Werror -mfpu=fpv4-sp-d16 -mfloat-abi=hard -IFreeRTOS/Source/include/ -IFreeRTOS/Source/portable/GCC/ARM_CM4F/ -Idrivers/ -Isrc/ FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c -o obj/port.o
+
+# Make data base, printed on Sat Nov  5 01:31:36 2016
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = i3
+# makefile (from `Makefile', line 60)
+SRC = src/
+# default
+CWEAVE = cweave
+# makefile (from `Makefile', line 99)
+TARGET = image.bin
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# makefile (from `Makefile', line 18)
+TOOLCHAIN = arm-none-eabi-
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /home/rb/.Xauthority
+# environment
+GDMSESSION = i3
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+CURDIR := /home/rb/embedded_testing
+# makefile
+SHELL = /bin/sh
+# default
+RM = rm -f
+# environment
+GDM_LANG = en_US
+# environment
+VTE_VERSION = 3409
+# environment
+_ = /usr/bin/make
+# default
+PREPROCESS.F = $(FC) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -F
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-i3:/etc/xdg
+# default
+OUTPUT_OPTION = -o $@
+# makefile (from `Makefile', line 107)
+DEP_FRTOS_CONFIG = $(SRC)FreeRTOSConfig.h
+# default
+COMPILE.cpp = $(COMPILE.cc)
+# makefile (from `Makefile', line 66)
+FREERTOS_OBJS = queue.o list.o tasks.o
+# makefile (from `Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# automatic
+@F = $(notdir $@)
+# default
+LINK.p = $(PC) $(PFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# environment
+MANDATORY_PATH = /usr/share/gconf/i3.mandatory.path
+# environment
+XDG_DATA_DIRS = /usr/share/i3:/usr/local/share/:/usr/share/
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:abstract=/tmp/dbus-zHfweqXdSe,guid=df49148f96217592ab00c58958141110
+# makefile (from `Makefile', line 19)
+CC = $(TOOLCHAIN)gcc
+# makefile (from `Makefile', line 94)
+OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERTOS_PORT_OBJS) $(SRC_OBJS))
+# makefile (from `Makefile', line 57)
+DRIVERS_SRC = drivers/
+# default
+CHECKOUT,v = +$(if $(wildcard $@),,$(CO) $(COFLAGS) $< $@)
+# environment
+CLUTTER_IM_MODULE = xim
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# makefile (from `Makefile', line 30)
+CPUFLAG = -mthumb -mcpu=cortex-m4
+# default
+CPP = $(CC) -E
+# makefile (from `Makefile', line 32)
+FPUFLAG = -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+# default
+LINK.cc = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+# default
+LEX = lex
+# environment
+PATH = /home/rb/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/arm-none-eabi/bin:/opt/lm4tools/lm4flash/:/opt/arm-none-eabi/bin:/opt/lm4tools/lm4flash/
+# makefile (from `Makefile', line 22)
+LD = $(TOOLCHAIN)ld
+# default
+TEXI2DVI = texi2dvi
+# default
+YACC = yacc
+# environment
+C_INCLUDE_PATH = /opt/arm-none-eabi/bin/arm-none-eabi/include
+# makefile (from `Makefile', line 28)
+OFLAG = -o
+# default
+COMPILE.mod = $(M2C) $(M2FLAGS) $(MODFLAGS) $(TARGET_ARCH)
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# makefile (from `Makefile', line 36)
+CFLAGS = $(CPUFLAG) $(WFLAG) $(FPUFLAG)
+# default
+ARFLAGS = rv
+# environment
+TEXTDOMAIN = im-config
+# default
+LINK.r = $(FC) $(FFLAGS) $(RFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# environment
+WINDOWID = 27262986
+# default
+COMPILE.f = $(FC) $(FFLAGS) $(TARGET_ARCH) -c
+# makefile (from `Makefile', line 108)
+DEP_SETTINGS = $(DEP_FRTOS_CONFIG)
+# default
+LINT.c = $(LINT) $(LINTFLAGS) $(CPPFLAGS) $(TARGET_ARCH)
+# default
+LINT = lint
+# default
+YACC.y = $(YACC) $(YFLAGS)
+# makefile (from `Makefile', line 24)
+AR = $(TOOLCHAIN)ar
+# makefile (from `Makefile', line 84)
+DRIVERSLIB_OBJS = $(wildcard $(OBJDIR)driverslib/*.o)
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# default
+TANGLE = tangle
+# environment
+XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/rb
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:
+# makefile (from `Makefile', line 89)
+SRC_OBJS := main.o
+# environment
+SSH_AUTH_SOCK = /tmp/ssh-JeYNJLYAZAym/agent.2738
+# default
+GET = get
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# default
+COMPILE.F = $(FC) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+# default
+CTANGLE = ctangle
+# environment
+GTK_IM_MODULE = ibus
+# default
+.LIBPATTERNS = lib%.so lib%.a
+# default
+LINK.C = $(LINK.cc)
+# environment
+PWD = /home/rb/embedded_testing
+# environment
+QT_QPA_PLATFORMTHEME = appmenu-qt5
+# makefile (from `Makefile', line 105)
+INC_FLAGS = $(addprefix $(INCLUDEFLAG), $(INC_FREERTOS) $(FREERTOS_PORT_SRC) $(DRIVERS_SRC) $(SRC))
+# makefile (from `Makefile', line 77)
+FREERTOS_MEMMANG_OBJS = heap_4.o
+# default
+LINK.S = $(CC) $(ASFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_MACH)
+# environment
+XDG_SEAT = seat0
+# default
+PREPROCESS.r = $(FC) $(FFLAGS) $(RFLAGS) $(TARGET_ARCH) -F
+# environment
+SSH_AGENT_PID = 2815
+# default
+LINK.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# environment
+GTK_MODULES = overlay-scrollbar
+# default
+LINK.s = $(CC) $(ASFLAGS) $(LDFLAGS) $(TARGET_MACH)
+# environment
+HOME = /home/rb
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+LOGNAME = rb
+# default
+CO = co
+# makefile (from `Makefile', line 27)
+CFLAG = -c
+# default
+MAKE_VERSION := 3.81
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+XDG_VTNR = 7
+# environment
+COLORTERM = gnome-terminal
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+QT_IM_MODULE = ibus
+# environment
+SHLVL = 1
+# makefile (from `Makefile', line 21)
+AS = $(TOOLCHAIN)as
+# default
+PREPROCESS.S = $(CC) -E $(CPPFLAGS)
+# default
+COMPILE.p = $(PC) $(PFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+# environment
+XDG_SESSION_ID = c4
+# makefile (from `Makefile', line 54)
+FREERTOS_PORT_SRC = $(FREERTOS_SRC)portable/$(PORT_COMP_TARG)
+# environment
+USER = rb
+# default
+FC = f77
+# makefile
+.DEFAULT_GOAL := all
+# environment
+XDG_CURRENT_DESKTOP = i3
+# makefile (from `Makefile', line 42)
+PORT_COMP_TARG = GCC/ARM_CM4F/
+# makefile (from `Makefile', line 86)
+SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)tasks/*.c)
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+GNOME_KEYRING_PID = 2736
+# makefile (from `Makefile', line 97)
+LINKER_SCRIPT = $(SRC)tiva.ld
+# default
+WEAVE = weave
+# default
+MAKE_COMMAND := make
+# default
+LINK.cpp = $(LINK.cc)
+# default
+F77 = $(FC)
+# environment
+OLDPWD = /home/rb/embedded_testing/drivers
+# default
+.VARIABLES := 
+# default
+PC = pc
+# automatic
+*F = $(notdir $*)
+# environment
+LANGUAGE = en_US
+# environment
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+# default
+COMPILE.def = $(M2C) $(M2FLAGS) $(DEFFLAGS) $(TARGET_ARCH)
+# environment
+GNOME_KEYRING_CONTROL = /run/user/1000/keyring-j6JyCk
+# makefile (from `Makefile', line 39)
+DEB_FLAG = -g -DDEBUG
+# makefile
+MAKEFLAGS = p
+# environment
+MFLAGS = -p
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# default
+LEX.l = $(LEX) $(LFLAGS) -t
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# default
+COMPILE.r = $(FC) $(FFLAGS) $(RFLAGS) $(TARGET_ARCH) -c
+# automatic
++F = $(notdir $+)
+# default
+M2C = m2c
+# makefile (from `Makefile', line 31)
+WFLAG = -Wall -Wextra -Werror
+# environment
+DEFAULTS_PATH = /usr/share/gconf/i3.default.path
+# makefile (from `Makefile', line 102)
+INC_FREERTOS = $(FREERTOS_SRC)include/
+# environment
+TEXTDOMAINDIR = /usr/share/locale/
+# default
+MAKEFILES := 
+# makefile (from `Makefile', line 80)
+FREERTOS_PORT_OBJS = port.o
+# makefile (from `Makefile', line 98)
+ELF_IMAGE = image.elf
+# default
+COMPILE.cc = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+# automatic
+<F = $(notdir $<)
+# makefile (from `Makefile', line 51)
+FREERTOS_MEMMANG_SRC = $(FREERTOS_SRC)portable/MemMang/
+# makefile (from `Makefile', line 45)
+OBJDIR = obj/
+# makefile (from `Makefile', line 20)
+CXX = $(TOOLCHAIN)g++
+# default
+COFLAGS = 
+# default
+COMPILE.C = $(COMPILE.cc)
+# environment
+QT4_IM_MODULE = xim
+# automatic
+^F = $(notdir $^)
+# makefile (from `Makefile', line 29)
+INCLUDEFLAG = -I
+# makefile (from `Makefile', line 85)
+UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
+# default
+COMPILE.S = $(CC) $(ASFLAGS) $(CPPFLAGS) $(TARGET_MACH) -c
+# makefile (from `Makefile', line 23)
+OBJCOPY = $(TOOLCHAIN)objcopy
+# default
+LINK.F = $(FC) $(FFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# default
+SUFFIXES := .out .a .ln .o .c .cc .C .cpp .p .f .F .r .y .l .s .S .mod .sym .def .h .info .dvi .tex .texinfo .texi .txinfo .w .ch .web .sh .elc .el
+# default
+COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+# default
+COMPILE.s = $(AS) $(ASFLAGS) $(TARGET_MACH)
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# makefile (from `Makefile', line 48)
+FREERTOS_SRC = FreeRTOS/Source/
+# environment
+MAKELEVEL := 0
+# default
+MAKEINFO = makeinfo
+# default
+LINK.f = $(FC) $(FFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# default
+TEX = tex
+# environment
+LANG = en_US.UTF-8
+# environment
+TERM = xterm
+# default
+F77FLAGS = $(FFLAGS)
+# default
+LINK.o = $(CC) $(LDFLAGS) $(TARGET_ARCH)
+# variable set hash-table stats:
+# Load=168/1024=16%, Rehash=0, Collisions=62/326=19%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# FreeRTOS/Source/portable/MemMang/SCCS: could not be stat'd.
+# src/tasks: could not be stat'd.
+# src/RCS: could not be stat'd.
+# SCCS: could not be stat'd.
+# obj (device 2049, inode 1975227): 7 files, 15 impossibilities.
+# FreeRTOS/Source/portable/MemMang/RCS: could not be stat'd.
+# . (device 2049, inode 1975237): 10 files, 17 impossibilities.
+# obj/SCCS: could not be stat'd.
+# FreeRTOS/Source/include (device 2049, inode 1977624): 16 files, 17 impossibilities.
+# obj/RCS: could not be stat'd.
+# FreeRTOS/Source/portable/GCC/ARM_CM4F (device 2049, inode 1977653): 4 files, 7 impossibilities.
+# FreeRTOS/Source/include/SCCS: could not be stat'd.
+# FreeRTOS/Source (device 2049, inode 1977621): 11 files, 13 impossibilities.
+# FreeRTOS/Source/include/RCS: could not be stat'd.
+# src (device 2049, inode 2107640): 5 files, 1 impossibilities.
+# FreeRTOS/Source/portable/GCC/ARM_CM4F/SCCS: could not be stat'd.
+# FreeRTOS/Source/SCCS: could not be stat'd.
+# FreeRTOS/Source/portable/MemMang (device 2049, inode 1977667): 7 files, 7 impossibilities.
+# FreeRTOS/Source/portable/GCC/ARM_CM4F/RCS: could not be stat'd.
+# src/SCCS: could not be stat'd.
+# FreeRTOS/Source/RCS: could not be stat'd.
+# RCS: could not be stat'd.
+
+# 60 files, 77 impossibilities in 22 directories.
+
+# Implicit Rules
+
+obj/%.o: FreeRTOS/Source/%.c FreeRTOS/Source/include/* obj/ src/FreeRTOSConfig.h
+#  commands to execute (from `Makefile', line 143):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+obj/%.o: FreeRTOS/Source/portable/MemMang/%.c obj/ src/FreeRTOSConfig.h
+#  commands to execute (from `Makefile', line 146):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+obj/%.o: FreeRTOS/Source/portable/GCC/ARM_CM4F/%.c obj/ src/FreeRTOSConfig.h
+#  commands to execute (from `Makefile', line 149):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+obj/%.o: src/%.c src/%.h (OBJDIR)
+#  commands to execute (from `Makefile', line 153):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+obj/tasks/%.o: src/tasks%.c src/tasks/%.h (OBJDIR)
+#  commands to execute (from `Makefile', line 156):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+print-%:
+#  commands to execute (from `Makefile', line 235):
+	@echo $* = $($*)
+	
+
+%.out:
+
+%.a:
+
+%.ln:
+
+%.o:
+
+%: %.o
+#  commands to execute (built-in):
+	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.c:
+
+%: %.c
+#  commands to execute (built-in):
+	$(LINK.c) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.ln: %.c
+#  commands to execute (built-in):
+	$(LINT.c) -C$* $<
+
+%.o: %.c
+#  commands to execute (built-in):
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+
+%.cc:
+
+%: %.cc
+#  commands to execute (built-in):
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.cc
+#  commands to execute (built-in):
+	$(COMPILE.cc) $(OUTPUT_OPTION) $<
+
+%.C:
+
+%: %.C
+#  commands to execute (built-in):
+	$(LINK.C) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.C
+#  commands to execute (built-in):
+	$(COMPILE.C) $(OUTPUT_OPTION) $<
+
+%.cpp:
+
+%: %.cpp
+#  commands to execute (built-in):
+	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.cpp
+#  commands to execute (built-in):
+	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+
+%.p:
+
+%: %.p
+#  commands to execute (built-in):
+	$(LINK.p) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.p
+#  commands to execute (built-in):
+	$(COMPILE.p) $(OUTPUT_OPTION) $<
+
+%.f:
+
+%: %.f
+#  commands to execute (built-in):
+	$(LINK.f) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.f
+#  commands to execute (built-in):
+	$(COMPILE.f) $(OUTPUT_OPTION) $<
+
+%.F:
+
+%: %.F
+#  commands to execute (built-in):
+	$(LINK.F) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.F
+#  commands to execute (built-in):
+	$(COMPILE.F) $(OUTPUT_OPTION) $<
+
+%.f: %.F
+#  commands to execute (built-in):
+	$(PREPROCESS.F) $(OUTPUT_OPTION) $<
+
+%.r:
+
+%: %.r
+#  commands to execute (built-in):
+	$(LINK.r) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.r
+#  commands to execute (built-in):
+	$(COMPILE.r) $(OUTPUT_OPTION) $<
+
+%.f: %.r
+#  commands to execute (built-in):
+	$(PREPROCESS.r) $(OUTPUT_OPTION) $<
+
+%.y:
+
+%.ln: %.y
+#  commands to execute (built-in):
+	$(YACC.y) $< 
+	$(LINT.c) -C$* y.tab.c 
+	$(RM) y.tab.c
+
+%.c: %.y
+#  commands to execute (built-in):
+	$(YACC.y) $< 
+	mv -f y.tab.c $@
+
+%.l:
+
+%.ln: %.l
+#  commands to execute (built-in):
+	@$(RM) $*.c
+	$(LEX.l) $< > $*.c
+	$(LINT.c) -i $*.c -o $@
+	$(RM) $*.c
+
+%.c: %.l
+#  commands to execute (built-in):
+	@$(RM) $@ 
+	$(LEX.l) $< > $@
+
+%.r: %.l
+#  commands to execute (built-in):
+	$(LEX.l) $< > $@ 
+	mv -f lex.yy.r $@
+
+%.s:
+
+%: %.s
+#  commands to execute (built-in):
+	$(LINK.s) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.s
+#  commands to execute (built-in):
+	$(COMPILE.s) -o $@ $<
+
+%.S:
+
+%: %.S
+#  commands to execute (built-in):
+	$(LINK.S) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+%.o: %.S
+#  commands to execute (built-in):
+	$(COMPILE.S) -o $@ $<
+
+%.s: %.S
+#  commands to execute (built-in):
+	$(PREPROCESS.S) $< > $@
+
+%.mod:
+
+%: %.mod
+#  commands to execute (built-in):
+	$(COMPILE.mod) -o $@ -e $@ $^
+
+%.o: %.mod
+#  commands to execute (built-in):
+	$(COMPILE.mod) -o $@ $<
+
+%.sym:
+
+%.def:
+
+%.sym: %.def
+#  commands to execute (built-in):
+	$(COMPILE.def) -o $@ $<
+
+%.h:
+
+%.info:
+
+%.dvi:
+
+%.tex:
+
+%.dvi: %.tex
+#  commands to execute (built-in):
+	$(TEX) $<
+
+%.texinfo:
+
+%.info: %.texinfo
+#  commands to execute (built-in):
+	$(MAKEINFO) $(MAKEINFO_FLAGS) $< -o $@
+
+%.dvi: %.texinfo
+#  commands to execute (built-in):
+	$(TEXI2DVI) $(TEXI2DVI_FLAGS) $<
+
+%.texi:
+
+%.info: %.texi
+#  commands to execute (built-in):
+	$(MAKEINFO) $(MAKEINFO_FLAGS) $< -o $@
+
+%.dvi: %.texi
+#  commands to execute (built-in):
+	$(TEXI2DVI) $(TEXI2DVI_FLAGS) $<
+
+%.txinfo:
+
+%.info: %.txinfo
+#  commands to execute (built-in):
+	$(MAKEINFO) $(MAKEINFO_FLAGS) $< -o $@
+
+%.dvi: %.txinfo
+#  commands to execute (built-in):
+	$(TEXI2DVI) $(TEXI2DVI_FLAGS) $<
+
+%.w:
+
+%.c: %.w
+#  commands to execute (built-in):
+	$(CTANGLE) $< - $@
+
+%.tex: %.w
+#  commands to execute (built-in):
+	$(CWEAVE) $< - $@
+
+%.ch:
+
+%.web:
+
+%.p: %.web
+#  commands to execute (built-in):
+	$(TANGLE) $<
+
+%.tex: %.web
+#  commands to execute (built-in):
+	$(WEAVE) $<
+
+%.sh:
+
+%: %.sh
+#  commands to execute (built-in):
+	cat $< >$@ 
+	chmod a+x $@
+
+%.elc:
+
+%.el:
+
+(%): %
+#  commands to execute (built-in):
+	$(AR) $(ARFLAGS) $@ $<
+
+%.out: %
+#  commands to execute (built-in):
+	@rm -f $@ 
+	cp $< $@
+
+%.c: %.w %.ch
+#  commands to execute (built-in):
+	$(CTANGLE) $^ $@
+
+%.tex: %.w %.ch
+#  commands to execute (built-in):
+	$(CWEAVE) $^ $@
+
+%:: %,v
+#  commands to execute (built-in):
+	$(CHECKOUT,v)
+
+%:: RCS/%,v
+#  commands to execute (built-in):
+	$(CHECKOUT,v)
+
+%:: RCS/%
+#  commands to execute (built-in):
+	$(CHECKOUT,v)
+
+%:: s.%
+#  commands to execute (built-in):
+	$(GET) $(GFLAGS) $(SCCS_OUTPUT_OPTION) $<
+
+%:: SCCS/s.%
+#  commands to execute (built-in):
+	$(GET) $(GFLAGS) $(SCCS_OUTPUT_OPTION) $<
+
+# 92 implicit rules, 5 (5.4%) terminal.
+
+# Files
+
+# Not a target:
+FreeRTOS/Source/include/mpu_wrappers.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.717266259
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.web.p:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(TANGLE) $<
+
+# Not a target:
+.l.r:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LEX.l) $< > $@ 
+	mv -f lex.yy.r $@
+
+# Not a target:
+.dvi:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+FreeRTOS/Source/include/FreeRTOS.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.F.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.F) $(OUTPUT_OPTION) $<
+
+# Not a target:
+FreeRTOS/Source/include/portable.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+obj/tasks.o: FreeRTOS/Source/tasks.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `tasks'
+#  Last modified 2016-11-05 01:31:36.135766922
+#  File has been updated.
+#  Successfully updated.
+# automatic
+# @ := obj/tasks.o
+# automatic
+# % := 
+# automatic
+# * := tasks
+# automatic
+# + := FreeRTOS/Source/tasks.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+# automatic
+# | := 
+# automatic
+# < := FreeRTOS/Source/tasks.c
+# automatic
+# ^ := FreeRTOS/Source/tasks.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+# automatic
+# ? := obj/
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=14/29=48%
+#  commands to execute (from `Makefile', line 143):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+all: image.bin
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/76=0%
+
+# Not a target:
+.y.ln:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(YACC.y) $< 
+	$(LINT.c) -C$* y.tab.c 
+	$(RM) y.tab.c
+
+# Not a target:
+.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+clean_obj:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 220):
+	$(RM) $(OBJDIR)*
+	
+
+# Not a target:
+FreeRTOS/Source/queue.c:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.741266259
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.y:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.def.sym:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.def) -o $@ $<
+
+.PHONY: all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.p.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.p) $(OUTPUT_OPTION) $<
+
+# Not a target:
+.p:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.p) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Not a target:
+.txinfo.dvi:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(TEXI2DVI) $(TEXI2DVI_FLAGS) $<
+
+obj/list.o: FreeRTOS/Source/list.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `list'
+#  Last modified 2016-11-05 01:31:36.047766921
+#  File has been updated.
+#  Successfully updated.
+# automatic
+# @ := obj/list.o
+# automatic
+# % := 
+# automatic
+# * := list
+# automatic
+# + := FreeRTOS/Source/list.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+# automatic
+# | := 
+# automatic
+# < := FreeRTOS/Source/list.c
+# automatic
+# ^ := FreeRTOS/Source/list.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+# automatic
+# ? := obj/
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=14/29=48%
+#  commands to execute (from `Makefile', line 143):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+# Not a target:
+.a:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.l.ln:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	@$(RM) $*.c
+	$(LEX.l) $< > $*.c
+	$(LINT.c) -i $*.c -o $@
+	$(RM) $*.c
+
+# Not a target:
+.w.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(CTANGLE) $< - $@
+
+# Not a target:
+.texi.dvi:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(TEXI2DVI) $(TEXI2DVI_FLAGS) $<
+
+# Not a target:
+.sh:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	cat $< >$@ 
+	chmod a+x $@
+
+# Not a target:
+FreeRTOS/Source/include/projdefs.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.cc:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+clean_intermediate: clean_obj
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 223):
+	$(RM) *.elf
+	$(RM) *.img
+	
+
+# Not a target:
+.cc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.cc) $(OUTPUT_OPTION) $<
+
+# Not a target:
+obj/main.o:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.def:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.SUFFIXES: .out .a .ln .o .c .cc .C .cpp .p .f .F .r .y .l .s .S .mod .sym .def .h .info .dvi .tex .texinfo .texi .txinfo .w .ch .web .sh .elc .el
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+FreeRTOS/Source/include/timers.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.589266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.c.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-05 01:31:03.371766634
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.r.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.r) $(OUTPUT_OPTION) $<
+
+# Not a target:
+.r:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.r) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+rebuild: clean all
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+debug: _debug_flags all
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+obj/heap_4.o: FreeRTOS/Source/portable/MemMang/heap_4.c obj/ src/FreeRTOSConfig.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `heap_4'
+#  Last modified 2016-11-05 01:31:08.827766682
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 146):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+# Not a target:
+FreeRTOS/Source/include/semphr.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+FreeRTOS/Source/include/croutine.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+FreeRTOS/Source/portable/MemMang/heap_4.c:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.725266259
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.info:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.elc:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.l.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	@$(RM) $@ 
+	$(LEX.l) $< > $@
+
+# Not a target:
+.out:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.C:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.C) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Not a target:
+.r.f:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(PREPROCESS.r) $(OUTPUT_OPTION) $<
+
+# Not a target:
+.S:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.S) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Not a target:
+.texinfo.info:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(MAKEINFO) $(MAKEINFO_FLAGS) $< -o $@
+
+# Not a target:
+.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.c) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Not a target:
+.w.tex:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(CWEAVE) $< - $@
+
+help:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 238):
+	@echo
+	@echo Valid targets:
+	@echo - all: builds missing dependencies and creates the target image \'$(IMAGE)\'.
+	@echo - rebuild: rebuilds all dependencies and creates the target image \'$(IMAGE)\'.
+	@echo - debug: same as \'all\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
+	@echo - debug_rebuild: same as \'rebuild\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
+	@echo - clean_obj: deletes all object files, only keeps \'$(ELF_IMAGE)\' and \'$(IMAGE)\'.
+	@echo - clean_intermediate: deletes all intermediate binaries, only keeps the target image \'$(IMAGE)\'.
+	@echo - clean: deletes all intermediate binaries, incl. the target image \'$(IMAGE)\'.
+	@echo - help: displays these help instructions.
+	@echo
+	
+
+# Not a target:
+.c.ln:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINT.c) -C$* $<
+
+# Not a target:
+.s.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.s) -o $@ $<
+
+# Not a target:
+FreeRTOS/Source/include/list.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.s:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.s) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+obj/:
+#  Implicit rule search has not been done.
+#  Last modified 2016-11-05 01:31:08.819766682
+#  File has been updated.
+#  Successfully updated.
+#  commands to execute (from `Makefile', line 124):
+	mkdir -p $@
+	
+
+# Not a target:
+.texinfo.dvi:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(TEXI2DVI) $(TEXI2DVI_FLAGS) $<
+
+# Not a target:
+.el:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.texinfo:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.y.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(YACC.y) $< 
+	mv -f y.tab.c $@
+
+# Not a target:
+FreeRTOS/Source/include/task.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.589266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+FreeRTOS/Source/tasks.c:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.741266259
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.web.tex:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(WEAVE) $<
+
+# Not a target:
+.texi.info:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(MAKEINFO) $(MAKEINFO_FLAGS) $< -o $@
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+obj/queue.o: FreeRTOS/Source/queue.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `queue'
+#  Last modified 2016-11-05 01:31:36.023766921
+#  File has been updated.
+#  Successfully updated.
+# automatic
+# @ := obj/queue.o
+# automatic
+# % := 
+# automatic
+# * := queue
+# automatic
+# + := FreeRTOS/Source/queue.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+# automatic
+# | := 
+# automatic
+# < := FreeRTOS/Source/queue.c
+# automatic
+# ^ := FreeRTOS/Source/queue.c FreeRTOS/Source/include/croutine.h FreeRTOS/Source/include/deprecated_definitions.h FreeRTOS/Source/include/event_groups.h FreeRTOS/Source/include/FreeRTOS.h FreeRTOS/Source/include/list.h FreeRTOS/Source/include/mpu_wrappers.h FreeRTOS/Source/include/portable.h FreeRTOS/Source/include/projdefs.h FreeRTOS/Source/include/queue.h FreeRTOS/Source/include/semphr.h FreeRTOS/Source/include/StackMacros.h FreeRTOS/Source/include/stdint.readme FreeRTOS/Source/include/task.h FreeRTOS/Source/include/timers.h obj/ src/FreeRTOSConfig.h
+# automatic
+# ? := obj/
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=14/29=48%
+#  commands to execute (from `Makefile', line 143):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+# Not a target:
+FreeRTOS/Source/list.c:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.589266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+src/tiva.ld:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+FreeRTOS/Source/include/StackMacros.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.tex.dvi:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(TEX) $<
+
+# Not a target:
+.cpp.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+
+# Not a target:
+.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+clean: clean_intermediate
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 227):
+	$(RM) *.bin
+	
+
+# Not a target:
+.C.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.C) $(OUTPUT_OPTION) $<
+
+# Not a target:
+.ln:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.texi:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.txinfo:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.tex:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.txinfo.info:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(MAKEINFO) $(MAKEINFO_FLAGS) $< -o $@
+
+# Not a target:
+.ch:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+FreeRTOS/Source/include/event_groups.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+obj/port.o: FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c obj/ src/FreeRTOSConfig.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `port'
+#  Last modified 2016-11-05 01:31:36.159766922
+#  File has been updated.
+#  Successfully updated.
+# automatic
+# @ := obj/port.o
+# automatic
+# % := 
+# automatic
+# * := port
+# automatic
+# + := FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c obj/ src/FreeRTOSConfig.h
+# automatic
+# | := 
+# automatic
+# < := FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
+# automatic
+# ^ := FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c obj/ src/FreeRTOSConfig.h
+# automatic
+# ? := obj/
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=14/29=48%
+#  commands to execute (from `Makefile', line 149):
+	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
+	
+
+# Not a target:
+src/FreeRTOSConfig.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 21:27:13.881304987
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+flash:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 231):
+	sudo lm4flash image.bin
+	
+
+# Not a target:
+.S.s:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(PREPROCESS.S) $< > $@
+
+# Not a target:
+.mod:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.mod) -o $@ -e $@ $^
+
+# Not a target:
+.mod.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.mod) -o $@ $<
+
+image.bin: image.elf
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/76=0%
+#  commands to execute (from `Makefile', line 121):
+	$(OBJCOPY) -O binary $(word 2,$^) $@
+	
+
+# Not a target:
+.F.f:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(PREPROCESS.F) $(OUTPUT_OPTION) $<
+
+image.elf: obj/queue.o obj/list.o obj/tasks.o obj/heap_4.o obj/port.o obj/main.o src/tiva.ld
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/76=0%
+#  commands to execute (from `Makefile', line 127):
+	$(LD) -nostdlib -L $(OBJDIR) -T $(LINKER_SCRIPT) $(TIVA_DRIVER_OBJS) $(OBJS) $(OFLAG) $@
+	
+
+# Not a target:
+.w:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.S.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.S) -o $@ $<
+
+_debug_flags:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 134):
+	$(eval CFLAGS += $(DEB_FLAG))
+	
+
+debug_rebuild: _debug_flags rebuild
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+FreeRTOS/Source/include/stdint.readme:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.589266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.l:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+FreeRTOS/Source/include/deprecated_definitions.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.F:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.F) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Not a target:
+FreeRTOS/Source/include/queue.h:
+#  Implicit rule search has been done.
+#  Last modified 2016-11-04 20:13:44.585266258
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.web:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.sym:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.f:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(LINK.f) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Not a target:
+.f.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (built-in):
+	$(COMPILE.f) $(OUTPUT_OPTION) $<
+
+# files hash-table stats:
+# Load=108/1024=11%, Rehash=0, Collisions=347/1984=17%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 1
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+
+# Finished Make data base on Sat Nov  5 01:31:36 2016
+

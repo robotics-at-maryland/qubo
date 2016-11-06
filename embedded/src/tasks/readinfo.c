@@ -6,29 +6,44 @@
 
 #include "readinfo.h"
 
+#include <FreeRTOS.h>
+#include <task.h>
+#include <queue.h>
+
+#include <stdbool.h>
+#include <stdint.h>
+
+#include <inc/hw_memmap.h>
+#include <inc/hw_ints.h>
+#include <driverlib/interrupt.h>
+#include <driverlib/gpio.h>
+#include <driverlib/pin_map.h>
+#include <driverlib/sysctl.h>
+#include <driverlib/uart.h>
+#include <utils/uartstdio.h>
+
 void _readinfo_handler(void) {
   uint32_t status = UARTIntStatus(UART0_BASE, true);
 
-  UARTIntClear(UART0_Base, status);
+  UARTIntClear(UART0_BASE, status);
 
-  while (UARTCharsAvail(UART)_BASE) {
-    int32_t = UARTCharGet(UART0_BASE);
+  while (UARTCharsAvail(UART0_BASE)) {
+    int32_t ch = UARTCharGet(UART0_BASE);
 
     // Send the string to the readinfo_task
-    xQueueSendToBackFromISR(uart_input, string, NULL);
+    xQueueSendToBackFromISR(uart_input, &ch, NULL);
+  }
 }
 
   // msg is passed by value in the queue, but it's members have to be allocated in heap so they don't die
 void readinfo_task(void* params) {
 
-  uart_input = xQueueCreate(INPUT_BUFFER_SIZE, sizeof(int32_t))
+  uart_input = xQueueCreate(INPUT_BUFFER_SIZE, sizeof(int32_t));
 
-  const QueueHandle_t * const processing_queue = (QueueHandle_t *) params;
+  QueueHandle_t *processing_queue = (QueueHandle_t *) params;
 
   int32_t ch;
-  readinfo_msg msg = {
-    .size = INPUT_BUFFER_SIZE;
-  };
+  readinfo_msg msg;
 
   int buffer_pos = 0;
 
@@ -57,7 +72,7 @@ void readinfo_task(void* params) {
     case ',' :
       {
         if ( buffer_pos < INPUT_BUFFER_SIZE ) {
-          msg->buffer[buffer_pos] = ch;
+          msg.buffer[buffer_pos] = ch;
           ++buffer_pos;
         }
         break;
@@ -77,7 +92,7 @@ void readinfo_task(void* params) {
     case CODE_CR :
       {
         /* Append characters to terminate the string:*/
-        msg->buffer[buffer_pos] = '\0';
+        msg.buffer[buffer_pos] = '\0';
         /* Send the the string's pointer to the queue: */
         xQueueSendToBack(*processing_queue, (void*) &msg, 0);
         /* And switch to the next line of the "circular" buffer */
@@ -86,7 +101,5 @@ void readinfo_task(void* params) {
       }
 
     }
-
   }
-
 }
