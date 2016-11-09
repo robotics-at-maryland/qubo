@@ -1,6 +1,12 @@
 #ifndef _READINFO_H_
 #define _READINFO_H_
 
+#include <stdbool.h>
+#include <stdint.h>
+
+#include <FreeRTOS.h>
+#include <task.h>
+#include <queue.h>
 
 // The max size a message sent from computer to MCU can be
 #define INPUT_BUFFER_SIZE 10

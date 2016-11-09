@@ -146,7 +146,7 @@ $(TASKDIR) :
 $(OBJDIR)%.o: $(SRC)%.c $(wildcard $(SRC)%.h) $(TASKDIR)
 	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
 
-#$(OBJDIR)$(TASKDIR)%.o: $(TASKDIR) $(SRC)$(TASKDIR)%.c $(wildcard $(SRC)$(TASKDIR)%.h) 
+#$(OBJDIR)$(TASKDIR)%.o: $(TASKDIR) $(SRC)$(TASKDIR)%.c $(wildcard $(SRC)$(TASKDIR)%.h)
 #	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
 
 
@@ -164,6 +164,7 @@ $(OBJDIR)%.o: $(FREERTOS_PORT_SRC)%.c $(DEP_FRTOS_CONFIG)
 
 clean_obj :
 	$(RM) $(OBJDIR)*
+	$(RM) $(OBJDIR)$(TASKDIR)*
 
 clean_intermediate : clean_obj
 	$(RM) *.elf
