@@ -24,6 +24,9 @@ find_package(catkin
 #  REQUIRED COMPONENTS algorithm
 #)
 
+#generate messages used by the server and client from vison.action
+add_action_files(DIRECTORY ../ram_msgs/action FILES VisionExample.action)
+generate_messages(DEPENDENCIES actionlib_msgs)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
@@ -31,7 +34,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 catkin_package(
    INCLUDE_DIRS
    LIBRARIES ${PROJECT_NAME}
-   CATKIN_DEPENDS roscpp roslib
+   CATKIN_DEPENDS roscpp roslib actionlib_msgs
 )
 
 
@@ -51,10 +54,10 @@ set(VISION_SRC_FILES
 )
 
 
-
 ##############################
 # Add Executables ############
 ##############################
+
 
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})

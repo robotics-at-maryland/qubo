@@ -62,6 +62,7 @@ void VisionNode::update(){
 
 bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
     // code goes here
+    // 
     ROS_ERROR("You called the service! nice!");
     return 0;
 }

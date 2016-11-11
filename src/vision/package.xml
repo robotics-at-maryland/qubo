@@ -29,6 +29,11 @@
   <build_depend>actionlib</build_depend>
   <build_depend>actionlib_msgs</build_depend>
 
+  <!-- dl:python action client stuff -->
+  <build_depend>message_generation</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+
 
   <run_depend>roslib</run_depend>
   <run_depend>ram_msgs</run_depend>
@@ -42,6 +47,12 @@
   <!-- sg: required by actionlib (if you couldn't guess) --> 
   <run_depend>actionlib</run_depend>
   <run_depend>actionlib_msgs</run_depend>
+
+  <!-- dl:python action client stuff -->
+  <run_depend>message_generation</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+
 
 
 </package>
