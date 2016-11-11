@@ -8,6 +8,7 @@
 #include "message.h"
 #include "modules.h"
 /* Subsystem message definitions. */
+#include "protocol.h"
 #include "embedded.h"
 #include "safety.h"
 #include "battery.h"
@@ -15,3 +16,4 @@
 #include "thruster.h"
 #include "pneumatics.h"
 #include "depth.h"
+#include "debug.h"

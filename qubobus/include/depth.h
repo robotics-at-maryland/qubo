@@ -5,46 +5,42 @@
 #define QUBOBUS_DEPTH_H
 
 enum {
-    /* Command requesting a status message about the depth sensor. */
-    D_ID_DEPTH_STATUS_REQUEST = M_ID_OFFSET_DEPTH,
+    M_ID_DEPTH_STATUS = M_ID_OFFSET_DEPTH,
 
-    /* Response to a status request command. */
-    D_ID_DEPTH_STATUS,
+    M_ID_DEPTH_MONITOR_ENABLE,
 
-    /* Command to enable background monitoring of the depth sensor. */
-    D_ID_DEPTH_MONITOR_ENABLE,
+    M_ID_DEPTH_MONITOR_DISABLE,
 
-    /* Command to disable background monitoring of the depth sensor. */
-    D_ID_DEPTH_MONITOR_DISABLE,
-
-    /* Command to set the background monitoring configuration. */
-    D_ID_DEPTH_MONITOR_CONFIG
+    M_ID_DEPTH_MONITOR_SET_CONFIG,
+        
+    M_ID_DEPTH_MONITOR_GET_CONFIG
 };
 
 enum {
-    /* Error sent when the sensor is unreachable. */
     E_ID_DEPTH_UNREACHABLE = M_ID_OFFSET_DEPTH,
-
-    /* Error sent when the depth sensor reading exceeds the limit. */
-    E_ID_DEPTH_MONITOR_SOFT_WARNING,
-
-    /* Error sent when the depth sensor reading exceeds hard limits */
-    E_ID_DEPTH_MONITOR_HARD_WARNING
 };
 
-/* Message payload of details from the depth sensor */
 struct Depth_Status {
-    /* Current reading of the depth sensor */
     float depth_m;
+
+    uint8_t warning_level;
 };
 
-/* Message payload with background monitoring configuration details. */
-struct Depth_Monitor_Config {
-    /* Maximum depth before warnings are generated */
-    float soft_depth_max;
-    
-    /* Maximum depth before important warnings are generated */
-    float hard_depth_max;
+struct Depth_Monitor_Config_Request {
+    uint8_t warning_level;
 };
+
+struct Depth_Monitor_Config {
+    float depth[2];
+    
+    uint8_t warning_level;
+};
+
+extern const Transaction tDepthStatus;
+extern const Transaction tDepthMonitorEnable;
+extern const Transaction tDepthMonitorDisable;
+extern const Transaction tDepthMonitorSetConfig;
+extern const Transaction tDepthMonitorGetConfig;
+extern const Error eDepthUnreachable;
 
 #endif

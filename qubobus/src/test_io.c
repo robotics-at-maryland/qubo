@@ -5,7 +5,7 @@
 #include <qubobus.h>
 #include <io.h>
 
-#if QUBOBUS_PROTOCOL_VERSION != 2
+#if QUBOBUS_PROTOCOL_VERSION != 3
 #error Update me with new message defs!
 #endif
 
@@ -72,8 +72,7 @@ int parent_program() {
 
     {
         int data = 1337;
-        Message m = create_message(state, MT_DATA, &data, sizeof(int));
-        m.data.data_id = 13;
+        Message m = create_message(state, MT_REQUEST, 13, &data, sizeof(int));
         send_message(state, &m);
         destroy_message(state, &m);
     }
@@ -97,9 +96,9 @@ int child_program() {
         int data = 1336;
         Message m = recieve_message(state, &data, sizeof(int));
 
-        if (m.header.message_type != MT_DATA)
+        if (m.header.message_type != MT_REQUEST)
             error = 4;
-        else if (m.data.data_id != 13)
+        else if (m.header.message_id != 13)
             error = 5;
         else if (data != 1337)
             error = 6;

@@ -38,13 +38,6 @@ typedef struct _Message {
     struct Message_Footer footer;
 
     /* 
-     * Details about the contents of the message
-     * These may be unintelligible depending on the message type
-     */
-    struct Error_Header error;
-    struct Data_Header data;
-
-    /* 
      * Details about the payload that was read from the message.
      * This includes the pointer to the payload and it's size,
      * as well as a flag for tracking whether the payload was dynamically allocated.
@@ -76,7 +69,7 @@ int connect(IO_State *state);
  * Function to create a message with given payload size.
  * If payload is NULL but the size is nonzero, a sufficient buffer will be allocated.
  */
-Message create_message(IO_State *state, uint16_t message_type, void *payload, size_t payload_size);
+Message create_message(IO_State *state, uint8_t message_type, uint8_t message_id, void *payload, size_t payload_size);
 
 /*
  * Function to destroy a Message object

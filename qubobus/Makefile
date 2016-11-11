@@ -6,7 +6,7 @@ OBJDIR = obj/
 BINDIR = bin/
 
 # List of object targets needed in building other modules
-OBJECTS = $(addprefix $(OBJDIR), io.o)
+OBJECTS = $(addprefix $(OBJDIR), io.o protocol.o embedded.o safety.o battery.o power.o thruster.o pneumatics.o depth.o debug.o)
 
 # List of executable targets needed
 TARGETS = $(addprefix $(BINDIR), test_defs test_io)

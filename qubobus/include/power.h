@@ -5,41 +5,26 @@
 #define QUBOBUS_POWER_H
 
 enum {
-    /* Command requesting a status message about the power subsystem. */
-    D_ID_POWER_STATUS_REQUEST = M_ID_OFFSET_POWER,
+    M_ID_POWER_STATUS = M_ID_OFFSET_POWER,
 
-    /* Reply with information about the status of the power system. */
-    D_ID_POWER_STATUS,
+    M_ID_POWER_RAIL_ENABLE,
 
-    /* Command to enable the power supply for a specified rail */
-    D_ID_POWER_ENABLE,
+    M_ID_POWER_RAIL_DISABLE,
 
-    /* Command to disable the power supply for a specified rail. */
-    D_ID_POWER_DISABLE,
+    M_ID_POWER_MONITOR_ENABLE,
 
-    /* Command to enable background monitoring. */
-    D_ID_POWER_MONITOR_ENABLE,
+    M_ID_POWER_MONITOR_DISABLE,
 
-    /* Command to disable background monitoring. */
-    D_ID_POWER_MONITOR_DISABLE,
+    M_ID_POWER_MONITOR_SET_CONFIG,
 
-    /* Command to set the software limits for determining when to send error messages. */
-    D_ID_POWER_MONITOR_CONFIG
+    M_ID_POWER_MONITOR_GET_CONFIG
 
 };
 
 enum {
-    /* Error sent when the power board is unreachable. */
     E_ID_POWER_UNREACHABLE = M_ID_OFFSET_POWER,
-
-    /* Error sent when a soft limit is exceeded. */
-    E_ID_POWER_MONITOR_SOFT_WARNING,
-
-    /* Error sent when a hard limit is exceeded. */
-    E_ID_POWER_MONITOR_HARD_WARNING,
 };
 
-/* Defintions for different rail IDs. */
 enum {
     RAIL_ID_3V,
     RAIL_ID_5V,
@@ -54,38 +39,38 @@ enum {
 
 #define IS_POWER_RAIL_ID(X) ((RAIL_ID_3V <= (X)) && ((X) <= RAIL_ID_SHORE))
 
-struct Power_Status_Request {
+struct Power_Rail {
     uint8_t rail_id;
 };
 
-/* Payload of data about a single power rail */
 struct Power_Status {
-    /* Measurements for the requested common rail. */
-    float rail_V;
-    float rail_A;
+    float voltage;
+    float current;
 
     uint8_t rail_id;
+    uint8_t warning_level;
 };
 
-struct Power_Enable {
-    uint8_t rail_id;   
-};
-
-struct Power_Disable {
+struct Power_Monitor_Config_Request {
     uint8_t rail_id;
+    uint8_t warning_level;
 };
 
 struct Power_Monitor_Config {
-    /* Limits for the 3.3-volt common rail. */
-    float rail_soft_low_V;
-    float rail_soft_high_V;
-    float rail_soft_high_A;
+    float voltage[2];
+    float current[2];
     
-    float rail_hard_low_V;
-    float rail_hard_high_V;
-    float rail_hard_high_A;
-
     uint8_t rail_id;
+    uint8_t warning_level;
 };
+
+extern const Transaction tPowerStatus;
+extern const Transaction tPowerRailEnable;
+extern const Transaction tPowerRailDisable;
+extern const Transaction tPowerMonitorEnable;
+extern const Transaction tPowerMonitorDisable;
+extern const Transaction tPowerMonitorSetConfig;
+extern const Transaction tPowerMonitorGetConfig;
+extern const Error ePowerUnreachable;
 
 #endif

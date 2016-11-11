@@ -36,7 +36,7 @@ int connect(IO_State *state) {
      */
 
     /* Send an announce message to the other client. */
-    our_announce = create_message(state, MT_ANNOUNCE, NULL, 0);
+    our_announce = create_message(state, MT_ANNOUNCE, 0, NULL, 0);
     write_message(state, &our_announce);
 
     /*
@@ -69,7 +69,7 @@ int connect(IO_State *state) {
     /* The master client initiates the handshake with a protocol message. */
     if (master) {
 
-        protocol = create_message(state, MT_PROTOCOL, &protocol_info, sizeof(struct Protocol_Info));
+        protocol = create_message(state, MT_PROTOCOL, 0, &protocol_info, sizeof(struct Protocol_Info));
         write_message(state, &protocol);
         destroy_message(state, &protocol);
 
@@ -94,9 +94,7 @@ int connect(IO_State *state) {
         if (!success) { 
             uint16_t cause = response.header.sequence_number;
             destroy_message(state, &response);
-            response = create_message(state, MT_ERROR, NULL, 0);
-            response.error.err_code = E_ID_PROTOCOL;
-            response.error.cause_id = cause;
+            response = create_message(state, MT_ERROR, E_ID_PROTOCOL, NULL, 0);
         }
 
         /* The slave client must respond to the master's protocol message. */
@@ -109,13 +107,14 @@ int connect(IO_State *state) {
     return !success;
 }
 
-Message create_message(IO_State *state, uint16_t message_type, void *payload, size_t payload_size) {
+Message create_message(IO_State *state, uint8_t message_type, uint8_t message_id, void *payload, size_t payload_size) {
 
     /* Initialize the message to be empty. */
     Message message = {0};
 
     /* Set the message type in the header of the message. */
     message.header.message_type = message_type;
+    message.header.message_id = message_id;
 
     /* If we need space for a payload, we need to make sure there is a sufficient buffer. */
     if (payload_size > 0) {
@@ -156,15 +155,11 @@ Message recieve_message(IO_State *state, void *buffer, size_t buffer_size) {
     Message message = read_message(state, buffer, buffer_size);
 
     if (message.footer.checksum != checksum_message(&message)) {
-        Message response = create_message(state, MT_ERROR, NULL, 0);
-        response.error.err_code = E_ID_CHECKSUM;
-        response.error.cause_id = message.header.sequence_number;
+        Message response = create_message(state, MT_ERROR, E_ID_CHECKSUM, NULL, 0);
         write_message(state, &response);
         destroy_message(state, &response);
     } else if (message.header.sequence_number != state->remote_sequence_number) {
-        Message response = create_message(state, MT_ERROR, NULL, 0);
-        response.error.err_code = E_ID_SEQUENCE;
-        response.error.cause_id = message.header.sequence_number;
+        Message response = create_message(state, MT_ERROR, E_ID_SEQUENCE, NULL, 0);
         write_message(state, &response);
         destroy_message(state, &response);
     }
@@ -206,7 +201,7 @@ static void safe_io(raw_io_function raw_io, void *data, size_t size) {
     size_t bytes_transferred = 0;
     while (bytes_transferred != size) {
         ssize_t ret = raw_io(data + bytes_transferred, size - bytes_transferred);
-        if (ret < 0) {
+        if (ret <= 0) {
             break;
         }
         bytes_transferred += ret;
@@ -225,16 +220,6 @@ static uint16_t checksum_message(Message *message) {
 
     /* Compute the checksum for the message header. */
     checksum = crc16(checksum, &(message->header), sizeof(struct Message_Header));
-
-    /* Compute the checksum for the message payload header. */
-    switch (message->header.message_type) {
-        case MT_ERROR:
-            checksum = crc16(checksum, &(message->error), sizeof(struct Error_Header));
-            break;
-        case MT_DATA:
-            checksum = crc16(checksum, &(message->data), sizeof(struct Data_Header));
-            break;
-    }
 
     /* Compute the checksum for the payload itself. */
     checksum = crc16(checksum, message->payload, message->payload_size);
@@ -255,35 +240,16 @@ static Message read_message(IO_State *state, void *buffer, size_t buffer_size) {
         - sizeof(struct Message_Header)
         - sizeof(struct Message_Footer);
 
-    /* Subtract the payload header sizes. */
-    switch (header.message_type) {
-        case MT_ERROR:
-            payload_size -= sizeof(struct Error_Header);
-            break;
-        case MT_DATA:
-            payload_size -= sizeof(struct Data_Header);
-            break;
-    }
-
     /* Allocate storage for the message */
     message = create_message(
             state, 
-            header.message_type, 
+            0, 
+            0,
             buffer_size >= payload_size ? buffer : NULL,
             payload_size);
 
     /* Copy the message header into the message storage. */
     message.header = header;
-
-    /* Read in the payload header. */
-    switch (message.header.message_type) {
-        case MT_ERROR:
-            safe_io(state->read_raw, &(message.error), sizeof(struct Error_Header));
-            break;
-        case MT_DATA:
-            safe_io(state->read_raw, &(message.data), sizeof(struct Data_Header));
-            break;
-    }
 
     /* Read in the data payload. */
     safe_io(state->read_raw, message.payload, message.payload_size);
@@ -308,17 +274,6 @@ static void write_message(IO_State *state, Message *message) {
         sizeof(struct Message_Footer) +
         message->payload_size;
 
-
-    /* Add message-type dependent data sizes. */
-    switch (message->header.message_type) {
-        case MT_ERROR:
-            message->header.num_bytes += sizeof(struct Error_Header);
-            break;
-        case MT_DATA:
-            message->header.num_bytes += sizeof(struct Data_Header);
-            break;
-    }
-
     /* Set the sequence number of the message from the state structure */
     message->header.sequence_number = ++state->local_sequence_number;
 
@@ -331,16 +286,6 @@ static void write_message(IO_State *state, Message *message) {
 
     /* Write the message header to the bus. */
     safe_io(state->write_raw, &(message->header), sizeof(struct Message_Header));
-
-    /* Write the message payload header. */
-    switch (message->header.message_type) {
-        case MT_ERROR:
-            safe_io(state->write_raw, &(message->error), sizeof(struct Error_Header));
-            break;
-        case MT_DATA:
-            safe_io(state->write_raw, &(message->data), sizeof(struct Data_Header));
-            break;
-    }
 
     /* Write the data payload */
     safe_io(state->write_raw, message->payload, message->payload_size);
