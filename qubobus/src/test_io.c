@@ -16,53 +16,20 @@
 
 int tx_fd[2]; // TO CHILD FROM PARENT
 int rx_fd[2]; // TO PARENT FROM CHILD
-int debug = 0;
 
-ssize_t parent_read(void *buffer, size_t size) {
-    ssize_t transferred;
-    transferred = read(rx_fd[0], buffer, size);
-    if (debug) {
-        printf("parent read %d/%d\n", transferred, size);
-        sleep(1);
-    }
-    return transferred;
+ssize_t pipe_write(void *io_host, void *buffer, size_t size) {
+    return write(((int*)io_host)[1], buffer, size);
 }
 
-ssize_t parent_write(void *buffer, size_t size) {
-    ssize_t transferred;
-    transferred = write(tx_fd[1], buffer, size);
-    if (debug) {
-        printf("parent write %d/%d\n", transferred, size);
-        sleep(1);
-    }
-    return transferred;
-}
-
-ssize_t child_read(void *buffer, size_t size) {
-    ssize_t transferred;
-    transferred = read(tx_fd[0], buffer, size);
-    if (debug) {
-        printf("child read %d/%d\n", transferred, size);
-        sleep(1);
-    }
-    return transferred;
-}
-
-ssize_t child_write(void *buffer, size_t size) {
-    ssize_t transferred;
-    transferred = write(rx_fd[1], buffer, size);
-    if (debug) {
-        printf("child write %d/%d\n", transferred, size);
-        sleep(1);
-    }
-    return transferred;
+ssize_t pipe_read(void *io_host, void *buffer, size_t size) {
+    return read(((int*)io_host)[0], buffer, size);
 }
 
 int parent_program() {
     IO_State state_storage, *state = &state_storage;
-    int error = 0;
+    int pipefd[2] = {rx_fd[0], tx_fd[1]}, error = 0;
 
-    initialize(state, &parent_read, &parent_write, &malloc, &free, 40);
+    state_storage = initialize(&pipefd, &pipe_read, &pipe_write, 40);
 
     printf("Parent connecting...\n");
 
@@ -71,10 +38,9 @@ int parent_program() {
     printf("Parent connected!\n");
 
     {
-        int data = 1337;
-        Message m = create_message(state, MT_REQUEST, 13, &data, sizeof(int));
-        send_message(state, &m);
-        destroy_message(state, &m);
+        struct Depth_Status depth_status = {3.14f, 2};
+        Message m = create_response(&tDepthStatus, &depth_status);
+        write_message(state, &m);
     }
 
     return error;
@@ -82,9 +48,9 @@ int parent_program() {
 
 int child_program() {
     IO_State state_storage, *state = &state_storage;
-    int error = 0;
+    int pipefd[2] = {tx_fd[0], rx_fd[1]}, error = 0;
 
-    initialize(state, &child_read, &child_write, &malloc, &free, 80);
+    state_storage = initialize(pipefd, &pipe_read, &pipe_write, 80);
 
     printf("Child connecting...\n");
 
@@ -93,16 +59,16 @@ int child_program() {
     printf("Child connected!\n");
 
     {
-        int data = 1336;
-        Message m = recieve_message(state, &data, sizeof(int));
+        struct Depth_Status depth_status = {0.14f, 1};
+        Message m;
+        read_message(state, &m, &depth_status);
 
-        if (m.header.message_type != MT_REQUEST)
+        if (m.header.message_type != MT_RESPONSE)
             error = 4;
-        else if (m.header.message_id != 13)
+        else if (m.header.message_id != tDepthStatus.id)
             error = 5;
-        else if (data != 1337)
+        else if (depth_status.warning_level != 2)
             error = 6;
-        destroy_message(state, &m);
     }
 
     return error;

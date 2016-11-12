@@ -4,22 +4,15 @@
 #ifndef QUBOBUS_IO_H
 #define QUBOBUS_IO_H
 
-typedef ssize_t (*raw_io_function)(void*, size_t);
-typedef void* (*malloc_function)(size_t);
-typedef void (*free_function)(void*);
+typedef ssize_t (*raw_io_function)(void*, void*, size_t);
 
 typedef struct _IO_State {
     /*
      * External functions required to implement io operations.
      */
+    void *io_host;
     raw_io_function read_raw;
     raw_io_function write_raw;
-
-    /*
-     * Dynamic allocation library functions.
-     */
-    malloc_function malloc;
-    free_function free;
 
     /*
      * State information for the connection itself.
@@ -44,7 +37,6 @@ typedef struct _Message {
      */
     void *payload;
     uint16_t payload_size;
-    uint16_t is_dynamic;
 
 } Message;
 
@@ -52,13 +44,7 @@ typedef struct _Message {
 /* 
  * Function to initialize the IO_State struct with needed data to start interacting across the bus.
  */
-void initialize(
-        IO_State *state, 
-        raw_io_function read, 
-        raw_io_function write, 
-        malloc_function malloc, 
-        free_function free, 
-        uint16_t priority);
+IO_State initialize(void *io_host, raw_io_function read, raw_io_function write, uint16_t priority);
 
 /*
  * Function to connect to the other device on the bus.
@@ -66,29 +52,24 @@ void initialize(
 int connect(IO_State *state);
 
 /*
- * Function to create a message with given payload size.
- * If payload is NULL but the size is nonzero, a sufficient buffer will be allocated.
+ * Function to create transaction messages with a specified payload.
  */
-Message create_message(IO_State *state, uint8_t message_type, uint8_t message_id, void *payload, size_t payload_size);
-
-/*
- * Function to destroy a Message object
- * This releases any dynamically allocated memory
- */
-void destroy_message(IO_State *state, Message *message);
+Message create_request(Transaction const *transaction, void *payload);
+Message create_response(Transaction const *transaction, void *payload);
+Message create_error(Error const *error, void *payload);
 
 /*
  * Function to write a message to the data line.
  * This assembles the message based on the configuration of the message.
  * The message is modified to reflect the message that will be recieved on the other end.
  */
-void send_message(IO_State *state, Message *message);
+void write_message(IO_State *state, Message *message);
 
 /*
  * Function to read an incoming message from the data bus.
  * Takes a void* to buffer memory to use for storing the read payload
- * If the buffer is insufficient (NULL or too small), it will attempt to allocate memory for the message.
+ * This buffer should have sufficient size to recieve any message
  */
-Message recieve_message(IO_State *state, void *buffer, size_t buffer_size);
+void read_message(IO_State *state, Message *message, void *buffer);
 
 #endif
