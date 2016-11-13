@@ -72,4 +72,6 @@ void write_message(IO_State *state, Message *message);
  */
 void read_message(IO_State *state, Message *message, void *buffer);
 
+uint16_t checksum_message(Message *message);
+
 #endif

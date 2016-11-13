@@ -4,7 +4,6 @@
 static void read_announce(IO_State *state, Message *message);
 static void safe_io(void *io_host, raw_io_function raw_io, void *data, size_t size);
 static uint16_t crc16(uint16_t crc, const void *data, size_t bytes);
-static uint16_t checksum_message(Message *message);
 static void create_message(Message *message, uint8_t message_type, uint8_t message_id, void *payload, size_t payload_size);
 
 /*
@@ -173,6 +172,18 @@ void write_message(IO_State *state, Message *message) {
 
 }
 
+uint16_t checksum_message(Message *message) {
+    uint16_t checksum = 0;
+
+    /* Compute the checksum for the message header. */
+    checksum = crc16(checksum, &(message->header), sizeof(struct Message_Header));
+
+    /* Compute the checksum for the payload itself. */
+    checksum = crc16(checksum, message->payload, message->payload_size);
+
+    return checksum;
+}
+
 #define ANNOUNCE_SIZE sizeof(struct Message_Header) + sizeof(struct Message_Footer)
 
 static void read_announce(IO_State *state, Message *message) {
@@ -218,18 +229,6 @@ static uint16_t crc16(uint16_t crc, const void* ptr, size_t bytes) {
     for (; bytes > 0; bytes--, data++)
         crc += *data;
     return crc;
-}
-
-static uint16_t checksum_message(Message *message) {
-    uint16_t checksum = 0;
-
-    /* Compute the checksum for the message header. */
-    checksum = crc16(checksum, &(message->header), sizeof(struct Message_Header));
-
-    /* Compute the checksum for the payload itself. */
-    checksum = crc16(checksum, message->payload, message->payload_size);
-
-    return checksum;
 }
 
 static void create_message(Message *message, uint8_t message_type, uint8_t message_id, void *payload, size_t payload_size) {
