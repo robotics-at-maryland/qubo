@@ -22,7 +22,7 @@ AR = $(TOOLCHAIN)ar
 CFLAG = -c
 OFLAG = -o
 INCLUDEFLAG = -I
-CPUFLAG = -mthumb -mcpu=cortex-m4
+CPUFLAG = -mthumb -mcpu=cortex-m4 -DTARGET_IS_TM4C123_RB1
 WFLAG = -Wall -Wextra #-Werror
 FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 
@@ -86,7 +86,8 @@ FREERTOS_MEMMANG_OBJS = heap_4.o
 FREERTOS_PORT_OBJS = port.o
 
 # Driver object lists to tivaware libs
-DRIVERLIB_OBJS = $(wildcard $(OBJDIR)driverlib/*.o)
+DRIVERLIB_OBJS := $(wildcard $(OBJDIR)driverlib/*.o)
+DRIVERLIB_OBJS := $(DRIVERLIB_OBJS) $(wildcard $(OBJDIR)driverlib/*.a)
 UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
 
 TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS) $(UTILS_OBJS)
