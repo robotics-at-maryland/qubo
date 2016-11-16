@@ -22,7 +22,7 @@ AR = $(TOOLCHAIN)ar
 CFLAG = -c
 OFLAG = -o
 INCLUDEFLAG = -I
-CPUFLAG = -mthumb -mcpu=cortex-m4 -DTARGET_IS_TM4C123_RB1
+CPUFLAG = -mthumb -mcpu=cortex-m4 -DTARGET_IS_TM4C123_RB1 -DPART_TM4C123GH6PM
 WFLAG = -Wall -Wextra #-Werror
 FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 
