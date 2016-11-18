@@ -16,11 +16,12 @@
 // Enter (CR):
 #define CODE_CR ( 0x0D )
 
-typedef struct _readinfo_msg
+// This message isn't defined in main because it's for communication between an interrupt and a task
+typedef struct _read_uart_msg
 {
   int32_t size;
   int32_t buffer[INPUT_BUFFER_SIZE];
-} readinfo_msg;
+} read_uart_msg;
 
 // Queue that will send to the handler task, which will be blocking on this queue
 //extern binary semaphore that will unblock the specific task
@@ -28,8 +29,8 @@ typedef struct _readinfo_msg
 static QueueHandle_t uart_input;
 
 // Triggered on a UART interrupt.
-void _readinfo_handler(void);
+void _read_uart_handler(void);
 
-void readinfo_task(void* params);
+void read_uart_task(void* params);
 
 #endif
