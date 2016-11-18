@@ -4,7 +4,7 @@
     Maybe have input determine what i2c device to get info from, which gets printed into UART
 */
 
-#include "read_uart.h"
+#include "include/read_uart.h"
 
 #include <inc/hw_memmap.h>
 #include <inc/hw_ints.h>
