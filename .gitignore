@@ -33,3 +33,4 @@ packages/CMakeLists.txt
 *.bin
 *.img
 *.elf
+*.swp
