@@ -4,7 +4,7 @@
     Maybe have input determine what i2c device to get info from, which gets printed into UART
 */
 
-#include "readinfo.h"
+#include "include/read_uart.h"
 
 #include <inc/hw_memmap.h>
 #include <inc/hw_ints.h>
@@ -15,7 +15,7 @@
 #include <driverlib/uart.h>
 #include <utils/uartstdio.h>
 
-void _readinfo_handler(void) {
+void _read_uart_handler(void) {
   uint32_t status = UARTIntStatus(UART0_BASE, true);
 
   UARTIntClear(UART0_BASE, status);
@@ -29,7 +29,7 @@ void _readinfo_handler(void) {
 }
 
   // msg is passed by value in the queue, but it's members have to be allocated in heap so they don't die
-void readinfo_task(void* params) {
+void read_uart_task(void* params) {
 
   uart_input = xQueueCreate(INPUT_BUFFER_SIZE, sizeof(int32_t));
 
