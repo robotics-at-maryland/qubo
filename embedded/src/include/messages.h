@@ -10,8 +10,19 @@
 #include <queue.h>
 #include <semphr.h>
 
+// The max size a message sent from computer to MCU can be
+#define UART_BUFFER_SIZE 10
+
+/**
+  Queue of individual bytes from UART Interrupt to the task
+*/
 typedef QueueHandle_t read_uart_msg;
 
+/**
+   message_queue = pointer to queue of completed messages received from computer
+
+   Semaphore pointers to tasks to unblock depending on the message
+*/
 typedef struct _process_uart_msg
 {
   read_uart_msg *message_queue;

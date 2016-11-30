@@ -8,8 +8,7 @@
 #include <task.h>
 #include <queue.h>
 
-// The max size a message sent from computer to MCU can be
-#define INPUT_BUFFER_SIZE 10
+#include "include/messages.h"
 
 // Backspace code, hopefully
 #define CODE_BS ( 0x08 )
@@ -20,7 +19,7 @@
 typedef struct _read_uart_msg
 {
   int32_t size;
-  int32_t buffer[INPUT_BUFFER_SIZE];
+  int32_t buffer[UART_BUFFER_SIZE];
 } read_uart_msg;
 
 // Queue that will send to the handler task, which will be blocking on this queue
