@@ -1,0 +1,33 @@
+#!/bin/bash
+
+PWD=$(pwd)
+
+mkdir -p ../obj
+
+driverlib_link=$PWD/../obj/driverlib
+grlib_link=$PWD/../obj/grlib
+sensorlib_link=$PWD/../obj/sensorlib
+usblib_link=$PWD/../obj/usblib
+utils_link=$PWD/../obj/utils
+
+if [ -L "$driverlib_link" ]; then	
+	rm $driverlib_link
+fi
+if [ -L "$grlib_link" ]; then
+	rm $grlib_link
+fi
+if [ -L "$sensorlib_link" ]; then
+	rm $sensorlib_link
+fi
+if [ -L "$usblib_link" ]; then
+	rm $usblib_link
+fi
+if [ -L "$utils_link" ]; then
+	rm $utils_link
+fi
+
+ln -s $PWD/driverlib/gcc $driverlib_link
+#ln -s $PWD/grlib/gcc $grlib_link
+#ln -s $PWD/sensorlib/gcc $sensorlib_link
+#ln -s $PWD/usblib/gcc $usblib_link
+ln -s $PWD/utils/gcc $utils_link
