@@ -16,14 +16,13 @@ int main(int argc, char** argv){
 
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     VisionNode node(n,10,argv[1],argv[2],argv[3]);
-
-
+    
     ros::ServiceServer service = n->advertiseService("buoy_detect", VisionNode::buoy_detector);
     
     Server server(*n, "vision_example", boost::bind(&VisionNode::test_execute, _1 , &server), false);
     server.start();
-
-    ros::spin();
+    
+    //ros::spin();
     while(ros::ok()){
         node.update();
     }
