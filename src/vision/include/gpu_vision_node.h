@@ -1,8 +1,13 @@
 #include <stdio.h>
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/core/utility.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/core/cuda.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include "ros/ros.h"
 #include <iostream>
+#include <string.h>
 
 class GpuVisionNode{
 public:

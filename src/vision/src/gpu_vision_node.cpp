@@ -19,8 +19,13 @@ GpuVisionNode::~GpuVisionNode(){
 
 void GpuVisionNode::update(){
 	cv::cuda::DeviceInfo dev;
-	ROS_INFO(dev.name() + "\n");
-	ROS_INFO(dev.majorVersion() + ":" + dev.minorVersion() + "\n");
-	ROS_INFO(dev.multiProcessorCount() + "\n");
+	ROS_INFO("%s",dev.name());
+	ROS_INFO("\n");
+	ROS_INFO("%d",dev.majorVersion());
+	ROS_INFO(":");
+	ROS_INFO("%d",dev.minorVersion());
+	ROS_INFO("\n");
+	ROS_INFO("%d",dev.multiProcessorCount());
+	ROS_INFO("\n");
 	ros::spinOnce();
 }
