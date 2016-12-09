@@ -10,7 +10,12 @@ find_package(catkin
   cv_bridge
   ram_msgs
   genmsg
+
   OpenCV
+
+  rospy
+  std_msgs
+  message_generation
 
   actionlib_msgs
   actionlib
@@ -26,7 +31,9 @@ find_package(catkin
 
 #generate messages used by the server and client from vison.action
 add_action_files(DIRECTORY ../ram_msgs/action FILES VisionExample.action)
-generate_messages(DEPENDENCIES actionlib_msgs)
+#the files used by services
+add_service_files(DIRECTORY ../ram_msgs/srv FILES bool_bool.srv)
+generate_messages(DEPENDENCIES actionlib_msgs std_msgs)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
