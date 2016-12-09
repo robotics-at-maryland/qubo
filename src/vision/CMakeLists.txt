@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
 #Find stuff we need
-find_package(catkin 
+find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   roslib
@@ -10,10 +10,10 @@ find_package(catkin
   cv_bridge
   ram_msgs
   genmsg
-  OpenCV 
-  
+  OpenCV
+
   actionlib_msgs
-  actionlib      
+  actionlib
 )
 
 #sg: these used to be here but I have reason to believe they do not do anything, so I'm getting rid of them
@@ -53,12 +53,19 @@ set(VISION_SRC_FILES
   src/vision_node.cpp
 )
 
+set(GPU_VISION_SRC_FILES
+    src/gpu_main.cpp
+    src/gpu_vision_node.cpp
+)
+
 
 ##############################
 # Add Executables ############
 ##############################
 
-
+add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
+target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
+target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
