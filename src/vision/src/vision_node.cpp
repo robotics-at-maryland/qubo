@@ -5,7 +5,7 @@
 //feed0 and feed1 need to correspond to the two forward facing cameras, feedb is the bottom facing camera. 
 //note you always need to pass 3 feeds even if you're just testing monocualar tasks
 VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string feed0, std::string feed1, std::string feedb){
-
+    ROS_ERROR("here!\n");
     //take in the node handle
     this->n = n;
     
@@ -40,6 +40,7 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string
 
     //Need to register all our services 
     ros::ServiceServer service = this->n->advertiseService("buoy_detect", this->buoy_detector);
+   
 }
 
 
