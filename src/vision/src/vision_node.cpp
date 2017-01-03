@@ -53,8 +53,13 @@ void VisionNode::update(){
     cap0 >> img0;
     cap1 >> img1;
     capb >> imgb;
+    //if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
+    if(img0.empty() || img1.empty() || imgb.empty()){           
+        ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
+        exit(0);
+    }
+    
     ros::spinOnce();
-    //std::cout << img;
 }
 
 //Past this point is a collection of services and actions that will be able to called from any other node
