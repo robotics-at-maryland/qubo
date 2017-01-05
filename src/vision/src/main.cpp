@@ -14,17 +14,18 @@ int main(int argc, char** argv){
     // node for testing  
 
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
-    VisionNode node(n,10,argv[1],argv[2],argv[3]);
+    VisionNode node(n,argv[1],argv[2],argv[3]);
 
     
     ros::ServiceServer service = n->advertiseService("buoy_detect", VisionNode::buoy_detector);
     
     Server server(*n, "vision_example", boost::bind(&VisionNode::test_execute, _1 , &server), false);
     server.start();
-
-    //ros::spin();
+    
+    ros::Rate r(10); // 10 hz
     while(ros::ok()){
         node.update();
+        r.sleep(); //you update this time in the second argument to the VisionNode constructor
     }
 
     return 0;

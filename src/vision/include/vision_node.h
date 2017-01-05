@@ -20,7 +20,7 @@ class VisionNode{
     //you need to pass in a node handle, a rate to poll at, and 3 camera feeds, which should be a file path either to a physical device or to a video file
     //feed0 and feed1 need to correspond to the two forward facing cameras, feedb is the bottom facing camera. 
     //note you always need to pass 3 feeds even if you're just testing monocualar tasks
-    VisionNode(std::shared_ptr<ros::NodeHandle>, int rate, std::string feed0, std::string feed1, std::string feedb);
+    VisionNode(std::shared_ptr<ros::NodeHandle>, std::string feed0, std::string feed1, std::string feedb);
     ~VisionNode();
     void update(); //this will just pull the next image in
 
