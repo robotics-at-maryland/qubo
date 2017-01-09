@@ -1,8 +1,15 @@
+//QSCU
+#include "include/endpoints.h"
+#include "include/read_uart.h"
+#include "include/write_uart.h"
+
+// FreeRTOS
 #include <FreeRTOS.h>
 #include <queue.h>
 #include <task.h>
 #include <semphr.h>
 
+// Tiva
 #include <stdbool.h>
 #include <stdint.h>
 #include <inc/hw_memmap.h>
@@ -29,8 +36,7 @@ __error__(char *pcFilename, uint32_t ui32Line)
 //*****************************************************************************
 xSemaphoreHandle g_pUARTSemaphore;
 
-void
-ConfigureUART(void)
+void configureUART(void)
 {
   //
   // Enable the GPIO Peripheral used by the UART.
@@ -60,6 +66,19 @@ ConfigureUART(void)
   UARTStdioConfig(0, 115200, 16000000);
 }
 
+void configureGPIO(void) {
+  //
+  // Enable the GPIO port that is used for the on-board LED.
+  //
+  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+
+  //
+  // Enable the GPIO pins for the LED (PF2).
+  //
+  ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
+
+}
+
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName ) {
   for (;;) {}
@@ -69,7 +88,28 @@ int main() {
   ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ |
                      SYSCTL_OSC_MAIN);
 
-  ConfigureUART();
+  configureUART();
+  configureGPIO();
 
-  return 0;
+  // -----------------------------------------------------------------------
+  // Allocate FreeRTOS data structures for tasks
+  // -----------------------------------------------------------------------
+
+  read_uart = xQueueCreate(READ_UART_Q_SIZE, sizeof(int32_t));
+  write_uart = xQueueCreate(WRITE_UART_Q_SIZE, sizeof(int32_t));
+
+  // -----------------------------------------------------------------------
+  // Start FreeRTOS tasks
+  // -----------------------------------------------------------------------
+  if ( xTaskCreate(read_uart_task, (const portCHAR *)"Read_UART", READ_UART_STACKSIZE,
+                   NULL, READ_UART_PRIORITY, NULL) != pdTRUE) {
+    // ERROR
+  }
+  if ( xTaskCreate(write_uart_task, (const portCHAR *)"Write_UART", WRITE_UART_STACKSIZE,
+                   NULL, WRITE_UART_PRIORITY, NULL) != pdTRUE) {
+    // ERROR
+  }
+
+  vTaskStartScheduler();
+  for (;;) {}
 }
