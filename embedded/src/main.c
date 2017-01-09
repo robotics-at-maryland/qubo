@@ -22,19 +22,12 @@
 #include <utils/uartstdio.h>
 
 #ifdef DEBUG
-void
-__error__(char *pcFilename, uint32_t ui32Line)
+void __error__(char *pcFilename, uint32_t ui32Line)
 {
 }
 
 #endif
 
-//*****************************************************************************
-//
-// The mutex that protects concurrent access of UART from multiple tasks.
-//
-//*****************************************************************************
-xSemaphoreHandle g_pUARTSemaphore;
 
 void configureUART(void)
 {
@@ -92,7 +85,7 @@ int main() {
   configureGPIO();
 
   // -----------------------------------------------------------------------
-  // Allocate FreeRTOS data structures for tasks
+  // Allocate FreeRTOS data structures for tasks, this may be changed to dynamic
   // -----------------------------------------------------------------------
 
   read_uart = xQueueCreate(READ_UART_Q_SIZE, sizeof(int32_t));
