@@ -1,98 +1,86 @@
-/** Ross Baehr
-    Read info from UART0(part of the ICDI which can be used as a COM device)
-    Put that info in a queue that another task is blocked on, so it will do shit with it
-    Maybe have input determine what i2c device to get info from, which gets printed into UART
-*/
+/**
+   Interrupt generates dynamically allocated buffer of messages.
+   Their pointers are added to the read_uart task queue, who
+   decides what to do with them
+ */
 
+// QSCU
 #include "include/read_uart.h"
+#include "include/endpoints.h"
 
-#include <inc/hw_memmap.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+// FreeRTOS
+#include <FreeRTOS.h>
+#include <task.h>
+#include <queue.h>
+#include <portable/MemMang/heap_4.c>
+
+// Tiva
 #include <inc/hw_ints.h>
-#include <driverlib/interrupt.h>
+#include <inc/hw_memmap.h>
+#include <driverlib/debug.h>
+#include <driverlib/fpu.h>
 #include <driverlib/gpio.h>
+#include <driverlib/interrupt.h>
 #include <driverlib/pin_map.h>
+#include <driverlib/rom.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
-#include <utils/uartstdio.h>
+
 
 void _read_uart_handler(void) {
   uint32_t status = UARTIntStatus(UART0_BASE, true);
 
-  UARTIntClear(UART0_BASE, status);
+  // Clear interrupt
+  ROM_UARTIntClear(UART0_BASE, status);
 
-  while (UARTCharsAvail(UART0_BASE)) {
-    int32_t ch = UARTCharGet(UART0_BASE);
+  // Get the first 32 bits, to get the size of message
+  int32_t first_32 = ROM_UARTCharGetNonBlocking(UART0_BASE);
 
-    // Send the string to the readinfo_task
-    xQueueSendToBackFromISR(uart_input, &ch, NULL);
+  // Bitmask first half of first message to get size
+  int16_t size = ((first_32 & 0xffff0000) >> 16);
+
+  // NEED TO DYNAMICALLY ALLOCATE THIS, SO PTR DOESNT DIE
+  int32_t *message = pvPortMalloc(size*sizeof(int32_t));
+
+  message[0] = first_32;
+
+  // Copy the whole message into array
+  for (int32_t i = 0; i < size; i++) {
+    if (!ROM_UARTCharsAvail(UART0_BASE)) {
+      // ERROR CONDITION
+    }
+    int32_t ch = ROM_UARTCharGetNonBlocking(UART0_BASE);
+
+    // Optional LED blink to show its receiving
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
+
+    //
+    // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
+    //
+    SysCtlDelay(SysCtlClockGet() / (1000 * 3));
+
+    //
+    // Turn off the LED
+    //
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
+
+    // Write character to buffer
+    *(message+i) = ch;
   }
+
+  // Send buffer to task to handle message
+  xQueueSendToBackFromISR(read_uart, message, NULL);
 }
 
-  // msg is passed by value in the queue, but it's members have to be allocated in heap so they don't die
+
 void read_uart_task(void* params) {
 
-  uart_input = xQueueCreate(INPUT_BUFFER_SIZE, sizeof(int32_t));
-
-  QueueHandle_t *processing_queue = (QueueHandle_t *) params;
-
-  int32_t ch;
-  readinfo_msg msg;
-
-  int buffer_pos = 0;
 
   for (;;) {
+    xQueueRecieve(read_uart, )
 
-    // Blocked until something appears in uart_input queue
-    xQueueReceive(uart_input, (void*) &ch, portMAX_DELAY);
-
-    switch (ch) {
-      /* Uppercase letters 'A' .. 'Z': */
-    case 'A' ... 'Z' :
-
-      /* Lowercase letters 'a'..'z': */
-    case 'a' ... 'z' :
-
-      /* Decimal digits '0'..'9': */
-    case '0' ... '9' :
-
-      /* Other valid characters: */
-    case ' ' :
-    case '_' :
-    case '+' :
-    case '-' :
-    case '/' :
-    case '.' :
-    case ',' :
-      {
-        if ( buffer_pos < INPUT_BUFFER_SIZE ) {
-          msg.buffer[buffer_pos] = ch;
-          ++buffer_pos;
-        }
-        break;
-      }
-    case CODE_BS :
-      {
-        /*
-         * If the buffer is not empty, decrease the position index,
-         * i.e. "delete" the last character
-         */
-        if ( buffer_pos>0 )
-          {
-            --buffer_pos;
-          }
-        break;
-      }
-    case CODE_CR :
-      {
-        /* Append characters to terminate the string:*/
-        msg.buffer[buffer_pos] = '\0';
-        /* Send the the string's pointer to the queue: */
-        xQueueSendToBack(*processing_queue, (void*) &msg, 0);
-        /* And switch to the next line of the "circular" buffer */
-        buffer_pos = 0;
-        break;
-      }
-
-    }
   }
 }
