@@ -15,6 +15,7 @@
 #include <inc/hw_memmap.h>
 #include <inc/hw_types.h>
 #include <driverlib/gpio.h>
+#include <driverlib/i2c.h>
 #include <driverlib/pin_map.h>
 #include <driverlib/rom.h>
 #include <driverlib/sysctl.h>
@@ -69,6 +70,32 @@ void configureGPIO(void) {
   // Enable the GPIO pins for the LED (PF2).
   //
   ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
+
+}
+
+void configureI2C(void) {
+  // Enable i2c periph
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+
+  // I2C0 With PortB[3:2]
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+
+  // Configure pins for scl and sda
+  GPIOPinConfigure(GPIO_PB2_I2C0SCL);
+  GPIOPinConfigure(GPIO_PB3_I2C0SDA);
+
+  // Select the I2C function for these pins.  This function will also
+  // configure the GPIO pins pins for I2C operation, setting them to
+  // open-drain operation with weak pull-ups.  Consult the data sheet
+  // to see which functions are allocated per pin.
+  GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
+  GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
+
+  // Enable and initialize the I2C0 master module.  Use the system clock for
+  // the I2C0 module.  The last parameter sets the I2C data transfer rate.
+  // If false the data rate is set to 100kbps and if true the data rate will
+  // be set to 400kbps.
+  I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
 
 }
 
