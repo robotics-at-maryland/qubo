@@ -15,7 +15,7 @@ public:
 	/**
 	 * Everything is the same as VisionNode, just look there
 	 */
-	GpuVisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string feed0, std::string feed1, std::string feedb);
+	GpuVisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed0, std::string feed1, std::string feedb);
 	~GpuVisionNode();
 	void update();
 

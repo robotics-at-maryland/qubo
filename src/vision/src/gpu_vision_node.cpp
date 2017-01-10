@@ -1,8 +1,7 @@
 #include "gpu_vision_node.h"
 
-GpuVisionNode::GpuVisionNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string feed0, std::string feed1, std::string feedb){
+GpuVisionNode::GpuVisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed0, std::string feed1, std::string feedb){
 
-	this->n = n;
 	cv::cuda::GpuMat test;
 	int i = cv::cuda::getCudaEnabledDeviceCount();
 	int e = cv::cuda::getDevice();
