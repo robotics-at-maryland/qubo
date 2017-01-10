@@ -17,8 +17,6 @@ int main(int argc, char** argv){
     VisionNode node(n,argv[1],argv[2],argv[3]);
 
     
-    ros::ServiceServer service = n->advertiseService("buoy_detect", VisionNode::buoy_detector);
-    
     Server server(*n, "vision_example", boost::bind(&VisionNode::test_execute, _1 , &server), false);
     server.start();
     

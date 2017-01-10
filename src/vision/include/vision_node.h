@@ -25,11 +25,16 @@ class VisionNode{
     void update(); //this will just pull the next image in
 
 
-    //all service prototypes should go below
+    //all service prototypes should go below, you also need to add a service variable for it in here and actually register
+    //it in the constructor
     //=================================================================================================================
     
-    static bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
+    bool service_test(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+    
+    bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+
+    
     //function
 
     //function
@@ -60,6 +65,10 @@ class VisionNode{
 
     cv::VideoCapture capb;
     cv::Mat imgb;
-    
+
+    //declare a service object for your service below
+    //======================================================================
+    ros::ServiceServer buoy_detect_srv;
+    ros::ServiceServer test_srv;
 
 };

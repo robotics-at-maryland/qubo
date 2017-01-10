@@ -38,9 +38,11 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed0, st
         exit(0);
     }
 
-    //Need to register all our services 
-    ros::ServiceServer service = this->n->advertiseService("buoy_detect", this->buoy_detector);
-   
+    //register all services here
+    //=====================================================================
+    test_srv = this->n->advertiseService("service_test", &VisionNode::service_test, this);
+    buoy_detect_srv = this->n->advertiseService("buoy_detect", &VisionNode::buoy_detector, this);
+    
 }
 
 
@@ -64,13 +66,30 @@ void VisionNode::update(){
 
 //Past this point is a collection of services and actions that will be able to called from any other node
 //=================================================================================================================
-    
-
+bool VisionNode::service_test(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
+    ROS_ERROR("service called successfully");
+}
+//this will detect if there are buoy's in the scene or not. 
 bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
-    // code goes here
-    // 
-    ROS_ERROR("You called the service! nice!");
-    return 0;
+    
+    //sg - copied this from stack overflow, you can call it but it exits with a (handled) exception somewhere
+
+    // Set up the detector with default parameters.
+    cv::SimpleBlobDetector detector;
+ 
+    // Detect blobs.
+    std::vector<cv::KeyPoint> keypoints;
+    detector.detect(img0, keypoints);
+ 
+    // Draw detected blobs as red circles.
+    // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the circle corresponds to the size of blob
+    cv::Mat im_with_keypoints;
+    cv::drawKeypoints(img0, keypoints, im_with_keypoints, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
+ 
+    // Show blobs
+    cv::imshow("keypoints", im_with_keypoints );
+    cv::waitKey(0);
+
 }
 
 //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet. 
