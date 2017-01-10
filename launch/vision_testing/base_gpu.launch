@@ -1,3 +1,3 @@
 <launch>
-	<node name="gpu_vision_node" pkg="vision" type="gpu_vision_node" args="no feeds lol"/>
+	<node name="gpu_vision_node" pkg="vision" type="gpu_vision_node" args="$(find vision)/../../../video/nrbf_video/buoy/buoy.avi $(find vision)/../../../video/nrbf_video/buoy/buoy.avi $(find vision)/../../../video/nrbf_video/buoy/buoy.avi"/>
 </launch>
