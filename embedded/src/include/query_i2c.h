@@ -24,9 +24,7 @@
 #include <utils/uartstdio.h>
 
 //*****************************************************************************
-//
 // The states in the interrupt handler state machine.
-//
 //*****************************************************************************
 #define STATE_IDLE              0
 #define STATE_WRITE_NEXT        1
@@ -39,32 +37,34 @@
 #define STATE_READ_FINAL        8
 #define STATE_READ_WAIT         9
 
-//*****************************************************************************
-//
-// The state of the SoftI2C module.
-//
-//*****************************************************************************
-static tSoftI2C state;
+// ****************************************************************************
+// Variables
+// ****************************************************************************
 
-//*****************************************************************************
-//
+// Address of slave
+static uint32_t address;
+
+// The state of the SoftI2C module.
+static tSoftI2C module_state;
+
 // The variables that track the data to be transmitted or received.
-//
-//*****************************************************************************
 static uint8_t *buffer = 0;
 static uint32_t size = 0;
 
-//*****************************************************************************
-//
 // The current state of the interrupt handler state machine.
-//
-//*****************************************************************************
-static volatile uint32_t state = STATE_IDLE;
+static volatile uint32_t int_state = STATE_IDLE;
 
 // Mutex on I2C bus
 static SemaphoreHandle_t i2c_mutex;
 
+// ***************************************************************************
+// Functions
+// ***************************************************************************
+
+
 void initI2C(void);
+
+void Timer0AIntHandler(void);
 
 void SoftI2CCallback(void);
 
