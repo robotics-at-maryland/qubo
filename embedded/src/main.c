@@ -1,7 +1,7 @@
 //QSCU
-#include "include/endpoints.h"
 #include "include/read_uart.h"
 #include "include/write_uart.h"
+#include "include/task_constants.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -115,18 +115,14 @@ int main() {
   // Allocate FreeRTOS data structures for tasks, this may be changed to dynamic
   // -----------------------------------------------------------------------
 
-  read_uart = xQueueCreate(READ_UART_Q_SIZE, sizeof(int32_t));
-  write_uart = xQueueCreate(WRITE_UART_Q_SIZE, sizeof(int32_t));
+  //  read_uart = xQueueCreate(READ_UART_Q_SIZE, sizeof(int32_t));
+  //  write_uart = xQueueCreate(WRITE_UART_Q_SIZE, sizeof(int32_t));
 
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
   if ( xTaskCreate(read_uart_task, (const portCHAR *)"Read_UART", READ_UART_STACKSIZE,
                    NULL, READ_UART_PRIORITY, NULL) != pdTRUE) {
-    // ERROR
-  }
-  if ( xTaskCreate(write_uart_task, (const portCHAR *)"Write_UART", WRITE_UART_STACKSIZE,
-                   NULL, WRITE_UART_PRIORITY, NULL) != pdTRUE) {
     // ERROR
   }
 

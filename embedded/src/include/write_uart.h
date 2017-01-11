@@ -1,8 +1,5 @@
 #ifndef _WRITEUART_H_
-#def _WRITEUART_H_
-
-// QSCU
-#include "include/endpoints.h"
+#define _WRITEUART_H_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -12,7 +9,7 @@
 #include <task.h>
 #include <semphr.h>
 #include <queue.h>
-#include <portable/MemMang/heap_4.c>
+#include <heap_4.h>
 
 // Tiva
 #include <inc/hw_ints.h>
@@ -30,13 +27,13 @@ static SemaphoreHandle_t uart_mutex;
 
 void initUARTWrite(void);
 
-boolean UARTWrite(int32_t *buffer, int16_t size);
+bool UARTWrite(int32_t *buffer, int16_t size);
 
 // ---------
 // Task based implementation
 
-extern QueueHandle_t write_uart;
+//extern QueueHandle_t write_uart;
 
-void uart_send_task(void * params);
+//void uart_send_task(void * params);
 
 #endif

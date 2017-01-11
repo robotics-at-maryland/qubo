@@ -6,7 +6,7 @@ void initUARTWrite(void) {
 }
 
 // Library routine implementation of sending UART
-boolean UARTWrite(int32_t *buffer, int16_t size) {
+bool UARTWrite(int32_t *buffer, int16_t size) {
   if ( xSemaphoreTake(uart_mutex, 0) ) {
     for (int16_t i = 0; i < size; i++) {
       // Write buffer to UART
@@ -40,6 +40,8 @@ boolean UARTWrite(int32_t *buffer, int16_t size) {
 // TASK based implemenatation 
 //
 
+/*
+
 // Task implementation of writing to UART
 // This task is assuming it's getting a valid Qubobus message buffer
 void uart_send_task(void * params) {
@@ -52,7 +54,8 @@ void uart_send_task(void * params) {
   for (;;) {
 
     // Block until has gotten a message
-    xQueueReceive(write_uart, buffer, portMAX_DELAY);
+    xQueueReceive(write_uart, buffer, pgit clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+COPY TO CLIPBOARDortMAX_DELAY);
 
     size = (*buffer & 0xffff0000) >> 16;
     for (int32_t i = 0; i < size; i++) {
@@ -65,3 +68,5 @@ void uart_send_task(void * params) {
     vPortFree(buffer);
   }
 }
+
+*/

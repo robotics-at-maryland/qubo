@@ -68,13 +68,13 @@ void Timer0AIntHandler(void);
 
 void SoftI2CCallback(void);
 
-// Will perform a write, then a read after
-boolean I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,
-                 uint8_t *read_data, uint8_t *read_length);
 
 boolean I2CWrite(uint8_t address, uint8_t *data, uint32_t length);
 
 boolean I2CRead(uint8_t *data, uint32_t *length);
 
+// Will perform a write, then a read after
+boolean I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,
+                 uint8_t *read_data, uint8_t *read_length);
 
 #endif

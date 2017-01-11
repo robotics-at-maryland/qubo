@@ -6,6 +6,10 @@
 
 #include "include/read_uart.h"
 
+void init_read_uart(void) {
+  read_uart = xQueueCreate(Q_SIZE, sizeof(int32_t));
+}
+
 void _read_uart_handler(void) {
   uint32_t status = UARTIntStatus(UART0_BASE, true);
 
@@ -54,9 +58,8 @@ void _read_uart_handler(void) {
 
 void read_uart_task(void* params) {
 
-
   for (;;) {
-    xQueueRecieve(read_uart, )
+    //xQueueRecieve(read_uart, )
 
   }
 }

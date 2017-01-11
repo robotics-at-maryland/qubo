@@ -46,13 +46,7 @@ void initI2C(void) {
   // TODO: change this to whichever I2C rate you require.
   //
   TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-#if defined(TARGET_IS_TM4C129_RA0) ||                                         \
-  defined(TARGET_IS_TM4C129_RA1) ||                                         \
-  defined(TARGET_IS_TM4C129_RA2)
-  TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 40000);
-#else
   TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() / 40000);
-#endif
   TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
   TimerEnable(TIMER0_BASE, TIMER_A);
 
@@ -61,8 +55,6 @@ void initI2C(void) {
   // TODO: change this to whichever timer interrupt you are using.
   //
   IntEnable(INT_TIMER0A);
-
-
 }
 
 void Timer0AIntHandler(void) {
@@ -265,7 +257,7 @@ void SoftI2CCallback(void) {
 }
 
 
-boolean I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
+bool I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
   if ( xSemaphoreTake(i2c_mutex), 0) {
 
     //
@@ -307,7 +299,7 @@ boolean I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
 }
 
 
-boolean I2CRead(uint8_t *data, uint32_t *length) {
+bool I2CRead(uint8_t *data, uint32_t *length) {
 
   // Save the data buffer to be read.
   buffer = data;
@@ -342,3 +334,10 @@ boolean I2CRead(uint8_t *data, uint32_t *length) {
     {
     }
 }
+
+// Will perform a write, then a read after
+boolean I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,
+                 uint8_t *read_data, uint8_t *read_length) {
+  return true;
+}
+
