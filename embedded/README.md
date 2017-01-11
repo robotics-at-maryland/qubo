@@ -13,11 +13,11 @@ To flash to the MCU you can use [LM4Tools](https://github.com/utzig/lm4tools)
 To install both of these automatically run `../scripts/embedded_install_deps.bash`
 
 It may be necessary to install ia32-libs if you're on a 64 bit system.
-`sudo apt install ia32-libs`
-Or on 16.04: 
-`sudo dpkg --add-architecture i386`
-`sudo apt update`
-`sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386`
+`sudo apt install ia32-libs`  
+Or on 16.04:   
+`sudo dpkg --add-architecture i386`  
+`sudo apt update`  
+`sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386`  
 
 ##Drivers
 [Tivaware drivers](http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html)(_EK-TM4C123GXL_)
