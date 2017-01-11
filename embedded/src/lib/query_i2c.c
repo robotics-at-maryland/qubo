@@ -1,3 +1,4 @@
+// THIS CODE WILL HAVE TO BE PORTED TO i2c.c HARDWARE LIBRARY
 
 #include "include/query_i2c.h"
 
