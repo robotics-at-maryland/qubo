@@ -336,7 +336,7 @@ bool I2CRead(uint8_t *data, uint32_t *length) {
 }
 
 // Will perform a write, then a read after
-boolean I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,
+bool I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,
                  uint8_t *read_data, uint8_t *read_length) {
   return true;
 }
