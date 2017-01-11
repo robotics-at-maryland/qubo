@@ -16,7 +16,7 @@ bool UARTWrite(int32_t *buffer, int16_t size) {
     // Maybe needed, if they're going to be dynamically allocated might as well free here
     // so its not forgotten
     // vPortFree(buffer);
-    xSemaphoreGive(uart_mutex, NULL);
+    xSemaphoreGive(uart_mutex);
     return true;
   }
   // Mutex is busy, not really sure if this should be handled here or the calling function

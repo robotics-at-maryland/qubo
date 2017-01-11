@@ -1,7 +1,6 @@
 
 #include "include/query_i2c.h"
 
-
 void initI2C(void) {
   i2c_mutex = xSemaphoreCreateMutex();
   //
@@ -63,7 +62,7 @@ void Timer0AIntHandler(void) {
   TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
   // Call the SoftI2C tick function.
-  SoftI2CTimerTick(&g_sI2C);
+  SoftI2CTimerTick(&module_state);
 }
 
 
@@ -258,13 +257,14 @@ void SoftI2CCallback(void) {
 
 
 bool I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
-  if ( xSemaphoreTake(i2c_mutex), 0) {
+  if ( xSemaphoreTake(i2c_mutex, 0) ) {
 
     //
     // Save the data buffer to be written.
     //
     buffer = data;
-    size = length;
+    // -1 because we're going to put the first byte in here
+    size = length - 1;
     address = addr;
 
     // Set the next state of the callback state machine based on the number of
@@ -299,7 +299,7 @@ bool I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
 }
 
 
-bool I2CRead(uint8_t *data, uint32_t *length) {
+bool I2CRead(uint8_t *data, uint32_t length) {
 
   // Save the data buffer to be read.
   buffer = data;
@@ -322,7 +322,7 @@ bool I2CRead(uint8_t *data, uint32_t *length) {
 
 
   // Write the address to be written as the first data byte.
-  SoftI2CDataPut(&module_state, ui32Offset);
+  SoftI2CDataPut(&module_state, *data);
 
 
   // Perform a single send, writing the address as the only byte.

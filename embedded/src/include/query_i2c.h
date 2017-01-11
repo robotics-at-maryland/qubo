@@ -6,11 +6,12 @@
 #define _SENDI2C_H_
 
 #include <FreeRTOS.h>
-#include <queue.h>
+//#include <queue.h>
 #include <semphr.h>
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include <inc/hw_ints.h>
 #include <inc/hw_memmap.h>
@@ -19,9 +20,9 @@
 #include <driverlib/pin_map.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/timer.h>
-#include <driverlib/uart.h>
+//#include <driverlib/uart.h>
 #include <utils/softi2c.h>
-#include <utils/uartstdio.h>
+//#include <utils/uartstdio.h>
 
 //*****************************************************************************
 // The states in the interrupt handler state machine.
@@ -71,7 +72,7 @@ void SoftI2CCallback(void);
 
 bool I2CWrite(uint8_t address, uint8_t *data, uint32_t length);
 
-bool I2CRead(uint8_t *data, uint32_t *length);
+bool I2CRead(uint8_t *data, uint32_t length);
 
 // Will perform a write, then a read after
 bool I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,

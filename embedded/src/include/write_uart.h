@@ -6,9 +6,9 @@
 
 // FreeRTOS
 #include <FreeRTOS.h>
-#include <task.h>
+//#include <task.h>
 #include <semphr.h>
-#include <queue.h>
+//#include <queue.h>
 #include <heap_4.h>
 
 // Tiva
