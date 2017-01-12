@@ -93,7 +93,7 @@ UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
 TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS) $(UTILS_OBJS)
 
 # List of source file objects. Adds any c file in $(SRC) and $(SRC)$(TASKDIR)
-SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c)
+SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c) $(wildcard $(SRC)lib/*.c)
 SRC_OBJS := $(SRC_C_FILES:$(SRC)%=%)
 SRC_OBJS := $(SRC_OBJS:.c=.o)
 
