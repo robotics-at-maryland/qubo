@@ -1,4 +1,3 @@
-
 # import the necessary packages
 from collections import deque
 import numpy as np
@@ -17,8 +16,8 @@ args = vars(ap.parse_args())
 # define the lower and upper boundaries of the needed color
 # ball in the HSV color space, then initialize the
 # list of tracked points
-colorLower = (82, 69, 102)
-colorUpper = (114, 255, 190)
+colorLower = (50, 50, 50)
+colorUpper = (255, 255, 255)
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -64,18 +63,21 @@ while True:
 		# find the largest contour in the mask, then use
 		# it to compute the minimum enclosing circle and
 		# centroid
-		c = max(cnts, key=cv2.contourArea)
-		((x, y), radius) = cv2.minEnclosingCircle(c)
-		M = cv2.moments(c)
-		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+        
+	##	c = max(cnts, key=cv2.contourArea)
+                print len(cnts)
+                for c in cnts:
+		        ((x, y), radius) = cv2.minEnclosingCircle(c)
+		        M = cv2.moments(c)
+		        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
-		# only proceed if the radius meets a minimum size
-		if radius > 10:
-			# draw the circle and centroid on the frame,
-			# then update the list of tracked points
-			cv2.circle(frame, (int(x), int(y)), int(radius),
-				(0, 255, 255), 2)
-			cv2.circle(frame, center, 5, (0, 0, 255), -1)
+		        # only proceed if the radius meets a minimum size
+                        if radius > 10:
+			        # draw the circle and centroid on the frame,
+			        # then update the list of tracked points
+			        cv2.circle(frame, (int(x), int(y)), int(radius),
+				           (0, 255, 255), 2)
+			        cv2.circle(frame, center, 5, (0, 0, 255), -1)
 
 	# update the points queue
 	pts.appendleft(center)
