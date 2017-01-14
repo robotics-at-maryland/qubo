@@ -3,75 +3,47 @@
 #include "include/query_i2c.h"
 
 void initI2C(void) {
-  i2c_mutex = xSemaphoreCreateMutex();
   //
-  // For this example, PortB[3:2] are used for the SoftI2C pins.  GPIO port B
-  // needs to be enabled so these pins can be used.
-  // TODO: change this to whichever GPIO port(s) you are using.
+  // Enable the peripherals used by this example.
   //
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 
-  //
-  // For this example, Timer0 is used for the SoftI2C time base.  This timer
-  // needs to be enabled before it can be used.
-  // TODO: change this to whichever timer you are using.
-  //
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
 
   //
-  // Configure the appropriate pins to be I2C instead of GPIO.
+  // Configure the pin muxing for I2C0 functions on port B2 and B3.
+  // This step is not necessary if your part does not support pin muxing.
   // TODO: change this to select the port/pin you are using.
   //
-  GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_2 | GPIO_PIN_3);
+  GPIOPinConfigure(GPIO_PB2_I2C0SCL);
+  GPIOPinConfigure(GPIO_PB3_I2C0SDA);
+
+  // Select the I2C function for these pins.
+  GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
+  GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
+
 
   //
-  // Initialize the SoftI2C module, including the assignment of GPIO pins.
-  // TODO: change this to whichever GPIO pins you are using.
+  // Initialize the I2C master.
   //
-  memset(&module_state, 0, sizeof(module_state));
-  SoftI2CCallbackSet(&module_state, SoftI2CCallback);
-  SoftI2CSCLGPIOSet(&module_state, GPIO_PORTB_BASE, GPIO_PIN_2);
-  SoftI2CSDAGPIOSet(&module_state, GPIO_PORTB_BASE, GPIO_PIN_3);
-  SoftI2CInit(&module_state);
+  I2CMasterInitExpClk(I2C_LIB_DEVICE, SysCtlClockGet(), false);
 
   //
-  // Enable the SoftI2C interrupt.
+  // Enable the I2C interrupt.
   //
-  SoftI2CIntEnable(&module_state);
+  IntEnable(INT_I2C0);
 
   //
-  // Configure the timer to generate an interrupt at a rate of 40 KHz.  This
-  // will result in a I2C rate of 10 KHz.
-  // TODO: change this to whichever timer you are using.
-  // TODO: change this to whichever I2C rate you require.
+  // Enable the I2C master interrupt.
   //
-  TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-  TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() / 40000);
-  TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-  TimerEnable(TIMER0_BASE, TIMER_A);
-
-  //
-  // Enable the timer interrupt.
-  // TODO: change this to whichever timer interrupt you are using.
-  //
-  IntEnable(INT_TIMER0A);
+  I2CMasterIntEnable(I2C_LIB_DEVICE);
 }
 
-void Timer0AIntHandler(void) {
-  // Clear the timer interrupt.
-  // TODO: change this to whichever timer you are using.
-  TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-
-  // Call the SoftI2C tick function.
-  SoftI2CTimerTick(&module_state);
-}
-
-
-void SoftI2CCallback(void) {
+void I2CIntHandler(void) {
     //
-    // Clear the SoftI2C interrupt.
+    // Clear the I2C interrupt.
     //
-    SoftI2CIntClear(&module_state);
+    I2CMasterIntClear(I2C_LIB_DEVICE);
 
     //
     // Determine what to do based on the current state.
@@ -83,44 +55,68 @@ void SoftI2CCallback(void) {
         //
         case STATE_IDLE:
         {
-          xSemaphoreGiveFromISR(i2c_mutex, NULL);
+            //
+            // There is nothing to be done.
+            //
+            break;
         }
 
+        //
         // The state for the middle of a burst write.
+        //
         case STATE_WRITE_NEXT:
         {
-            // Write the next data byte.
-            SoftI2CDataPut(&module_state, *buffer++);
-            size--;
+            //
+            // Write the next byte to the data register.
+            //
+            I2CMasterDataPut(I2C_LIB_DEVICE, *buffer++);
+            count--;
 
+            //
             // Continue the burst write.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_BURST_SEND_CONT);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
 
+            //
             // If there is one byte left, set the next state to the final write
             // state.
-            if(size == 1)
+            //
+            if(count == 1)
             {
                 int_state = STATE_WRITE_FINAL;
             }
 
+            //
             // This state is done.
+            //
             break;
         }
 
+        //
         // The state for the final write of a burst sequence.
+        //
         case STATE_WRITE_FINAL:
         {
-            // Write the final data byte.
-            SoftI2CDataPut(&module_state, *buffer++);
-            size--;
+            //
+            // Write the final byte to the data register.
+            //
+            I2CMasterDataPut(I2C_LIB_DEVICE, *buffer++);
+            count--;
 
+            //
             // Finish the burst write.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_BURST_SEND_FINISH);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE,
+                             I2C_MASTER_CMD_BURST_SEND_FINISH);
 
+            //
             // The next state is to wait for the burst write to complete.
+            //
             int_state = STATE_SEND_ACK;
 
+            //
             // This state is done.
+            //
             break;
         }
 
@@ -129,13 +125,19 @@ void SoftI2CCallback(void) {
         //
         case STATE_WAIT_ACK:
         {
+            //
             // See if there was an error on the previously issued read.
-            if(SoftI2CErr(&module_state) == SOFTI2C_ERR_NONE)
+            //
+            if(I2CMasterErr(I2C_LIB_DEVICE) == I2C_MASTER_ERR_NONE)
             {
+                //
                 // Read the byte received.
-                SoftI2CDataGet(&module_state);
+                //
+                I2CMasterDataGet(I2C_LIB_DEVICE);
 
+                //
                 // There was no error, so the state machine is now idle.
+                //
                 int_state = STATE_IDLE;
 
                 //
@@ -144,151 +146,197 @@ void SoftI2CCallback(void) {
                 break;
             }
 
+            //
             // Fall through to STATE_SEND_ACK.
+            //
         }
 
+        //
         // Send a read request, looking for the ACK to indicate that the write
         // is done.
+        //
         case STATE_SEND_ACK:
         {
+            //
             // Put the I2C master into receive mode.
-            SoftI2CSlaveAddrSet(&module_state, address, true);
+            //
+            I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
 
+            //
             // Perform a single byte read.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_SINGLE_RECEIVE);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
 
+            //
             // The next state is the wait for the ack.
+            //
             int_state = STATE_WAIT_ACK;
 
+            //
             // This state is done.
+            //
             break;
         }
 
+        //
         // The state for a single byte read.
+        //
         case STATE_READ_ONE:
         {
+            //
+            // Put the I2C master into receive mode.
+            //
+            I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
 
-            // Put the SoftI2C module into receive mode.
-            SoftI2CSlaveAddrSet(&module_state, address, true);
-
+            //
             // Perform a single byte read.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_SINGLE_RECEIVE);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
 
+            //
             // The next state is the wait for final read state.
+            //
             int_state = STATE_READ_WAIT;
 
-
+            //
             // This state is done.
+            //
             break;
         }
 
+        //
         // The state for the start of a burst read.
+        //
         case STATE_READ_FIRST:
         {
-            // Put the SoftI2C module into receive mode.
-            SoftI2CSlaveAddrSet(&module_state, address, true);
+            //
+            // Put the I2C master into receive mode.
+            //
+            I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
 
+            //
             // Start the burst receive.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_BURST_RECEIVE_START);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE,
+                             I2C_MASTER_CMD_BURST_RECEIVE_START);
 
+            //
             // The next state is the middle of the burst read.
+            //
             int_state = STATE_READ_NEXT;
 
+            //
             // This state is done.
+            //
             break;
         }
 
+        //
         // The state for the middle of a burst read.
+        //
         case STATE_READ_NEXT:
         {
-
+            //
             // Read the received character.
-            *buffer++ = SoftI2CDataGet(&module_state);
-            size--;
+            //
+            *buffer++ = I2CMasterDataGet(I2C_LIB_DEVICE);
+            count--;
 
+            //
             // Continue the burst read.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_BURST_RECEIVE_CONT);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE,
+                             I2C_MASTER_CMD_BURST_RECEIVE_CONT);
 
+            //
             // If there are two characters left to be read, make the next
             // state be the end of burst read state.
-            if(size == 2)
+            //
+            if(count == 2)
             {
                 int_state = STATE_READ_FINAL;
             }
 
+            //
             // This state is done.
+            //
             break;
         }
 
+        //
         // The state for the end of a burst read.
+        //
         case STATE_READ_FINAL:
         {
-
+            //
             // Read the received character.
-            *buffer++ = SoftI2CDataGet(&module_state);
-            size--;
+            //
+            *buffer++ = I2CMasterDataGet(I2C_LIB_DEVICE);
+            count--;
 
+            //
             // Finish the burst read.
-            SoftI2CControl(&module_state, SOFTI2C_CMD_BURST_RECEIVE_FINISH);
+            //
+            I2CMasterControl(I2C_LIB_DEVICE,
+                             I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
 
+            //
             // The next state is the wait for final read state.
+            //
             int_state = STATE_READ_WAIT;
 
+            //
             // This state is done.
+            //
             break;
         }
 
-
+        //
         // This state is for the final read of a single or burst read.
+        //
         case STATE_READ_WAIT:
         {
-
+            //
             // Read the received character.
-            *buffer++ = SoftI2CDataGet(&module_state);
-            size--;
+            //
+            *buffer++  = I2CMasterDataGet(I2C_LIB_DEVICE);
+            count--;
 
+            //
             // The state machine is now idle.
+            //
             int_state = STATE_IDLE;
 
+            //
             // This state is done.
+            //
             break;
         }
     }
 }
 
 
-bool I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
+bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length) {
   if ( xSemaphoreTake(i2c_mutex, 0) ) {
 
     //
     // Save the data buffer to be written.
     //
     buffer = data;
-    // -1 because we're going to put the first byte in here
-    size = length - 1;
+    count = length;
     address = addr;
 
     // Set the next state of the callback state machine based on the number of
     // bytes to write.
-    if(length != 1)
-      {
-        int_state = STATE_WRITE_NEXT;
-      }
-    else
-      {
-        int_state = STATE_WRITE_FINAL;
-      }
-
+    if(count != 1 ) {
+      int_state = STATE_WRITE_NEXT;
+    }
+    else {
+      int_state = STATE_WRITE_FINAL;
+    }
 
     // Set the slave address and setup for a transmit operation.
-    SoftI2CSlaveAddrSet(&module_state, address, false);
-
-    // Write the first byte
-    SoftI2CDataPut(&module_state, *buffer);
-
-
-    // Start the burst cycle, writing the address as the first byte.
-    SoftI2CControl(&module_state, SOFTI2C_CMD_BURST_SEND_START);
+    I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, false);
 
     // Wait until the SoftI2C callback state machine is idle.
     while(int_state != STATE_IDLE)
@@ -300,11 +348,12 @@ bool I2CWrite(uint8_t addr, uint8_t *data, uint32_t length) {
 }
 
 
-bool I2CRead(uint8_t *data, uint32_t length) {
+ bool i2cRead(uint8_t addr, uint8_t *data, uint32_t length) {
 
   // Save the data buffer to be read.
   buffer = data;
-  size = length;
+  count = length;
+  address = addr;
 
   // Set the next state of the callback state machine based on the number of
   // bytes to read.
@@ -317,19 +366,6 @@ bool I2CRead(uint8_t *data, uint32_t length) {
       int_state = STATE_READ_FIRST;
     }
 
-
-  // Start with a dummy write to get the address set in the EEPROM.
-  SoftI2CSlaveAddrSet(&module_state, address, false);
-
-
-  // Write the address to be written as the first data byte.
-  SoftI2CDataPut(&module_state, *data);
-
-
-  // Perform a single send, writing the address as the only byte.
-  SoftI2CControl(&module_state, SOFTI2C_CMD_SINGLE_SEND);
-
-
   // Wait until the SoftI2C callback state machine is idle.
   while(int_state != STATE_IDLE)
     {
@@ -337,8 +373,11 @@ bool I2CRead(uint8_t *data, uint32_t length) {
 }
 
 // Will perform a write, then a read after
-bool I2CQuery(uint8_t address, uint8_t *write_data, uint32_t write_length,
-                 uint8_t *read_data, uint8_t *read_length) {
-  return true;
+bool i2cQuery(uint8_t addr, uint8_t *write_data, uint32_t write_length,
+                 uint8_t *read_data, uint8_t read_length) {
+  bool write = i2cWrite(addr, write_data, write_length);
+  bool read = i2cRead(addr, read_data, read_length);
+
+  return write && read;
 }
 
