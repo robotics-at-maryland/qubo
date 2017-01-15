@@ -26,7 +26,7 @@ void initI2C(void) {
   //
   // Initialize the I2C master.
   //
-  ROM_I2CMasterInitExpClk(I2C_LIB_DEVICE, SysCtlClockGet(), false);
+  ROM_I2CMasterInitExpClk(I2C_LIB_DEVICE, ROM_SysCtlClockGet(), false);
 
   //
   // Enable the I2C interrupt.

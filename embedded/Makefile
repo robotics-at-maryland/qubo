@@ -130,7 +130,9 @@ $(OBJDIR) :
 	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
 
 $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
-	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(TIVA_DRIVER_OBJS) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
+	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
+#	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(TIVA_DRIVER_OBJS) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
+
 
 debug : _debug_flags all
 

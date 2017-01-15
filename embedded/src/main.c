@@ -21,7 +21,7 @@
 #include <driverlib/rom.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
-#include <utils/uartstdio.h>
+//#include <utils/uartstdio.h>
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -58,7 +58,7 @@ void configureUART(void)
   //
   // Initialize the UART for console I/O.
   //
-  UARTStdioConfig(0, 115200, 16000000);
+  //  UARTStdioConfig(0, 115200, 16000000);
 }
 
 void configureGPIO(void) {

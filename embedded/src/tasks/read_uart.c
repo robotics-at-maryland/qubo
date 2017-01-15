@@ -11,7 +11,7 @@ void initReadUART(void) {
 }
 
 void UARTIntHandler(void) {
-  uint32_t status = UARTIntStatus(UART0_BASE, true);
+  uint32_t status = ROM_UARTIntStatus(UART0_BASE, true);
 
   // Clear interrupt
   ROM_UARTIntClear(UART0_BASE, status);
@@ -40,7 +40,7 @@ void UARTIntHandler(void) {
     //
     // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
     //
-    ROM_SysCtlDelay(SysCtlClockGet() / (1000 * 3));
+    ROM_SysCtlDelay(ROM_SysCtlClockGet() / (1000 * 3));
 
     //
     // Turn off the LED
