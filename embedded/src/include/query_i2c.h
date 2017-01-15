@@ -58,7 +58,7 @@ static uint32_t count = 0;
 static volatile uint16_t int_state = STATE_IDLE;
 
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
-//extern SemaphoreHandle_t i2c_mutex;
+SemaphoreHandle_t i2c_mutex;
 
 // ***************************************************************************
 // Functions

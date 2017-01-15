@@ -1,8 +1,6 @@
 //QSCU
 #include "include/task_constants.h"
 #include "include/read_uart.h"
-#include "include/i2c_mutex.h"
-#include "include/uart_mutex.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -22,6 +20,13 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 //#include <utils/uartstdio.h>
+
+// Globals
+#include "include/i2c_mutex.h"
+#include "include/uart_mutex.h"
+SemaphoreHandle_t i2c_mutex;
+SemaphoreHandle_t uart_mutex;
+
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
