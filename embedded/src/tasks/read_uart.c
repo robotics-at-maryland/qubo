@@ -6,11 +6,11 @@
 
 #include "include/read_uart.h"
 
-void init_read_uart(void) {
+void initReadUART(void) {
   read_uart = xQueueCreate(Q_SIZE, sizeof(int32_t));
 }
 
-void _read_uart_handler(void) {
+void UARTIntHandler(void) {
   uint32_t status = UARTIntStatus(UART0_BASE, true);
 
   // Clear interrupt
@@ -25,7 +25,7 @@ void _read_uart_handler(void) {
   // NEED TO DYNAMICALLY ALLOCATE THIS, SO PTR DOESNT DIE
   int32_t *message = pvPortMalloc(size*sizeof(int32_t));
 
-  message[0] = first_32;
+  *message = first_32;
 
   // Copy the whole message into array
   for (int32_t i = 0; i < size; i++) {
@@ -35,17 +35,17 @@ void _read_uart_handler(void) {
     int32_t ch = ROM_UARTCharGetNonBlocking(UART0_BASE);
 
     // Optional LED blink to show its receiving
-    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
+    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
     //
     // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
     //
-    SysCtlDelay(SysCtlClockGet() / (1000 * 3));
+    ROM_SysCtlDelay(SysCtlClockGet() / (1000 * 3));
 
     //
     // Turn off the LED
     //
-    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
+    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
 
     // Write character to buffer
     *(message+i) = ch;

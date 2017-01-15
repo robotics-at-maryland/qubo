@@ -1,7 +1,8 @@
 //QSCU
+#include "include/task_constants.h"
 #include "include/read_uart.h"
 #include "include/write_uart.h"
-#include "include/task_constants.h"
+#include "include/query_i2c.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -52,7 +53,7 @@ void configureUART(void)
   //
   // Use the internal 16MHz oscillator as the UART clock source.
   //
-  UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
+  ROM_UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
 
   //
   // Initialize the UART for console I/O.
@@ -73,33 +74,6 @@ void configureGPIO(void) {
 
 }
 
-void configureI2C(void) {
-  // Enable i2c periph
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-
-  // I2C0 With PortB[3:2]
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-
-  // Configure pins for scl and sda
-  GPIOPinConfigure(GPIO_PB2_I2C0SCL);
-  GPIOPinConfigure(GPIO_PB3_I2C0SDA);
-
-  // Select the I2C function for these pins.  This function will also
-  // configure the GPIO pins pins for I2C operation, setting them to
-  // open-drain operation with weak pull-ups.  Consult the data sheet
-  // to see which functions are allocated per pin.
-  GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
-  GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
-
-  // Enable and initialize the I2C0 master module.  Use the system clock for
-  // the I2C0 module.  The last parameter sets the I2C data transfer rate.
-  // If false the data rate is set to 100kbps and if true the data rate will
-  // be set to 400kbps.
-  I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
-
-}
-
-
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName ) {
   for (;;) {}
 }
@@ -109,15 +83,23 @@ int main() {
                      SYSCTL_OSC_MAIN);
 
   // Master enable interrupts
-  IntMasterEnable();
+  ROM_IntMasterEnable();
 
   configureUART();
   configureGPIO();
+
+  // Query i2c init
+  initI2C();
+
+
+
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, this may be changed to dynamic
   // -----------------------------------------------------------------------
 
+  uart_mutex = xSemaphoreCreateMutex();
+  i2c_mutex = xSemaphoreCreateMutex();
   //  read_uart = xQueueCreate(READ_UART_Q_SIZE, sizeof(int32_t));
   //  write_uart = xQueueCreate(WRITE_UART_Q_SIZE, sizeof(int32_t));
 

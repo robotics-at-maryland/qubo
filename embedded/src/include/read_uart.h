@@ -23,10 +23,10 @@
 
 static QueueHandle_t read_uart;
 
-void init_read_uart(void);
+void initReadUART(void);
 
 // Triggered on a UART interrupt.
-void _read_uart_handler(void);
+void UARTIntHandler(void);
 
 void read_uart_task(void* params);
 

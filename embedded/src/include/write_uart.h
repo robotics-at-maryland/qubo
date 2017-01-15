@@ -27,7 +27,7 @@ extern SemaphoreHandle_t uart_mutex;
 
 void initUARTWrite(void);
 
-bool UARTWrite(int32_t *buffer, int16_t size);
+bool uartWrite(int32_t *buffer, int16_t size);
 
 // ---------
 // Task based implementation

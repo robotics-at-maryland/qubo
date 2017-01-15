@@ -140,7 +140,7 @@ _debug_flags :
 	$(eval CFLAGS += $(DEB_FLAG))
 
 $(TASKDIR) :
-	mkdir -p $(OBJDIR)$(TASKDIR)
+	mkdir -p $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
 
 
 # Objects for files in $(SRC) and $(SRC)$(TASKDIR)

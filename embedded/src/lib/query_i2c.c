@@ -6,8 +6,8 @@ void initI2C(void) {
   //
   // Enable the peripherals used by this example.
   //
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 
 
   //
@@ -15,35 +15,35 @@ void initI2C(void) {
   // This step is not necessary if your part does not support pin muxing.
   // TODO: change this to select the port/pin you are using.
   //
-  GPIOPinConfigure(GPIO_PB2_I2C0SCL);
-  GPIOPinConfigure(GPIO_PB3_I2C0SDA);
+  ROM_GPIOPinConfigure(GPIO_PB2_I2C0SCL);
+  ROM_GPIOPinConfigure(GPIO_PB3_I2C0SDA);
 
   // Select the I2C function for these pins.
-  GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
-  GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
+  ROM_GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
+  ROM_GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
 
 
   //
   // Initialize the I2C master.
   //
-  I2CMasterInitExpClk(I2C_LIB_DEVICE, SysCtlClockGet(), false);
+  ROM_I2CMasterInitExpClk(I2C_LIB_DEVICE, SysCtlClockGet(), false);
 
   //
   // Enable the I2C interrupt.
   //
-  IntEnable(INT_I2C0);
+  ROM_IntEnable(INT_I2C0);
 
   //
   // Enable the I2C master interrupt.
   //
-  I2CMasterIntEnable(I2C_LIB_DEVICE);
+  ROM_I2CMasterIntEnable(I2C_LIB_DEVICE);
 }
 
 void I2CIntHandler(void) {
     //
     // Clear the I2C interrupt.
     //
-    I2CMasterIntClear(I2C_LIB_DEVICE);
+    ROM_I2CMasterIntClear(I2C_LIB_DEVICE);
 
     //
     // Determine what to do based on the current state.
@@ -69,13 +69,13 @@ void I2CIntHandler(void) {
             //
             // Write the next byte to the data register.
             //
-            I2CMasterDataPut(I2C_LIB_DEVICE, *buffer++);
+            ROM_I2CMasterDataPut(I2C_LIB_DEVICE, *buffer++);
             count--;
 
             //
             // Continue the burst write.
             //
-            I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
+            ROM_I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
 
             //
             // If there is one byte left, set the next state to the final write
@@ -100,13 +100,13 @@ void I2CIntHandler(void) {
             //
             // Write the final byte to the data register.
             //
-            I2CMasterDataPut(I2C_LIB_DEVICE, *buffer++);
+            ROM_I2CMasterDataPut(I2C_LIB_DEVICE, *buffer++);
             count--;
 
             //
             // Finish the burst write.
             //
-            I2CMasterControl(I2C_LIB_DEVICE,
+            ROM_I2CMasterControl(I2C_LIB_DEVICE,
                              I2C_MASTER_CMD_BURST_SEND_FINISH);
 
             //
@@ -128,12 +128,12 @@ void I2CIntHandler(void) {
             //
             // See if there was an error on the previously issued read.
             //
-            if(I2CMasterErr(I2C_LIB_DEVICE) == I2C_MASTER_ERR_NONE)
+            if(ROM_I2CMasterErr(I2C_LIB_DEVICE) == I2C_MASTER_ERR_NONE)
             {
                 //
                 // Read the byte received.
                 //
-                I2CMasterDataGet(I2C_LIB_DEVICE);
+                ROM_I2CMasterDataGet(I2C_LIB_DEVICE);
 
                 //
                 // There was no error, so the state machine is now idle.
@@ -160,12 +160,12 @@ void I2CIntHandler(void) {
             //
             // Put the I2C master into receive mode.
             //
-            I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
+            ROM_I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
 
             //
             // Perform a single byte read.
             //
-            I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+            ROM_I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
 
             //
             // The next state is the wait for the ack.
@@ -186,12 +186,12 @@ void I2CIntHandler(void) {
             //
             // Put the I2C master into receive mode.
             //
-            I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
+            ROM_I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
 
             //
             // Perform a single byte read.
             //
-            I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+            ROM_I2CMasterControl(I2C_LIB_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
 
             //
             // The next state is the wait for final read state.
@@ -212,12 +212,12 @@ void I2CIntHandler(void) {
             //
             // Put the I2C master into receive mode.
             //
-            I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
+            ROM_I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, true);
 
             //
             // Start the burst receive.
             //
-            I2CMasterControl(I2C_LIB_DEVICE,
+            ROM_I2CMasterControl(I2C_LIB_DEVICE,
                              I2C_MASTER_CMD_BURST_RECEIVE_START);
 
             //
@@ -239,13 +239,13 @@ void I2CIntHandler(void) {
             //
             // Read the received character.
             //
-            *buffer++ = I2CMasterDataGet(I2C_LIB_DEVICE);
+            *buffer++ = ROM_I2CMasterDataGet(I2C_LIB_DEVICE);
             count--;
 
             //
             // Continue the burst read.
             //
-            I2CMasterControl(I2C_LIB_DEVICE,
+            ROM_I2CMasterControl(I2C_LIB_DEVICE,
                              I2C_MASTER_CMD_BURST_RECEIVE_CONT);
 
             //
@@ -271,13 +271,13 @@ void I2CIntHandler(void) {
             //
             // Read the received character.
             //
-            *buffer++ = I2CMasterDataGet(I2C_LIB_DEVICE);
+            *buffer++ = ROM_I2CMasterDataGet(I2C_LIB_DEVICE);
             count--;
 
             //
             // Finish the burst read.
             //
-            I2CMasterControl(I2C_LIB_DEVICE,
+            ROM_I2CMasterControl(I2C_LIB_DEVICE,
                              I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
 
             //
@@ -299,7 +299,7 @@ void I2CIntHandler(void) {
             //
             // Read the received character.
             //
-            *buffer++  = I2CMasterDataGet(I2C_LIB_DEVICE);
+            *buffer++  = ROM_I2CMasterDataGet(I2C_LIB_DEVICE);
             count--;
 
             //
@@ -336,7 +336,7 @@ bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length) {
     }
 
     // Set the slave address and setup for a transmit operation.
-    I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, false);
+    ROM_I2CMasterSlaveAddrSet(I2C_LIB_DEVICE, address, false);
 
     // Wait until the SoftI2C callback state machine is idle.
     while(int_state != STATE_IDLE)

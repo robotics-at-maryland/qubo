@@ -2,11 +2,10 @@
 
 // Creates the mutex
 void initUARTWrite(void) {
-  uart_mutex = xSemaphoreCreateMutex();
-}
+  }
 
 // Library routine implementation of sending UART
-bool UARTWrite(int32_t *buffer, int16_t size) {
+bool uartWrite(int32_t *buffer, int16_t size) {
   if ( xSemaphoreTake(uart_mutex, 0) ) {
     for (int16_t i = 0; i < size; i++) {
       // Write buffer to UART
