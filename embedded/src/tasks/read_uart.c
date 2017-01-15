@@ -20,9 +20,10 @@ void UARTIntHandler(void) {
   int32_t first_32 = ROM_UARTCharGetNonBlocking(UART0_BASE);
 
   // Bitmask first half of first message to get size
-  int16_t size = ((first_32 & 0xffff0000) >> 16);
+  int16_t size = GET_SIZE(first_32);
 
   // NEED TO DYNAMICALLY ALLOCATE THIS, SO PTR DOESNT DIE
+  // Assuming size is the number of bytes
   int32_t *message = pvPortMalloc(size*sizeof(int32_t));
 
   *message = first_32;
@@ -58,8 +59,12 @@ void UARTIntHandler(void) {
 
 void read_uart_task(void* params) {
 
+  in32_t *buffer;
+
   for (;;) {
-    //xQueueRecieve(read_uart, )
+    // Get the ptr to the message
+    xQueueRecieve(read_uart, buffer, portMAX_DELAY);
+
 
   }
 }

@@ -18,6 +18,8 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
+// Macro that takes the first 2 bytes of the buffer
+#define GET_SIZE(a) (a >> 16)
 
 #define Q_SIZE 100
 
