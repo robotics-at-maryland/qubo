@@ -1,8 +1,8 @@
 //QSCU
 #include "include/task_constants.h"
 #include "include/read_uart.h"
-#include "include/write_uart.h"
-#include "include/query_i2c.h"
+#include "include/i2c_mutex.h"
+#include "include/uart_mutex.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>

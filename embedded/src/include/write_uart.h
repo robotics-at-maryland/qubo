@@ -1,6 +1,8 @@
 #ifndef _WRITEUART_H_
 #define _WRITEUART_H_
 
+#include "include/uart_mutex.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -23,7 +25,7 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
-extern SemaphoreHandle_t uart_mutex;
+//extern SemaphoreHandle_t uart_mutex;
 
 void initUARTWrite(void);
 

@@ -5,6 +5,8 @@
 #ifndef _SENDI2C_H_
 #define _SENDI2C_H_
 
+#include "include/i2c_mutex.h"
+
 #include <FreeRTOS.h>
 //#include <queue.h>
 #include <semphr.h>
@@ -56,7 +58,7 @@ static uint32_t count = 0;
 static volatile uint16_t int_state = STATE_IDLE;
 
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
-extern SemaphoreHandle_t i2c_mutex;
+//extern SemaphoreHandle_t i2c_mutex;
 
 // ***************************************************************************
 // Functions
