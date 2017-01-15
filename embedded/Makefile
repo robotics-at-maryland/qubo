@@ -127,7 +127,7 @@ tiva:
 	bash -c "make -C drivers/"
 
 $(OBJDIR) :
-	mkdir -p $@
+	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
 
 $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
 	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(TIVA_DRIVER_OBJS) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
@@ -138,10 +138,6 @@ debug_rebuild : _debug_flags rebuild
 
 _debug_flags :
 	$(eval CFLAGS += $(DEB_FLAG))
-
-$(TASKDIR) :
-	mkdir -p $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
-
 
 # Objects for files in $(SRC) and $(SRC)$(TASKDIR)
 $(OBJDIR)%.o: $(SRC)%.c $(wildcard $(SRC)%.h) $(TASKDIR)
