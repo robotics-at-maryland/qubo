@@ -140,7 +140,7 @@ _debug_flags :
 	$(eval CFLAGS += $(DEB_FLAG))
 
 # Objects for files in $(SRC) and $(SRC)$(TASKDIR)
-$(OBJDIR)%.o: $(SRC)%.c $(wildcard $(SRC)%.h) $(TASKDIR)
+$(OBJDIR)%.o: $(SRC)%.c $(SRC)include/* $(OBJDIR)
 	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
 
 #$(OBJDIR)$(TASKDIR)%.o: $(TASKDIR) $(SRC)$(TASKDIR)%.c $(wildcard $(SRC)$(TASKDIR)%.h)
@@ -162,6 +162,7 @@ $(OBJDIR)%.o: $(FREERTOS_PORT_SRC)%.c $(DEP_FRTOS_CONFIG)
 clean_obj :
 	$(RM) $(OBJDIR)*
 	$(RM) $(OBJDIR)$(TASKDIR)*
+	$(RM) $(OBJDIR)lib/*
 
 clean_intermediate : clean_obj
 	$(RM) *.elf
