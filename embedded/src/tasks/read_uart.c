@@ -59,7 +59,7 @@ void UARTIntHandler(void) {
 
 void read_uart_task(void* params) {
 
-  in32_t *buffer;
+  int32_t *buffer;
 
   for (;;) {
     // Get the ptr to the message
