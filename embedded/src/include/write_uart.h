@@ -29,7 +29,7 @@ SemaphoreHandle_t uart_mutex;
 
 void initUARTWrite(void);
 
-bool uartWrite(int32_t *buffer, int16_t size);
+bool uartWrite(uint8_t *buffer, uint16_t size);
 
 // ---------
 // Task based implementation

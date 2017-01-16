@@ -5,9 +5,9 @@ void initUARTWrite(void) {
   }
 
 // Library routine implementation of sending UART
-bool uartWrite(int32_t *buffer, int16_t size) {
+bool uartWrite(uint8_t *buffer, uint16_t size) {
   if ( xSemaphoreTake(uart_mutex, 0) ) {
-    for (int16_t i = 0; i < size; i++) {
+    for (uint16_t i = 0; i < size; i++) {
       // Write buffer to UART
       ROM_UARTCharPutNonBlocking(UART0_BASE, *(buffer+i));
 

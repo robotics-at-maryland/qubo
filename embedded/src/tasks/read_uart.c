@@ -7,7 +7,7 @@
 #include "include/read_uart.h"
 
 void initReadUART(void) {
-  read_uart = xQueueCreate(Q_SIZE, sizeof(int32_t));
+  read_uart = xQueueCreate(Q_SIZE, sizeof(uint8_t));
 }
 
 void UARTIntHandler(void) {
@@ -16,8 +16,9 @@ void UARTIntHandler(void) {
   // Clear interrupt
   ROM_UARTIntClear(UART0_BASE, status);
 
-  // Get 32 bits from the UART
-  int32_t c = ROM_UARTCharGetNonBlocking(UART0_BASE);
+  // Get one byte
+  // Tivaware casts the byte to a int32_t for some reason, cast back to save space
+  uint8_t c = (uint8_t)(ROM_UARTCharGetNonBlocking(UART0_BASE));
   // Push to the queue
   xQueueSendToBackFromISR(read_uart, c, NULL);
 
@@ -40,7 +41,7 @@ void UARTIntHandler(void) {
 void read_uart_task(void* params) {
 
   // Qubobus driver code to assemble/interpret messages here
-  int32_t *buffer;
+  uint8_t *buffer;
 
   for (;;) {
     // Get the ptr to the message
