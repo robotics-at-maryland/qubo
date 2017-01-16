@@ -16,54 +16,35 @@ void UARTIntHandler(void) {
   // Clear interrupt
   ROM_UARTIntClear(UART0_BASE, status);
 
-  // Get the first 32 bits, to get the size of message
-  int32_t first_32 = ROM_UARTCharGetNonBlocking(UART0_BASE);
+  // Get 32 bits from the UART
+  int32_t c = ROM_UARTCharGetNonBlocking(UART0_BASE);
+  // Push to the queue
+  xQueueSendToBackFromISR(read_uart, c, NULL);
 
-  // Bitmask first half of first message to get size
-  int16_t size = GET_SIZE(first_32);
+  // Optional LED blink to show its receiving
+  ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
-  // NEED TO DYNAMICALLY ALLOCATE THIS, SO PTR DOESNT DIE
-  // Assuming size is the number of bytes
-  int32_t *message = pvPortMalloc(size*sizeof(int32_t));
+  //
+  // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
+  //
+  ROM_SysCtlDelay(ROM_SysCtlClockGet() / (1000 * 3));
 
-  *message = first_32;
+  //
+  // Turn off the LED
+  //
+  ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
 
-  // Copy the whole message into array
-  for (int32_t i = 0; i < size; i++) {
-    if (!ROM_UARTCharsAvail(UART0_BASE)) {
-      // ERROR CONDITION
-    }
-    int32_t ch = ROM_UARTCharGetNonBlocking(UART0_BASE);
-
-    // Optional LED blink to show its receiving
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-
-    //
-    // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
-    //
-    ROM_SysCtlDelay(ROM_SysCtlClockGet() / (1000 * 3));
-
-    //
-    // Turn off the LED
-    //
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
-
-    // Write character to buffer
-    *(message+i) = ch;
   }
-
-  // Send buffer to task to handle message
-  xQueueSendToBackFromISR(read_uart, message, NULL);
-}
 
 
 void read_uart_task(void* params) {
 
+  // Qubobus driver code to assemble/interpret messages here
   int32_t *buffer;
 
   for (;;) {
     // Get the ptr to the message
-    xQueueRecieve(read_uart, buffer, portMAX_DELAY);
+    xQueueReceive(read_uart, buffer, portMAX_DELAY);
 
 
   }
