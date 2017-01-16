@@ -9,7 +9,7 @@ bool uartWrite(uint8_t *buffer, uint16_t size) {
   if ( xSemaphoreTake(uart_mutex, 0) ) {
     for (uint16_t i = 0; i < size; i++) {
       // Write buffer to UART
-      ROM_UARTCharPutNonBlocking(UART0_BASE, *(buffer+i));
+      ROM_UARTCharPutNonBlocking(UART_DEVICE, *(buffer+i));
 
     }
     // Maybe needed, if they're going to be dynamically allocated might as well free here
@@ -60,7 +60,7 @@ COPY TO CLIPBOARDortMAX_DELAY);
     for (int32_t i = 0; i < size; i++) {
 
       // Write buffer to UART
-      ROM_UARTCharPutNonBlocking(UART0_BASE, *(buffer+i));
+      ROM_UARTCharPutNonBlocking(UART_DEVICE, *(buffer+i));
     }
 
     // Free the memory of the buffer

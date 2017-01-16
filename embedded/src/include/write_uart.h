@@ -25,6 +25,8 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
+#define UART_DEVICE UART0_BASE
+
 SemaphoreHandle_t uart_mutex;
 
 void initUARTWrite(void);
