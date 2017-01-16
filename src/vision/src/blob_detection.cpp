@@ -5,8 +5,40 @@
 using namespace cv;
 using namespace std;
 
+Mat im;
+Mat gray;
+int thresh = 100;
+int max_thresh = 255;
+RNG rng(12345);
+
+/** @function thresh_callback */
+void thresh_callback(int, void* )
+{
+    Mat canny_output;
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+
+    /// Detect edges using canny
+    Canny(gray, canny_output, thresh, thresh*2, 3 );
+    /// Find contours
+    findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+    
+    /// Draw contours
+    Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
+    for( int i = 0; i< contours.size(); i++ )
+     {
+         Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+         drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, Point() );
+     }
+    
+    /// Show in a window
+    namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+    imshow( "Contours", drawing );
+}
+
+
 int main(int argc, char*argv[]){
-    cout <<"hello!" << endl;
+    
     if(argc != 2){
         cout << "wrong number of arguments dummy, call \"a.out test_video\"" << endl;
         return 0;
@@ -15,64 +47,48 @@ int main(int argc, char*argv[]){
 
     // Read image
     VideoCapture cap = VideoCapture( argv[1] );
-    Mat im;
-    cap >> im;
 
-    
+    cap >> im;
  
-    // Setup SimpleBlobDetector parameters.
-    SimpleBlobDetector::Params params;
- 
-    // Change thresholds
-    params.minThreshold = 10;
-    params.maxThreshold = 200;
- 
-    // Filter by Area.
-    //params.filterByArea = true;
-    //params.minArea = 1500;
- 
-    // Filter by Circularity
-    //params.filterByCircularity = true;
-    //params.minCircularity = 0.1;
- 
-    // Filter by Convexity
-    //params.filterByConvexity = true;
-    //params.minConvexity = 0.87;
- 
-    // Filter by Inertia
-    //   params.filterByInertia = true;
-    //params.minInertiaRatio = 0.01;
- 
-#if CV_MAJOR_VERSION < 3   // If you are using OpenCV 2
- 
-    // Set up detector with params
-    SimpleBlobDetector detector(params);
- 
-    // You can use the detector this way
-    // detector.detect( im, keypoints);
- 
-#else
- 
-    // Set up detector with params
-    Ptr<SimpleBlobDetector> detector = SimpleBlobDetector::create();
- 
-    // SimpleBlobDetector::create creates a smart pointer. 
-    // So you need to use arrow ( ->) instead of dot ( . )
-    // detector->detect( im, keypoints);
- 
-#endif
+
+    // Convert input image to HSV
+
+    Mat im_with_keypoints;
+    std::vector<KeyPoint> keypoints;
+  
     while(!im.empty()){
-        // Detect blobs.
-        std::vector<KeyPoint> keypoints;
-        detector->detect(im, keypoints);
+
+
         
-        // Draw detected blobs as red circles.
-        // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the circle corresponds to the size of blob
-        Mat im_with_keypoints;
-        drawKeypoints( im, keypoints, im_with_keypoints, Scalar(0,0,255)/*, DrawMatchesFlags::DRAW_RICH_KEYPOINTS*/ );
+        cvtColor(im, gray, CV_BGR2GRAY);
+        GaussianBlur(gray, gray, Size(9, 9), 2, 2 );
         
-        // Show blobs
-        imshow("keypoints", im_with_keypoints );
+        /// Create Window
+        char* source_window = "Source";
+        namedWindow( source_window, CV_WINDOW_AUTOSIZE );
+        imshow(source_window, im );
+        
+        createTrackbar( " Canny thresh:", "Source", &thresh, max_thresh, thresh_callback );
+        thresh_callback( 0, 0 );
+        
+
+        // vector<Vec3f> circles;
+        // HoughCircles(gray, circles, CV_HOUGH_GRADIENT,2, gray.rows/4, 400, 50 );
+        // imshow("gray", gray);
+        // waitKey(0);
+        // for( size_t i = 0; i < circles.size(); i++ )
+        //     {
+        //         Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+        //         int radius = cvRound(circles[i][2]);
+        //         // draw the circle center
+        //         circle(im, center, 3, Scalar(0,255,0), -1, 8, 0 );
+        //         // draw the circle outline
+        //         circle(im, center, radius, Scalar(0,0,255), 3, 8, 0 );
+        //     }
+        // namedWindow( "circles", 1 );
+        // imshow( "circles", im );        
+        
+        
         waitKey(0);
         cap >> im;
     }
