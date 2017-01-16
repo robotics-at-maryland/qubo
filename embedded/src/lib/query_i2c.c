@@ -342,6 +342,7 @@ bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length) {
     while(int_state != STATE_IDLE)
       {
       }
+    xSemaphoreGive(i2c_mutex);
     return true;
   }
   return false;
@@ -349,27 +350,31 @@ bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length) {
 
 
  bool i2cRead(uint8_t addr, uint8_t *data, uint32_t length) {
+   if ( xSemaphoreTake(i2c_mutex, 0) ) {
+    // Save the data buffer to be read.
+    buffer = data;
+    count = length;
+    address = addr;
 
-  // Save the data buffer to be read.
-  buffer = data;
-  count = length;
-  address = addr;
+    // Set the next state of the callback state machine based on the number of
+    // bytes to read.
+    if(length == 1)
+      {
+        int_state = STATE_READ_ONE;
+      }
+    else
+      {
+        int_state = STATE_READ_FIRST;
+      }
 
-  // Set the next state of the callback state machine based on the number of
-  // bytes to read.
-  if(length == 1)
-    {
-      int_state = STATE_READ_ONE;
-    }
-  else
-    {
-      int_state = STATE_READ_FIRST;
-    }
-
-  // Wait until the SoftI2C callback state machine is idle.
-  while(int_state != STATE_IDLE)
-    {
-    }
+    // Wait until the SoftI2C callback state machine is idle.
+    while(int_state != STATE_IDLE)
+      {
+      }
+    xSemaphoreGive(i2c_mutex);
+    return true;
+   }
+   return false;
 }
 
 // Will perform a write, then a read after
