@@ -17,7 +17,7 @@ args = vars(ap.parse_args())
 # ball in the HSV color space, then initialize the
 # list of tracked points Current color:GREEN
 colorLower = (21, 73, 5)
-colorUpper = (42, 255, 255)
+colorUpper = (200, 255, 114)
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -42,8 +42,9 @@ while True:
 	# resize the frame, blur it, and convert it to the HSV
 	# color space
 	frame = imutils.resize(frame, width=600)
-	# blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+        #blurred = cv2.
+	hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
 	# construct a mask for the color, then perform
 	# a series of dilations and erosions to remove any small
@@ -64,13 +65,13 @@ while True:
 		# it to compute the minimum enclosing circle and
 		# centroid
         
-	##	c = max(cnts, key=cv2.contourArea)
-                print len(cnts)
+                #c = max(cnts, key=cv2.contourArea)
+                # print len(cnts)
                 for c in cnts:
-		        ((x, y), radius) = cv2.minEnclosingCircle(c)
-		        M = cv2.moments(c)
-		        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-
+	                ((x, y), radius) = cv2.minEnclosingCircle(c)
+	                M = cv2.moments(c)
+	                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                        
 		        # only proceed if the radius meets a minimum size
                         if radius > 10:
 			        # draw the circle and centroid on the frame,

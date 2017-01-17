@@ -47,7 +47,6 @@ int main(int argc, char*argv[]){
 
     // Read image
     VideoCapture cap = VideoCapture( argv[1] );
-
     cap >> im;
  
 
@@ -61,7 +60,7 @@ int main(int argc, char*argv[]){
 
         
         cvtColor(im, gray, CV_BGR2GRAY);
-        GaussianBlur(gray, gray, Size(9, 9), 2, 2 );
+        GaussianBlur(gray, gray, Size(15, 15), 2, 2 );
         
         /// Create Window
         char* source_window = "Source";

@@ -58,16 +58,20 @@ include_directories(
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
-)
+  )
 
 set(GPU_VISION_SRC_FILES
-    src/gpu_main.cpp
-    src/gpu_vision_node.cpp
-   )
+  src/gpu_main.cpp
+  src/gpu_vision_node.cpp
+  )
 
- set(TEST_FILES
-   src/blob_detection.cpp
-   )
+set(TEST_FILES
+  src/blob_detection.cpp
+  )
+
+set(SEGMENT_FILES
+  src/segmentation.cpp
+  )
 
 
 ##############################
@@ -86,6 +90,10 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 add_executable(blob_test ${TEST_FILES})
 target_link_libraries(blob_test ${OpenCV_LIBRARIES})
+
+
+add_executable(segment_test ${SEGMENT_FILES})
+target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 
 ##############################
 # Installable Targets ########
