@@ -6,6 +6,8 @@ LINKER_SCRIPT = $(SRC)tiva.ld
 ELF_IMAGE = image.elf
 TARGET = image.bin
 
+TC_PATH = /opt/arm-none-eabi/
+
 # You shouldn't need to edit anything below here
 #########################################################################
 # FLAGS                                                                 #
@@ -19,14 +21,19 @@ OBJCOPY = $(TOOLCHAIN)objcopy
 AR = $(TOOLCHAIN)ar
 
 # GCC flags
+#
 CFLAG = -c
 OFLAG = -o
 INCLUDEFLAG = -I
-CPUFLAG = -mthumb -mcpu=cortex-m4 -DTARGET_IS_TM4C123_RB1 -DPART_TM4C123GH6PM
-WFLAG = -Wall -Wextra #-Werror
-FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 
-CFLAGS = $(CPUFLAG) $(WFLAG) $(FPUFLAG)
+CFLAGS = -g -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+CFLAGS +=-Os -ffunction-sections -fdata-sections -MD -std=c99
+CFLAGS += -pedantic -DPART_TM4C123GH6PM -c
+CFLAGS += -DTARGET_IS_BLIZZARD_RA1
+#CFLAGS = -mcpu=cortex-m4 -march=armv7e-m -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Dgcc -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -ffunction-sections -fdata-sections -g -gdwarf-3 -gstrict-dwarf -specs="nosys.specs" -MD -std=c99 -I$(TC_PATH)arm-none-eabi/include/
+
+LDFLAGS = -T $(LINKER_SCRIPT) --entry ResetISR --gc-sections
+
 
 ##########################################################################
 # LOCATIONS                                                              #
@@ -90,7 +97,7 @@ DRIVERLIB_OBJS := $(wildcard $(OBJDIR)driverlib/*.o)
 DRIVERLIB_OBJS := $(DRIVERLIB_OBJS) $(wildcard $(OBJDIR)driverlib/*.a)
 UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
 
-TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS) $(UTILS_OBJS)
+TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS)
 
 # List of source file objects. Adds any c file in $(SRC) and $(SRC)$(TASKDIR)
 SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c) $(wildcard $(SRC)lib/*.c)
@@ -124,14 +131,15 @@ $(TARGET) : $(OBJDIR) $(ELF_IMAGE)
 	$(OBJCOPY) -O binary $(word 2,$^) $@
 
 tiva:
-	bash -c "make -C drivers/"
+	bash -c "make -C drivers/;./drivers/symlink_objs &> /dev/null"
 
 $(OBJDIR) :
 	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
 
-$(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
-	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
-#	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(TIVA_DRIVER_OBJS) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
+$(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
+	$(LD) $(OFLAG) $@ $^ $(LDFLAGS)
+#	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(LDFLAGS) 
+
 
 
 debug : _debug_flags all
@@ -144,10 +152,6 @@ _debug_flags :
 # Objects for files in $(SRC) and $(SRC)$(TASKDIR)
 $(OBJDIR)%.o: $(SRC)%.c $(SRC)include/* $(OBJDIR)
 	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
-
-#$(OBJDIR)$(TASKDIR)%.o: $(TASKDIR) $(SRC)$(TASKDIR)%.c $(wildcard $(SRC)$(TASKDIR)%.h)
-#	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
-
 
 # Make objects for the FreeRTOS Files
 $(OBJDIR)%.o: $(FREERTOS_SRC)%.c $(INC_FREERTOS)* $(DEP_FRTOS_CONFIG)

@@ -13,7 +13,7 @@ OFLAG = -o
 INCLUDEFLAG = -I
 CPUFLAG = -mthumb -mcpu=cortex-m4
 WFLAG = -Wall -Wextra -Werror
-FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
+FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 CFLAGS = $(CPUFLAG) $(WFLAG) $(FPUFLAG)
 
