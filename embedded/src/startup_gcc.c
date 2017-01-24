@@ -2,30 +2,29 @@
 //
 // startup_gcc.c - Startup code for use with GNU tools.
 //
-// Copyright (c) 2012 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2016 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
-//
+// 
 // Texas Instruments (TI) is supplying this software for use solely and
 // exclusively on TI's microcontroller products. The software is owned by
 // TI and/or its suppliers, and is protected under applicable copyright
 // laws. You may not combine this software with "viral" open-source
 // software in order to form a larger program.
-//
+// 
 // THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
 // NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
 // NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
 // A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
 // CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
 // DAMAGES, FOR ANY REASON WHATSOEVER.
-//
-// This is part of revision 9453 of the EK-LM4F120XL Firmware Package.
+// 
+// This is part of revision 2.1.3.156 of the EK-TM4C123GXL Firmware Package.
 //
 //*****************************************************************************
 
-#include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_nvic.h>
-#include <inc/hw_types.h>
+#include "inc/hw_nvic.h"
+#include "inc/hw_types.h"
 
 //*****************************************************************************
 //
@@ -39,6 +38,15 @@ static void IntDefaultHandler(void);
 
 //*****************************************************************************
 //
+// External declarations for the interrupt handlers used by the application.
+//
+//*****************************************************************************
+extern void xPortPendSVHandler(void);
+extern void vPortSVCHandler(void);
+extern void xPortSysTickHandler(void);
+
+//*****************************************************************************
+//
 // The entry point for the application.
 //
 //*****************************************************************************
@@ -49,7 +57,7 @@ extern int main(void);
 // Reserve space for the system stack.
 //
 //*****************************************************************************
-static unsigned long pulStack[64];
+static uint32_t pui32Stack[128];
 
 //*****************************************************************************
 //
@@ -60,8 +68,8 @@ static unsigned long pulStack[64];
 __attribute__ ((section(".isr_vector")))
 void (* const g_pfnVectors[])(void) =
 {
-    (void (*)(void))((unsigned long)pulStack + sizeof(pulStack)),
-					    // The initial stack pointer
+    (void (*)(void))((uint32_t)pui32Stack + sizeof(pui32Stack)),
+                                            // The initial stack pointer
     ResetISR,                               // The reset handler
     NmiSR,                                  // The NMI handler
     FaultISR,                               // The hard fault handler
@@ -72,11 +80,11 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    IntDefaultHandler,                      // SVCall handler
+    vPortSVCHandler,                        // SVCall handler
     IntDefaultHandler,                      // Debug monitor handler
     0,                                      // Reserved
-    IntDefaultHandler,                      // The PendSV handler
-    IntDefaultHandler,                      // The SysTick handler
+    xPortPendSVHandler,                     // The PendSV handler
+    xPortSysTickHandler,                    // The SysTick handler
     IntDefaultHandler,                      // GPIO Port A
     IntDefaultHandler,                      // GPIO Port B
     IntDefaultHandler,                      // GPIO Port C
@@ -118,8 +126,8 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Quadrature Encoder 1
     IntDefaultHandler,                      // CAN0
     IntDefaultHandler,                      // CAN1
-    IntDefaultHandler,                      // CAN2
-    IntDefaultHandler,                      // Ethernet
+    0,                                      // Reserved
+    0,                                      // Reserved
     IntDefaultHandler,                      // Hibernate
     IntDefaultHandler,                      // USB0
     IntDefaultHandler,                      // PWM Generator 3
@@ -129,8 +137,8 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // ADC1 Sequence 1
     IntDefaultHandler,                      // ADC1 Sequence 2
     IntDefaultHandler,                      // ADC1 Sequence 3
-    IntDefaultHandler,                      // I2S0
-    IntDefaultHandler,                      // External Bus Interface 0
+    0,                                      // Reserved
+    0,                                      // Reserved
     IntDefaultHandler,                      // GPIO Port J
     IntDefaultHandler,                      // GPIO Port K
     IntDefaultHandler,                      // GPIO Port L
@@ -184,14 +192,14 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Wide Timer 5 subtimer A
     IntDefaultHandler,                      // Wide Timer 5 subtimer B
     IntDefaultHandler,                      // FPU
-    IntDefaultHandler,                      // PECI 0
-    IntDefaultHandler,                      // LPC 0
+    0,                                      // Reserved
+    0,                                      // Reserved
     IntDefaultHandler,                      // I2C4 Master and Slave
     IntDefaultHandler,                      // I2C5 Master and Slave
     IntDefaultHandler,                      // GPIO Port M
     IntDefaultHandler,                      // GPIO Port N
     IntDefaultHandler,                      // Quadrature Encoder 2
-    IntDefaultHandler,                      // Fan 0
+    0,                                      // Reserved
     0,                                      // Reserved
     IntDefaultHandler,                      // GPIO Port P (Summary or P0)
     IntDefaultHandler,                      // GPIO Port P1
@@ -225,11 +233,11 @@ void (* const g_pfnVectors[])(void) =
 // for the "data" segment resides immediately following the "text" segment.
 //
 //*****************************************************************************
-extern unsigned long _etext;
-extern unsigned long _data;
-extern unsigned long _edata;
-extern unsigned long _bss;
-extern unsigned long _ebss;
+extern uint32_t _ldata;
+extern uint32_t _data;
+extern uint32_t _edata;
+extern uint32_t _bss;
+extern uint32_t _ebss;
 
 //*****************************************************************************
 //
@@ -244,29 +252,29 @@ extern unsigned long _ebss;
 void
 ResetISR(void)
 {
-    unsigned long *pulSrc, *pulDest;
+    uint32_t *pui32Src, *pui32Dest;
 
     //
     // Copy the data segment initializers from flash to SRAM.
     //
-    pulSrc = &_etext;
-    for(pulDest = &_data; pulDest < &_edata; )
+    pui32Src = &_ldata;
+    for(pui32Dest = &_data; pui32Dest < &_edata; )
     {
-	*pulDest++ = *pulSrc++;
+        *pui32Dest++ = *pui32Src++;
     }
 
     //
     // Zero fill the bss segment.
     //
     __asm("    ldr     r0, =_bss\n"
-	  "    ldr     r1, =_ebss\n"
-	  "    mov     r2, #0\n"
-	  "    .thumb_func\n"
-	  "zero_loop:\n"
-	  "        cmp     r0, r1\n"
-	  "        it      lt\n"
-	  "        strlt   r2, [r0], #4\n"
-	  "        blt     zero_loop");
+          "    ldr     r1, =_ebss\n"
+          "    mov     r2, #0\n"
+          "    .thumb_func\n"
+          "zero_loop:\n"
+          "        cmp     r0, r1\n"
+          "        it      lt\n"
+          "        strlt   r2, [r0], #4\n"
+          "        blt     zero_loop");
 
     //
     // Enable the floating-point unit.  This must be done here to handle the
@@ -279,8 +287,8 @@ ResetISR(void)
     // this project.
     //
     HWREG(NVIC_CPAC) = ((HWREG(NVIC_CPAC) &
-			 ~(NVIC_CPAC_CP10_M | NVIC_CPAC_CP11_M)) |
-			NVIC_CPAC_CP10_FULL | NVIC_CPAC_CP11_FULL);
+                         ~(NVIC_CPAC_CP10_M | NVIC_CPAC_CP11_M)) |
+                        NVIC_CPAC_CP10_FULL | NVIC_CPAC_CP11_FULL);
 
     //
     // Call the application's entry point.
