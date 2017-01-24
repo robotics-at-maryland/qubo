@@ -29,8 +29,6 @@
 
 SemaphoreHandle_t uart_mutex;
 
-void initUARTWrite(void);
-
 bool uartWrite(uint8_t *buffer, uint16_t size);
 
 // ---------

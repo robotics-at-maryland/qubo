@@ -51,16 +51,23 @@ void read_uart_task(void* params) {
   uint8_t *buffer;
 
   for (;;) {
-    // Get the ptr to the message
-    xQueueReceive(read_uart, buffer, portMAX_DELAY);
 
-    // Mult by 2
-    *buffer = *buffer << 1;
+    // Optional LED blink to show its receiving
+    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
-    // UART Echo bit shift
+    //
+    // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
+    //
+    ROM_SysCtlDelay(ROM_SysCtlClockGet() / (1000 * 3));
+
+    //
+    // Turn off the LED
+    //
+    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
+
     bool status = false;
     while ( !status ) {
-      status = uartWrite(buffer, 1);
+      status = uartWrite(0xFF, 1);
     }
   }
 }
