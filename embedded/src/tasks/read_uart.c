@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 /**
    Interrupt generates dynamically allocated buffer of messages.
    Their pointers are added to the read_uart task queue, who

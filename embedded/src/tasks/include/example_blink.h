@@ -1,3 +1,11 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
+#ifndef _EXAMPLE_BLINK_H_
+#define _EXAMPLE_BLINK_H_
+
 #include "include/task_constants.h"
 #include "lib/include/rgb.h"
 
@@ -27,3 +35,5 @@
 static void example_blink_task(void *params);
 
 bool example_blink_init(void);
+
+#endif

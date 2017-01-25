@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 /*
   A message will be a parameter that is passed into a task. Tasks that communicate with other
   tasks will need a message parameter that gives it some FreeRTOS data structure which will
@@ -5,6 +10,9 @@
 
   This is so source code in tasks is clearer to read.
  */
+
+#ifndef _INTERTASK_MESSAGES_H_
+#define _INTERTASK_MESSAGES_H_
 
 #include <FreeRTOS.h>
 #include <queue.h>
@@ -38,3 +46,5 @@ typedef struct _process_uart_msg
   SemaphoreHandle_t *insert_tasks_to_unblock;
 } process_uart_msg;
 */
+
+#endif

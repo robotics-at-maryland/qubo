@@ -1,3 +1,10 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
+
+// Uncomment if want debug messages sent to uart. Requires linking to be done with tiva drivers
 //#define DEBUG
 
 //QSCU
@@ -131,11 +138,6 @@ int main() {
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
-  //  if ( xTaskCreate(read_uart_task, (const portCHAR *)"Read_UART", READ_UART_STACKSIZE,
-  //                   NULL, READ_UART_PRIORITY, NULL) != pdTRUE) {
-    // ERROR
-  //  }
-
 
   /*
   if ( example_blink_init() ) {

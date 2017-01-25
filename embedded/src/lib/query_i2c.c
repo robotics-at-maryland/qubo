@@ -1,4 +1,7 @@
-// THIS CODE WILL HAVE TO BE PORTED TO i2c.c HARDWARE LIBRARY
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
 
 #include "lib/include/query_i2c.h"
 

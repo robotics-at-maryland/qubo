@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 #ifndef _WRITEUART_H_
 #define _WRITEUART_H_
 

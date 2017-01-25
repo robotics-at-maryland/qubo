@@ -1,3 +1,11 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
+#ifndef _EXAMPLE_UART_H_
+#define _EXAMPLE_UART_H_
+
 #include "lib/include/write_uart.h"
 
 // FreeRTOS
@@ -20,3 +28,5 @@
 bool example_uart_init(void);
 
 static void example_uart_task(void *params);
+
+#endif

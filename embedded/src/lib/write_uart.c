@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 #include "lib/include/write_uart.h"
 
 // Library routine implementation of sending UART

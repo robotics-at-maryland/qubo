@@ -1,3 +1,11 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
+#ifndef _RGB_H_
+#define _RGB_H_
+
 // Tiva
 #include <stdbool.h>
 #include <stdint.h>
@@ -38,3 +46,4 @@ void rgb_on_from_isr(uint8_t color);
 
 void rgb_off_from_isr(uint8_t color);
 
+#endif

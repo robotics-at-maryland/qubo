@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 /**
    Library that can be used to send to I2C bus and receive data
  */

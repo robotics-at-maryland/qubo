@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 /* Library to control rgb LED on board */
 
 #include "lib/include/rgb.h"

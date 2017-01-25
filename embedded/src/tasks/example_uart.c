@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 #include "tasks/include/example_uart.h"
 
 bool example_uart_init() {

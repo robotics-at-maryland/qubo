@@ -1,3 +1,8 @@
+/* Ross Baehr
+   R@M 2017
+   ross.baehr@gmail.com
+*/
+
 #ifndef _READUART_H_
 #define _READUART_H_
 
