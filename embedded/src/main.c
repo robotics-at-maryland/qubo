@@ -1,3 +1,5 @@
+//#define DEBUG
+
 //QSCU
 #include "include/task_constants.h"
 #include "tasks/include/read_uart.h"
@@ -21,7 +23,11 @@
 #include <driverlib/rom.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
+
+// If debug defined, can use this to print to UART
+#ifdef DEBUG
 #include <utils/uartstdio.h>
+#endif
 
 // Globals
 #include "include/i2c_mutex.h"
@@ -64,10 +70,12 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
 
+  #ifdef DEBUG
   //
   // Initialize the UART for console I/O.
   //
   UARTStdioConfig(0, 115200, 16000000);
+  #endif
 }
 
 void configureGPIO(void) {
@@ -97,15 +105,15 @@ int main() {
   // Master enable interrupts
   ROM_IntMasterEnable();
 
-   configureUART();
-   configureGPIO();
+  configureUART();
+  configureGPIO();
 
   // Query i2c init
   //  initI2C();
 
-   UARTprintf("\n\nTask running\n");
-
-
+  #ifdef DEBUG
+  UARTprintf("\n\nTask running\n");
+  #endif
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, this may be changed to dynamic

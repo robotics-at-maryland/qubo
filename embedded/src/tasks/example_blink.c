@@ -5,9 +5,9 @@ static void example_blink_task(void* params) {
 
   for (;;) {
 
-    blink_led(RED_LED, 1);
-    blink_led(BLUE_LED, 1);
-    blink_led(GREEN_LED, 1);
+    blink_led(RED_LED, 2);
+    blink_led(BLUE_LED, 2);
+    blink_led(GREEN_LED, 2);
 
   }
 

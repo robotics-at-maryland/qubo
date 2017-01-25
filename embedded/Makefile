@@ -137,8 +137,8 @@ $(OBJDIR) :
 	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
 
 $(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
-	$(LD) $(OFLAG) $@ $^ $(LDFLAGS)
-#	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(LDFLAGS) 
+	$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)
+#	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS) 
 
 
 
