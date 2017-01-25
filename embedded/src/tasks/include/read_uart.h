@@ -1,6 +1,8 @@
 #ifndef _READUART_H_
 #define _READUART_H_
 
+#include "lib/include/rgb.h"
+
 // FreeRTOS
 #include <FreeRTOS.h>
 #include <queue.h>

@@ -1,33 +1,22 @@
 #include "lib/include/write_uart.h"
 
 // Library routine implementation of sending UART
-bool writeUART(uint8_t *buffer, uint16_t size) {
-  if ( xSemaphoreTake(uart_mutex, 0) == pdTRUE ) {
-    for (uint16_t i = 0; i < size; i++) {
-      // Write buffer to UART
-      ROM_UARTCharPutNonBlocking(UART_DEVICE, *(buffer+i));
+void writeUART(uint8_t *buffer, uint16_t size) {
 
-    }
-    // Maybe needed, if they're going to be dynamically allocated might as well free here
-    // so its not forgotten
-    // vPortFree(buffer);
-    xSemaphoreGive(uart_mutex);
-    return true;
+  // If the UART is busy, yield task and then try again
+  while (xSemaphoreTake(uart_mutex, 0) == pdFALSE ) {
+    taskYIELD();
   }
-  // Mutex is busy, not really sure if this should be handled here or the calling function
-  return false;
 
-  /**
-     Could have something like this on calling:
+  for (uint16_t i = 0; i < size; i++) {
+    // Write buffer to UART
+    ROM_UARTCharPutNonBlocking(UART_DEVICE, *(buffer+i));
 
-     boolean status = false;
-     while(!status) {
-     if( !(status = UARTWrite()))
-     // uart is busy right now, so yield and try again
-     yield scheduler
-     }
-
-  */
+  }
+  // Maybe needed, if they're going to be dynamically allocated might as well free here
+  // so its not forgotten
+  // vPortFree(buffer);
+  xSemaphoreGive(uart_mutex);
 
 }
 

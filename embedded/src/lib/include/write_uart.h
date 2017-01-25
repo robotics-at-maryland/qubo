@@ -8,7 +8,7 @@
 
 // FreeRTOS
 #include <FreeRTOS.h>
-//#include <task.h>
+#include <task.h>
 #include <semphr.h>
 //#include <queue.h>
 #include <heap_4.h>
@@ -29,7 +29,7 @@
 
 SemaphoreHandle_t uart_mutex;
 
-bool writeUART(uint8_t *buffer, uint16_t size);
+void writeUART(uint8_t *buffer, uint16_t size);
 
 // ---------
 // Task based implementation

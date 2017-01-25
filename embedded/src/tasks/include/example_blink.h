@@ -1,5 +1,5 @@
 #include "include/task_constants.h"
-#include "lib/include/blink.h"
+#include "lib/include/rgb.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>

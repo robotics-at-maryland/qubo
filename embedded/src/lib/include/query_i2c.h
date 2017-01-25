@@ -8,8 +8,8 @@
 #include "include/i2c_mutex.h"
 
 #include <FreeRTOS.h>
-//#include <queue.h>
 #include <semphr.h>
+#include <task.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -69,12 +69,12 @@ void initI2C(void);
 
 void I2CIntHandler(void);
 
-bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length);
+void writeI2C(uint8_t addr, uint8_t *data, uint32_t length);
 
-bool i2cRead(uint8_t addr, uint8_t *data, uint32_t length);
+void readI2C(uint8_t addr, uint8_t *data, uint32_t length);
 
 // Will perform a write, then a read after
-bool i2cQuery(uint8_t addr, uint8_t *write_data, uint32_t write_length,
+void queryI2C(uint8_t addr, uint8_t *write_data, uint32_t write_length,
                  uint8_t *read_data, uint8_t read_length);
 
 #endif

@@ -32,10 +32,11 @@
 // Globals
 #include "include/i2c_mutex.h"
 #include "include/uart_mutex.h"
-#include "include/blink_mutex.h"
+#include "include/rgb_mutex.h"
+
 SemaphoreHandle_t i2c_mutex;
 SemaphoreHandle_t uart_mutex;
-SemaphoreHandle_t blink_mutex;
+SemaphoreHandle_t rgb_mutex;
 
 
 #ifdef DEBUG
@@ -121,7 +122,7 @@ int main() {
 
   uart_mutex = xSemaphoreCreateMutex();
   i2c_mutex = xSemaphoreCreateMutex();
-  blink_mutex = xSemaphoreCreateMutex();
+  rgb_mutex = xSemaphoreCreateMutex();
 
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
