@@ -2,6 +2,7 @@
 #define _READUART_H_
 
 #include "lib/include/rgb.h"
+#include "include/read_uart_queue.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -28,12 +29,12 @@
 
 #define Q_SIZE 100
 
-static QueueHandle_t read_uart;
+QueueHandle_t read_uart_queue;
 
 bool read_uart_init(void);
 
 // Triggered on a UART interrupt.
-void UARTIntHandler(void);
+static void UART0IntHandler(void);
 
 static void read_uart_task(void* params);
 

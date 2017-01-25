@@ -1,4 +1,3 @@
-#include "include/task_constants.h"
 #include "lib/include/write_uart.h"
 
 // FreeRTOS

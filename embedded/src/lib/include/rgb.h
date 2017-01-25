@@ -25,8 +25,16 @@
 SemaphoreHandle_t blink_mutex;
 
 // Blink the RGB led color c and n times
-void rgb_blink(uint8_t color, uint8_t n);
+void blink_rgb(uint8_t color, uint8_t n);
 
 void rgb_on(uint8_t color);
 
 void rgb_off(uint8_t color);
+
+// Blink the RGB led color c and n times from an isr
+void blink_rgb_from_isr(uint8_t color, uint8_t n);
+
+void rgb_on_from_isr(uint8_t color);
+
+void rgb_off_from_isr(uint8_t color);
+

@@ -5,10 +5,7 @@ static void example_blink_task(void* params) {
 
   for (;;) {
 
-    rgb_blink(RED_LED, 2);
-    rgb_blink(BLUE_LED, 2);
-    rgb_blink(GREEN_LED, 2);
-
+    blink_rgb(GREEN_LED, 1);
   }
 
 }

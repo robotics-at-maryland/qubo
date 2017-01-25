@@ -33,10 +33,12 @@
 #include "include/i2c_mutex.h"
 #include "include/uart_mutex.h"
 #include "include/rgb_mutex.h"
+#include "include/read_uart_queue.h"
 
 SemaphoreHandle_t i2c_mutex;
 SemaphoreHandle_t uart_mutex;
 SemaphoreHandle_t rgb_mutex;
+QueueHandle_t read_uart_queue;
 
 
 #ifdef DEBUG
@@ -117,12 +119,14 @@ int main() {
   #endif
 
   // -----------------------------------------------------------------------
-  // Allocate FreeRTOS data structures for tasks, this may be changed to dynamic
+  // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
   // -----------------------------------------------------------------------
 
   uart_mutex = xSemaphoreCreateMutex();
   i2c_mutex = xSemaphoreCreateMutex();
   rgb_mutex = xSemaphoreCreateMutex();
+
+  read_uart_queue = xQueueCreate(READ_UART_Q_SIZE, sizeof(uint8_t));
 
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
@@ -133,16 +137,16 @@ int main() {
   //  }
 
 
+  /*
   if ( example_blink_init() ) {
     while(1){}
   }
+  */
 
 
-  /*
   if ( read_uart_init() ) {
     while(1){}
   }
-  */
 
   /*
   if ( example_uart_init() ) {
