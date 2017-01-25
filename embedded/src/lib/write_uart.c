@@ -1,12 +1,8 @@
-#include "include/write_uart.h"
-
-// Creates the mutex
-void initUARTWrite(void) {
-  }
+#include "lib/include/write_uart.h"
 
 // Library routine implementation of sending UART
-bool uartWrite(uint8_t *buffer, uint16_t size) {
-  if ( xSemaphoreTake(uart_mutex, 0) ) {
+bool writeUART(uint8_t *buffer, uint16_t size) {
+  if ( xSemaphoreTake(uart_mutex, 0) == pdTRUE ) {
     for (uint16_t i = 0; i < size; i++) {
       // Write buffer to UART
       ROM_UARTCharPutNonBlocking(UART_DEVICE, *(buffer+i));

@@ -4,13 +4,19 @@
    decides what to do with them
  */
 
-#include "include/read_uart.h"
+#include "tasks/include/read_uart.h"
 
 // For testing purposes
-#include "include/write_uart.h"
+#include "lib/include/write_uart.h"
 
-void initReadUART(void) {
+bool read_uart_init(void) {
   read_uart = xQueueCreate(Q_SIZE, sizeof(uint8_t));
+
+  if ( xTaskCreate(read_uart_task, (const portCHAR *)"Read UART", 128, NULL,
+                   tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+    return true;
+  }
+  return false;
 }
 
 void UARTIntHandler(void) {
@@ -29,45 +35,18 @@ void UARTIntHandler(void) {
   // Push to the queue
   xQueueSendToBackFromISR(read_uart, c, NULL);
 
-  // Optional LED blink to show its receiving
-  ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-
-  //
-  // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
-  //
-  ROM_SysCtlDelay(ROM_SysCtlClockGet() / (1000 * 3));
-
-  //
-  // Turn off the LED
-  //
-  ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
-
   }
 
 
 void read_uart_task(void* params) {
 
   // Qubobus driver code to assemble/interpret messages here
-  uint8_t *buffer;
+  uint8_t buffer[8] = "Recieved";
 
   for (;;) {
 
-    // Optional LED blink to show its receiving
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-
-    //
-    // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
-    //
-    ROM_SysCtlDelay(ROM_SysCtlClockGet() / (1000 * 3));
-
-    //
-    // Turn off the LED
-    //
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
-
-    bool status = false;
-    while ( !status ) {
-      status = uartWrite(0xFF, 1);
+    if ( xQueueReceive(read_uart, buffer, 0) == pdTRUE ) {
+      writeUART(&buffer, 8);
     }
   }
 }

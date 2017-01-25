@@ -1,4 +1,4 @@
-#include "include/example_uart.h"
+#include "tasks/include/example_uart.h"
 
 bool example_uart_init() {
   if ( xTaskCreate(example_uart_task, (const portCHAR *)"Example UART", 200, NULL, tskIDLE_PRIORITY + 1, NULL)

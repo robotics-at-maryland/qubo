@@ -1,6 +1,6 @@
 // THIS CODE WILL HAVE TO BE PORTED TO i2c.c HARDWARE LIBRARY
 
-#include "include/query_i2c.h"
+#include "lib/include/query_i2c.h"
 
 void initI2C(void) {
   //
@@ -317,7 +317,7 @@ void I2CIntHandler(void) {
 
 
 bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length) {
-  if ( xSemaphoreTake(i2c_mutex, 0) ) {
+  if ( xSemaphoreTake(i2c_mutex, 0) == pdTRUE ) {
 
     //
     // Save the data buffer to be written.
@@ -350,7 +350,7 @@ bool i2cWrite(uint8_t addr, uint8_t *data, uint32_t length) {
 
 
  bool i2cRead(uint8_t addr, uint8_t *data, uint32_t length) {
-   if ( xSemaphoreTake(i2c_mutex, 0) ) {
+   if ( xSemaphoreTake(i2c_mutex, 0) == pdTRUE ) {
     // Save the data buffer to be read.
     buffer = data;
     count = length;

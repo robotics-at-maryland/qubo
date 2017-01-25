@@ -35,7 +35,7 @@
 #include "driverlib/timer.h"
 #include "driverlib/gpio.h"
 #include "driverlib/interrupt.h"
-#include "include/rgb.h"
+#include "lib/include/rgb.h"
 
 //*****************************************************************************
 //

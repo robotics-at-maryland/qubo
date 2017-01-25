@@ -32,7 +32,7 @@
 #include "driverlib/rom_map.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/gpio.h"
-#include "include/buttons.h"
+#include "lib/include/buttons.h"
 
 //*****************************************************************************
 //

@@ -1,6 +1,21 @@
-#include "include/example_blink.h"
+#include "tasks/include/example_blink.h"
+
+
+static void example_blink_task(void* params) {
+
+  for (;;) {
+
+    blink_led(RED_LED, 1);
+    blink_led(BLUE_LED, 1);
+    blink_led(GREEN_LED, 1);
+
+  }
+
+}
 
 bool example_blink_init(void) {
+  // Setup code done in main already 
+  /*
   ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
   while(!ROM_SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOF))
     {
@@ -10,24 +25,14 @@ bool example_blink_init(void) {
   // Configure the GPIO port for the LED operation.
   //
   ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, RED_LED|BLUE_LED|GREEN_LED);
+  */
 
-  if ( xTaskCreate(example_blink_task, (const portCHAR *)"Example", 200, NULL, tskIDLE_PRIORITY + 1, NULL)
-      != pdTRUE) {
 
+  if ( xTaskCreate(example_blink_task, (const portCHAR *)"Example", 128, NULL,
+                   tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
 
   }
   return false;
 }
 
-
-static void example_blink_task(void* params) {
-
-  for (;;) {
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, RED_LED|GREEN_LED|BLUE_LED, RED_LED);
-    ROM_SysCtlDelay(5000000);
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, RED_LED|GREEN_LED|BLUE_LED, 0);
-    ROM_SysCtlDelay(5000000);
-  }
-
-}
