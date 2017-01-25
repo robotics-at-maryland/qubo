@@ -33,9 +33,6 @@ QueueHandle_t read_uart_queue;
 
 bool read_uart_init(void);
 
-// Triggered on a UART interrupt.
-static void UART0IntHandler(void);
-
 static void read_uart_task(void* params);
 
 #endif

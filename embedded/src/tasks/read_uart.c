@@ -27,11 +27,13 @@ static void read_uart_task(void* params) {
   uint8_t buffer[8] = "Recieved";
 
   for (;;) {
-
     if ( xQueueReceive(read_uart_queue, buffer, 0) == pdTRUE ) {
       rgb_on(BLUE_LED);
       writeUART(buffer, 8);
       rgb_off(BLUE_LED);
+    }
+    else {
+      taskYIELD();
     }
   }
 }
