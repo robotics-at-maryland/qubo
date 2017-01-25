@@ -3,7 +3,6 @@
    ross.baehr@gmail.com
 */
 
-
 // Uncomment if want debug messages sent to uart. Requires linking to be done with tiva drivers
 //#define DEBUG
 
@@ -12,6 +11,8 @@
 #include "tasks/include/read_uart.h"
 #include "tasks/include/example_blink.h"
 #include "tasks/include/example_uart.h"
+#include "tasks/include/blink_red.h"
+#include "tasks/include/blink_blue.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -106,6 +107,14 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName
   for (;;) {}
 }
 
+// Called when a tick interrupt happens
+// Can be used to confirm tick interrupt happening
+void vApplicationTickHook(void) {
+	#ifdef DEBUG
+  //UARTprintf("\nTick interrupt\n");
+	#endif
+}
+
 int main() {
 
   // Set the clocking to run at 50 MHz from the PLL
@@ -145,10 +154,19 @@ int main() {
   }
   */
 
+  if ( blink_red_init() ) {
+    while(1){}
+  }
 
+  if ( blink_blue_init() ) {
+    while(1){}
+  }
+
+  /*
   if ( read_uart_init() ) {
     while(1){}
   }
+  */
 
   /*
   if ( example_uart_init() ) {
