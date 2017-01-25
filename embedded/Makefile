@@ -1,4 +1,7 @@
-# If you have questions about this or something doesn't work, ask Ross
+# Ross Baehr
+# R@M 2017
+# ross.baehr@gmail.com
+
 # FreeRTOS and src objects are put into obj/
 # Tivaware objects are built in drivers/ and symlinked into obj/
 
