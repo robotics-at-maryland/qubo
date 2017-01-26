@@ -26,7 +26,7 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 fi
 
 # Installing additional packages.
-sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
