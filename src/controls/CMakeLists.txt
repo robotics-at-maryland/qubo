@@ -5,8 +5,7 @@ project(controls)
 # Catkin Setup ###############
 ##############################
 
-find_package(catkin 
-    REQUIRED COMPONENTS
+find_package(catkin REQUIRED COMPONENTS
     roscpp
     cv_bridge #these two are used in the camera node
     image_transport
@@ -32,7 +31,7 @@ include_directories(
 )
 
 set(PID_CONTROLLER_SRC_FILES
-  src/PIDController.cpp
+  src/pid_controller.cpp
 )
 
 ##############################
