@@ -32,6 +32,7 @@ include_directories(
 
 set(PID_CONTROLLER_SRC_FILES
   src/pid_controller.cpp
+  src/pid_controller_node.cpp
 )
 
 ##############################

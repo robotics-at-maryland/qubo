@@ -1,18 +1,30 @@
 #include "pid_controller.h"
 
-PIDController::PIDController() {}
+namespace Controls {
+
+PIDController::PIDController(ros::NodeHandle nh) {
+    // Initialize all instance variables to 0
+    desired_x = desired_y = desired_z = 0.0;
+    error_x = error_y = error_z = 0.0;
+    integral_error_x = integral_error_y = integral_error_z = 0.0;
+    prev_error_x = prev_error_y = prev_error_z = 0.0;
+    prev_time = ros::Time::now();
+
+    // Set up publishers and subscribers
+    robot_state_sub = nh.subscribe("current_state", 1, &PIDController::robot_state_callback, this);
+    desired_state_sub = nh.subscribe("desired_state", 1, &PIDController::desired_state_callback, this);
+}
+
 PIDController::~PIDController() {}
+
+void PIDController::run() {
+    ros::spin();
+}
 
 void PIDController::robot_state_callback(const nav_msgs::OdometryConstPtr& current_state) {
     // Calculate time passed since previous loop
-    ros::Duration dt;
-    if (!prev_time.isZero()) {
-        dt = ros::Time::now() - prev_time;
-        prev_time = ros::Time::now();
-    } else {
-        prev_time = ros::Time::now();
-        return;
-    }
+    ros::Duration dt = ros::Time::now() - prev_time;
+    prev_time = ros::Time::now();
     
     // Save previous errors
     prev_error_x = error_x;
@@ -61,11 +73,10 @@ void PIDController::robot_state_callback(const nav_msgs::OdometryConstPtr& curre
     /* Publish control efforts to thrusters */
 }
 
-void PIDController::setpoint_callback(const nav_msgs::OdometryConstPtr& desired_state) {
+void PIDController::desired_state_callback(const nav_msgs::OdometryConstPtr& desired_state) {
     desired_x = desired_state->pose.pose.position.x;
     desired_y = desired_state->pose.pose.position.y;
     desired_z = desired_state->pose.pose.position.z;
 }
 
-int main(int argc, char** argv) {
-}
+} // namespace Controls
