@@ -32,7 +32,7 @@ INCLUDEFLAG = -I
 CFLAGS = -g -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 CFLAGS +=-Os -ffunction-sections -fdata-sections -MD -std=c99
 CFLAGS += -pedantic -DPART_TM4C123GH6PM -c
-CFLAGS += -DTARGET_IS_BLIZZARD_RA1
+CFLAGS += -DTARGET_IS_TM4C123_RB2
 #CFLAGS = -mcpu=cortex-m4 -march=armv7e-m -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Dgcc -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -ffunction-sections -fdata-sections -g -gdwarf-3 -gstrict-dwarf -specs="nosys.specs" -MD -std=c99 -I$(TC_PATH)arm-none-eabi/include/
 
 LDFLAGS = -T $(LINKER_SCRIPT) --entry ResetISR --gc-sections
@@ -140,12 +140,14 @@ $(OBJDIR) :
 	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
 
 $(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
-	$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)
-#	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS) 
+#	$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)
+	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS) 
 
 
 
-debug : _debug_flags all
+# Want this to be used to pass macro DEBUG to compiler
+debug : 
+
 
 debug_rebuild : _debug_flags rebuild
 

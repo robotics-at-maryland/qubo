@@ -5,44 +5,6 @@
 
 #include "lib/include/query_i2c.h"
 
-void initI2C(void) {
-  //
-  // Enable the peripherals used by this example.
-  //
-  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-
-
-  //
-  // Configure the pin muxing for I2C0 functions on port B2 and B3.
-  // This step is not necessary if your part does not support pin muxing.
-  // TODO: change this to select the port/pin you are using.
-  //
-  ROM_GPIOPinConfigure(GPIO_PB2_I2C0SCL);
-  ROM_GPIOPinConfigure(GPIO_PB3_I2C0SDA);
-
-  // Select the I2C function for these pins.
-  ROM_GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
-  ROM_GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
-
-
-  //
-  // Initialize the I2C master.
-  //
-  ROM_I2CMasterInitExpClk(I2C_LIB_DEVICE, ROM_SysCtlClockGet(), false);
-
-  //
-  // Enable the I2C interrupt.
-  //
-  ROM_IntEnable(INT_I2C0);
-
-  //
-  // Enable the I2C master interrupt.
-  //
-  ROM_I2CMasterIntEnable(I2C_LIB_DEVICE);
-}
-
-
 void writeI2C(uint8_t addr, uint8_t *data, uint32_t length) {
 
   // If the i2c bus is busy, yield task and then try again

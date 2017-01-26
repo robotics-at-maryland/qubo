@@ -47,8 +47,6 @@ volatile uint16_t int_state;
 // ***************************************************************************
 
 
-void initI2C(void);
-
 //void I2CIntHandler(void);
 
 void writeI2C(uint8_t addr, uint8_t *data, uint32_t length);
