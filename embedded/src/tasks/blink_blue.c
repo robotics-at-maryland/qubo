@@ -11,7 +11,7 @@ static void blink_blue_task(void* params) {
   for (;;) {
 
     blink_rgb(BLUE_LED, 1);
-    vTaskDelay(500 / portTICK_RATE_MS);
+    vTaskDelay(1000 / portTICK_RATE_MS);
   }
 
 }

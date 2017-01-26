@@ -10,6 +10,6 @@
 
 QueueHandle_t read_uart_queue;
 
-void UARTIntHandler(void);
+extern void UARTIntHandler(void);
 
 #endif
