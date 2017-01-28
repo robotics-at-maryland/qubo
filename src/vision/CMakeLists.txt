@@ -65,14 +65,26 @@ set(GPU_VISION_SRC_FILES
   src/gpu_vision_node.cpp
   )
 
-set(TEST_FILES
-  src/blob_detection.cpp
+set(CANNY_TUNER_FILES
+  src/canny_tuner.cpp
   )
+
 
 set(SEGMENT_FILES
-  src/segmentation.cpp
+  src/prototypes/segmentation.cpp
   )
 
+set(EDGE_FILES
+  src/prototypes/edge_detection.cpp
+  )
+
+set(MOG_FILES
+  src/prototypes/mog.cpp
+  )
+
+set(EM_FILES
+  src/prototypes/em.cpp
+  )
 
 ##############################
 # Add Executables ############
@@ -88,12 +100,23 @@ target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
-add_executable(blob_test ${TEST_FILES})
-target_link_libraries(blob_test ${OpenCV_LIBRARIES})
+##below are all basically prototypes
 
+add_executable(canny_tuner ${CANNY_TUNER_FILES})
+target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
 add_executable(segment_test ${SEGMENT_FILES})
 target_link_libraries(segment_test ${OpenCV_LIBRARIES})
+
+add_executable(canny_test ${EDGE_FILES})
+target_link_libraries(canny_test ${OpenCV_LIBRARIES})
+
+add_executable(mog_test ${MOG_FILES})
+target_link_libraries(mog_test ${OpenCV_LIBRARIES})
+
+add_executable(em_test ${EM_FILES})
+target_link_libraries(em_test ${OpenCV_LIBRARIES})
+
 
 ##############################
 # Installable Targets ########
