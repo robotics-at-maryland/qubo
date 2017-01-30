@@ -65,10 +65,14 @@ set(GPU_VISION_SRC_FILES
   src/gpu_vision_node.cpp
   )
 
+##Tuners
+
 set(CANNY_TUNER_FILES
   src/canny_tuner.cpp
   )
 
+
+##Prototype algorithms
 
 set(SEGMENT_FILES
   src/prototypes/segmentation.cpp
@@ -84,6 +88,10 @@ set(MOG_FILES
 
 set(EM_FILES
   src/prototypes/em.cpp
+  )
+
+set(GFIT_FILES
+  src/prototypes/g_fit.cpp
   )
 
 ##############################
@@ -117,6 +125,8 @@ target_link_libraries(mog_test ${OpenCV_LIBRARIES})
 add_executable(em_test ${EM_FILES})
 target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
+add_executable(gfit_test ${GFIT_FILES})
+target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
 ##############################
 # Installable Targets ########

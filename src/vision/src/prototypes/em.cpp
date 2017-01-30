@@ -8,33 +8,52 @@ using namespace cv::ml;
 
 int main(int argc, char*argv[]){
     
-    //    if(argc != 2){
-    //    cout << "wrong number of arguments dummy, call \"a.out test_video\"" << endl;
-    //    return 0;
-    // }
-    cout << "OpenCV version : " << CV_VERSION << endl;
-    cout << "Major version : " << CV_MAJOR_VERSION << endl;
-    cout << "Minor version : " << CV_MINOR_VERSION << endl;
-    cout << "Subminor version : " << CV_SUBMINOR_VERSION << endl;
+    if(argc != 2){
+        cout << "wrong number of arguments dummy, call \"a.out test_video\"" << endl;
+        return 0;
+    }
+
+    
     
     // Read image
-    //VideoCapture cap = VideoCapture( argv[1] );
-    //Mat im;
-    //cap >> im;
+    VideoCapture cap = VideoCapture( argv[1] );
+    Mat im;
+    cap >> im;
     
-    // Convert input image to HSV
-    //Mat im_with_keypoints;
+    Mat im_with_keypoints;
+
+    
+    Mat planes[3];
+    split(im, planes);
+    imshow("plane1" , planes[0]);
+    imshow("plane2" , planes[1]);
+    imshow("plane3" , planes[2]);
+    waitKey(100000);
     
     //const TermCriteria termCrit(TermCriteria::COUNT+TermCriteria::EPS, EM::DEFAULT_MAX_ITERS, FLT_EPSILON);
     //EM test(1, (int)EM::COV_MAT_DIAGONAL, termCrit);
-    
-    //EM test();
 
-    //CvEMParams params(DEFAULT_NCLUSTERS, EM::COV_MAT_DIAGONAL, const termCrit=TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, EM::DEFAULT_MAX_ITERS, 1e-6))
+    if(im.empty()){
+        cout << "something went wrong the image is empty! (maybe a bad path)" << endl;
+        exit(0);
+    }
     
-    //    while(!im.empty()){
+    Ptr<EM> em = EM::create();
 
-    // waitKey(0);
-    //   cap >> im;
-    // }
+    vector<Mat> samples = {im};
+    
+    //em->trainEM(samples, im_with_keypoints, noArray(), noArray());
+    
+    
+    em->predict2(im, im_with_keypoints);
+
+    
+    cout << im_with_keypoints;
+    
+    // //CvEMParams params(DEFAULT_NCLUSTERS, EM::COV_MAT_DIAGONAL, const termCrit=TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, EM::DEFAULT_MAX_ITERS, 1e-6))
+        
+    while(!im.empty()){
+        waitKey(0);
+        cap >> im;
+    }
 }
