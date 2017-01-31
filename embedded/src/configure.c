@@ -30,6 +30,8 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
 
+  // Disable the sending interrupt
+  ROM_UARTIntDisable(UART0_BASE,UART_INT_TX);
   // Enable UART1 receive and receive timeout
   ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
 
@@ -58,6 +60,8 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
 
+  // Disable the sending interrupt
+  ROM_UARTIntDisable(UART1_BASE,UART_INT_TX);
   // Enable UART1 receive and receive timeout
   ROM_UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT);
 
