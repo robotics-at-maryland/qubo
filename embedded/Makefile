@@ -51,6 +51,9 @@ SRC = src/
 # Subdir of src
 TASKDIR = tasks/
 
+# subdir of src for interrupts
+INTERRUPTS = interrupts/
+
 # Intermediate directory for all *.o and other files:
 OBJDIR = obj/
 
@@ -103,7 +106,7 @@ UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
 TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS)
 
 # List of source file objects. Adds any c file in $(SRC) and $(SRC)$(TASKDIR)
-SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c) $(wildcard $(SRC)lib/*.c)
+SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c) $(wildcard $(SRC)lib/*.c) $(wildcard $(SRC)$(INTERRUPTS)*.c)
 SRC_OBJS := $(SRC_C_FILES:$(SRC)%=%)
 SRC_OBJS := $(SRC_OBJS:.c=.o)
 
@@ -137,11 +140,11 @@ tiva:
 	bash -c "make -C drivers/;./drivers/symlink_objs &> /dev/null"
 
 $(OBJDIR) :
-	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/
+	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/ $(OBJDIR)$(INTERRUPTS)
 
 $(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
-#	$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)
-	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS) 
+	$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)
+#	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS) 
 
 
 

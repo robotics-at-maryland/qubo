@@ -23,13 +23,13 @@
 
 #include "include/i2c0_globals.h"
 
-uint32_t address;
+uint32_t i2c0_address;
 
-uint8_t *buffer = 0;
+uint8_t *i2c0_buffer;
 
-uint32_t count = 0;
+uint32_t i2c0_count;
 
-volatile uint16_t int_state = STATE_IDLE;
+volatile uint16_t i2c0_int_state;
 
 void I2C0IntHandler(void);
 

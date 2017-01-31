@@ -360,10 +360,3 @@ IntDefaultHandler(void)
     {
     }
 }
-
-
-// Include the source file here, just for easier organization
-#include "interrupts/uart0_interrupt.c"
-#include "interrupts/uart1_interrupt.c"
-
-#include "interrupts/i2c0_interrupt.c"
