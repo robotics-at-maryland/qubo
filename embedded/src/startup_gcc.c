@@ -31,8 +31,10 @@
 #include <driverlib/uart.h>
 
 // Include prototypes and specific defs of the interrupts
-#include "interrupts/include/uart_interrupt.h"
-#include "interrupts/include/i2c_interrupt.h"
+#include "interrupts/include/uart0_interrupt.h"
+#include "interrupts/include/uart1_interrupt.h"
+
+#include "interrupts/include/i2c0_interrupt.h"
 
 
 //*****************************************************************************
@@ -99,10 +101,10 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // GPIO Port C
     IntDefaultHandler,                      // GPIO Port D
     IntDefaultHandler,                      // GPIO Port E
-    UARTIntHandler,                      // UART0 Rx and Tx
-    IntDefaultHandler,                      // UART1 Rx and Tx
+    UART0IntHandler,                      // UART0 Rx and Tx
+    UART1IntHandler,                      // UART1 Rx and Tx
     IntDefaultHandler,                      // SSI0 Rx and Tx
-    I2CIntHandler,                      // I2C0 Master and Slave
+    I2C0IntHandler,                      // I2C0 Master and Slave
     IntDefaultHandler,                      // PWM Fault
     IntDefaultHandler,                      // PWM Generator 0
     IntDefaultHandler,                      // PWM Generator 1
@@ -361,5 +363,7 @@ IntDefaultHandler(void)
 
 
 // Include the source file here, just for easier organization
-#include "interrupts/uart_interrupt.c"
-#include "interrupts/i2c_interrupt.c"
+#include "interrupts/uart0_interrupt.c"
+#include "interrupts/uart1_interrupt.c"
+
+#include "interrupts/i2c0_interrupt.c"

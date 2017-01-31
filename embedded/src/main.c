@@ -8,7 +8,7 @@
 
 //QSCU
 #include "include/task_constants.h"
-#include "tasks/include/read_uart.h"
+#include "tasks/include/read_uart0.h"
 #include "tasks/include/example_blink.h"
 #include "tasks/include/example_uart.h"
 #include "tasks/include/blink_red.h"
@@ -38,15 +38,20 @@
 #endif
 
 // Globals
-#include "include/i2c_mutex.h"
-#include "include/uart_mutex.h"
+#include "include/i2c0_mutex.h"
+#include "include/uart0_mutex.h"
+#include "include/uart1_mutex.h"
 #include "include/rgb_mutex.h"
-#include "include/read_uart_queue.h"
+#include "include/read_uart0_queue.h"
+#include "include/read_uart1_queue.h"
 
-SemaphoreHandle_t i2c_mutex;
-SemaphoreHandle_t uart_mutex;
+SemaphoreHandle_t i2c0_mutex;
+SemaphoreHandle_t uart0_mutex;
+SemaphoreHandle_t uart1_mutex;
 SemaphoreHandle_t rgb_mutex;
-QueueHandle_t read_uart_queue;
+
+QueueHandle_t read_uart0_queue;
+QueueHandle_t read_uart1_queue;
 
 
 #ifdef DEBUG
@@ -174,11 +179,14 @@ int main() {
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
   // -----------------------------------------------------------------------
 
-  uart_mutex = xSemaphoreCreateMutex();
-  i2c_mutex = xSemaphoreCreateMutex();
+  uart0_mutex = xSemaphoreCreateMutex();
+  uart1_mutex = xSemaphoreCreateMutex();
+  i2c0_mutex = xSemaphoreCreateMutex();
   rgb_mutex = xSemaphoreCreateMutex();
 
-  read_uart_queue = xQueueCreate(READ_UART_Q_SIZE, sizeof(uint8_t));
+  read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
+  read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
+
 
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
@@ -190,25 +198,16 @@ int main() {
   }
   */
 
-  if ( blink_red_init() ) {
-    while(1){}
-  }
-
-  if ( blink_blue_init() ) {
-    while(1){}
-  }
-
   /*
   if ( read_uart_init() ) {
     while(1){}
   }
   */
 
-  /*
   if ( example_uart_init() ) {
     while(1){}
   }
-  */
+
 
   vTaskStartScheduler();
 

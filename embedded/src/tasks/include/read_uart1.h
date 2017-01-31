@@ -3,12 +3,11 @@
    ross.baehr@gmail.com
 */
 
-#ifndef _EXAMPLE_UART_H_
-#define _EXAMPLE_UART_H_
+#ifndef _READUART1_H_
+#define _READUART1_H_
 
-#include "include/read_uart1_queue.h"
-#include "lib/include/write_uart1.h"
 #include "lib/include/rgb.h"
+#include "include/read_uart1_queue.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -29,8 +28,8 @@
 
 QueueHandle_t read_uart1_queue;
 
-bool example_uart_init(void);
+bool read_uart1_init(void);
 
-static void example_uart_task(void *params);
+static void read_uart1_task(void* params);
 
 #endif

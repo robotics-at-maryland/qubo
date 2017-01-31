@@ -17,10 +17,13 @@ bool example_uart_init() {
 
 static void example_uart_task(void *params) {
 
-  uint8_t buffer = 0xFF;
+  uint8_t rx_buffer;
+  uint8_t tx_buffer = 0xFF;
 
   for (;;) {
-    uartWrite(&buffer, 1);
-    ROM_SysCtlDelay(2000000);
+    if ( xQueueReceive(read_uart1_queue, &rx_buffer, 0) == pdTRUE ) {
+      blink_rgb(BLUE_LED, 1);
+    }
+    writeUART1(&tx_buffer, 1);
   }
 }
