@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
+set(OpenCV_DIR /usr/share/OpenCV/)
+
 #Find stuff we need
 find_package(catkin
   REQUIRED COMPONENTS
