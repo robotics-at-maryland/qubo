@@ -25,7 +25,7 @@ AhrsQuboNode::AhrsQuboNode(std::shared_ptr<ros::NodeHandle> n,
 	try{
 		ahrs->openDevice();
 	}catch(AHRSException& ex){
-		ROS_ERROR(ex.what());
+		ROS_ERROR("%s", ex.what());
 		return;
 	}
 
@@ -57,7 +57,7 @@ void AhrsQuboNode::update(){
 		}catch(AHRSException& ex){
 			ROS_ERROR("Attempt %i to connect to AHRS failed.", attmepts++);
 			ROS_ERROR("DEVICE NOT FOUND! ");
-			ROS_ERROR(ex.what());
+			ROS_ERROR("%s", ex.what());
 			if(attmepts > MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find device, exiting node.");
 				exit(-1);
@@ -73,7 +73,7 @@ void AhrsQuboNode::update(){
 	}catch(AHRSException& ex){
 		//every so often an exception gets thrown and hangs on my vm
 		//This might be solved by running ROS on actual hardware
-		ROS_WARN(ex.what());
+		ROS_WARN("%s", ex.what());
 		return;
 	}
 

@@ -4,6 +4,7 @@ project(vl_qubo)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
+    ram_msgs
 )
 
 
@@ -24,6 +25,7 @@ include_directories(
   drivers/dvl/include
 
   ahrs/include
+  dvl/include
   include
 
 )
@@ -41,6 +43,8 @@ set(AHRS_SRC_FILES
 
 #SG: ditto above
 set(DVL_SRC_FILES
+         dvl/src/main.cpp
+         dvl/src/dvl_qubo.cpp
          drivers/dvl/src/DVL.cpp
 )
 
@@ -72,6 +76,9 @@ add_executable(ahrs_baudrate ${AHRS_BAUDRATE_SRC_FILES})
 
 add_executable(qubo_ahrs_node ${AHRS_SRC_FILES})
 target_link_libraries(qubo_ahrs_node ${catkin_LIBRARIES})
+
+add_executable(qubo_dvl_node ${DVL_SRC_FILES})
+target_link_libraries(qubo_dvl_node ${catkin_LIBRARIES})
 
 
 ##############################
