@@ -9,12 +9,11 @@ LINKER_SCRIPT = $(SRC)tiva.ld
 ELF_IMAGE = image.elf
 TARGET = image.bin
 
-TC_PATH = /opt/arm-none-eabi/
-
 # You shouldn't need to edit anything below here
 #########################################################################
 # FLAGS                                                                 #
 #########################################################################
+
 TOOLCHAIN = arm-none-eabi-
 CC = $(TOOLCHAIN)gcc
 CXX = $(TOOLCHAIN)g++
@@ -37,6 +36,8 @@ CFLAGS += -DTARGET_IS_TM4C123_RB2
 
 LDFLAGS = -T $(LINKER_SCRIPT) --entry ResetISR --gc-sections
 
+# Default debug off unless ran with make debug
+DEBUG = OFF
 
 ##########################################################################
 # LOCATIONS                                                              #
@@ -131,31 +132,36 @@ DEP_FRTOS_CONFIG = $(SRC)FreeRTOSConfig.h
 
 all : $(TARGET)
 
-rebuild : clean all
+debug: clean debug_flag all
+
+debug_flag: tiva
+	$(eval DEBUG := ON)
+	$(eval CFLAGS += $(DEB_FLAG))
+	@echo "Debug GO ON"
+
+tiva:
+	bash -c "cd drivers;./symlink_objs &> /dev/null"
+
+rebuild : clean
 
 $(TARGET) : $(OBJDIR) $(ELF_IMAGE)
 	$(OBJCOPY) -O binary $(word 2,$^) $@
-
-tiva:
-	bash -c "make -C drivers/;./drivers/symlink_objs &> /dev/null"
 
 $(OBJDIR) :
 	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/ $(OBJDIR)$(INTERRUPTS)
 
 $(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
-	$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)
-#	$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS) 
-
-
-
-# Want this to be used to pass macro DEBUG to compiler
-debug : 
-
-
-debug_rebuild : _debug_flags rebuild
-
-_debug_flags :
-	$(eval CFLAGS += $(DEB_FLAG))
+	@if [ $(DEBUG) = "ON" ]; then \
+		echo "_____________________________________________________________";\
+		echo "Debug on";\
+		echo "$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS)";\
+		$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS);\
+	else \
+		echo "_____________________________________________________________";\
+		echo "Debug off";\
+		echo "$(LD) $(OFLAG) $@ $^ $(LDFLAGS)";\
+		$(LD) $(OFLAG) $@ $^ $(LDFLAGS);\
+	fi
 
 # Objects for files in $(SRC) and $(SRC)$(TASKDIR)
 $(OBJDIR)%.o: $(SRC)%.c $(SRC)include/* $(OBJDIR)
@@ -174,9 +180,11 @@ $(OBJDIR)%.o: $(FREERTOS_PORT_SRC)%.c $(DEP_FRTOS_CONFIG)
 # Cleanup directives:
 
 clean_obj :
-	$(RM) $(OBJDIR)*
-	$(RM) $(OBJDIR)$(TASKDIR)*
-	$(RM) $(OBJDIR)lib/*
+	$(RM) $(OBJDIR)*.o $(OBJDIR)*.d
+	$(RM) $(OBJDIR)$(TASKDIR)*.o $(OBJDIR)$(TASKDIR)*.d 
+	$(RM) $(OBJDIR)lib/*.o	$(RM) $(OBJDIR)lib/*.d
+	$(RM) $(OBJDIR)$(INTERRUPTS)*.o $(OBJDIR)$(INTERRUPTS)*.d
+
 
 clean_intermediate : clean_obj
 	$(RM) *.elf
@@ -192,19 +200,5 @@ flash:
 # Short help instructions:
 
 print-%  : ; @echo $* = $($*)
-
-help :
-	@echo
-	@echo Valid targets:
-	@echo - all: builds missing dependencies and creates the target image \'$(IMAGE)\'.
-	@echo - rebuild: rebuilds all dependencies and creates the target image \'$(IMAGE)\'.
-	@echo - debug: same as \'all\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
-	@echo - debug_rebuild: same as \'rebuild\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
-	@echo - clean_obj: deletes all object files, only keeps \'$(ELF_IMAGE)\' and \'$(IMAGE)\'.
-	@echo - clean_intermediate: deletes all intermediate binaries, only keeps the target image \'$(IMAGE)\'.
-	@echo - clean: deletes all intermediate binaries, incl. the target image \'$(IMAGE)\'.
-	@echo - help: displays these help instructions.
-	@echo
-
 
 .PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help
