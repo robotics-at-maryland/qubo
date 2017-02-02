@@ -77,6 +77,10 @@
  * See heap_1.c, heap_2.c and heap_3.c for alternative implementations, and the
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
+
+#ifndef _HEAP_4_H_
+#define _HEAP_4_H_
+
 #include <stdlib.h>
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
@@ -171,3 +175,4 @@ static void prvHeapInit( void );
 
 static void prvInsertBlockIntoFreeList( BlockLink_t *pxBlockToInsert );
 
+#endif
