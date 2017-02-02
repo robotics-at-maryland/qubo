@@ -63,15 +63,15 @@ void configureUART(void)
   //
   // Enable port PC5 for UART1 U1TX
   //
-  ROM_GPIOPinConfigure(GPIO_PC5_U1TX);
   ROM_GPIOPinTypeUART(GPIO_PORTC_BASE, GPIO_PIN_5);
+  ROM_GPIOPinConfigure(GPIO_PC5_U1TX);
 
   //
   // Use the internal 16MHz oscillator as the UART clock source.
   //
   ROM_UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
 
-  ROM_IntEnable(INT_UART0);
+  ROM_IntEnable(INT_UART1);
   // Disable the sending interrupt
   ROM_UARTIntDisable(UART1_BASE,UART_INT_TX);
   // Enable UART1 receive and receive timeout
