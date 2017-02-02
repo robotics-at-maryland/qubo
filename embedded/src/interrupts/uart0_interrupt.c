@@ -6,6 +6,8 @@
 // Queue for the UART interrupt
 #include "interrupts/include/uart0_interrupt.h"
 
+#include "lib/include/rgb.h"
+
 // Interrupt for UART
 void UART0IntHandler(void) {
   uint32_t status = ROM_UARTIntStatus(UART_DEVICE, true);
@@ -20,7 +22,8 @@ void UART0IntHandler(void) {
   // Get one byte
   // Tivaware casts the byte to a int32_t for some reason, cast back to save space
   uint8_t c = (uint8_t)(ROM_UARTCharGetNonBlocking(UART_DEVICE));
+
+  //ROM_UARTCharPutNonBlocking(UART_DEVICE, c);
   // Push to the queue
   xQueueSendToBackFromISR(read_uart0_queue, &c, NULL);
-
 }

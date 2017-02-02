@@ -30,10 +30,21 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
 
+  ROM_IntEnable(INT_UART0);
   // Disable the sending interrupt
   ROM_UARTIntDisable(UART0_BASE,UART_INT_TX);
   // Enable UART1 receive and receive timeout
   ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
+
+  #ifdef DEBUG
+  //
+  // Initialize the UART for console I/O.
+  //
+  UARTStdioConfig(0, 115200, 16000000);
+
+  UARTprintf("\nUART0 configured\n");
+  #endif
+
 
 
   // -----------------------------------------------------------
@@ -60,17 +71,16 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
 
+  ROM_IntEnable(INT_UART0);
   // Disable the sending interrupt
   ROM_UARTIntDisable(UART1_BASE,UART_INT_TX);
   // Enable UART1 receive and receive timeout
   ROM_UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT);
 
   #ifdef DEBUG
-  //
-  // Initialize the UART for console I/O.
-  //
-  UARTStdioConfig(0, 115200, 16000000);
+  UARTprintf("UART1 configured\n");
   #endif
+
 }
 
 void configureGPIO(void) {
@@ -84,7 +94,9 @@ void configureGPIO(void) {
   // Configure the GPIO port for the LED operation.
   //
   ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);
-
+  #ifdef DEBUG
+  UARTprintf("GPIO configured\n");
+  #endif
 }
 
 void configureI2C(void) {
@@ -122,4 +134,8 @@ void configureI2C(void) {
   // Enable the I2C master interrupt.
   //
   ROM_I2CMasterIntEnable(I2C0_BASE);
+
+  #ifdef DEBUG
+  UARTprintf("I2C configured\n");
+  #endif
 }
