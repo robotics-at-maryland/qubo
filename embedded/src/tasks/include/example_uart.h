@@ -7,7 +7,8 @@
 #define _EXAMPLE_UART_H_
 
 #include "include/read_uart0_queue.h"
-#include "lib/include/write_uart0.h"
+#include "include/read_uart1_queue.h"
+#include "lib/include/write_uart.h"
 #include "lib/include/rgb.h"
 
 // FreeRTOS
@@ -28,6 +29,7 @@
 #include <driverlib/uart.h>
 
 QueueHandle_t read_uart0_queue;
+QueueHandle_t read_uart1_queue;
 
 bool example_uart_init(void);
 

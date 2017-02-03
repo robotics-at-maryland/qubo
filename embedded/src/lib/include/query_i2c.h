@@ -7,8 +7,8 @@
    Library that can be used to send to I2C bus and receive data
  */
 
-#ifndef _QUERY_I2C0_H_
-#define _QUERY_I2C0_H_
+#ifndef _QUERY_I2C_H_
+#define _QUERY_I2C_H_
 
 #include "include/i2c0_mutex.h"
 #include "include/i2c0_globals.h"
@@ -29,9 +29,6 @@
 #include <driverlib/pin_map.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/i2c.h>
-
-// The device to perform on
-#define I2C_DEVICE I2C0_BASE
 
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
 SemaphoreHandle_t i2c0_mutex;

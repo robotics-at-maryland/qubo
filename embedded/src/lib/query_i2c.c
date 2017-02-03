@@ -3,7 +3,7 @@
    ross.baehr@gmail.com
 */
 
-#include "lib/include/query_i2c0.h"
+#include "lib/include/query_i2c.h"
 
 void writeI2C0(uint8_t addr, uint8_t *data, uint32_t length) {
 
@@ -29,7 +29,7 @@ void writeI2C0(uint8_t addr, uint8_t *data, uint32_t length) {
   }
 
   // Set the slave i2c0_address and setup for a transmit operation.
-  ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, i2c0_address, false);
+  ROM_I2CMasterSlaveAddrSet(I2C0_BASE, i2c0_address, false);
 
   // Wait until the SoftI2C callback state machine is idle.
   while(i2c0_int_state != STATE_IDLE)
