@@ -30,12 +30,28 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 		return;
 	}
 
+    dvl->loadFactorySettings();
+    
+    dvl->enableMeasurement();
+    //checks the parameter server to see if we have water data,
+    //sets them if we don't
+    // if(!n.getParam("salinity", live_cond.salinity)){
+    //     live_cond.salinity = 0;
+    //     n.setParam("salinity" salinity);
+    // }
+    // if(!n.getParam("temperature", live_cond.temperature)){
+    //     live_cond.temperature = 0;
+    //     n.setParam("temperature", live_cond.temperature);
+    // }
+
+
 	//INSERT CONFIG HERE~~~~~~
 
 	ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
 }
 
 DvlQuboNode::~DvlQuboNode(){
+    dvl->disableMeasurement();
 	dvl->closeDevice();
 }
 
@@ -55,17 +71,17 @@ void DvlQuboNode::update(){
 			}
 		}
 	}
+    attempts = 0;
 
 	ROS_DEBUG("Beginning to read data from the DVL");
 
-	dvl->enableMeasurement();
+
 	try{
 		sensor_data = dvl->getDVLData();
 	}catch(DVLException ex){
 		ROS_WARN("%s", ex.what());
 		return;
 	}
-	dvl->disableMeasurement();
 
 	//begin constructing the ros msg
 	//Currently assuming the data is formatted similar to the

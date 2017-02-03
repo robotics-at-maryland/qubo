@@ -48,23 +48,24 @@ AhrsQuboNode::~AhrsQuboNode(){
 
 void AhrsQuboNode::update(){
 	static int id = 0;
-	static int attmepts = 0;
+	static int attempts = 0;
 
 	//if we aren't connected yet, lets try a few more times
 	if(!ahrs->isOpen()){
 		try{
 			ahrs->openDevice();
 		}catch(AHRSException& ex){
-			ROS_ERROR("Attempt %i to connect to AHRS failed.", attmepts++);
+			ROS_ERROR("Attempt %i to connect to AHRS failed.", attempts++);
 			ROS_ERROR("DEVICE NOT FOUND! ");
 			ROS_ERROR("%s", ex.what());
-			if(attmepts > MAX_CONNECTION_ATTEMPTS){
+			if(attempts > MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find device, exiting node.");
 				exit(-1);
 			}
 			return;
 		}
 	}
+	attempts = 0;
 
 	ROS_DEBUG("Beginning to read data");
 	//sit and wait for an update

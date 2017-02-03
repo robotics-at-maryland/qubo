@@ -48,12 +48,23 @@ protected:
 	 * just killing the node
 	 */
 	const int MAX_CONNECTION_ATTEMPTS = 10;
-	
+
 	/**
 	 * defined in DVL driver
 	 * its the data the DVL collects
 	 */
 	DVL::DVLData sensor_data;
 
+	/**
+	 * defined in DVL types
+	 * data used to get more accurate readings from the DVL
+	 */
+	DVL::LiveConditions live_cond;
+
+	/**
+	 * defined in DVL types
+	 * sets up the DVL
+	 */
+	DVL::VehicleConfig v_config;
 };
 #endif
