@@ -17,41 +17,42 @@ will symlink the drivers the tiva Makefile outputted into our `obj/` directory. 
 the tiva object files in your `obj/` directory, run this script.
 
 ##Includes
-Includes are relative to: *INC_FLAGS = -IFreeRTOS/Source/include/ -IFreeRTOS/Source/portable/GCC/ARM_CM4F/ -Idrivers/ -Isrc/*  
+Includes are relative to:  
+*INC_FLAGS = -IFreeRTOS/Source/include/ -IFreeRTOS/Source/portable/GCC/ARM_CM4F/ -Idrivers/ -Isrc/*  
 Use <> for tiva or FreeRTOS includes. Use "" for our source files.  
 
 ##Basic overview of directory:
-├── drivers
-│   ├── driverlib
-│   ├── inc
-│   ├── Makefile
-│   ├── symlink_objs
-│   └── utils
-├── FreeRTOS
-│   ├── Source
-│   │   ├── include
-│   │   ├── portable
-│   │   │   ├── GCC
-│   │   │   │   └── ARM_CM4F
-│   │   │   ├── MemMang
-├── image.bin
-├── image.elf
-├── Makefile
-├── obj
-├── setenv.sh
-└── src
-    ├── main.c
-    ├── configure.c
-    ├── startup_gcc.c
-    ├── FreeRTOSConfig.h
-    ├── include
-    ├── interrupts
-    │   ├── include
-    ├── lib
-    │   ├── include
-    ├── tasks
-    │   ├── include
-    └── tiva.ld
+├── drivers  
+│   ├── driverlib  
+│   ├── inc  
+│   ├── Makefile  
+│   ├── symlink_objs  
+│   └── utils  
+├── FreeRTOS  
+│   ├── Source  
+│   │   ├── include  
+│   │   ├── portable  
+│   │   │   ├── GCC  
+│   │   │   │   └── ARM_CM4F  
+│   │   │   ├── MemMang  
+├── image.bin  
+├── image.elf  
+├── Makefile  
+├── obj  
+├── setenv.sh  
+└── src  
+    ├── main.c  
+    ├── configure.c  
+    ├── startup_gcc.c  
+    ├── FreeRTOSConfig.h  
+    ├── include  
+    ├── interrupts  
+    │   ├── include  
+    ├── lib  
+    │   ├── include  
+    ├── tasks  
+    │   ├── include  
+    └── tiva.ld  
     
 ##DEBUG
 To compile a debug binary run `make debug`  
