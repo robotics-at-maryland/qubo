@@ -26,6 +26,10 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
+#ifdef DEBUG
+#include <utils/uartstdio.h>
+#endif
+
 QueueHandle_t read_uart0_queue;
 
 bool read_uart0_init(void);

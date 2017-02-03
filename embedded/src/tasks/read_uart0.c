@@ -14,7 +14,7 @@
 // For testing purposes
 //#include "lib/include/write_uart0.h"
 
-bool read_uart0_init(void) { 
+bool read_uart0_init(void) {
   if ( xTaskCreate(read_uart0_task, (const portCHAR *)"Read UART0", 128, NULL,
                    tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
@@ -27,16 +27,17 @@ bool read_uart0_init(void) {
 static void read_uart0_task(void* params) {
 
   // Qubobus driver code to assemble/interpret messages here
-  uint8_t buffer[8] = "Recieved";
+  uint8_t buffer;
 
   for (;;) {
-    if ( xQueueReceive(read_uart0_queue, buffer, 0) == pdTRUE ) {
-      rgb_on(BLUE_LED);
-      writeUART0( buffer, 8);
-      rgb_off(BLUE_LED);
-    }
-    else {
-      taskYIELD();
+    if ( xQueueReceive(read_uart0_queue, &buffer, 0) == pdTRUE ) {
+      writeUART1(&buffer, 1);
+
+      #ifdef DEBUG
+      UARTprintf("Writing to UART1\n");
+      #endif
+
+      blink_rgb(BLUE_LED, 1);
     }
   }
 }

@@ -29,7 +29,8 @@ void writeI2C0(uint8_t addr, uint8_t *data, uint32_t length) {
   }
 
   // Set the slave i2c0_address and setup for a transmit operation.
-  ROM_I2CMasterSlaveAddrSet(I2C0_BASE, i2c0_address, false);
+  // Tiva shifts the address left, we need to offset it
+  ROM_I2CMasterSlaveAddrSet(I2C0_BASE, i2c0_address>>1, false);
 
   // Wait until the SoftI2C callback state machine is idle.
   while(i2c0_int_state != STATE_IDLE)

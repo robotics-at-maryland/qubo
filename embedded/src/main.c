@@ -7,6 +7,7 @@
 #include "include/configure.h"
 #include "include/task_constants.h"
 #include "tasks/include/read_uart0.h"
+#include "tasks/include/read_uart1.h"
 #include "tasks/include/example_blink.h"
 #include "tasks/include/example_uart.h"
 #include "tasks/include/blink_red.h"
@@ -89,14 +90,6 @@ int main() {
   // Master enable interrupts
   ROM_IntMasterEnable();
 
-  #ifdef DEBUG
-  UARTprintf("Active Interrupts: %x\n", HWREG(NVIC_ACTIVE0));
-  UARTprintf("Active Interrupts: %x\n", HWREG(NVIC_ACTIVE1));
-  UARTprintf("Active Interrupts: %x\n", HWREG(NVIC_ACTIVE2));
-  UARTprintf("Active Interrupts: %x\n", HWREG(NVIC_ACTIVE3));
-  UARTprintf("Active Interrupts: %x\n", HWREG(NVIC_ACTIVE4));
-  #endif
-
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
@@ -130,10 +123,19 @@ int main() {
   }
   */
 
+  /*
   if ( example_uart_init() ) {
     while(1){}
   }
+  */
 
+  if ( read_uart0_init() ) {
+    while(1){}
+  }
+
+  if ( read_uart1_init() ) {
+    while(1){}
+  }
 
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
