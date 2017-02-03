@@ -40,19 +40,19 @@ Use <> for tiva or FreeRTOS includes. Use "" for our source files.
 ├── Makefile  
 ├── obj  
 ├── setenv.sh  
-└── src  
-    ├── main.c  
-    ├── configure.c  
-    ├── startup_gcc.c  
-    ├── FreeRTOSConfig.h  
-    ├── include  
-    ├── interrupts  
-    │   ├── include  
-    ├── lib  
-    │   ├── include  
-    ├── tasks  
-    │   ├── include  
-    └── tiva.ld  
+├── src  
+│   ├── main.c  
+│   ├── configure.c  
+│   ├── startup_gcc.c  
+│   ├── FreeRTOSConfig.h  
+│   ├── include  
+│   ├── interrupts  
+│   │   ├── include  
+│   ├── lib  
+│   │   ├── include  
+│   ├── tasks  
+│   │   ├── include  
+└── └── tiva.ld  
     
 ##DEBUG
 To compile a debug binary run `make debug`  
