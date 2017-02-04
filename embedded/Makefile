@@ -137,7 +137,6 @@ debug: clean debug_flag all
 debug_flag: tiva
 	$(eval DEBUG := ON)
 	$(eval CFLAGS += $(DEB_FLAG))
-	@echo "Debug GO ON"
 
 tiva:
 	bash -c "cd drivers;./symlink_objs &> /dev/null"
