@@ -19,7 +19,7 @@
 
 #include "include/read_uart0_queue.h"
 
-QueueHandle_t read_uart0_queue;
+volatile QueueHandle_t read_uart0_queue;
 
 void UART0IntHandler(void);
 

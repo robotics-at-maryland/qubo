@@ -21,16 +21,19 @@ static void example_uart_task(void *params) {
   uint8_t tx_buffer = 0x61;
 
   for (;;) {
-    if ( xQueueReceive(read_uart0_queue, &rx_buffer, 0) == pdTRUE ) {
+    if ( xQueueReceive(read_uart1_queue, &rx_buffer, 0) == pdTRUE ) {
       #ifdef DEBUG
-      //UARTprintf("Reading from queue\n");
+      UARTprintf("Reading from queue\n");
       #endif
-      writeUART0(&rx_buffer, 1);
-      blink_rgb(GREEN_LED, 1);
+      //writeUART1(&rx_buffer, 1);
+      blink_rgb(BLUE_LED, 1);
     }
     else {
-      blink_rgb(RED_LED, 1);
-      //writeUART0(&tx_buffer, 1);
+      blink_rgb(GREEN_LED, 1);
+      writeUART1(&tx_buffer, 1);
+      #ifdef DEBUG
+      UARTprintf("Writing to UART1\n");
+      #endif
     }
   }
 }

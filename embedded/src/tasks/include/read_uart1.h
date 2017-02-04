@@ -30,7 +30,7 @@
 #include <utils/uartstdio.h>
 #endif
 
-QueueHandle_t read_uart1_queue;
+volatile QueueHandle_t read_uart1_queue;
 
 bool read_uart1_init(void);
 

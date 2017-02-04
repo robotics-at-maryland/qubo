@@ -31,6 +31,7 @@
 #include <driverlib/rom.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
+#include <driverlib/fpu.h>
 
 // If debug defined, can use this to print to UART
 #ifdef DEBUG
@@ -45,13 +46,13 @@
 #include "include/read_uart0_queue.h"
 #include "include/read_uart1_queue.h"
 
-SemaphoreHandle_t i2c0_mutex;
-SemaphoreHandle_t uart0_mutex;
-SemaphoreHandle_t uart1_mutex;
-SemaphoreHandle_t rgb_mutex;
+volatile SemaphoreHandle_t i2c0_mutex;
+volatile SemaphoreHandle_t uart0_mutex;
+volatile SemaphoreHandle_t uart1_mutex;
+volatile SemaphoreHandle_t rgb_mutex;
 
-QueueHandle_t read_uart0_queue;
-QueueHandle_t read_uart1_queue;
+volatile QueueHandle_t read_uart0_queue;
+volatile QueueHandle_t read_uart1_queue;
 
 
 #ifdef DEBUG
@@ -77,6 +78,10 @@ void vApplicationTickHook(void) {
 }
 
 int main() {
+
+  // Enable floating point operations
+  ROM_FPULazyStackingEnable();
+  ROM_FPUEnable();
 
   // Set the clocking to run at 50 MHz from the PLL
   ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ |

@@ -39,5 +39,6 @@ static void read_uart0_task(void* params) {
 
       blink_rgb(BLUE_LED, 1);
     }
+    vTaskDelay(25 / portTICK_RATE_MS);
   }
 }

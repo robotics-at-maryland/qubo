@@ -28,8 +28,8 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
-QueueHandle_t read_uart0_queue;
-QueueHandle_t read_uart1_queue;
+volatile QueueHandle_t read_uart0_queue;
+volatile QueueHandle_t read_uart1_queue;
 
 bool example_uart_init(void);
 

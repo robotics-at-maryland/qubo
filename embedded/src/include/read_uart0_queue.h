@@ -11,6 +11,6 @@
 
 #define READ_UART0_Q_SIZE 64
 
-extern QueueHandle_t read_uart0_queue;
+extern volatile QueueHandle_t read_uart0_queue;
 
 #endif

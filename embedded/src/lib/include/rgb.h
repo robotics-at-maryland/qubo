@@ -30,7 +30,7 @@
 
 #define BLINK_RATE 250
 
-SemaphoreHandle_t blink_mutex;
+volatile SemaphoreHandle_t blink_mutex;
 
 // Blink the RGB led color c and n times
 void blink_rgb(uint8_t color, uint8_t n);
