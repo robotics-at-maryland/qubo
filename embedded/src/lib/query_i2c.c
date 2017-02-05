@@ -12,11 +12,11 @@
 static void assign_vars(uint32_t device) {
   switch(device) {
   case I2C0_BASE:
-    i2c_mutex = &i2c0_mutex;
-    i2c_address = &i2c0_address;
-    i2c_buffer = &i2c0_buffer;
-    i2c_count = &i2c0_count;
-    i2c_int_state = &i2c0_int_state;
+    i2c_mutex = i2c0_mutex;
+    i2c_address = i2c0_address;
+    i2c_buffer = i2c0_buffer;
+    i2c_count = i2c0_count;
+    i2c_int_state = i2c0_int_state;
     break;
   }
 }

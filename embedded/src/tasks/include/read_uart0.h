@@ -7,6 +7,7 @@
 #define _READUART0_H_
 
 #include "lib/include/rgb.h"
+#include "lib/include/write_uart.h"
 #include "include/read_uart0_queue.h"
 
 // FreeRTOS

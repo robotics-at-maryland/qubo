@@ -18,14 +18,14 @@
 // ****************************************************************************
 
 // Address of slave
-extern volatile uint32_t i2c0_address;
+extern volatile uint32_t *i2c0_address;
 
 // The variables that track the data to be transmitted or received.
-extern volatile uint8_t *i2c0_buffer;
-extern volatile uint32_t i2c0_count;
+extern volatile uint8_t **i2c0_buffer;
+extern volatile uint32_t *i2c0_count;
 
 // The current state of the interrupt handler state machine.
-extern volatile uint16_t i2c0_int_state;
+extern volatile uint16_t *i2c0_int_state;
 
 
 #endif

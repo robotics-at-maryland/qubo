@@ -5,7 +5,16 @@
 
 // ported from https://github.com/adafruit/Adafruit_BME280_Library
 
+// TODO:
+// Not sure if macros should be big or little endian
+
+
+#ifndef _BME280_H_
+#define _BME280_H_
+
 #include "lib/include/query_i2c.h"
+
+#include <math.h>
 
 /*=========================================================================
   I2C ADDRESS/BITS
@@ -17,8 +26,17 @@
   REGISTERS
   -----------------------------------------------------------------------*/
 
-#ifndef _BME280_H_
-#define _BME280_H_
+// Macro that mimics original _LE functions
+#define LE(X) ( X = (X >> 8) | (X << 8) )
+
+// Macro to convert a 2-array of uint8_t to signed int16_t
+#define ARR_TO_S16(X,Y) ( X = (int16_t)(Y[0] | (Y[1] << 8)) )
+
+// Macro to convert a 2-array of uint8_t to uint16_t
+#define ARR_TO_16(X,Y) ( X = Y[0] | (Y[1] << 8) )
+
+// Macro to convert a 3-array of uint8_t to uint32_t
+#define ARR_TO_32(X,Y) ( X = Y[0] | (Y[1] << 8) | (Y[2] << 16) )
 
 #define BME280_REGISTER_DIG_T1 0x88
 #define BME280_REGISTER_DIG_T2 0x8A
@@ -82,10 +100,18 @@ typedef struct
   int8_t   dig_H6;
 } bme280_calib_data;
 
-float readTemperature(void);
-float readPressure(void);
-float readHumidity(void);
-float readAltitude(float seaLevel);
-float seaLevelForAltitude(float altitude, float atmospheric);
+// Public
+float readTemperature(uint32_t device);
+float readPressure(uint32_t device);
+float readHumidity(uint32_t device);
+float readAltitude(uint32_t device, float seaLevel);
+float seaLevelForAltitude(uint32_t device, float altitude, float atmospheric);
+
+// Private
+static void readCoefficients(uint32_t device);
+
+static bme280_calib_data _bme280_calib;
+
+static int32_t t_fine;
 
 #endif

@@ -44,10 +44,10 @@ volatile SemaphoreHandle_t i2c0_mutex;
 
 // Extern globals that are shared between interrupt
 // I2C0_BASE:
-volatile uint32_t i2c0_address;
-volatile uint8_t *i2c0_buffer;
-volatile uint32_t i2c0_count;
-volatile uint16_t i2c0_int_state;
+volatile uint32_t *i2c0_address;
+volatile uint8_t **i2c0_buffer;
+volatile uint32_t *i2c0_count;
+volatile uint16_t *i2c0_int_state;
 
 // ***************************************************************************
 // Functions
