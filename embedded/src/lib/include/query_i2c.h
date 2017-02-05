@@ -55,9 +55,11 @@ volatile uint16_t *i2c0_int_state;
 
 static void assign_vars(uint32_t device);
 
-void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length);
+// Always set query to be false if you're specifically calling write or read.
+// If query is true, the semaphore is taken at write, then given at read only
+void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, bool query);
 
-void readI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length);
+void readI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, bool query);
 
 // Will perform a write, then a read after
 void queryI2C(uint32_t device, uint8_t addr, uint8_t *write_data, uint32_t write_length,

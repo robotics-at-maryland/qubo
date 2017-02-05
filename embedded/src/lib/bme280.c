@@ -24,12 +24,12 @@ bool begin(uint32_t device) {
   // Set before CONTROL_meas (DS 5.4.3)
   buffer[0] = BME280_REGISTER_CONTROLHUMID;
   buffer[1] = 0x05;
-  writeI2C(device, BME280_ADDRESS, buffer, 2);
+  writeI2C(device, BME280_ADDRESS, buffer, 2, false);
 
   // 16x oversampling, normal mode
   buffer[0] = BME280_REGISTER_CONTROL;
   buffer[1] = 0xB7;
-  writeI2C(device, BME280_ADDRESS, buffer, 2);
+  writeI2C(device, BME280_ADDRESS, buffer, 2, false);
 
   return true;
 }
