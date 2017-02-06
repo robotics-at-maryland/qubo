@@ -36,6 +36,12 @@ automatically build all `*.c` files in `src/` and `src/tasks/`. It will then try
 Make sure you `source setenv.sh` so that you can find the toolchain. Also make sure the locations
 `setenv.sh` points to are correct.
 
+If you get an error that looks like "can't build object obj/task/something.d no such file or directory"
+then try:
+mkdir qubo/embedded/obj/tasks/
+mkdir qubo/embedded/obj/lib/
+mkdir qubo/embedded/obj/interrupts/
+
 ##Flash
 Run `make flash` to flash the `image.bin` file onto the chip while you're in the `embedded/` directory.
 
