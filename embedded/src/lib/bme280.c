@@ -8,7 +8,7 @@
 #include "lib/include/bme280.h"
 
 // Public
-bool begin(uint32_t device) {
+bool bme280_begin(uint32_t device) {
   // Make this an array so we can reuse it for the writes later
   uint8_t buffer[2];
   buffer[0] = BME280_REGISTER_CHIPID;
@@ -34,7 +34,7 @@ bool begin(uint32_t device) {
   return true;
 }
 
-float readTemperature(uint32_t device) {
+float bme280_readTemperature(uint32_t device) {
   int32_t var1, var2;
   uint8_t reg = BME280_REGISTER_TEMPDATA;
 
@@ -64,10 +64,10 @@ float readTemperature(uint32_t device) {
   return T/100;
 }
 
-float readPressure(uint32_t device) {
+float bme280_readPressure(uint32_t device) {
   int64_t var1, var2, p;
 
-  readTemperature(device); // must be done first to get t_fine
+  bme280_readTemperature(device); // must be done first to get t_fine
 
   uint8_t adc_P_ptr[3];
   int32_t adc_P = 0;
@@ -100,9 +100,9 @@ float readPressure(uint32_t device) {
   return (float)p/256;
 }
 
-float readHumidity(uint32_t device) {
+float bme280_readHumidity(uint32_t device) {
 
-  readTemperature(device); // must be done first to get t_fine
+  bme280_readTemperature(device); // must be done first to get t_fine
 
   int32_t adc_H = 0;
   uint8_t adc_H_ptr[2];
@@ -139,7 +139,7 @@ float readHumidity(uint32_t device) {
   @param  seaLevel      Sea-level pressure in hPa
   @param  atmospheric   Atmospheric pressure in hPa
 */
-float readAltitude(uint32_t device, float seaLevel) {
+float bme280_readAltitude(uint32_t device, float seaLevel) {
   // Equation taken from BMP180 datasheet (page 16):
   //  http://www.adafruit.com/datasheets/BST-BMP180-DS000-09.pdf
 
@@ -147,7 +147,7 @@ float readAltitude(uint32_t device, float seaLevel) {
   // at high altitude.  See this thread for more information:
   //  http://forums.adafruit.com/viewtopic.php?f=22&t=58064
 
-  float atmospheric = readPressure(device) / 100.0F;
+  float atmospheric = bme280_readPressure(device) / 100.0F;
   return 44330.0 * (1.0 - pow(atmospheric / seaLevel, 0.1903));
 }
 
@@ -159,7 +159,7 @@ float readAltitude(uint32_t device, float seaLevel) {
   @param  atmospheric   Atmospheric pressure in hPa
 */
 /**************************************************************************/
-float seaLevelForAltitude(uint32_t device, float altitude, float atmospheric) {
+float bme280_seaLevelForAltitude(uint32_t device, float altitude, float atmospheric) {
   // Equation taken from BMP180 datasheet (page 17):
   //  http://www.adafruit.com/datasheets/BST-BMP180-DS000-09.pdf
 
