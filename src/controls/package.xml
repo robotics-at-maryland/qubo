@@ -30,5 +30,6 @@
   <run_depend>cv_bridge</run_depend>
   <run_depend>opencv2</run_depend>
 
+  <depend>eigen</depend>
 
 </package>
