@@ -10,8 +10,16 @@
 #ifndef _QUERY_I2C_H_
 #define _QUERY_I2C_H_
 
+#include "interrupts/include/i2c_states.h"
 #include "include/i2c0_mutex.h"
+#include "include/i2c1_mutex.h"
+#include "include/i2c2_mutex.h"
+#include "include/i2c3_mutex.h"
+
 #include "include/i2c0_globals.h"
+#include "include/i2c1_globals.h"
+#include "include/i2c2_globals.h"
+#include "include/i2c3_globals.h"
 
 #include <FreeRTOS.h>
 #include <semphr.h>
@@ -41,6 +49,10 @@ uint16_t *i2c_int_state;
 
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
 SemaphoreHandle_t i2c0_mutex;
+SemaphoreHandle_t i2c1_mutex;
+SemaphoreHandle_t i2c2_mutex;
+SemaphoreHandle_t i2c3_mutex;
+
 
 // Extern globals that are shared between interrupt
 // I2C0_BASE:
@@ -48,6 +60,21 @@ volatile uint32_t *i2c0_address;
 volatile uint8_t **i2c0_buffer;
 volatile uint32_t *i2c0_count;
 volatile uint16_t *i2c0_int_state;
+
+volatile uint32_t *i2c1_address;
+volatile uint8_t **i2c1_buffer;
+volatile uint32_t *i2c1_count;
+volatile uint16_t *i2c1_int_state;
+
+volatile uint32_t *i2c2_address;
+volatile uint8_t **i2c2_buffer;
+volatile uint32_t *i2c2_count;
+volatile uint16_t *i2c2_int_state;
+
+volatile uint32_t *i2c3_address;
+volatile uint8_t **i2c3_buffer;
+volatile uint32_t *i2c3_count;
+volatile uint16_t *i2c3_int_state;
 
 // ***************************************************************************
 // Functions

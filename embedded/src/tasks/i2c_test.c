@@ -13,7 +13,11 @@ static void i2c_test_task(void *params) {
   uint8_t reg = 0xF0;
   uint8_t buffer = 0xAA;
 
-  if ( !bme280_begin(I2C0_BASE) ) {
+  #ifdef DEBUG
+  UARTprintf("bme280_begin\n");
+  #endif
+
+  if ( !bme280_begin(I2C3_BASE) ) {
     #ifdef DEBUG
     UARTprintf("error in bme280 begin\n");
     #endif
@@ -25,7 +29,7 @@ static void i2c_test_task(void *params) {
 		#ifdef DEBUG
     UARTprintf("sending data on i2c");
 		#endif
-    a = bme280_readTemperature(I2C0_BASE);
+    a = bme280_readTemperature(I2C3_BASE);
     #ifdef DEBUG
     UARTprintf("Temp: %f\n");
     #endif

@@ -13,7 +13,15 @@ bool bme280_begin(uint32_t device) {
   uint8_t buffer[2];
   buffer[0] = BME280_REGISTER_CHIPID;
 
+  #ifdef DEBUG
+  UARTprintf("in bme280_begin\n");
+  #endif
+
   queryI2C(device, BME280_ADDRESS, &(buffer[0]), 1, &(buffer[1]), 1);
+
+  #ifdef DEBUG
+  UARTprintf("After first query\n");
+  #endif
 
   if ( buffer[1] != 0x60 )
     return false;

@@ -23,5 +23,6 @@ void UART0IntHandler(void) {
 
   //ROM_UARTCharPutNonBlocking(UART_DEVICE, c);
   // Push to the queue
+
   xQueueSendToBackFromISR(read_uart0_queue, &c, NULL);
 }

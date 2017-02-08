@@ -3,9 +3,9 @@
    ross.baehr@gmail.com
 */
 
-#include "interrupts/include/i2c0_interrupt.h"
+#include "interrupts/include/i2c2_interrupt.h"
 
-void I2C0IntHandler(void) {
+void I2C2IntHandler(void) {
     //
     // Clear the I2C interrupt.
     //
@@ -18,7 +18,7 @@ void I2C0IntHandler(void) {
     //
     // Determine what to do based on the current state.
     //
-    switch(*i2c0_int_state)
+    switch(*i2c2_int_state)
     {
       //
       // The idle state.
@@ -39,9 +39,9 @@ void I2C0IntHandler(void) {
         //
         // Write the next byte to the data register.
         //
-        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c0_buffer);
-        *i2c0_buffer = (*i2c0_buffer) + 1;
-        *i2c0_count = *i2c0_count - 1;
+        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_buffer);
+        *i2c2_buffer = (*i2c2_buffer) + 1;
+        *i2c2_count = *i2c2_count - 1;
         //
         // Continue the burst write.
         //
@@ -50,9 +50,9 @@ void I2C0IntHandler(void) {
         // If there is one byte left, set the next state to the final write
         // state.
         //
-        if(*i2c0_count == 1)
+        if(*i2c2_count == 1)
           {
-            *i2c0_int_state = STATE_WRITE_FINAL;
+            *i2c2_int_state = STATE_WRITE_FINAL;
           }
         //
         // This state is done.
@@ -67,9 +67,9 @@ void I2C0IntHandler(void) {
         //
         // Write the final byte to the data register.
         //
-        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c0_buffer);
-        *i2c0_buffer = (*i2c0_buffer) + 1;
-        *i2c0_count = *i2c0_count - 1;
+        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_buffer);
+        *i2c2_buffer = (*i2c2_buffer) + 1;
+        *i2c2_count = *i2c2_count - 1;
         //
         // Finish the burst write.
         //
@@ -78,7 +78,7 @@ void I2C0IntHandler(void) {
         //
         // The next state is to wait for the burst write to complete.
         //
-        *i2c0_int_state = STATE_SEND_ACK;
+        *i2c2_int_state = STATE_SEND_ACK;
         //
         // This state is done.
         //
@@ -101,7 +101,7 @@ void I2C0IntHandler(void) {
             //
             // There was no error, so the state machine is now idle.
             //
-            *i2c0_int_state = STATE_IDLE;
+            *i2c2_int_state = STATE_IDLE;
             //
             // This state is done.
             //
@@ -121,7 +121,7 @@ void I2C0IntHandler(void) {
         //
         // Put the I2C master into receive mode.
         //
-        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c0_address, true);
+        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c2_address, true);
         //
         // Perform a single byte read.
         //
@@ -129,7 +129,7 @@ void I2C0IntHandler(void) {
         //
         // The next state is the wait for the ack.
         //
-        *i2c0_int_state = STATE_WAIT_ACK;
+        *i2c2_int_state = STATE_WAIT_ACK;
         //
         // This state is done.
         //
@@ -143,7 +143,7 @@ void I2C0IntHandler(void) {
         //
         // Put the I2C master into receive mode.
         //
-        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c0_address, true);
+        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c2_address, true);
         //
         // Perform a single byte read.
         //
@@ -151,7 +151,7 @@ void I2C0IntHandler(void) {
         //
         // The next state is the wait for final read state.
         //
-        *i2c0_int_state = STATE_READ_WAIT;
+        *i2c2_int_state = STATE_READ_WAIT;
         //
         // This state is done.
         //
@@ -165,7 +165,7 @@ void I2C0IntHandler(void) {
         //
         // Put the I2C master into receive mode.
         //
-        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c0_address, true);
+        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c2_address, true);
         //
         // Start the burst receive.
         //
@@ -174,7 +174,7 @@ void I2C0IntHandler(void) {
         //
         // The next state is the middle of the burst read.
         //
-        *i2c0_int_state = STATE_READ_NEXT;
+        *i2c2_int_state = STATE_READ_NEXT;
         //
         // This state is done.
         //
@@ -188,9 +188,9 @@ void I2C0IntHandler(void) {
         //
         // Read the received character.
         //
-        **i2c0_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
-        *i2c0_buffer = (*i2c0_buffer) + 1;
-        *i2c0_count = *i2c0_count - 1;
+        **i2c2_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
+        *i2c2_buffer = (*i2c2_buffer) + 1;
+        *i2c2_count = *i2c2_count - 1;
         //
         // Continue the burst read.
         //
@@ -200,9 +200,9 @@ void I2C0IntHandler(void) {
         // If there are two characters left to be read, make the next
         // state be the end of burst read state.
         //
-        if(*i2c0_count == 2)
+        if(*i2c2_count == 2)
           {
-            *i2c0_int_state = STATE_READ_FINAL;
+            *i2c2_int_state = STATE_READ_FINAL;
           }
         //
         // This state is done.
@@ -217,9 +217,9 @@ void I2C0IntHandler(void) {
         //
         // Read the received character.
         //
-        **i2c0_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
-        *i2c0_buffer = (*i2c0_buffer) + 1;
-        *i2c0_count = *i2c0_count - 1;
+        **i2c2_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
+        *i2c2_buffer = (*i2c2_buffer) + 1;
+        *i2c2_count = *i2c2_count - 1;
         //
         // Finish the burst read.
         //
@@ -228,7 +228,7 @@ void I2C0IntHandler(void) {
         //
         // The next state is the wait for final read state.
         //
-        *i2c0_int_state = STATE_READ_WAIT;
+        *i2c2_int_state = STATE_READ_WAIT;
         //
         // This state is done.
         //
@@ -242,13 +242,13 @@ void I2C0IntHandler(void) {
         //
         // Read the received character.
         //
-        **i2c0_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
-        *i2c0_buffer = (*i2c0_buffer) + 1;
-        *i2c0_count = *i2c0_count - 1;
+        **i2c2_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
+        *i2c2_buffer = (*i2c2_buffer) + 1;
+        *i2c2_count = *i2c2_count - 1;
         //
         // The state machine is now idle.
         //
-        *i2c0_int_state = STATE_IDLE;
+        *i2c2_int_state = STATE_IDLE;
         //
         // This state is done.
         //

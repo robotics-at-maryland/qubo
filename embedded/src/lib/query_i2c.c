@@ -12,12 +12,41 @@
 static void assign_vars(uint32_t device) {
   switch(device) {
   case I2C0_BASE:
-    i2c_mutex = &i2c0_mutex;
-    i2c_address = i2c0_address;
-    i2c_buffer = i2c0_buffer;
-    i2c_count = i2c0_count;
-    i2c_int_state = i2c0_int_state;
-    break;
+    {
+      i2c_mutex = &i2c0_mutex;
+      i2c_address = i2c0_address;
+      i2c_buffer = i2c0_buffer;
+      i2c_count = i2c0_count;
+      i2c_int_state = i2c0_int_state;
+      break;
+    }
+  case I2C1_BASE:
+    {
+      i2c_mutex = &i2c1_mutex;
+      i2c_address = i2c1_address;
+      i2c_buffer = i2c1_buffer;
+      i2c_count = i2c1_count;
+      i2c_int_state = i2c1_int_state;
+      break;
+    }
+  case I2C2_BASE:
+    {
+      i2c_mutex = &i2c2_mutex;
+      i2c_address = i2c2_address;
+      i2c_buffer = i2c2_buffer;
+      i2c_count = i2c2_count;
+      i2c_int_state = i2c2_int_state;
+      break;
+    }
+  case I2C3_BASE:
+    {
+      i2c_mutex = &i2c3_mutex;
+      i2c_address = i2c3_address;
+      i2c_buffer = i2c3_buffer;
+      i2c_count = i2c3_count;
+      i2c_int_state = i2c3_int_state;
+      break;
+    }
   }
 }
 
@@ -57,17 +86,13 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
 
   // Set the slave i2c0_address and setup for a transmit operation.
   // Tiva shifts the address left, we need to offset it
-  ROM_I2CMasterSlaveAddrSet(device, (*i2c_address)>>1, false);
+  ROM_I2CMasterSlaveAddrSet(device, *i2c_address, false);
   #ifdef DEBUG
-  UARTprintf("Set slave addr to %x\n", (*i2c_address)>>1);
+  UARTprintf("Set slave addr to %x\nNext state is %d", *i2c_address, *i2c_int_state);
   #endif
 
   // Wait until the SoftI2C callback state machine is idle.
-  while(*i2c_int_state != STATE_IDLE) {
-    #ifdef DEBUG
-    UARTprintf("not idle\n");
-    #endif
-  }
+  while(*i2c_int_state != STATE_IDLE) {}
 
   #ifdef DEBUG
   UARTprintf("Finished interrupt\n");
