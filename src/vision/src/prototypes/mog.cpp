@@ -6,6 +6,8 @@
 #include "opencv2/videoio.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/video.hpp>
+#include <opencv2/opencv.hpp>
+
 //C
 #include <stdio.h>
 //C++
@@ -78,7 +80,6 @@ void processVideo(char* videoFilename) {
         exit(EXIT_FAILURE);
     }
 
-    
     VideoWriter outputVideo; //output video object
     Size S = Size((int) capture.get(CV_CAP_PROP_FRAME_WIDTH),    //Acquire input size
                   (int) capture.get(CV_CAP_PROP_FRAME_HEIGHT));
@@ -94,8 +95,6 @@ void processVideo(char* videoFilename) {
         cout << capture.get(CV_CAP_PROP_FPS) << endl;
     }
 
-
-
     //read input data. ESC or 'q' for quitting
     while( (char)keyboard != 'q' && (char)keyboard != 27 ){
         //read the current frame
@@ -105,10 +104,6 @@ void processVideo(char* videoFilename) {
             exit(EXIT_FAILURE);
         }
 
-        
-        cvtColor(frame,frame,cv::COLOR_RGB2HSV);
-
-        
         //update the background model
         pMOG2->apply(frame, fgMaskMOG2);
 
@@ -121,11 +116,70 @@ void processVideo(char* videoFilename) {
         putText(frame, frameNumberString.c_str(), cv::Point(15, 15),
                 FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
         //show the current frame and the fg masks
-        imshow("Frame", frame);
         imshow("FG Mask MOG 2", fgMaskMOG2);
+        imshow("Frame", frame);
         Mat copy;
+        Mat test;
+
         cvtColor(fgMaskMOG2,copy, CV_GRAY2RGB);
-      
+
+        //inverts the colors 
+        bitwise_not(fgMaskMOG2, test, noArray());
+
+        // Setup SimpleBlobDetector parameters.
+        SimpleBlobDetector::Params params;
+         
+        // Change thresholds
+        params.minThreshold = 0;
+        params.maxThreshold = 256;
+         
+        // Filter by Area.
+        params.filterByArea = true;
+        params.minArea = 100;
+         
+        // Filter by Circularity
+        params.filterByCircularity = true;
+        params.minCircularity = 0.1;
+         
+        // Filter by Convexity
+        params.filterByConvexity = true;
+        params.minConvexity = 0.87;
+         
+        // Filter by Inertia
+        params.filterByInertia = true;
+        params.minInertiaRatio = 0.01;
+
+        // Storage for blobs
+        vector<KeyPoint> keypoints;
+         
+        #if CV_MAJOR_VERSION < 3   // If you are using OpenCV 2
+         
+        // Set up detector with params
+          SimpleBlobDetector detector(params);
+         
+          // You can use the detector this way
+          detector.detect( test, keypoints);
+         
+        #else
+         
+          // Set up detector with params
+          Ptr<SimpleBlobDetector> detector = SimpleBlobDetector::create(params);
+         
+          // SimpleBlobDetector::create creates a smart pointer. 
+          // So you need to use arrow ( ->) instead of dot ( . )
+          detector->detect( test, keypoints);
+         
+        #endif        
+
+        // Draw detected blobs as red circles.
+        // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures
+        // the size of the circle corresponds to the size of blob
+
+        Mat im_with_keypoints;
+        drawKeypoints(frame, keypoints, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
+
+        // Show blobs
+        imshow("keypoints", im_with_keypoints );            
         
         outputVideo << copy;
         
@@ -135,6 +189,7 @@ void processVideo(char* videoFilename) {
     //delete capture object
     capture.release();
 }
+
 void processImages(char* fistFrameFilename) {
     //read the first file of the sequence
     frame = imread(fistFrameFilename);
