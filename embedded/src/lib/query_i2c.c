@@ -12,7 +12,7 @@
 static void assign_vars(uint32_t device) {
   switch(device) {
   case I2C0_BASE:
-    i2c_mutex = i2c0_mutex;
+    i2c_mutex = &i2c0_mutex;
     i2c_address = i2c0_address;
     i2c_buffer = i2c0_buffer;
     i2c_count = i2c0_count;
@@ -27,6 +27,9 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
 
   // If the i2c bus is busy, yield task and then try again
   while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) {
+    #ifdef DEBUG
+    UARTprintf("Semaphore busy\n");
+    #endif
     taskYIELD();
   }
 
@@ -38,6 +41,10 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
   *i2c_count = length;
   *i2c_address = addr;
 
+  #ifdef DEBUG
+  UARTprintf("Writing %d bytes to %x\nWriting %x\n", *i2c_count, *i2c_address, **i2c0_buffer);
+  #endif
+
   // Set the next state of the callback state machine based on the number of
   // bytes to write.
   if(length != 1 ) {
@@ -47,12 +54,24 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
     *i2c_int_state = STATE_WRITE_FINAL;
   }
 
+
   // Set the slave i2c0_address and setup for a transmit operation.
   // Tiva shifts the address left, we need to offset it
-  ROM_I2CMasterSlaveAddrSet(device, *i2c_address>>1, false);
+  ROM_I2CMasterSlaveAddrSet(device, (*i2c_address)>>1, false);
+  #ifdef DEBUG
+  UARTprintf("Set slave addr to %x\n", (*i2c_address)>>1);
+  #endif
 
   // Wait until the SoftI2C callback state machine is idle.
-  while(*i2c_int_state != STATE_IDLE) {}
+  while(*i2c_int_state != STATE_IDLE) {
+    #ifdef DEBUG
+    UARTprintf("not idle\n");
+    #endif
+  }
+
+  #ifdef DEBUG
+  UARTprintf("Finished interrupt\n");
+  #endif
 
   // Only give it back if its an individual write
   if ( !query )

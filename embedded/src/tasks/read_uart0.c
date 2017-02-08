@@ -31,10 +31,9 @@ static void read_uart0_task(void* params) {
 
   for (;;) {
     if ( xQueueReceive(read_uart0_queue, &buffer, 0) == pdTRUE ) {
-      writeUART1(&buffer, 1);
 
       #ifdef DEBUG
-      UARTprintf("Writing to UART1\n");
+      UARTprintf("Got %d\n", buffer);
       #endif
 
       blink_rgb(BLUE_LED, 1);

@@ -40,7 +40,7 @@ uint32_t *i2c_count;
 uint16_t *i2c_int_state;
 
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
-volatile SemaphoreHandle_t i2c0_mutex;
+SemaphoreHandle_t i2c0_mutex;
 
 // Extern globals that are shared between interrupt
 // I2C0_BASE:

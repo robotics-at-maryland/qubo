@@ -9,6 +9,6 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
-extern volatile SemaphoreHandle_t i2c0_mutex;
+extern SemaphoreHandle_t i2c0_mutex;
 
 #endif

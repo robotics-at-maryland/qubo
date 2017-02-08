@@ -29,9 +29,9 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
-volatile SemaphoreHandle_t uart0_mutex;
+SemaphoreHandle_t uart0_mutex;
 
-volatile SemaphoreHandle_t uart1_mutex;
+SemaphoreHandle_t uart1_mutex;
 
 void writeUART0(uint8_t *buffer, uint16_t size);
 

@@ -6,8 +6,6 @@
 // Queue for the UART interrupt
 #include "interrupts/include/uart0_interrupt.h"
 
-#include "lib/include/rgb.h"
-
 // Interrupt for UART
 void UART0IntHandler(void) {
   uint32_t status = ROM_UARTIntStatus(UART_DEVICE, true);

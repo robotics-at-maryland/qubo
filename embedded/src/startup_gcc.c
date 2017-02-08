@@ -31,15 +31,10 @@
 #include <driverlib/uart.h>
 
 // Include prototypes and specific defs of the interrupts
-//#include "interrupts/include/uart0_interrupt.h"
-//#include "interrupts/include/uart1_interrupt.h"
+#include "interrupts/include/uart0_interrupt.h"
+#include "interrupts/include/uart1_interrupt.h"
 
-//#include "interrupts/include/i2c0_interrupt.h"
-
-extern void UART0IntHandler(void);
-extern void UART1IntHandler(void);
-extern void I2C0IntHandler(void);
-
+#include "interrupts/include/i2c0_interrupt.h"
 
 //*****************************************************************************
 //

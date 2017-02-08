@@ -10,8 +10,7 @@
 #include "tasks/include/read_uart1.h"
 #include "tasks/include/example_blink.h"
 #include "tasks/include/example_uart.h"
-#include "tasks/include/blink_red.h"
-#include "tasks/include/blink_blue.h"
+#include "tasks/include/i2c_test.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -52,10 +51,10 @@ volatile uint8_t **i2c0_buffer;
 volatile uint32_t *i2c0_count;
 volatile uint16_t *i2c0_int_state;
 
-volatile SemaphoreHandle_t i2c0_mutex;
-volatile SemaphoreHandle_t uart0_mutex;
-volatile SemaphoreHandle_t uart1_mutex;
-volatile SemaphoreHandle_t rgb_mutex;
+SemaphoreHandle_t i2c0_mutex;
+SemaphoreHandle_t uart0_mutex;
+SemaphoreHandle_t uart1_mutex;
+SemaphoreHandle_t rgb_mutex;
 
 volatile QueueHandle_t read_uart0_queue;
 volatile QueueHandle_t read_uart1_queue;
@@ -130,20 +129,12 @@ int main() {
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
 
+  if ( i2c_test_init() ) {
+    while(1){}
+  }
+
   /*
   if ( example_blink_init() ) {
-    while(1){}
-  }
-  */
-
-  /*
-  if ( read_uart_init() ) {
-    while(1){}
-  }
-  */
-
-  /*
-  if ( example_uart_init() ) {
     while(1){}
   }
   */
@@ -152,9 +143,12 @@ int main() {
     while(1){}
   }
 
-  if ( read_uart1_init() ) {
+  /*
+  if ( example_uart_init() ) {
     while(1){}
   }
+  */
+
 
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
