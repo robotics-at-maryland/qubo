@@ -1,4 +1,7 @@
-# If you have questions about this or something doesn't work, ask Ross
+# Ross Baehr
+# R@M 2017
+# ross.baehr@gmail.com
+
 # FreeRTOS and src objects are put into obj/
 # Tivaware objects are built in drivers/ and symlinked into obj/
 
@@ -10,6 +13,7 @@ TARGET = image.bin
 #########################################################################
 # FLAGS                                                                 #
 #########################################################################
+
 TOOLCHAIN = arm-none-eabi-
 CC = $(TOOLCHAIN)gcc
 CXX = $(TOOLCHAIN)g++
@@ -19,14 +23,21 @@ OBJCOPY = $(TOOLCHAIN)objcopy
 AR = $(TOOLCHAIN)ar
 
 # GCC flags
+#
 CFLAG = -c
 OFLAG = -o
 INCLUDEFLAG = -I
-CPUFLAG = -mthumb -mcpu=cortex-m4 -DTARGET_IS_TM4C123_RB1 -DPART_TM4C123GH6PM
-WFLAG = -Wall -Wextra #-Werror
-FPUFLAG=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 
-CFLAGS = $(CPUFLAG) $(WFLAG) $(FPUFLAG)
+CFLAGS = -g -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+CFLAGS +=-Os -ffunction-sections -fdata-sections -MD -std=c99
+CFLAGS += -pedantic -DPART_TM4C123GH6PM -c
+CFLAGS += -DTARGET_IS_TM4C123_RB2
+#CFLAGS = -mcpu=cortex-m4 -march=armv7e-m -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Dgcc -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -ffunction-sections -fdata-sections -g -gdwarf-3 -gstrict-dwarf -specs="nosys.specs" -MD -std=c99 -I$(TC_PATH)arm-none-eabi/include/
+
+LDFLAGS = -T $(LINKER_SCRIPT) --entry ResetISR --gc-sections
+
+# Default debug off unless ran with make debug
+DEBUG = OFF
 
 ##########################################################################
 # LOCATIONS                                                              #
@@ -40,6 +51,9 @@ SRC = src/
 
 # Subdir of src
 TASKDIR = tasks/
+
+# subdir of src for interrupts
+INTERRUPTS = interrupts/
 
 # Intermediate directory for all *.o and other files:
 OBJDIR = obj/
@@ -90,10 +104,10 @@ DRIVERLIB_OBJS := $(wildcard $(OBJDIR)driverlib/*.o)
 DRIVERLIB_OBJS := $(DRIVERLIB_OBJS) $(wildcard $(OBJDIR)driverlib/*.a)
 UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
 
-TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS) $(UTILS_OBJS)
+TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS)
 
 # List of source file objects. Adds any c file in $(SRC) and $(SRC)$(TASKDIR)
-SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c)
+SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c) $(wildcard $(SRC)lib/*.c) $(wildcard $(SRC)$(INTERRUPTS)*.c)
 SRC_OBJS := $(SRC_C_FILES:$(SRC)%=%)
 SRC_OBJS := $(SRC_OBJS:.c=.o)
 
@@ -118,38 +132,39 @@ DEP_FRTOS_CONFIG = $(SRC)FreeRTOSConfig.h
 
 all : $(TARGET)
 
-rebuild : clean all
+debug: clean debug_flag all
+
+debug_flag: tiva
+	$(eval DEBUG := ON)
+	$(eval CFLAGS += $(DEB_FLAG))
+
+tiva:
+	bash -c "cd drivers;./symlink_objs &> /dev/null"
+
+rebuild : clean
 
 $(TARGET) : $(OBJDIR) $(ELF_IMAGE)
 	$(OBJCOPY) -O binary $(word 2,$^) $@
 
-tiva:
-	bash -c "make -C drivers/"
-
 $(OBJDIR) :
-	mkdir -p $@
+	mkdir -p $@ $(OBJDIR)$(TASKDIR) $(OBJDIR)lib/ $(OBJDIR)$(INTERRUPTS)
 
-$(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
-	$(LD) -L $(OBJDIR) -T $(LINKER_SCRIPT) $(TIVA_DRIVER_OBJS) $(OBJS) $(LIBGCC) $(LIBC) $(LIBM) $(OFLAG) $@
-
-debug : _debug_flags all
-
-debug_rebuild : _debug_flags rebuild
-
-_debug_flags :
-	$(eval CFLAGS += $(DEB_FLAG))
-
-$(TASKDIR) :
-	mkdir -p $(OBJDIR)$(TASKDIR)
-
+$(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
+	@if [ $(DEBUG) = "ON" ]; then \
+		echo "_____________________________________________________________";\
+		echo "Debug on";\
+		echo "$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS)";\
+		$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS);\
+	else \
+		echo "_____________________________________________________________";\
+		echo "Debug off";\
+		echo "$(LD) $(OFLAG) $@ $^ $(LDFLAGS)";\
+		$(LD) $(OFLAG) $@ $^ $(LDFLAGS);\
+	fi
 
 # Objects for files in $(SRC) and $(SRC)$(TASKDIR)
-$(OBJDIR)%.o: $(SRC)%.c $(wildcard $(SRC)%.h) $(TASKDIR)
+$(OBJDIR)%.o: $(SRC)%.c $(SRC)include/* $(OBJDIR)
 	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
-
-#$(OBJDIR)$(TASKDIR)%.o: $(TASKDIR) $(SRC)$(TASKDIR)%.c $(wildcard $(SRC)$(TASKDIR)%.h)
-#	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
-
 
 # Make objects for the FreeRTOS Files
 $(OBJDIR)%.o: $(FREERTOS_SRC)%.c $(INC_FREERTOS)* $(DEP_FRTOS_CONFIG)
@@ -164,8 +179,11 @@ $(OBJDIR)%.o: $(FREERTOS_PORT_SRC)%.c $(DEP_FRTOS_CONFIG)
 # Cleanup directives:
 
 clean_obj :
-	$(RM) $(OBJDIR)*
-	$(RM) $(OBJDIR)$(TASKDIR)*
+	$(RM) $(OBJDIR)*.o $(OBJDIR)*.d
+	$(RM) $(OBJDIR)$(TASKDIR)*.o $(OBJDIR)$(TASKDIR)*.d 
+	$(RM) $(OBJDIR)lib/*.o	$(RM) $(OBJDIR)lib/*.d
+	$(RM) $(OBJDIR)$(INTERRUPTS)*.o $(OBJDIR)$(INTERRUPTS)*.d
+
 
 clean_intermediate : clean_obj
 	$(RM) *.elf
@@ -181,19 +199,5 @@ flash:
 # Short help instructions:
 
 print-%  : ; @echo $* = $($*)
-
-help :
-	@echo
-	@echo Valid targets:
-	@echo - all: builds missing dependencies and creates the target image \'$(IMAGE)\'.
-	@echo - rebuild: rebuilds all dependencies and creates the target image \'$(IMAGE)\'.
-	@echo - debug: same as \'all\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
-	@echo - debug_rebuild: same as \'rebuild\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
-	@echo - clean_obj: deletes all object files, only keeps \'$(ELF_IMAGE)\' and \'$(IMAGE)\'.
-	@echo - clean_intermediate: deletes all intermediate binaries, only keeps the target image \'$(IMAGE)\'.
-	@echo - clean: deletes all intermediate binaries, incl. the target image \'$(IMAGE)\'.
-	@echo - help: displays these help instructions.
-	@echo
-
 
 .PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help

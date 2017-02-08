@@ -25,7 +25,7 @@
 # toolchain is from: https://launchpad.net/gcc-arm-embedded/+download
 
 TOOLCHAIN=/opt/arm-none-eabi/bin
-FLASHER=/opt/lm4tools/lm4flash/
+FLASHER=/opt/lm4tools/lm4flash
 
 # Add a path to gnu-none-eabi-* executables:
 export PATH=$PATH:$TOOLCHAIN:$FLASHER
