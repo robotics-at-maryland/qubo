@@ -1,0 +1,8 @@
+# Goal
+bool test_goal
+---
+# Result
+bool test_result
+---
+# Feedback
+uint32 test_feedback
