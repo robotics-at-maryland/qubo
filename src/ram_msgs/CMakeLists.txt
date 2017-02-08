@@ -6,7 +6,7 @@ project(ram_msgs)
 ##############################
 
 find_package(
-    catkin REQUIRED COMPONENTS 
+    catkin REQUIRED COMPONENTS
     std_msgs
     sensor_msgs
     message_generation
@@ -37,7 +37,9 @@ add_message_files(
     Sim_Temperature.msg
     Sim_Led.msg
     Led.msg
-    
+
+    #Qubo specific messages
+    DVL_qubo.msg
 )
 
 ##############################
@@ -60,4 +62,3 @@ generate_messages(
 catkin_package(
     CATKIN_DEPENDS message_runtime std_msgs
 )
-
