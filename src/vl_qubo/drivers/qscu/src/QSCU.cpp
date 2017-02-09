@@ -15,7 +15,7 @@
 #include <stdarg.h>
 
 // Header include
-#include "../include/QSCU.h"
+#include "QSCU.h"
 
 #if QUBOBUS_PROTOCOL_VERSION != 3
 #error Update me with new message defs!
@@ -45,7 +45,8 @@ void QSCU::openDevice() {
     if (fd == -1)
         throw EndpointException("Device '"+_deviceFile+"' unavaliable.");
     // Read the config of the interface.
-    if(tcgetattr(fd, &termcfg)) 
+    if(// tcgetattr
+       (fd, &termcfg)) 
         throw EndpointException("Unable to read terminal configuration.");
 
     // Set the baudrate for the terminal

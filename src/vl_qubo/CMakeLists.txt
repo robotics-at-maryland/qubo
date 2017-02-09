@@ -15,8 +15,9 @@ catkin_package(
 include_directories(
   drivers/ahrs/include
   drivers/dvl/include
-  
-)
+  drivers/qscu/include
+  drivers/qubobus/include
+  )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
@@ -24,28 +25,34 @@ SET(CMAKE_C++_CREATE_SHARED_LIBRARY 1)
 
 #SG: currently unused, eventually we'll add a wrapper with a main and build them together.
 set(AHRS_SRC_FILES
-        drivers/ahrs/src/AHRS.cpp
-)
+  drivers/ahrs/src/AHRS.cpp
+  )
 
 #SG: ditto above
 set(DVL_SRC_FILES
-         drivers/dvl/src/DVL.cpp
-)
+  drivers/dvl/src/DVL.cpp
+  )
 
 set(AHRS_CONFIG_SRC_FILES
-        drivers/ahrs/src/config.cpp
-        drivers/ahrs/src/util.cpp
-
-        drivers/ahrs/src/AHRS.cpp # SG: maybe putting this here is not the best way to do this, but it will work for now 
-)
+  drivers/ahrs/src/config.cpp
+  drivers/ahrs/src/util.cpp
+  drivers/ahrs/src/AHRS.cpp # SG: maybe putting this here is not the best way to do this, but it will work for now 
+  )
 
 set(AHRS_BAUDRATE_SRC_FILES
-        drivers/ahrs/src/baudrate.cpp
-        drivers/ahrs/src/util.cpp
+  drivers/ahrs/src/baudrate.cpp
+  drivers/ahrs/src/util.cpp
+  drivers/ahrs/src/AHRS.cpp #SG: ditto above
+  )
 
-        drivers/ahrs/src/AHRS.cpp #SG: ditto above
-)
 
+set(QSCU_SRC_FILES
+  drivers/qscu/src/QSCU.cpp
+  )
+
+file(GLOB QUBOBUS_LIB_FILES
+  drivers/qubobus/src/*.c
+  )
 
 ##############################
 # Add Executables ############
@@ -57,6 +64,13 @@ add_executable(ahrs_config ${AHRS_CONFIG_SRC_FILES})
 
 add_executable(ahrs_baudrate ${AHRS_BAUDRATE_SRC_FILES})
 #target_link_libraries(ahrs_baudrate ${PROJECT_NAME})
+
+add_library(qubobus ${QUBOBUS_SRC_FILES})
+set_target_properties(qubobus PROPERTIES LINKER_LANGUAGE CXX)
+
+add_library(qscu ${QSCU_SRC_FILES})
+set_target_properties(qscu PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(qscu qubobus)
 
 
 ##############################
