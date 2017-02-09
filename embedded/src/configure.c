@@ -134,6 +134,16 @@ void configureI2C(void) {
   ROM_I2CMasterInitExpClk(I2C0_BASE, ROM_SysCtlClockGet(), false);
   ROM_I2CMasterInitExpClk(I2C3_BASE, ROM_SysCtlClockGet(), false);
 
+  //
+  // Enable interrupts for Arbitration Lost, Stop, NAK, CLock lLow Timeout and Data
+  ROM_I2CMasterIntEnableEx(I2C0_BASE, (I2C_MASTER_INT_ARB_LOST |
+                                   I2C_MASTER_INT_STOP | I2C_MASTER_INT_NACK |
+                                   I2C_MASTER_INT_TIMEOUT | I2C_MASTER_INT_DATA));
+  ROM_I2CMasterIntEnableEx(I2C3_BASE, (I2C_MASTER_INT_ARB_LOST |
+                                   I2C_MASTER_INT_STOP | I2C_MASTER_INT_NACK |
+                                   I2C_MASTER_INT_TIMEOUT | I2C_MASTER_INT_DATA));
+
+
 
   //
   // Enable the I2C interrupt.
@@ -142,14 +152,6 @@ void configureI2C(void) {
   ROM_IntEnable(INT_I2C3);
 
 
-  //
-  // Enable the I2C master interrupt.
-  //
-  ROM_I2CMasterIntEnable(I2C0_BASE);
-  ROM_I2CMasterIntEnable(I2C3_BASE);
-
-
-  ROM_IntPrioritySet(INT_I2C0, 0x00);
 
   #ifdef DEBUG
   UARTprintf("I2C configured\n");

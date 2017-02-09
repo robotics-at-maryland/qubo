@@ -13,6 +13,7 @@ static void i2c_test_task(void *params) {
   uint8_t reg = 0xF0;
   uint8_t buffer = 0xAA;
 
+  /*
   #ifdef DEBUG
   UARTprintf("bme280_begin\n");
   #endif
@@ -22,10 +23,18 @@ static void i2c_test_task(void *params) {
     UARTprintf("error in bme280 begin\n");
     #endif
   }
+  */
 
   float a = -1;
+  ROM_I2CMasterSlaveAddrSet(I2C0_BASE, 0x3C, false);
+
 
   for (;;) {
+
+    ROM_I2CMasterDataPut(I2C0_BASE, 0xAA);
+    ROM_I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_SEND);
+
+    /*
 		#ifdef DEBUG
     UARTprintf("sending data on i2c");
 		#endif
@@ -33,6 +42,7 @@ static void i2c_test_task(void *params) {
     #ifdef DEBUG
     UARTprintf("Temp: %f\n");
     #endif
+    */
   }
 }
 

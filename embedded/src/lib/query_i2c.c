@@ -86,7 +86,7 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
 
   // Set the slave i2c0_address and setup for a transmit operation.
   // Tiva shifts the address left, we need to offset it
-  ROM_I2CMasterSlaveAddrSet(device, *i2c_address, false);
+  ROM_I2CMasterSlaveAddrSet(device, (*i2c_address)>>1, false);
   #ifdef DEBUG
   UARTprintf("Set slave addr to %x\nNext state is %d", *i2c_address, *i2c_int_state);
   #endif
