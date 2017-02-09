@@ -101,7 +101,7 @@ int main() {
 int message(const char *name, const char *suffix, uint16_t type, size_t size) {
     size += sizeof(struct Message_Header);
     size += sizeof(struct Message_Footer);
-    printf("%s %s: %d\n", name, suffix, size);
+    printf("%s %s: %lu\n", name, suffix, size);
     return 1;
 }
 

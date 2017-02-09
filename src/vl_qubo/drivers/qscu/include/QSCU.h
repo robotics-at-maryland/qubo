@@ -66,7 +66,7 @@ class QSCU
          * @param (QSCUSpeed) Baudrate to use for connection.
          */
         QSCU(std::string deviceFile, QSCUSpeed speed);
-        /** Destructor that cleans up and closes the device. */
+        /** Destructor that cleans up and closes the device. *
         ~QSCU();
         /** 
          * Opens the device and configures the I/O terminal. 
