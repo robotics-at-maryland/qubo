@@ -8,6 +8,7 @@
 #include <opencv2/video.hpp>
 #include <opencv2/opencv.hpp>
 
+
 //C
 #include <stdio.h>
 //C++
@@ -118,13 +119,28 @@ void processVideo(char* videoFilename) {
         //show the current frame and the fg masks
         imshow("FG Mask MOG 2", fgMaskMOG2);
         imshow("Frame", frame);
-        Mat copy;
-        Mat test;
 
-        cvtColor(fgMaskMOG2,copy, CV_GRAY2RGB);
+        Mat copy, thresh, final, gauss, mask;
+
+        //blurs the image
+        GaussianBlur(fgMaskMOG2, gauss, Size(3,3), 0,0);
+        imshow("GaussianBlur", gauss);
+
+
+        // Define the structuring elements to be used in eroding and dilating the image 
+        Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
+        Mat se2 = getStructuringElement(MORPH_RECT, Size(5, 5));
+
+        // Perform dialting and eroding helps to elminate background noise 
+        morphologyEx(gauss, mask, MORPH_CLOSE, se1);
+        morphologyEx(gauss, mask, MORPH_OPEN, se2);
+        imshow("mask", mask);
+
 
         //inverts the colors 
-        bitwise_not(fgMaskMOG2, test, noArray());
+        bitwise_not(mask, final, noArray());
+        imshow("invert",final);
+        
 
         // Setup SimpleBlobDetector parameters.
         SimpleBlobDetector::Params params;
@@ -132,22 +148,25 @@ void processVideo(char* videoFilename) {
         // Change thresholds
         params.minThreshold = 0;
         params.maxThreshold = 256;
+
+        params.filterByColor = true;
+        params.blobColor= 0;
          
         // Filter by Area.
         params.filterByArea = true;
-        params.minArea = 100;
+        params.minArea = 500;
          
         // Filter by Circularity
         params.filterByCircularity = true;
-        params.minCircularity = 0.1;
+        params.minCircularity = 0.5;
          
         // Filter by Convexity
         params.filterByConvexity = true;
-        params.minConvexity = 0.87;
+        params.minConvexity = 0.80;
          
         // Filter by Inertia
         params.filterByInertia = true;
-        params.minInertiaRatio = 0.01;
+        params.minInertiaRatio = 0.40;
 
         // Storage for blobs
         vector<KeyPoint> keypoints;
@@ -158,7 +177,7 @@ void processVideo(char* videoFilename) {
           SimpleBlobDetector detector(params);
          
           // You can use the detector this way
-          detector.detect( test, keypoints);
+          detector.detect( final, keypoints);
          
         #else
          
@@ -167,7 +186,7 @@ void processVideo(char* videoFilename) {
          
           // SimpleBlobDetector::create creates a smart pointer. 
           // So you need to use arrow ( ->) instead of dot ( . )
-          detector->detect( test, keypoints);
+          detector->detect( final, keypoints);
          
         #endif        
 
@@ -178,7 +197,7 @@ void processVideo(char* videoFilename) {
         Mat im_with_keypoints;
         drawKeypoints(frame, keypoints, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
 
-        // Show blobs
+        // Shows blobs
         imshow("keypoints", im_with_keypoints );            
         
         outputVideo << copy;
