@@ -11,10 +11,6 @@ void I2C0IntHandler(void) {
     //
     ROM_I2CMasterIntClear(I2C_DEVICE);
 
-    #ifdef DEBUG
-    UARTprintf("Got to i2c int\n");
-    #endif
-
     //
     // Determine what to do based on the current state.
     //
@@ -36,6 +32,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_WRITE_NEXT:
       {
+        #ifdef DEBUG
+        UARTprintf("in state_write_next\n");
+        #endif
         //
         // Write the next byte to the data register.
         //
@@ -64,6 +63,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_WRITE_FINAL:
       {
+        #ifdef DEBUG
+        UARTprintf("in state final\n");
+        #endif
         //
         // Write the final byte to the data register.
         //
@@ -89,11 +91,17 @@ void I2C0IntHandler(void) {
       //
     case STATE_WAIT_ACK:
       {
+        #ifdef DEBUG
+        UARTprintf("In state_wait_ack\n");
+        #endif
         //
         // See if there was an error on the previously issued read.
         //
         if(ROM_I2CMasterErr(I2C_DEVICE) == I2C_MASTER_ERR_NONE)
           {
+            #ifdef DEBUG
+            UARTprintf("No error in wait ack\n");
+            #endif
             //
             // Read the byte received.
             //
@@ -107,6 +115,9 @@ void I2C0IntHandler(void) {
             //
             break;
           }
+        #ifdef DEBUG
+        UARTprintf("Error in wait ack\n");
+        #endif
         //
         // Fall through to STATE_SEND_ACK.
         //
@@ -118,6 +129,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_SEND_ACK:
       {
+        #ifdef DEBUG
+        UARTprintf("In state sending ack\n");
+        #endif
         //
         // Put the I2C master into receive mode.
         //
@@ -140,6 +154,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_READ_ONE:
       {
+        #ifdef DEBUG
+        UARTprintf("In state read one\n");
+        #endif
         //
         // Put the I2C master into receive mode.
         //
@@ -162,6 +179,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_READ_FIRST:
       {
+        #ifdef DEBUG
+        UARTprintf("In state read first\n");
+        #endif
         //
         // Put the I2C master into receive mode.
         //
@@ -185,6 +205,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_READ_NEXT:
       {
+        #ifdef DEBUG
+        UARTprintf("In state read next\n");
+        #endif
         //
         // Read the received character.
         //
@@ -214,6 +237,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_READ_FINAL:
       {
+        #ifdef DEBUG
+        UARTprintf("In state read final\n");
+        #endif
         //
         // Read the received character.
         //
@@ -239,6 +265,9 @@ void I2C0IntHandler(void) {
       //
     case STATE_READ_WAIT:
       {
+        #ifdef DEBUG
+        UARTprintf("In state read wait\n");
+        #endif
         //
         // Read the received character.
         //

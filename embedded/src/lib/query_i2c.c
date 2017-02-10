@@ -66,8 +66,11 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
   //
   // Save the data i2c0_buffer to be written.
   //
-  *i2c_buffer = data;
-  *i2c_count = length;
+
+  // Set buffer to next byte for int
+  *i2c_buffer = data + 1;
+  // Will be writing one byte here to trigger interrupt
+  *i2c_count = length - 1;
   *i2c_address = addr;
 
   #ifdef DEBUG
@@ -76,20 +79,29 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
 
   // Set the next state of the callback state machine based on the number of
   // bytes to write.
-  if(length != 1 ) {
-    *i2c_int_state = STATE_WRITE_NEXT;
+  if(length == 1 ) {
+    *i2c_int_state = STATE_SEND_ACK;
   }
   else {
-    *i2c_int_state = STATE_WRITE_FINAL;
+    // Send one byte here, go to send ack after
+    *i2c_int_state = STATE_WRITE_NEXT;
   }
-
 
   // Set the slave i2c0_address and setup for a transmit operation.
   // Tiva shifts the address left, we need to offset it
-  ROM_I2CMasterSlaveAddrSet(device, (*i2c_address)>>1, false);
-  #ifdef DEBUG
+  ROM_I2CMasterSlaveAddrSet(device, *i2c_address, false);
+  ROM_I2CMasterDataPut(device, *data);
+
+	#ifdef DEBUG
   UARTprintf("Set slave addr to %x\nNext state is %d", *i2c_address, *i2c_int_state);
-  #endif
+	#endif
+
+  if ( length == 1 ) {
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
+  }
+  else {
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_CONT);
+  }
 
   // Wait until the SoftI2C callback state machine is idle.
   while(*i2c_int_state != STATE_IDLE) {}
