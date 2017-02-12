@@ -21,14 +21,12 @@
 #error Update me with new message defs!
 #endif
 
-#include "impl.cpp"
-
 #include <stdio.h>
 
-QSCU::QSCU(std::string deviceFile, QuboSpeed speed) 
-    : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({10,0})
+QSCU::QSCU(std::string deviceFile, speed_t baud) 
+    : _deviceFile(deviceFile), _termBaud(baud), _deviceFD(-1), _timeout({10,0}), _state(initialize(this, QSCU::readRaw, QSCU::writeRaw, (uint16_t)10))
 { 
-    _state = initialize(this, &serial_read, &serial_write, 10);
+   
 }
 
 QSCU::~QSCU() { closeDevice(); }
@@ -43,17 +41,17 @@ void QSCU::openDevice() {
     fd = open(_deviceFile.c_str(), O_RDWR, O_NONBLOCK);
     // Check to see if the device exists.
     if (fd == -1)
-        throw EndpointException("Device '"+_deviceFile+"' unavaliable.");
+        throw QSCUException("Device '"+_deviceFile+"' unavaliable.");
     // Read the config of the interface.
     if(// tcgetattr
        (fd, &termcfg)) 
-        throw EndpointException("Unable to read terminal configuration.");
+        throw QSCUException("Unable to read terminal configuration.");
 
     // Set the baudrate for the terminal
     if(cfsetospeed(&termcfg, _termBaud))
-        throw EndpointException("Unable to set terminal output speed.");
+        throw QSCUException("Unable to set terminal output speed.");
     if(cfsetispeed(&termcfg, _termBaud))
-        throw EndpointException("Unable to set terminal intput speed.");
+        throw QSCUException("Unable to set terminal intput speed.");
 
     // Set raw I/O rules to read and write the data purely.
     cfmakeraw(&termcfg);
@@ -65,16 +63,16 @@ void QSCU::openDevice() {
 
     // Push the configuration to the terminal NOW.
     if(tcsetattr(fd, TCSANOW, &termcfg))
-        throw EndpointException("Unable to set terminal configuration.");
+        throw QSCUException("Unable to set terminal configuration.");
 
     // Pull in the modem configuration
     if(ioctl(fd, TIOCMGET, &modemcfg))
-        throw EndpointException("Unable to read modem configuration.");
+        throw QSCUException("Unable to read modem configuration.");
     // Enable Request to Send
     modemcfg |= TIOCM_RTS;
     // Push the modem config back to the modem.
     if(ioctl(fd, TIOCMSET, &modemcfg))
-        throw EndpointException("Unable to set modem configuration.");
+        throw QSCUException("Unable to set modem configuration.");
 
     // Successful hardware connection!
     // Needs to be set for the qscu protocol library to make the connection.
@@ -83,13 +81,13 @@ void QSCU::openDevice() {
     // Prepare to begin communication with the device.
     if (connect(&_state)) {
         closeDevice();
-        throw QSCUConnectionException("Unable to sychronize the remote connection!");
+        throw QSCUException("Unable to sychronize the remote connection!");
     }
 }
 
 bool QSCU::isOpen() {return _deviceFD >= 0;}
 
-void QSCU::assertOpen() { if (!isOpen()) throw EndpointException("Device needs to be open!"); }
+void QSCU::assertOpen() { if (!isOpen()) throw QSCUException("Device needs to be open!"); }
 
 void QSCU::closeDevice() {
     if (isOpen()) 
@@ -102,7 +100,7 @@ void QSCU::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
-int QSCU::readRaw(void* blob, int bytes_to_read)
+static ssize_t QSCU::readRaw(void* io_host, void* blob, ssize_t bytes_to_read)
 {  
     // Keep track of the number of bytes read, and the number of fds that are ready.
     int bytes_read = 0, current_read = 0, fds_ready = 0;
@@ -138,7 +136,7 @@ int QSCU::readRaw(void* blob, int bytes_to_read)
     return bytes_to_read - bytes_read;
 }
 
-int QSCU::writeRaw(void* blob, int bytes_to_write)
+static ssize_t QSCU::writeRaw(void* io_host, void* blob, ssize_t bytes_to_write)
 {
     // Keep track of the number of bytes written, and the number of fds that are ready.
     int bytes_written = 0, current_write = 0, fds_ready = 0;
@@ -175,10 +173,10 @@ int QSCU::writeRaw(void* blob, int bytes_to_write)
 }
 
 void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) {
-    char buffer[QUBOBUS_MAX_PAYLOAD];
+    char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     bool completed = false;
 
-    Message recieved, sent = create_request(transaction, payload);
+    Message recieved_message, sent = create_request(transaction, payload);
 
     while (!completed) {
         bool recieved = false;
@@ -186,9 +184,9 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
         write_message(&_state, &sent);
 
         while (!recieved) {
-            read_message(&_state, &recieved, buffer);
+            read_message(&_state, &recieved_message, buffer);
 
-            if (checksum(&recieved) != recieved.footer.checksum) {
+            if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
                 Message response = create_error(&eChecksum, NULL);
                 write_message(&_state, &response);
             } else {
@@ -196,32 +194,35 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
             }
         }
 
-        if (recieved.header.message_type == MT_RESPONSE) {
-            if (recieved.header.message_id != transaction->id || recieved.payload_size != transaction->response)
-                throw new QSCUCommunicationException("Malformed response payload!");
+        if (recieved_message.header.message_type == MT_RESPONSE) {
+            if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
+                throw new QSCUException("Malformed response payload!");
             /* Copy the read message back into the response buffer. */
             memcpy(response, buffer, transaction->response);
-            complete = true;
-        } else if (recieved.header.message_type == MT_ERROR) {
-            if (recieved.header.message_id == eChecksum.id) {
+            completed = true;
+        } else if (recieved_message.header.message_type == MT_ERROR) {
+            if (recieved_message.header.message_id == eChecksum.id) {
                 //The other side got a checksum error, retry sending.
             } else {
-                throw new QSCUFunctionalException(str(recieved.payload, recieved.payload_size));
+                // throw new QSCUException(str(recieved_message.payload, recieved_message.payload_size));
             }
         } else {
-            throw new QSCUCommunicationException("Unexpected response: " + recieved.header.message_type + ":" + recieved.header.message_id);
+            //throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
         }
     }
 }
 
-ssize_t serial_read(void *io_host, void *buffer, size_t size) {
-    QSCU *qscu = (QSCU*) io_host;
-    qscu->readRaw(buffer, size);
-}
 
-ssize_t serial_write(void *io_host, void *buffer, size_t size) {
-    QSCU *qscu = (QSCU*) io_host;
-    qscu->writeRaw(buffer, size);
-}
+//I'm like 90% sure we won't need these
+
+// ssize_t serial_read(void *io_host, void *buffer, size_t size) {
+//     QSCU *qscu = (QSCU*) io_host;
+//     qscu->readRaw(buffer, size);
+// }
+
+// ssize_t serial_write(void *io_host, void *buffer, size_t size) {
+//     QSCU *qscu = (QSCU*) io_host;
+//     qscu->writeRaw(buffer, size);
+// }
 
 
