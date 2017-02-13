@@ -24,7 +24,7 @@
 #include <stdio.h>
 
 QSCU::QSCU(std::string deviceFile, speed_t baud) 
-    : _deviceFile(deviceFile), _termBaud(baud), _deviceFD(-1), _timeout({10,0}), _state(initialize(this, QSCU::readRaw, QSCU::writeRaw, (uint16_t)10))
+    : _deviceFile(deviceFile), _termBaud(baud), _deviceFD(-1), _timeout({10,0}), _state(initialize(this,QSCU::readRaw, QSCU::writeRaw, 10))
 { 
    
 }
@@ -100,7 +100,7 @@ void QSCU::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
-static ssize_t QSCU::readRaw(void* io_host, void* blob, ssize_t bytes_to_read)
+ssize_t QSCU::readRaw(void* io_host, void* blob, size_t bytes_to_read)
 {  
     // Keep track of the number of bytes read, and the number of fds that are ready.
     int bytes_read = 0, current_read = 0, fds_ready = 0;
@@ -136,7 +136,7 @@ static ssize_t QSCU::readRaw(void* io_host, void* blob, ssize_t bytes_to_read)
     return bytes_to_read - bytes_read;
 }
 
-static ssize_t QSCU::writeRaw(void* io_host, void* blob, ssize_t bytes_to_write)
+ssize_t QSCU::writeRaw(void* io_host, void* blob, size_t bytes_to_write)
 {
     // Keep track of the number of bytes written, and the number of fds that are ready.
     int bytes_written = 0, current_write = 0, fds_ready = 0;
@@ -215,14 +215,14 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
 
 //I'm like 90% sure we won't need these
 
-// ssize_t serial_read(void *io_host, void *buffer, size_t size) {
-//     QSCU *qscu = (QSCU*) io_host;
-//     qscu->readRaw(buffer, size);
-// }
+ssize_t serial_read(void *io_host, void *buffer, size_t size) {
+    QSCU *qscu = (QSCU*) io_host;
+    qscu->readRaw(buffer, size);
+}
 
-// ssize_t serial_write(void *io_host, void *buffer, size_t size) {
-//     QSCU *qscu = (QSCU*) io_host;
-//     qscu->writeRaw(buffer, size);
-// }
+ssize_t serial_write(void *io_host, void *buffer, size_t size) {
+    QSCU *qscu = (QSCU*) io_host;
+    qscu->writeRaw(buffer, size);
+}
 
 

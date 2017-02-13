@@ -84,19 +84,25 @@ class QSCU
         IO_State _state;
 
         /** Read bytes to a blob, return the bytes not read. */
-        static ssize_t readRaw(void*, void* blob, ssize_t bytes_to_read);
+        ssize_t readRaw(void*, void* blob, size_t bytes_to_read);
         /** Write bytes from a blob, return the bytes not written. */
-        static ssize_t writeRaw(void*, void* blob, ssize_t bytes_to_write);
-
+        ssize_t writeRaw(void*, void* blob, size_t bytes_to_write);
+        
         /** Write a command with variable args and read something back */
         void sendMessage(Transaction *transaction, void *payload, void *response);
+
+         
+        ssize_t serial_read(void *io_host, void *buffer, size_t size); 
+        
+        ssize_t serial_write(void *io_host, void *buffer, size_t size); 
+
 };
 
 
  
-/* ssize_t serial_read(void *io_host, void *buffer, size_t size); */
- 
-/* ssize_t serial_write(void *io_host, void *buffer, size_t size); */
+ssize_t serial_read(void *io_host, void *buffer, size_t size); 
+
+ssize_t serial_write(void *io_host, void *buffer, size_t size);/
 
 
 #endif
