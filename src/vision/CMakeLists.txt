@@ -13,7 +13,7 @@ find_package(catkin
   ram_msgs
   genmsg
 
-  OpenCV
+
 
   rospy
   std_msgs
@@ -23,8 +23,9 @@ find_package(catkin
   actionlib
 )
 
+find_package(OpenCV REQUIRED)
 #sg: these used to be here but I have reason to believe they do not do anything, so I'm getting rid of them
-#find_package(OpenCV REQUIRED)
+
 
 #find_package(
 #  Boost
