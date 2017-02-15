@@ -56,11 +56,11 @@ std::string DVL::getWaterProfilingHelp() {
 }
 
 void DVL::setSystemConfiguration(SystemConfig& config) {
-    sendCommand(cSerialPortControl, 
-            config.speed.id, 
-            config.parity, 
+    sendCommand(cSerialPortControl,
+            config.speed.id,
+            config.parity,
             config.two_stopbits ? 1 : 0);
-    sendCommand(cFlowControl, 
+    sendCommand(cFlowControl,
             config.auto_ensemble_cycling ? 1 : 0,
             config.auto_ping_cycling ? 1 : 0,
             config.binary_data_output ? 1 : 0,
@@ -71,13 +71,13 @@ void DVL::setSystemConfiguration(SystemConfig& config) {
 
 void DVL::setVehicleConfiguration(VehicleConfig& config) {
     sendCommand(cStaticHeadingOffset, config.beam3_alignment);
-    sendCommand(cCoordinateTransformation, 
+    sendCommand(cCoordinateTransformation,
             config.transformation,
             config.use_pitch_roll ? 1 : 0,
             config.use_three_beams ? 1 : 0,
             config.use_bin_mappings ? 1 : 0);
     sendCommand(cOrientationResolution, config.orientation);
-    sendCommand(cSensorSource, 
+    sendCommand(cSensorSource,
             config.condition_sources[0],
             config.condition_sources[1],
             config.condition_sources[2],
@@ -100,9 +100,9 @@ void DVL::setVehicleConfiguration(VehicleConfig& config) {
 void DVL::setLiveConditions(LiveConditions& conditions) {
     sendCommand(cLiveDepth, conditions.depth);
     sendCommand(cLiveHeading, conditions.heading);
-    sendCommand(cLivePitchAndRoll, 
-            conditions.pitch, 
-            conditions.roll, 
+    sendCommand(cLivePitchAndRoll,
+            conditions.pitch,
+            conditions.roll,
             1); // 1 for ship coords, 0 for inst coords
     sendCommand(cLiveSalinity, conditions.salinity);
     sendCommand(cLiveTemperature, conditions.temperature);
@@ -158,7 +158,7 @@ void DVL::setBottomTrackConfiguration(BottomTrackConfig& config) {
     sendCommand(cBottomDepthGuess, config.depth_guess);
     sendCommand(cBottomGainSwitchDepth, config.gain_switch_depth);
     sendCommand(cWaterMassPing, config.water_mass_mode);
-    sendCommand(cWaterMassParameters, 
+    sendCommand(cWaterMassParameters,
             config.water_mass_layer_size,
             config.water_mass_near_bound,
             config.water_mass_far_bound);
@@ -237,7 +237,7 @@ DVL::DVLData DVL::getDVLData() {
     int scanned;
     switch (message.format) {
         case FORMAT_PD0:
-            data.transform = (CoordinateSystem) 
+            data.transform = (CoordinateSystem)
                 ((message.pd0_fixed->coord_transform >> 3) & 0x3);
             if (message.pd0_velocity) {
                 data.water_vel[0] = message.pd0_velocity[0][0];
@@ -276,21 +276,21 @@ DVL::DVLData DVL::getDVLData() {
             break;
         case FORMAT_PD6:
             /* These are the basic ways to grab data from the PD6 format.
-            scanned = sscanf(message.pd6_attitude, 
-                    ":SA,%f,%f,%f", 
+            scanned = sscanf(message.pd6_attitude,
+                    ":SA,%f,%f,%f",
                     &pitch, &roll, &heading);
-            scanned = sscanf(message.pd6_timing, 
+            scanned = sscanf(message.pd6_timing,
                     ":TS,%2d%2d%2d%2d%2d%2d%2d,%f,%f,%f,%f,%1d%x",
                     &year, &month, &day, &hour, &minute, &second, &hundreth,
                     &salinity, &temperature, &depth, &speedofsound, &nerrors, &errcode);
             if (message.pd6_w_instrument) {
-                scanned = sscanf(message.pd6_w_instrument, 
+                scanned = sscanf(message.pd6_w_instrument,
                         ":WI,%d,%d,%d,%d,%c",
                         &xvel, &yvel, &zvel, &evel, &inststatus);
-                scanned = sscanf(message.pd6_w_ship, 
+                scanned = sscanf(message.pd6_w_ship,
                         ":WS,%d,%d,%d,%c",
                         &transverse, &longitudinal, &normal, &shipstatus);
-                scanned = sscanf(message.pd6_w_earth, 
+                scanned = sscanf(message.pd6_w_earth,
                         ":WE,%d,%d,%d,%c",
                         &east, &north, &up, &earthstatus);
                 scanned = sscanf(message.pd6_w_distance,
@@ -298,13 +298,13 @@ DVL::DVLData DVL::getDVLData() {
                         &east, &north, &up, &range, &time);
             }
             if (message.pd6_b_instrument) {
-                    scanned = sscanf(message.pd6_b_instrument, 
+                    scanned = sscanf(message.pd6_b_instrument,
                         ":BI,%d,%d,%d,%d,%c",
                         &xvel, &yvel, &zvel, &evel, &inststatus);
-                    scanned = sscanf(message.pd6_b_ship, 
+                    scanned = sscanf(message.pd6_b_ship,
                         ":BS,%d,%d,%d,%c",
                         &transverse, &longitudinal, &normal, &shipstatus);
-                    scanned = sscanf(message.pd6_b_earth, 
+                    scanned = sscanf(message.pd6_b_earth,
                         ":BE,%d,%d,%d,%c",
                         &east, &north, &up, &earthstatus);
                     scanned = sscanf(message.pd6_b_distance,
@@ -313,55 +313,21 @@ DVL::DVLData DVL::getDVLData() {
             }
             */
             data.transform = CoordinateSystem::SHIP_COORD;
-            scanned = sscanf(message.pd6_w_ship, 
+            scanned = sscanf(message.pd6_w_ship,
                     ":WS,%d,%d,%d,%*c",
                     &(data.water_vel[0]), &(data.water_vel[1]), &(data.water_vel[2]));
             if (scanned != 3)
-                throw new DVLException("Unable to parse PD6 Water Data");
-            scanned = sscanf(message.pd6_b_ship, 
+                throw DVLException("Unable to parse PD6 Water Data");
+            scanned = sscanf(message.pd6_b_ship,
                     ":BS,%d,%d,%d,%*c",
                     &(data.bottom_vel[0]), &(data.bottom_vel[1]), &(data.bottom_vel[2]));
             if (scanned != 3)
-                throw new DVLException("Unable to parse PD6 Bottom Data");
+                throw DVLException("Unable to parse PD6 Bottom Data");
             break;
         case FORMAT_EMPTY:
         case FORMAT_TEXT:
         default:
-            throw new DVLException("Did not recieve a data ensemble from device.");
+            throw DVLException("Did not recieve a data ensemble from device.");
     }
     return data;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
