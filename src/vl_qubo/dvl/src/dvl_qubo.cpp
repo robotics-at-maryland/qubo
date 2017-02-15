@@ -13,6 +13,9 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 	//inits a publisher on this node
 	dvlPub = n->advertise<ram_msgs::DVL_qubo>("qubo/" + name, 1000);
 
+    //creates a refresh rate
+    loop_rate.reset(new ros::Rate(rate));
+
 	//creates/opens the DVL
 	//Baud rate is currently a complete guess
 	dvl.reset(new DVL(device, DVL::k38400));
@@ -20,7 +23,7 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 	// attempt to open the DVL, and error if it doesn't work
 	try{
 		dvl->openDevice();
-	}catch(DVLException ex){
+	}catch(DVLException& ex){
 		ROS_ERROR("%s", ex.what());
 		return;
 	}
@@ -30,9 +33,17 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 		return;
 	}
 
-    dvl->loadFactorySettings();
-    
-    dvl->enableMeasurement();
+    //attempt to load factory settings, because we have no idea what they
+    //should be
+    try{
+        dvl->loadFactorySettings();
+        dvl->enableMeasurement();
+        ROS_DEBUG("DVL succsesfully setup in constructor");
+        ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
+    }catch(DVLException& ex){
+        ROS_ERROR("%s", ex.what());
+    }
+
     //checks the parameter server to see if we have water data,
     //sets them if we don't
     // if(!n.getParam("salinity", live_cond.salinity)){
@@ -47,12 +58,16 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 
 	//INSERT CONFIG HERE~~~~~~
 
-	ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
 }
 
 DvlQuboNode::~DvlQuboNode(){
-    dvl->disableMeasurement();
-	dvl->closeDevice();
+    try{
+        dvl->disableMeasurement();
+        dvl->closeDevice();
+    }catch(DVLException& ex){
+        ROS_ERROR("Unable to disable measurement and close device");
+        ROS_ERROR("%s", ex.what());
+    }
 }
 
 void DvlQuboNode::update(){
@@ -62,14 +77,18 @@ void DvlQuboNode::update(){
 	if(!dvl->isOpen()){
 		try{
 			dvl->openDevice();
-		}catch(DVLException ex){
+            dvl->loadFactorySettings();
+            dvl->enableMeasurement();
+            ROS_DEBUG("DVL succsesfully setup in update method");
+		}catch(DVLException& ex){
 			ROS_ERROR("Attempt %i to connect to the DVL failed", attempts++);
 			ROS_ERROR("%s", ex.what());
-			if(attempts > MAX_CONNECTION_ATTEMPTS){
+			if(attempts > DvlQuboNode::MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find DVL, exiting node.");
 				exit(-1);
 			}
 		}
+        return;
 	}
     attempts = 0;
 
@@ -78,7 +97,7 @@ void DvlQuboNode::update(){
 
 	try{
 		sensor_data = dvl->getDVLData();
-	}catch(DVLException ex){
+	}catch(DVLException& ex){
 		ROS_WARN("%s", ex.what());
 		return;
 	}
