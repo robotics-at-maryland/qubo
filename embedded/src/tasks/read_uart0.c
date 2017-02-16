@@ -11,6 +11,10 @@
 
 #include "tasks/include/read_uart0.h"
 
+//qubobus 
+#include "qubobus.h"
+#include "io.h"
+
 // For testing purposes
 //#include "lib/include/write_uart0.h"
 
@@ -19,6 +23,10 @@ bool read_uart0_init(void) {
                    tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
   }
+
+  IO_State state;
+  UARTprintf("hey the thing worked!\n");
+  
   return false;
 }
 

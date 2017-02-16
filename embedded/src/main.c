@@ -180,13 +180,15 @@ int main() {
   UARTprintf("Datastructures allocated\n");
   #endif
   uint8_t count;
-
+  /*
   while(1){
       writeUART0(count, 1);
       //UARTprintf("HELLO%i\n" ,count);
       //vTaskDelay(500);
       count++;
   }
+  */
+  
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
@@ -197,17 +199,21 @@ int main() {
   }
   */
   
-  /*
+  /*  
   if ( example_blink_init() ) {
-    while(1){}
+            while(1){}
   }
   */
 
-  /*
+  
   if ( read_uart0_init() ) {
-    while(1){}
+      #ifdef DEBUG
+      UARTprintf("readUART task init failed\n");
+      #endif
+      
+      while(1){}
   }
-  */
+  
 
   /*
   if ( example_uart_init() ) {

@@ -18,6 +18,7 @@ void UART0IntHandler(void) {
   }
 
   // Get one byte
+ 
   // Tivaware casts the byte to a int32_t for some reason, cast back to save space
   uint8_t c = (uint8_t)(ROM_UARTCharGetNonBlocking(UART_DEVICE));
 
