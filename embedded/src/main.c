@@ -179,15 +179,24 @@ int main() {
   #ifdef DEBUG
   UARTprintf("Datastructures allocated\n");
   #endif
+  uint8_t count;
 
+  while(1){
+      writeUART0(count, 1);
+      //UARTprintf("HELLO%i\n" ,count);
+      //vTaskDelay(500);
+      count++;
+  }
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
 
+  /*
   if ( i2c_test_init() ) {
     while(1){}
   }
-
+  */
+  
   /*
   if ( example_blink_init() ) {
     while(1){}
