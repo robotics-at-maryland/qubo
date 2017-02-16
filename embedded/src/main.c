@@ -43,36 +43,11 @@
 #include "include/i2c2_mutex.h"
 #include "include/i2c3_mutex.h"
 
-#include "include/i2c0_globals.h"
-#include "include/i2c1_globals.h"
-#include "include/i2c2_globals.h"
-#include "include/i2c3_globals.h"
-
 #include "include/uart0_mutex.h"
 #include "include/uart1_mutex.h"
 #include "include/rgb_mutex.h"
 #include "include/read_uart0_queue.h"
 #include "include/read_uart1_queue.h"
-
-volatile uint32_t *i2c0_address;
-volatile uint8_t **i2c0_buffer;
-volatile uint32_t *i2c0_count;
-volatile uint16_t *i2c0_int_state;
-
-volatile uint32_t *i2c1_address;
-volatile uint8_t **i2c1_buffer;
-volatile uint32_t *i2c1_count;
-volatile uint16_t *i2c1_int_state;
-
-volatile uint32_t *i2c2_address;
-volatile uint8_t **i2c2_buffer;
-volatile uint32_t *i2c2_count;
-volatile uint16_t *i2c2_int_state;
-
-volatile uint32_t *i2c3_address;
-volatile uint8_t **i2c3_buffer;
-volatile uint32_t *i2c3_count;
-volatile uint16_t *i2c3_int_state;
 
 SemaphoreHandle_t i2c0_mutex;
 SemaphoreHandle_t i2c1_mutex;
@@ -131,38 +106,6 @@ int main() {
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
   // -----------------------------------------------------------------------
-
-  i2c0_address = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // Double ptr, ptr to a pointer of buffer
-  i2c0_buffer = (uint8_t **)pvPortMalloc(sizeof(uint8_t *));
-  i2c0_count = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // This is the only variable that isn't existing in the calling task
-  // Belongs to the interrupt, so we're not allocating a pointer but the value itself
-  i2c0_int_state = (uint16_t *)pvPortMalloc(sizeof(uint16_t));
-
-  i2c1_address = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // Double ptr, ptr to a pointer of buffer
-  i2c1_buffer = (uint8_t **)pvPortMalloc(sizeof(uint8_t *));
-  i2c1_count = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // This is the only variable that isn't existing in the calling task
-  // Belongs to the interrupt, so we're not allocating a pointer but the value itself
-  i2c1_int_state = (uint16_t *)pvPortMalloc(sizeof(uint16_t));
-
-  i2c2_address = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // Double ptr, ptr to a pointer of buffer
-  i2c2_buffer = (uint8_t **)pvPortMalloc(sizeof(uint8_t *));
-  i2c2_count = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // This is the only variable that isn't existing in the calling task
-  // Belongs to the interrupt, so we're not allocating a pointer but the value itself
-  i2c2_int_state = (uint16_t *)pvPortMalloc(sizeof(uint16_t));
-
-  i2c3_address = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // Double ptr, ptr to a pointer of buffer
-  i2c3_buffer = (uint8_t **)pvPortMalloc(sizeof(uint8_t *));
-  i2c3_count = (uint32_t *)pvPortMalloc(sizeof(uint32_t *));
-  // This is the only variable that isn't existing in the calling task
-  // Belongs to the interrupt, so we're not allocating a pointer but the value itself
-  i2c3_int_state = (uint16_t *)pvPortMalloc(sizeof(uint16_t));
 
   i2c0_mutex = xSemaphoreCreateMutex();
   i2c1_mutex = xSemaphoreCreateMutex();

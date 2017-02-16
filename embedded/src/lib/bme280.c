@@ -9,21 +9,20 @@
 
 // Public
 bool bme280_begin(uint32_t device) {
-  // Make this an array so we can reuse it for the writes later
+  // Buffer to store received values
   uint8_t buffer[2];
-  buffer[0] = BME280_REGISTER_CHIPID;
 
   #ifdef DEBUG
   UARTprintf("in bme280_begin\n");
   #endif
 
-  queryI2C(device, BME280_ADDRESS, &(buffer[0]), 1, &(buffer[1]), 1);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_CHIPID, buffer, 1);
 
   #ifdef DEBUG
   UARTprintf("After first query\n");
   #endif
 
-  if ( buffer[1] != 0x60 )
+  if ( buffer[0] != 0x60 )
     return false;
 
   readCoefficients(device);
@@ -32,19 +31,18 @@ bool bme280_begin(uint32_t device) {
   // Set before CONTROL_meas (DS 5.4.3)
   buffer[0] = BME280_REGISTER_CONTROLHUMID;
   buffer[1] = 0x05;
-  writeI2C(device, BME280_ADDRESS, buffer, 2, false);
+  writeI2C(device, BME280_ADDRESS, buffer, 2);
 
   // 16x oversampling, normal mode
   buffer[0] = BME280_REGISTER_CONTROL;
   buffer[1] = 0xB7;
-  writeI2C(device, BME280_ADDRESS, buffer, 2, false);
+  writeI2C(device, BME280_ADDRESS, buffer, 2);
 
   return true;
 }
 
 float bme280_readTemperature(uint32_t device) {
   int32_t var1, var2;
-  uint8_t reg = BME280_REGISTER_TEMPDATA;
 
   uint8_t adc_T_ptr[3];
 
@@ -52,7 +50,7 @@ float bme280_readTemperature(uint32_t device) {
   int32_t adc_T = 0;
 
   // Query the BME280 with reg, and read back 3 bytes
-  queryI2C(device, BME280_ADDRESS, &reg, 1, adc_T_ptr, 3);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_TEMPDATA, adc_T_ptr, 3);
 
   // Make the 3 bytes into a 32 bit int
   ARR_TO_32(adc_T, adc_T_ptr);
@@ -81,7 +79,7 @@ float bme280_readPressure(uint32_t device) {
   int32_t adc_P = 0;
 
   uint8_t reg = BME280_REGISTER_PRESSUREDATA;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, adc_P_ptr, 3);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_PRESSUREDATA, adc_P_ptr, 3);
 
   // Make the 3 bytes into a 32 bit
   ARR_TO_32(adc_P, adc_P_ptr);
@@ -115,8 +113,7 @@ float bme280_readHumidity(uint32_t device) {
   int32_t adc_H = 0;
   uint8_t adc_H_ptr[2];
 
-  uint8_t reg = BME280_REGISTER_HUMIDDATA;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, adc_H_ptr, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_HUMIDDATA, adc_H_ptr, 2);
 
   // Make the 2 bytes to a 32bit
   ARR_TO_16(adc_H, adc_H_ptr);
@@ -180,110 +177,93 @@ float bme280_seaLevelForAltitude(uint32_t device, float altitude, float atmosphe
 
 // Private
 static void readCoefficients(uint32_t device) {
-  uint8_t reg;
+
   uint8_t buffer[2];
 
-  reg = BME280_REGISTER_DIG_T1;
   // Read 2 bytes save into calib
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_T1, buffer, 2);
   // The LE function does this after reading
   ARR_TO_16(_bme280_calib.dig_T1, buffer);
   LE(_bme280_calib.dig_T1);
 
-  reg = BME280_REGISTER_DIG_T2;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_T2, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_T2, buffer);
   LE(_bme280_calib.dig_T2);
 
-  reg = BME280_REGISTER_DIG_T3;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_T3, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_T3, buffer);
   LE(_bme280_calib.dig_T3);
 
-  reg = BME280_REGISTER_DIG_P1;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P1, buffer, 2);
   ARR_TO_16(_bme280_calib.dig_P1, buffer);
   LE(_bme280_calib.dig_P2);
 
-  reg = BME280_REGISTER_DIG_P2;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P2, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P2, buffer);
   LE(_bme280_calib.dig_P2);
 
-  reg = BME280_REGISTER_DIG_P3;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P3, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P3, buffer);
   LE(_bme280_calib.dig_P3);
 
-  reg = BME280_REGISTER_DIG_P4;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P4, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P4, buffer);
   LE(_bme280_calib.dig_P4);
 
-  reg = BME280_REGISTER_DIG_P5;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P5, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P5, buffer);
   LE(_bme280_calib.dig_P5);
 
-  reg = BME280_REGISTER_DIG_P6;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P6, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P6, buffer);
   LE(_bme280_calib.dig_P6);
 
-  reg = BME280_REGISTER_DIG_P7;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P7, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P7, buffer);
   LE(_bme280_calib.dig_P7);
 
-  reg = BME280_REGISTER_DIG_P8;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P8, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P8, buffer);
   LE(_bme280_calib.dig_P8);
 
-  reg = BME280_REGISTER_DIG_P9;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P9, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P9, buffer);
   LE(_bme280_calib.dig_P9);
 
   // Just reading one byte, so save directly to it
-  reg = BME280_REGISTER_DIG_H1;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &(_bme280_calib.dig_H1), 1);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H1, &(_bme280_calib.dig_H1), 1);
 
-  reg = BME280_REGISTER_DIG_H2;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, buffer, 2);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H2, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_H2, buffer);
   LE(_bme280_calib.dig_H2);
 
-  reg = BME280_REGISTER_DIG_H3;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &(_bme280_calib.dig_H3), 1);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H3, &(_bme280_calib.dig_H3), 1);
 
   // They do some weird stuff here, just copying it
-  uint8_t temp;
-  reg = BME280_REGISTER_DIG_H4;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &(_bme280_calib.dig_H4), 1);
-  reg = BME280_REGISTER_DIG_H4 + 1;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &temp, 1);
-  temp = temp & 0xF;
-  _bme280_calib.dig_H4 = (_bme280_calib.dig_H4 << 4 ) | temp;
+  uint8_t temp1;
+  uint8_t temp2;
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H4, &temp1, 1);
+  _bme280_calib.dig_H4 = temp1;
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H4 + 1, &temp2, 1);
+  temp2 &= 0xF;
+  _bme280_calib.dig_H4 = (_bme280_calib.dig_H4 << 4 ) | temp2;
 
-  reg = BME280_REGISTER_DIG_H5;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &(_bme280_calib.dig_H5), 1);
-  reg = BME280_REGISTER_DIG_H5 + 1;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &temp, 1);
-  _bme280_calib.dig_H5 = ( temp << 4 ) | ( _bme280_calib.dig_H5 >> 4);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H5, &temp1, 1);
+  _bme280_calib.dig_H5 = temp1;
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H5 + 1, &temp2, 1);
+  _bme280_calib.dig_H5 = ( temp2 << 4 ) | ( _bme280_calib.dig_H5 >> 4);
 
-  reg = BME280_REGISTER_DIG_H6;
-  queryI2C(device, BME280_ADDRESS, &reg, 1, &(_bme280_calib.dig_H6), 1);
+  readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H6, &(_bme280_calib.dig_H6), 1);
   _bme280_calib.dig_H6 = (int8_t)_bme280_calib.dig_H6;
 }

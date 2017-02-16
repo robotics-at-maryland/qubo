@@ -5,52 +5,8 @@
 
 #include "lib/include/query_i2c.h"
 
-/*
-  Private function whose only job is to assign the library pointers to the
-  needed externs for interrupts
- */
-static void assign_vars(uint32_t device) {
-  switch(device) {
-  case I2C0_BASE:
-    {
-      i2c_mutex = &i2c0_mutex;
-      i2c_address = i2c0_address;
-      i2c_buffer = i2c0_buffer;
-      i2c_count = i2c0_count;
-      i2c_int_state = i2c0_int_state;
-      break;
-    }
-  case I2C1_BASE:
-    {
-      i2c_mutex = &i2c1_mutex;
-      i2c_address = i2c1_address;
-      i2c_buffer = i2c1_buffer;
-      i2c_count = i2c1_count;
-      i2c_int_state = i2c1_int_state;
-      break;
-    }
-  case I2C2_BASE:
-    {
-      i2c_mutex = &i2c2_mutex;
-      i2c_address = i2c2_address;
-      i2c_buffer = i2c2_buffer;
-      i2c_count = i2c2_count;
-      i2c_int_state = i2c2_int_state;
-      break;
-    }
-  case I2C3_BASE:
-    {
-      i2c_mutex = &i2c3_mutex;
-      i2c_address = i2c3_address;
-      i2c_buffer = i2c3_buffer;
-      i2c_count = i2c3_count;
-      i2c_int_state = i2c3_int_state;
-      break;
-    }
-  }
-}
 
-void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, bool query) {
+void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
 
   assign_vars(device);
 
@@ -62,97 +18,139 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, boo
     taskYIELD();
   }
 
+  // Set address
+  ROM_I2CMasterSlaveAddrSet(device, addr, false);
 
-  //
-  // Save the data i2c0_buffer to be written.
-  //
-
-  // Set buffer to next byte for int
-  *i2c_buffer = data + 1;
-  // Will be writing one byte here to trigger interrupt
-  *i2c_count = length - 1;
-  *i2c_address = addr;
-
-  #ifdef DEBUG
-  UARTprintf("Writing %d bytes to %x\nWriting %x\n", *i2c_count, *i2c_address, **i2c0_buffer);
-  #endif
-
-  // Set the next state of the callback state machine based on the number of
-  // bytes to write.
-  if(length == 1 ) {
-    *i2c_int_state = STATE_SEND_ACK;
-  }
-  else {
-    // Send one byte here, go to send ack after
-    *i2c_int_state = STATE_WRITE_NEXT;
-  }
-
-  // Set the slave i2c0_address and setup for a transmit operation.
-  // Tiva shifts the address left, we need to offset it
-  ROM_I2CMasterSlaveAddrSet(device, *i2c_address, false);
-  ROM_I2CMasterDataPut(device, *data);
-
-	#ifdef DEBUG
-  UARTprintf("Set slave addr to %x\nNext state is %d", *i2c_address, *i2c_int_state);
-	#endif
+  // Put data, increment pointer after
+  ROM_I2CMasterDataPut(device, (*data)++);
 
   if ( length == 1 ) {
+    // Send byte
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
+
+    // Wait to finish transferring
+    while(ROM_I2CMasterBusy(device));
   }
+
   else {
-    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_CONT);
+    // Initiate burst send
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
+
+    while(ROM_I2CMasterBusy(device));
+
+    //
+    for(uint32_t i = 0; i < (length - 1); i++) {
+      // put data into fifo
+      ROM_I2CMasterDataPut(device, *data);
+      // Increment pointer
+      data++;
+      // Send data
+      ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_CONT);
+      // Wait till done transferring
+      while(ROM_I2CMasterBusy(device));
+    }
+
+    // put last byte
+    ROM_I2CMasterDataPut(device, *data);
+    // Send last byte
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    // wait till done transferring
+    while(ROM_I2CMasterBusy(device));
   }
 
-  // Wait until the SoftI2C callback state machine is idle.
-  while(*i2c_int_state != STATE_IDLE) {}
-
-  #ifdef DEBUG
-  UARTprintf("Finished interrupt\n");
-  #endif
-
-  // Only give it back if its an individual write
-  if ( !query )
-    xSemaphoreGive(*i2c_mutex);
-}
-
-
-void readI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length, bool query) {
-
-  assign_vars(device);
-
-  // Only take this if it's an individual read
-  if ( !query ) {
-    // If the i2c bus is busy, yield task and then try again
-    while (xSemaphoreTake(i2c0_mutex, 0) == pdFALSE) {
-      taskYIELD();
-    }
-  }
-
-  // Save the data i2c0_buffer to be read.
-  *i2c_buffer = data;
-  *i2c_count = length;
-  *i2c_address = addr;
-  // Set the next state of the callback state machine based on the number of
-  // bytes to read.
-  if(length == 1)
-    {
-      *i2c_int_state = STATE_READ_ONE;
-    }
-  else
-    {
-      *i2c_int_state = STATE_READ_FIRST;
-    }
-  // Wait until the state machine is idle.
-  while(*i2c_int_state != STATE_IDLE) {}
-
+  // Give semaphore back
   xSemaphoreGive(*i2c_mutex);
 }
 
-// Will perform a write, then a read after
-void queryI2C(uint32_t device, uint8_t addr, uint8_t *write_data, uint32_t write_length,
-                 uint8_t *read_data, uint8_t read_length) {
+void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t length) {
 
-  writeI2C(device, addr, write_data, write_length, true);
-  readI2C(device, addr, read_data, read_length, true);
+  assign_vars(device);
+
+  // If the i2c bus is busy, yield task and then try again
+  while (xSemaphoreTake(i2c0_mutex, 0) == pdFALSE) {
+    taskYIELD();
+  }
+
+  //specify that we are writing (a register address) to the
+  //slave device
+  ROM_I2CMasterSlaveAddrSet(device, addr, false);
+
+  //specify register to be read
+  ROM_I2CMasterDataPut(device, reg);
+
+  //send control byte and register address byte to slave device
+  ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
+
+  //wait for MCU to finish transaction
+  while(ROM_I2CMasterBusy(device));
+
+  //specify that we are going to read from slave device
+  ROM_I2CMasterSlaveAddrSet(device, addr, true);
+
+  if ( length == 1 ) {
+    // Read one byte
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_RECEIVE);
+
+    // Wait to finish reading
+    while(ROM_I2CMasterBusy(device));
+
+    // Set the buffer to what was recieved
+    *data = ROM_I2CMasterDataGet(device);
+  }
+  else {
+    // Initiate burst read
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
+
+    // Wait to finish reading
+    while(ROM_I2CMasterBusy(device));
+
+    for(uint32_t i = 0; i < (length - 1); i++) {
+      // Set the buffer with recieved byte
+      *data = ROM_I2CMasterDataGet(device);
+      // Increment pointer
+      data++;
+      // Receive data
+      ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
+    }
+
+    // Read last byte
+    *data = ROM_I2CMasterDataGet(device);
+
+    // Finish the read
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
+
+    while(ROM_I2CMasterBusy(device));
+  }
+
+  // Give back semaphore
+  xSemaphoreGive(*i2c_mutex);
 }
 
+/*
+  Private function whose only job is to assign the library pointers to the
+  needed externs for interrupts
+*/
+static void assign_vars(uint32_t device) {
+  switch(device) {
+  case I2C0_BASE:
+    {
+      i2c_mutex = &i2c0_mutex;
+      break;
+    }
+  case I2C1_BASE:
+    {
+      i2c_mutex = &i2c1_mutex;
+      break;
+    }
+  case I2C2_BASE:
+    {
+      i2c_mutex = &i2c2_mutex;
+      break;
+    }
+  case I2C3_BASE:
+    {
+      i2c_mutex = &i2c3_mutex;
+      break;
+    }
+  }
+}
