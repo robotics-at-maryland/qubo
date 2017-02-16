@@ -124,9 +124,6 @@ int main() {
   configureGPIO();
   configureI2C();
 
-  // Master enable interrupts
-  ROM_IntMasterEnable();
-
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
@@ -179,7 +176,7 @@ int main() {
   #ifdef DEBUG
   UARTprintf("Datastructures allocated\n");
   #endif
-  uint8_t count;
+
   /*
   while(1){
       writeUART0(count, 1);
@@ -225,6 +222,11 @@ int main() {
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
   #endif
+
+  
+  // Master enable interrupts
+  ROM_IntMasterEnable();
+  
   vTaskStartScheduler();
 
   while(1){}
