@@ -23,8 +23,8 @@ bool read_uart0_init(void) {
                    tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
   }
-
-  IO_State state;
+  
+  IO_State state initialize(UART0_BASE, writeUART0, xQueueRecieve, 1);
   UARTprintf("hey the thing worked!\n");
   
   return false;
