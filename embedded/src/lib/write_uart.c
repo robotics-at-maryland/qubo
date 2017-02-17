@@ -15,13 +15,14 @@ void writeUART0(uint8_t *buffer, uint16_t size) {
 
   for (uint16_t i = 0; i < size; i++) {
     // Write buffer to UART
+      //sg: this probably needs to be changed, we don't check the return value here.
     ROM_UARTCharPutNonBlocking(UART0_BASE, *(buffer+i));
 
   }
   // Maybe needed, if they're going to be dynamically allocated might as well free here
   // so its not forgotten
   // vPortFree(buffer);
-  xSemaphoreGive(uart0_mutex);
+  xSemaphoreGive (uart0_mutex);
 
 }
 

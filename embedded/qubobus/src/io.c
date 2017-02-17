@@ -9,6 +9,14 @@ static void create_message(Message *message, uint8_t message_type, uint8_t messa
 /*
  * API functionality
  */
+
+//The read_raw and write_raw functions must match the spec for posix read/write
+//for documentation on these type "man read" and "man right" into your terminal, those
+//are the reads and writes we are talking about.
+
+//The difference is that io_host pointer. This will be the first argument passed to your read/write functions
+//it doesn't need to be a file descriptor or anything, it is meant to tell your read/write functions what to
+//read/write to though. 
 IO_State initialize(void *io_host, raw_io_function read_raw, raw_io_function write_raw, uint16_t priority) {
     IO_State state = {0};
 

@@ -27,6 +27,9 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
+//added this to get ssize_t but really maybe we should get that from the qubobus include
+#include <sys/types.h>
+
 #ifdef DEBUG
 #include <utils/uartstdio.h>
 #endif
@@ -36,5 +39,9 @@ volatile QueueHandle_t read_uart0_queue;
 bool read_uart0_init(void);
 
 static void read_uart0_task(void* params);
+
+static ssize_t read_queue(void* io_host, void* buffer, size_t size);
+
+static ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size);
 
 #endif
