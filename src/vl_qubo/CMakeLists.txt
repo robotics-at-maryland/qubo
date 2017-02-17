@@ -90,9 +90,9 @@ add_executable(test_defs ${DEF_TEST_FILES})
 target_link_libraries(test_defs qubobus)
 
 
-#add_library(qscu ${QSCU_SRC_FILES})
-#set_target_properties(qscu PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(qscu qubobus)
+add_library(qscu ${QSCU_SRC_FILES})
+set_target_properties(qscu PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(qscu qubobus)
 
 
 ##############################

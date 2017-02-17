@@ -24,7 +24,10 @@
 #include <stdio.h>
 
 QSCU::QSCU(std::string deviceFile, speed_t baud) 
-    : _deviceFile(deviceFile), _termBaud(baud), _deviceFD(-1), _timeout({10,0}), _state(initialize(this,QSCU::readRaw, QSCU::writeRaw, 10))
+    : _deviceFile(deviceFile),
+      _termBaud(baud),
+      _deviceFD(-1),
+      _timeout({10,0})
 { 
    
 }
@@ -43,9 +46,9 @@ void QSCU::openDevice() {
     if (fd == -1)
         throw QSCUException("Device '"+_deviceFile+"' unavaliable.");
     // Read the config of the interface.
-    if(// tcgetattr
-       (fd, &termcfg)) 
-        throw QSCUException("Unable to read terminal configuration.");
+    // if(// tcgetattr
+    //   (fd, &termcfg)) 
+    //    throw QSCUException("Unable to read terminal configuration.");
 
     // Set the baudrate for the terminal
     if(cfsetospeed(&termcfg, _termBaud))
@@ -78,6 +81,7 @@ void QSCU::openDevice() {
     // Needs to be set for the qscu protocol library to make the connection.
     _deviceFD = fd;
 
+    _state = initialize(&_deviceFD, QSCU::serialRead, QSCU::serialWrite, 10);
     // Prepare to begin communication with the device.
     if (connect(&_state)) {
         closeDevice();
@@ -100,6 +104,19 @@ void QSCU::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
+
+ssize_t QSCU::serialRead(void *io_host, void *buffer, size_t size) {
+    return read(*((int*)io_host), buffer, size);
+}
+
+ssize_t QSCU::serialWrite(void *io_host, void *buffer, size_t size) {
+    return write(*((int*)io_host), buffer, size);
+}
+
+
+
+
+/*
 ssize_t QSCU::readRaw(void* io_host, void* blob, size_t bytes_to_read)
 {  
     // Keep track of the number of bytes read, and the number of fds that are ready.
@@ -171,6 +188,8 @@ ssize_t QSCU::writeRaw(void* io_host, void* blob, size_t bytes_to_write)
     // Return the number of bytes we actually managed to write.
     return bytes_to_write - bytes_written;
 }
+*/
+
 
 void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) {
     char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
@@ -210,19 +229,10 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
             //throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
         }
     }
-}
 
 
-//I'm like 90% sure we won't need these
 
-ssize_t serial_read(void *io_host, void *buffer, size_t size) {
-    QSCU *qscu = (QSCU*) io_host;
-    qscu->readRaw(buffer, size);
-}
-
-ssize_t serial_write(void *io_host, void *buffer, size_t size) {
-    QSCU *qscu = (QSCU*) io_host;
-    qscu->writeRaw(buffer, size);
+    
 }
 
 

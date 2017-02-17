@@ -24,10 +24,17 @@ bool read_uart0_init(void) {
         return true;
     }
     
+    
     IO_State state = initialize(UART0_BASE, &write_uart_wrapper, &read_queue, 1);
     #ifdef DEBUG
-    UARTprintf("hey the thing worked!\n");
+    UARTprintf("qubobus initialized!\n");
     #endif
+    int error = connect(&state);
+    #ifdef DEBUG
+    UARTprintf("error reads as %i\n", error);
+    #endif
+    
+        
     return false;
 }
 
