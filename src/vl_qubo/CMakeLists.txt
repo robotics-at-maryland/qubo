@@ -79,7 +79,7 @@ target_link_libraries(qubo_ahrs_node ${catkin_LIBRARIES})
 
 add_executable(qubo_dvl_node ${DVL_SRC_FILES})
 target_link_libraries(qubo_dvl_node ${catkin_LIBRARIES})
-
+add_dependencies(qubo_dvl_node ram_msgs_generate_messages_cpp)
 
 ##############################
 # Installable Targets ########

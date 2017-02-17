@@ -18,8 +18,8 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 
 	//creates/opens the DVL
 	//Baud rate is currently a complete guess
-	dvl.reset(new DVL(device, DVL::k38400));
-
+	dvl.reset(new DVL(device, DVL::k57600));
+	ROS_DEBUG("Device location: %s", device.c_str());
 	// attempt to open the DVL, and error if it doesn't work
 	try{
 		dvl->openDevice();
