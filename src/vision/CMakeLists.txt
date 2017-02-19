@@ -100,13 +100,13 @@ set(CANNY_TUNER_FILES
 # Add Executables ############
 ##############################
 
-add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
+add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES}) 
 target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
 
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
-#target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
