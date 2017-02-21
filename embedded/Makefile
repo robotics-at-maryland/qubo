@@ -153,8 +153,8 @@ $(ELF_IMAGE) : $(OBJS) $(LIBC) $(LIBM) $(LIBGCC)
 	@if [ $(DEBUG) = "ON" ]; then \
 		echo "_____________________________________________________________";\
 		echo "Debug on";\
-		echo "$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS)";\
-		$(LD) $(OFLAG) $@ $^ $(TIVA_DRIVER_OBJS) $(UTILS_OBJS) $(LDFLAGS);\
+		echo "$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS)";\
+		$(LD) $(OFLAG) $@ $^ $(UTILS_OBJS) $(LDFLAGS);\
 	else \
 		echo "_____________________________________________________________";\
 		echo "Debug off";\

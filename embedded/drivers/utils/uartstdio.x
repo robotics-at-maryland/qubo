@@ -286,15 +286,15 @@ UARTPrimeTransmit(uint32_t ui32Base)
         // Disable the UART interrupt.  If we don't do this there is a race
         // condition which can cause the read index to be corrupted.
         //
-        ROM_IntDisable(g_ui32UARTInt[g_ui32PortNum]);
+        MAP_IntDisable(g_ui32UARTInt[g_ui32PortNum]);
 
         //
         // Yes - take some characters out of the transmit buffer and feed
         // them to the UART transmit FIFO.
         //
-        while(ROM_UARTSpaceAvail(ui32Base) && !TX_BUFFER_EMPTY)
+        while(MAP_UARTSpaceAvail(ui32Base) && !TX_BUFFER_EMPTY)
         {
-            ROM_UARTCharPutNonBlocking(ui32Base,
+            MAP_UARTCharPutNonBlocking(ui32Base,
                                       g_pcUARTTxBuffer[g_ui32UARTTxReadIndex]);
             ADVANCE_TX_BUFFER_INDEX(g_ui32UARTTxReadIndex);
         }
@@ -302,7 +302,7 @@ UARTPrimeTransmit(uint32_t ui32Base)
         //
         // Reenable the UART interrupt.
         //
-        ROM_IntEnable(g_ui32UARTInt[g_ui32PortNum]);
+        MAP_IntEnable(g_ui32UARTInt[g_ui32PortNum]);
     }
 }
 #endif
@@ -349,7 +349,7 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
     //
     // Check to make sure the UART peripheral is present.
     //
-    if(!ROM_SysCtlPeripheralPresent(g_ui32UARTPeriph[ui32PortNum]))
+    if(!MAP_SysCtlPeripheralPresent(g_ui32UARTPeriph[ui32PortNum]))
     {
         return;
     }
@@ -362,12 +362,12 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
     //
     // Enable the UART peripheral for use.
     //
-    ROM_SysCtlPeripheralEnable(g_ui32UARTPeriph[ui32PortNum]);
+    MAP_SysCtlPeripheralEnable(g_ui32UARTPeriph[ui32PortNum]);
 
     //
     // Configure the UART for 115200, n, 8, 1
     //
-    ROM_UARTConfigSetExpClk(g_ui32Base, ui32SrcClock, ui32Baud,
+    MAP_UARTConfigSetExpClk(g_ui32Base, ui32SrcClock, ui32Baud,
                             (UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE |
                              UART_CONFIG_WLEN_8));
 
@@ -376,7 +376,7 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
     // Set the UART to interrupt whenever the TX FIFO is almost empty or
     // when any character is received.
     //
-    ROM_UARTFIFOLevelSet(g_ui32Base, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
+    MAP_UARTFIFOLevelSet(g_ui32Base, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
 
     //
     // Flush both the buffers.
@@ -395,15 +395,15 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
     // transmit interrupt in the UART itself until some data has been placed
     // in the transmit buffer.
     //
-    ROM_UARTIntDisable(g_ui32Base, 0xFFFFFFFF);
-    ROM_UARTIntEnable(g_ui32Base, UART_INT_RX | UART_INT_RT);
-    ROM_IntEnable(g_ui32UARTInt[ui32PortNum]);
+    MAP_UARTIntDisable(g_ui32Base, 0xFFFFFFFF);
+    MAP_UARTIntEnable(g_ui32Base, UART_INT_RX | UART_INT_RT);
+    MAP_IntEnable(g_ui32UARTInt[ui32PortNum]);
 #endif
 
     //
     // Enable the UART operation.
     //
-    ROM_UARTEnable(g_ui32Base);
+    MAP_UARTEnable(g_ui32Base);
 }
 
 //*****************************************************************************
@@ -493,7 +493,7 @@ UARTwrite(const char *pcBuf, uint32_t ui32Len)
     if(!TX_BUFFER_EMPTY)
     {
         UARTPrimeTransmit(g_ui32Base);
-        ROM_UARTIntEnable(g_ui32Base, UART_INT_TX);
+        MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
     }
 
     //
@@ -520,13 +520,13 @@ UARTwrite(const char *pcBuf, uint32_t ui32Len)
         //
         if(pcBuf[uIdx] == '\n')
         {
-            ROM_UARTCharPut(g_ui32Base, '\r');
+            MAP_UARTCharPut(g_ui32Base, '\r');
         }
 
         //
         // Send the character to the UART output.
         //
-        ROM_UARTCharPut(g_ui32Base, pcBuf[uIdx]);
+        MAP_UARTCharPut(g_ui32Base, pcBuf[uIdx]);
     }
 
     //
@@ -665,7 +665,7 @@ UARTgets(char *pcBuf, uint32_t ui32Len)
         //
         // Read the next character from the console.
         //
-        cChar = ROM_UARTCharGet(g_ui32Base);
+        cChar = MAP_UARTCharGet(g_ui32Base);
 
         //
         // See if the backspace key was pressed.
@@ -746,7 +746,7 @@ UARTgets(char *pcBuf, uint32_t ui32Len)
             //
             // Reflect the character back to the user.
             //
-            ROM_UARTCharPut(g_ui32Base, cChar);
+            MAP_UARTCharPut(g_ui32Base, cChar);
         }
     }
 
@@ -814,7 +814,7 @@ UARTgetc(void)
     // Block until a character is received by the UART then return it to
     // the caller.
     //
-    return(ROM_UARTCharGet(g_ui32Base));
+    return(MAP_UARTCharGet(g_ui32Base));
 #endif
 }
 
@@ -1426,7 +1426,7 @@ UARTFlushRx(void)
     //
     // Temporarily turn off interrupts.
     //
-    ui32Int = ROM_IntMasterDisable();
+    ui32Int = MAP_IntMasterDisable();
 
     //
     // Flush the receive buffer.
@@ -1440,7 +1440,7 @@ UARTFlushRx(void)
     //
     if(!ui32Int)
     {
-        ROM_IntMasterEnable();
+        MAP_IntMasterEnable();
     }
 }
 #endif
@@ -1476,7 +1476,7 @@ UARTFlushTx(bool bDiscard)
         // The remaining data should be discarded, so temporarily turn off
         // interrupts.
         //
-        ui32Int = ROM_IntMasterDisable();
+        ui32Int = MAP_IntMasterDisable();
 
         //
         // Flush the transmit buffer.
@@ -1490,7 +1490,7 @@ UARTFlushTx(bool bDiscard)
         //
         if(!ui32Int)
         {
-            ROM_IntMasterEnable();
+            MAP_IntMasterEnable();
         }
     }
     else
@@ -1557,8 +1557,8 @@ UARTStdioIntHandler(void)
     //
     // Get and clear the current interrupt source(s)
     //
-    ui32Ints = ROM_UARTIntStatus(g_ui32Base, true);
-    ROM_UARTIntClear(g_ui32Base, ui32Ints);
+    ui32Ints = MAP_UARTIntStatus(g_ui32Base, true);
+    MAP_UARTIntClear(g_ui32Base, ui32Ints);
 
     //
     // Are we being interrupted because the TX FIFO has space available?
@@ -1575,7 +1575,7 @@ UARTStdioIntHandler(void)
         //
         if(TX_BUFFER_EMPTY)
         {
-            ROM_UARTIntDisable(g_ui32Base, UART_INT_TX);
+            MAP_UARTIntDisable(g_ui32Base, UART_INT_TX);
         }
     }
 
@@ -1587,12 +1587,12 @@ UARTStdioIntHandler(void)
         //
         // Get all the available characters from the UART.
         //
-        while(ROM_UARTCharsAvail(g_ui32Base))
+        while(MAP_UARTCharsAvail(g_ui32Base))
         {
             //
             // Read a character
             //
-            i32Char = ROM_UARTCharGetNonBlocking(g_ui32Base);
+            i32Char = MAP_UARTCharGetNonBlocking(g_ui32Base);
             cChar = (unsigned char)(i32Char & 0xFF);
 
             //
@@ -1707,7 +1707,7 @@ UARTStdioIntHandler(void)
         // gets transmitted.
         //
         UARTPrimeTransmit(g_ui32Base);
-        ROM_UARTIntEnable(g_ui32Base, UART_INT_TX);
+        MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
     }
 }
 #endif
