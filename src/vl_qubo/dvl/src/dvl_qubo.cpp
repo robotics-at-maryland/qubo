@@ -18,8 +18,9 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 
 	//creates/opens the DVL
 	//Baud rate is currently a complete guess
-	dvl.reset(new DVL(device, DVL::k57600));
+	dvl.reset(new DVL(device, DVL::k115200));
 	ROS_DEBUG("Device location: %s", device.c_str());
+	
 	// attempt to open the DVL, and error if it doesn't work
 	try{
 		dvl->openDevice();
@@ -42,6 +43,7 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
         ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
     }catch(DVLException& ex){
         ROS_ERROR("%s", ex.what());
+	dvl->closeDevice();
     }
 
     //checks the parameter server to see if we have water data,
@@ -83,6 +85,7 @@ void DvlQuboNode::update(){
 		}catch(DVLException& ex){
 			ROS_ERROR("Attempt %i to connect to the DVL failed", attempts++);
 			ROS_ERROR("%s", ex.what());
+			dvl->closeDevice();
 			if(attempts > DvlQuboNode::MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find DVL, exiting node.");
 				exit(-1);
@@ -90,8 +93,7 @@ void DvlQuboNode::update(){
 		}
         return;
 	}
-    attempts = 0;
-
+	attempts = 0;
 	ROS_DEBUG("Beginning to read data from the DVL");
 
 
@@ -100,6 +102,7 @@ void DvlQuboNode::update(){
         ROS_DEBUG("DVL data got succsesfully");
 	}catch(DVLException& ex){
 		ROS_WARN("%s", ex.what());
+		dvl->closeDevice();
 		return;
 	}
 
