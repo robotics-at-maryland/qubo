@@ -36,7 +36,7 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
     //attempt to load factory settings, because we have no idea what they
     //should be
     try{
-        dvl->loadFactorySettings();
+        dvl->loadUserSettings();
         dvl->enableMeasurement();
         ROS_DEBUG("DVL succsesfully setup in constructor");
         ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
@@ -97,6 +97,7 @@ void DvlQuboNode::update(){
 
 	try{
 		sensor_data = dvl->getDVLData();
+        ROS_DEBUG("DVL data got succsesfully");
 	}catch(DVLException& ex){
 		ROS_WARN("%s", ex.what());
 		return;
