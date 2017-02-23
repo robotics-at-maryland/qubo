@@ -20,12 +20,13 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 	//Baud rate is currently a complete guess
 	dvl.reset(new DVL(device, DVL::k115200));
 	ROS_DEBUG("Device location: %s", device.c_str());
-	
+
 	// attempt to open the DVL, and error if it doesn't work
 	try{
 		dvl->openDevice();
 	}catch(DVLException& ex){
 		ROS_ERROR("%s", ex.what());
+        dvl->closeDevice();
 		return;
 	}
 
@@ -33,17 +34,11 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 		ROS_ERROR("DVL \"%s\" didn't open succsesfully", device.c_str());
 		return;
 	}
-
-    //attempt to load factory settings, because we have no idea what they
-    //should be
     try{
-        dvl->loadUserSettings();
-        dvl->enableMeasurement();
-        ROS_DEBUG("DVL succsesfully setup in constructor");
-        ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
+        setup_dvl();
     }catch(DVLException& ex){
+        ROS_ERROR("Unable to setup device");
         ROS_ERROR("%s", ex.what());
-	dvl->closeDevice();
     }
 
     //checks the parameter server to see if we have water data,
@@ -78,14 +73,11 @@ void DvlQuboNode::update(){
 
 	if(!dvl->isOpen()){
 		try{
-			dvl->openDevice();
-            dvl->loadFactorySettings();
-            dvl->enableMeasurement();
+			setup_dvl();
             ROS_DEBUG("DVL succsesfully setup in update method");
 		}catch(DVLException& ex){
 			ROS_ERROR("Attempt %i to connect to the DVL failed", attempts++);
 			ROS_ERROR("%s", ex.what());
-			dvl->closeDevice();
 			if(attempts > DvlQuboNode::MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find DVL, exiting node.");
 				exit(-1);
@@ -150,4 +142,35 @@ void DvlQuboNode::update(){
             ROS_ERROR("Invalid BEAM_COORD");
 	}
 	dvlPub.publish(msg);
+}
+
+void DvlQuboNode::setup_dvl(){
+    //attempt to load factory settings, because we have no idea what they
+    //should be
+    DVL::SystemConfig config;
+    DVL::DataConfig output = {};
+    config.speed = DVL::k115200;
+    config.parity = DVL::Parity::NO_PARITY;
+    config.two_stopbits=false;
+    config.auto_ensemble_cycling=true;
+    config.auto_ping_cycling=true;
+    config.binary_data_output=true;
+    config.serial_output=true;
+    config.turnkey=true;
+    config.recorder_enable=false;
+    output.output_type = DVL::DataOutput::ALL_DATA;
+    //output.output_type = DVL::DataOutput::PARTIAL_DATA;
+    //output.output_type = DVL::DataOutput::MINIMUM_DATA;
+    //output.output_type = DVL::DataOutput::TEXT_DATA;
+    output.profile_output[DVL::VELOCITY] = true,
+    output.profile_output[DVL::CORRELATION] = true,
+    output.profile_output[DVL::ECHO_INTENSITY] = true,
+    output.profile_output[DVL::PERCENT_GOOD] = true,
+    output.profile_output[DVL::STATUS] = true;
+    dvl->loadUserSettings();
+    dvl->enableMeasurement();
+    dvl->setSystemConfiguration(config);
+    dvl->setDataTransferConfiguration(output);
+    ROS_DEBUG("DVL succsesfully setup");
+    ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
 }
