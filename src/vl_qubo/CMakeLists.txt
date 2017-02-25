@@ -48,6 +48,7 @@ set(AHRS_BAUDRATE_SRC_FILES
 
 set(QSCU_SRC_FILES
   drivers/qscu/src/QSCU.cpp
+  drivers/qscu/src/main.cpp
   )
 
 ##sg: This does the same as set but it allows us to match everything in the
@@ -55,7 +56,6 @@ set(QSCU_SRC_FILES
 file(GLOB QUBOBUS_LIB_FILES
   drivers/qubobus/src/*.c
   )
-
 
 ##Qubobus Test Files
 
@@ -82,16 +82,14 @@ add_executable(ahrs_baudrate ${AHRS_BAUDRATE_SRC_FILES})
 add_library(qubobus ${QUBOBUS_LIB_FILES})
 set_target_properties(qubobus PROPERTIES LINKER_LANGUAGE C)
 
-
 add_executable(test_io ${IO_TEST_FILES})
 target_link_libraries(test_io qubobus)
 
 add_executable(test_defs ${DEF_TEST_FILES})
 target_link_libraries(test_defs qubobus)
 
-
-add_library(qscu ${QSCU_SRC_FILES})
-set_target_properties(qscu PROPERTIES LINKER_LANGUAGE CXX)
+#will probably change this back to a library at some point 
+add_executable(qscu ${QSCU_SRC_FILES})
 target_link_libraries(qscu qubobus)
 
 

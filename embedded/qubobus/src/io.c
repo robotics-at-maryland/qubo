@@ -9,14 +9,6 @@ static void create_message(Message *message, uint8_t message_type, uint8_t messa
 /*
  * API functionality
  */
-
-//The read_raw and write_raw functions must match the spec for posix read/write
-//for documentation on these type "man read" and "man right" into your terminal, those
-//are the reads and writes we are talking about.
-
-//The difference is that io_host pointer. This will be the first argument passed to your read/write functions
-//it doesn't need to be a file descriptor or anything, it is meant to tell your read/write functions what to
-//read/write to though. 
 IO_State initialize(void *io_host, raw_io_function read_raw, raw_io_function write_raw, uint16_t priority) {
     IO_State state = {0};
 
@@ -30,7 +22,7 @@ IO_State initialize(void *io_host, raw_io_function read_raw, raw_io_function wri
     return state;
 }
 
-int connect(IO_State *state) {
+int init_connect(IO_State *state) {
     Message our_announce, their_announce, protocol, response;
     char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     int master, success;
@@ -41,8 +33,9 @@ int connect(IO_State *state) {
 
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
+   
     write_message(state, &our_announce);
-
+   
     /*
      * SYNCHRONIZE WITH OTHER DEVICE
      */
@@ -61,7 +54,7 @@ int connect(IO_State *state) {
 
     /* Save the other client's sequence number */
     state->remote_sequence_number = their_announce.header.sequence_number;
-
+    
     /*
      * NEGOTIATE PROTOCOL
      */
@@ -101,6 +94,84 @@ int connect(IO_State *state) {
 
     return !success;
 }
+
+
+int wait_connect(IO_State *state) {
+    Message our_announce, their_announce, protocol, response;
+    char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+    int master, success;
+    
+    /*
+     * SYNCHRONIZE WITH OTHER DEVICE
+     */
+
+    /* 
+     * Read in the other client's announce message. 
+     * This serves to synchronize the message frame alignment of both clients.
+     */
+    read_announce(state, &their_announce);
+    
+    
+    /*
+     * ANNOUNCE THIS DEVICE
+     */
+    
+
+    /* Send an announce message to the other client. */
+    create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
+   
+    write_message(state, &our_announce);
+   
+
+    /* 
+     * In order to generate asymmetry, we compare the announce sequence numbers
+     * If ours is lower, then we are the ones in control of the handshake.
+     */
+    master = (our_announce.header.sequence_number < their_announce.header.sequence_number);
+
+    /* Save the other client's sequence number */
+    state->remote_sequence_number = their_announce.header.sequence_number;
+    
+    /*
+     * NEGOTIATE PROTOCOL
+     */
+
+    /* The master client initiates the handshake with a protocol message. */
+    if (master) {
+        struct Protocol_Info protocol_info = {QUBOBUS_PROTOCOL_VERSION};
+        create_message(&protocol, MT_PROTOCOL, 0, &protocol_info, sizeof(struct Protocol_Info));
+        write_message(state, &protocol);
+
+    }
+
+    /* Attempt to read a protocol message from the opposite client. */
+    read_message(state, &response, &buffer);
+
+    /* Send a reply to confirm or deny the connection. */
+    if (!master) {
+        struct Protocol_Info *protocol_info = (struct Protocol_Info*) buffer;
+
+        /* Check the protocol sent against our own version. */
+        success = (response.header.message_type == MT_PROTOCOL && protocol_info->version == QUBOBUS_PROTOCOL_VERSION);
+
+        /* If it didn't match, change the response from echo to error. */
+        if (!success) { 
+            response = create_error(&eProtocol, NULL);
+        }
+
+        /* The slave client must respond to the master's protocol message. */
+        write_message(state, &response);
+
+    } else {
+
+        /* Check that we got a protocol message back from the other client. */
+        success = (response.header.message_type == MT_PROTOCOL);
+
+    }
+
+    return !success;
+}
+
 
 Message create_request(Transaction const *transaction, void *payload) {
     Message message;

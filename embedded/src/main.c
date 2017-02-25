@@ -119,11 +119,7 @@ int main() {
   ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ |
                      SYSCTL_OSC_MAIN);
 
-
-  configureUART();
-  configureGPIO();
-  configureI2C();
-
+  
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
@@ -173,6 +169,15 @@ int main() {
   read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
 
+
+  // Master enable interrupts
+  ROM_IntMasterEnable();
+  
+
+  configureUART();
+  configureGPIO();
+  configureI2C();
+  
   #ifdef DEBUG
   UARTprintf("Datastructures allocated\n");
   #endif
@@ -202,6 +207,7 @@ int main() {
   }
   */
 
+  /*
   
   if ( read_uart0_init() ) {
       #ifdef DEBUG
@@ -210,6 +216,7 @@ int main() {
       
       while(1){}
   }
+  */
   
 
   /*
@@ -224,8 +231,6 @@ int main() {
   #endif
 
   
-  // Master enable interrupts
-  ROM_IntMasterEnable();
   
   vTaskStartScheduler();
 

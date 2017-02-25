@@ -25,13 +25,14 @@ bool read_uart0_init(void) {
     }
     
     
-    IO_State state = initialize(UART0_BASE, &write_uart_wrapper, &read_queue, 1);
+    IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 10);
     #ifdef DEBUG
-    UARTprintf("qubobus initialized!\n");
+    //UARTprintf("qubobus initialized!\n");
     #endif
-    int error = connect(&state);
+
+    int error = wait_connect(&state);
     #ifdef DEBUG
-    UARTprintf("error reads as %i\n", error);
+    //UARTprintf("error reads as %i\n", error);
     #endif
     
         
@@ -49,7 +50,7 @@ static void read_uart0_task(void* params) {
         if ( xQueueReceive(read_uart0_queue, &buffer, 0) == pdTRUE ) {
     
 #ifdef DEBUG
-            UARTprintf("Got %d\n", buffer);
+            //UARTprintf("Got %d\n", buffer);
 #endif
       
             blink_rgb(BLUE_LED, 1);
@@ -60,6 +61,7 @@ static void read_uart0_task(void* params) {
 
 static ssize_t read_queue(void* io_host, void* buffer, size_t size){
     if(xQueueReceive(read_uart0_queue, buffer, 0) == pdTRUE){
+        blink_rgb(BLUE_LED, 1);
         return 1;
     }
     else { return 0;}

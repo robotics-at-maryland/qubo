@@ -13,7 +13,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <stdarg.h>
-
+ 
 // Header include
 #include "QSCU.h"
 
@@ -49,7 +49,7 @@ void QSCU::openDevice() {
     // if(// tcgetattr
     //   (fd, &termcfg)) 
     //    throw QSCUException("Unable to read terminal configuration.");
-
+   
     // Set the baudrate for the terminal
     if(cfsetospeed(&termcfg, _termBaud))
         throw QSCUException("Unable to set terminal output speed.");
@@ -83,7 +83,7 @@ void QSCU::openDevice() {
 
     _state = initialize(&_deviceFD, QSCU::serialRead, QSCU::serialWrite, 10);
     // Prepare to begin communication with the device.
-    if (connect(&_state)) {
+    if (init_connect(&_state)) {
         closeDevice();
         throw QSCUException("Unable to sychronize the remote connection!");
     }
