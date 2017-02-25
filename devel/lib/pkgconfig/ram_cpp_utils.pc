@@ -1,0 +1,8 @@
+prefix=/home/asimov/qubo/devel
+
+Name: ram_cpp_utils
+Description: Description of ram_cpp_utils
+Version: 0.1.0
+Cflags: -I/home/asimov/qubo/packages/ram_cpp_utils/include
+Libs: -L/home/asimov/qubo/devel/lib -lram_cpp_utils
+Requires: roscpp

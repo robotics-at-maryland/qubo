@@ -1,0 +1,8 @@
+prefix=/home/asimov/qubo/devel
+
+Name: ram_msgs
+Description: Description of ram_msgs
+Version: 0.1.0
+Cflags: -I/home/asimov/qubo/devel/include
+Libs: -L/home/asimov/qubo/devel/lib 
+Requires: message_runtime

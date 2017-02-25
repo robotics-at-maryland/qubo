@@ -1,0 +1,8 @@
+prefix=/home/asimov/qubo/devel
+
+Name: qubo_sim
+Description: Description of qubo_sim
+Version: 0.1.0
+Cflags: -I/home/asimov/qubo/packages/qubo_sim/include
+Libs: -L/home/asimov/qubo/devel/lib -lqubo_sim
+Requires: roscpp

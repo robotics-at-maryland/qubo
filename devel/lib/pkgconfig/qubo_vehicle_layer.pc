@@ -1,0 +1,8 @@
+prefix=/home/asimov/qubo/devel
+
+Name: qubo_vehicle_layer
+Description: Description of qubo_vehicle_layer
+Version: 0.1.0
+Cflags: -I/home/asimov/qubo/packages/qubo_vehicle_layer/include
+Libs: -L/home/asimov/qubo/devel/lib -lqubo_vehicle_layer
+Requires: roscpp
