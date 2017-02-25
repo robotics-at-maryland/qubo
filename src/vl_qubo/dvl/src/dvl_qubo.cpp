@@ -13,15 +13,20 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 	//inits a publisher on this node
 	dvlPub = n->advertise<ram_msgs::DVL_qubo>("qubo/" + name, 1000);
 
+    //creates a refresh rate
+    loop_rate.reset(new ros::Rate(rate));
+
 	//creates/opens the DVL
 	//Baud rate is currently a complete guess
-	dvl.reset(new DVL(device, DVL::k38400));
+	dvl.reset(new DVL(device, DVL::k115200));
+	ROS_DEBUG("Device location: %s", device.c_str());
 
 	// attempt to open the DVL, and error if it doesn't work
 	try{
 		dvl->openDevice();
-	}catch(DVLException ex){
+	}catch(DVLException& ex){
 		ROS_ERROR("%s", ex.what());
+        dvl->closeDevice();
 		return;
 	}
 
@@ -29,10 +34,13 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 		ROS_ERROR("DVL \"%s\" didn't open succsesfully", device.c_str());
 		return;
 	}
+    try{
+        setup_dvl();
+    }catch(DVLException& ex){
+        ROS_ERROR("Unable to setup device");
+        ROS_ERROR("%s", ex.what());
+    }
 
-    dvl->loadFactorySettings();
-    
-    dvl->enableMeasurement();
     //checks the parameter server to see if we have water data,
     //sets them if we don't
     // if(!n.getParam("salinity", live_cond.salinity)){
@@ -47,12 +55,16 @@ DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
 
 	//INSERT CONFIG HERE~~~~~~
 
-	ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
 }
 
 DvlQuboNode::~DvlQuboNode(){
-    dvl->disableMeasurement();
-	dvl->closeDevice();
+    try{
+        dvl->disableMeasurement();
+        dvl->closeDevice();
+    }catch(DVLException& ex){
+        ROS_ERROR("Unable to disable measurement and close device");
+        ROS_ERROR("%s", ex.what());
+    }
 }
 
 void DvlQuboNode::update(){
@@ -61,25 +73,28 @@ void DvlQuboNode::update(){
 
 	if(!dvl->isOpen()){
 		try{
-			dvl->openDevice();
-		}catch(DVLException ex){
+			setup_dvl();
+            ROS_DEBUG("DVL succsesfully setup in update method");
+		}catch(DVLException& ex){
 			ROS_ERROR("Attempt %i to connect to the DVL failed", attempts++);
 			ROS_ERROR("%s", ex.what());
-			if(attempts > MAX_CONNECTION_ATTEMPTS){
+			if(attempts > DvlQuboNode::MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find DVL, exiting node.");
 				exit(-1);
 			}
 		}
+        return;
 	}
-    attempts = 0;
-
+	attempts = 0;
 	ROS_DEBUG("Beginning to read data from the DVL");
 
 
 	try{
 		sensor_data = dvl->getDVLData();
-	}catch(DVLException ex){
+        ROS_DEBUG("DVL data got succsesfully");
+	}catch(DVLException& ex){
 		ROS_WARN("%s", ex.what());
+		dvl->closeDevice();
 		return;
 	}
 
@@ -127,4 +142,35 @@ void DvlQuboNode::update(){
             ROS_ERROR("Invalid BEAM_COORD");
 	}
 	dvlPub.publish(msg);
+}
+
+void DvlQuboNode::setup_dvl(){
+    //attempt to load factory settings, because we have no idea what they
+    //should be
+    DVL::SystemConfig config;
+    DVL::DataConfig output = {};
+    config.speed = DVL::k115200;
+    config.parity = DVL::Parity::NO_PARITY;
+    config.two_stopbits=false;
+    config.auto_ensemble_cycling=true;
+    config.auto_ping_cycling=true;
+    config.binary_data_output=true;
+    config.serial_output=true;
+    config.turnkey=true;
+    config.recorder_enable=false;
+    output.output_type = DVL::DataOutput::ALL_DATA;
+    //output.output_type = DVL::DataOutput::PARTIAL_DATA;
+    //output.output_type = DVL::DataOutput::MINIMUM_DATA;
+    //output.output_type = DVL::DataOutput::TEXT_DATA;
+    output.profile_output[DVL::VELOCITY] = true,
+    output.profile_output[DVL::CORRELATION] = true,
+    output.profile_output[DVL::ECHO_INTENSITY] = true,
+    output.profile_output[DVL::PERCENT_GOOD] = true,
+    output.profile_output[DVL::STATUS] = true;
+    dvl->loadUserSettings();
+    dvl->enableMeasurement();
+    dvl->setSystemConfiguration(config);
+    dvl->setDataTransferConfiguration(output);
+    ROS_DEBUG("DVL succsesfully setup");
+    ROS_DEBUG("DVL INFO: \n%s", dvl->getSystemInfo().c_str());
 }

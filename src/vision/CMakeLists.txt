@@ -1,19 +1,17 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
-#set(OpenCV_DIR /usr/share/OpenCV/)
-
 #Find stuff we need
+
 find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   roslib
   image_transport
+
   cv_bridge
   ram_msgs
   genmsg
-
-  OpenCV
 
   rospy
   std_msgs
@@ -21,15 +19,12 @@ find_package(catkin
 
   actionlib_msgs
   actionlib
+
 )
 
-#sg: these used to be here but I have reason to believe they do not do anything, so I'm getting rid of them
-#find_package(OpenCV REQUIRED)
 
-#find_package(
-#  Boost
-#  REQUIRED COMPONENTS algorithm
-#)
+find_package(OpenCV REQUIRED)
+
 
 #generate messages used by the server and client from vison.action
 add_action_files(DIRECTORY ../ram_msgs/action FILES VisionExample.action)

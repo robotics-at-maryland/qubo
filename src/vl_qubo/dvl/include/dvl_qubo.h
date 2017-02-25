@@ -66,5 +66,10 @@ protected:
 	 * sets up the DVL
 	 */
 	DVL::VehicleConfig v_config;
+
+	/**
+	 *
+	 */
+	void setup_dvl();
 };
 #endif

@@ -2,6 +2,7 @@
 <!-- Not sure if ROS (the person) is done with dvl yet --> 
 <env name="ROSCONSOLE_CONFIG_FILE" value="$(find vl_qubo)/rosconsole.conf"/>
 
-<node name="dvl_node" pkg="vl_qubo" type="qubo_dvl_node" output="screen" args="/dev/ttyUSB1"/>
+<node name="dvl_node" pkg="vl_qubo" type="qubo_dvl_node" output="screen" args="/dev/ttyUSB0"/>
+
 </launch>
 <!--change "log" to "screen" to move debug to stdout.-->

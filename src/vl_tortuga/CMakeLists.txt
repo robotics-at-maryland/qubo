@@ -1,14 +1,13 @@
-cmake_minimum_required(VERSION 2.8.3) 
+cmake_minimum_required(VERSION 2.8.3)
 project(vl_tortuga)
 
 ##############################
 # Catkin Setup ###############
 ##############################
 
-find_package(catkin 
+find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-    cv_bridge #these two are used in the camera node
     image_transport
     ram_cpp_utils
     ram_msgs
@@ -32,7 +31,7 @@ include_directories(
   include
 
   drivers/include
-  
+
   dvl/include
   imu/include
 
@@ -43,7 +42,7 @@ set(DVL_SRC_FILES
   dvl/src/main.cpp
   dvl/src/dvl_tortuga.cpp
 
-  drivers/src/dvlapi.c #OLD TEAMS DRIVER CODE 
+  drivers/src/dvlapi.c #OLD TEAMS DRIVER CODE
   )
 
 set(IMU_SRC_FILES
@@ -70,13 +69,15 @@ set(SENSOR_BOARD_SRC_FILES
 
 #### OLD TEAMS CODE ####
 set(LCDSHOW_SRC_FILES
-		tortuga/src/lcdshow.c
+		drivers/src/lcdshow.c
+		drivers/src/sensorapi.c
+
 )
 ### END OF OLD TEAMS CODE ###
 
 #SG: maybe one day..
 set(TEST_FILES
-  
+
   )
 
 ##############################
@@ -93,7 +94,8 @@ target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
 add_executable(tortuga_imu_node ${IMU_SRC_FILES})
 target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
 
-  
+add_executable(lcdshow ${LCDSHOW_SRC_FILES})
+target_link_libraries(lcdshow ${catkin_LIBRARIES})
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
@@ -119,7 +121,7 @@ target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 ##############################
 
 
-#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in 
+#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in
 #install(TARGETS ${PROJECT_NAME}
 #  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
