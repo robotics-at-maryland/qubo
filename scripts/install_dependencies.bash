@@ -49,7 +49,11 @@ echo "Do you want to install optional IDE QtCreator and associated ROS plugin?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) sudo apt install qtcreator; 
-sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
+# This command broke the install on ubuntu 16.04.2
+#sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
+#https://github.com/ros-industrial/ros_qtc_plugin/wiki/1.-How-to-Install-(Users)
+#sudo add-apt-repository --remove ppa:beineri/opt-qt57-xenial
+sudo add-apt-repository ppa:levi-armstrong/qt-libraries-xenial 
 sudo add-apt-repository ppa:levi-armstrong/ppa;
 sudo apt-get update && sudo apt-get install qt57creator-plugin-ros;
 sudo apt install qtcreator; break;;
