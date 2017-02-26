@@ -1,0 +1,9 @@
+http://stackoverflow.com/questions/30369031/remove-spurious-small-islands-of-noise-in-an-image-python-opencv
+removing the background bubbles
+
+http://docs.opencv.org/2.4/modules/core/doc/basic_structures.html?#mat
+mat OpenCV C++ n-dimensional dense array class
+
+
+
+

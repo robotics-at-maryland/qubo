@@ -35,7 +35,8 @@ void help()
     << "Usage:"                                                                     << endl
     << "./bs {-vid <video filename>|-img <image filename>}"                         << endl
     << "for example: ./bs -vid video.avi"                                           << endl
-    << "or: ./bs -img /data/images/1.png"                                           << endl
+    << "or: ./bs -img /data/images/1.png"					    << endl
+    << "or: rosrun vision mog_test -cam cam"				       	    << endl
     << "--------------------------------------------------------------------------" << endl
     << endl;
 }
@@ -44,17 +45,17 @@ int main(int argc, char* argv[])
     //print help information
     help();
     //check for the input parameter correctness
-    if(argc != 3) {
+    if(argc != 3){
         cerr <<"Incorrect input list" << endl;
         cerr <<"exiting..." << endl;
         return EXIT_FAILURE;
     }
     //create GUI windows
-    namedWindow("Frame");
+    //namedWindow("Frame");
     namedWindow("FG Mask MOG 2");
     //create Background Subtractor objects
     pMOG2 = createBackgroundSubtractorMOG2(); //MOG2 approach
-    if(strcmp(argv[1], "-vid") == 0) {
+    if(strcmp(argv[1], "-vid") == 0 || strcmp(argv[1],"-cam")  ==0) {
         //input data coming from a video
         processVideo(argv[2]);
     }
@@ -74,7 +75,14 @@ int main(int argc, char* argv[])
 }
 void processVideo(char* videoFilename) {
     //create the capture object
-    VideoCapture capture(videoFilename);
+    VideoCapture capture;	
+    if(strcmp(videoFilename, "cam") == 0){
+	   capture.open(0);
+    }
+    else{
+        capture.open(videoFilename);
+    }		
+
     if(!capture.isOpened()){
         //error in opening the video input
         cerr << "Unable to open video file: " << videoFilename << endl;
@@ -98,7 +106,9 @@ void processVideo(char* videoFilename) {
 
     //read input data. ESC or 'q' for quitting
     while( (char)keyboard != 'q' && (char)keyboard != 27 ){
-        //read the current frame
+     	 
+
+	//read the current frame
         if(!capture.read(frame)) {
             cerr << "Unable to read next frame." << endl;
             cerr << "Exiting..." << endl;
@@ -118,14 +128,13 @@ void processVideo(char* videoFilename) {
                 FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
         //show the current frame and the fg masks
         imshow("FG Mask MOG 2", fgMaskMOG2);
-        imshow("Frame", frame);
+       // imshow("Frame", frame);
 
         Mat copy, thresh, final, gauss, mask;
 
         //blurs the image
         GaussianBlur(fgMaskMOG2, gauss, Size(3,3), 0,0);
-        imshow("GaussianBlur", gauss);
-
+       // imshow("GaussianBlur", gauss);
 
         // Define the structuring elements to be used in eroding and dilating the image 
         Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
@@ -134,7 +143,7 @@ void processVideo(char* videoFilename) {
         // Perform dialting and eroding helps to elminate background noise 
         morphologyEx(gauss, mask, MORPH_CLOSE, se1);
         morphologyEx(gauss, mask, MORPH_OPEN, se2);
-        imshow("mask", mask);
+       // imshow("mask", mask);
 
 
         //inverts the colors 
