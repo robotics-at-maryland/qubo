@@ -22,10 +22,8 @@ class VisionNode{
 
     public:
 
-    //you need to pass in a node handle, a rate to poll at, and 3 camera feeds, which should be a file path either to a physical device or to a video file
-    //feed0 and feed1 need to correspond to the two forward facing cameras, feedb is the bottom facing camera.
-    //note you always need to pass 3 feeds even if you're just testing monocualar tasks
-    VisionNode(std::shared_ptr<ros::NodeHandle>, std::string feed0, std::string feed1, std::string feedb);
+    //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
+    VisionNode(std::shared_ptr<ros::NodeHandle>, std::string feed);
     ~VisionNode();
     void update(); //this will just pull the next image in
 
@@ -52,6 +50,8 @@ class VisionNode{
     //=================================================================================================================
 
     static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
+
+
     protected:
 
 
@@ -60,16 +60,9 @@ class VisionNode{
     //img is the object reprenting the current image we're looking at, we'll keep pumping the next fram
     //from cap into img at every update
 
-    //cap0 is our top most forward facing camera, cap1 is the bottom most forward facing camera, capb is our downards facing camera
-    //the images obviously correspond
-    cv::VideoCapture cap0;
-    cv::Mat img0;
-
-    cv::VideoCapture cap1;
-    cv::Mat img1;
-
-    cv::VideoCapture capb;
-    cv::Mat imgb;
+    //cap is a video capture object, img is a Mat object that gets updated every time step
+    cv::VideoCapture cap;
+    cv::Mat img;
 
     //declare a service object for your service below
     //======================================================================
