@@ -11,16 +11,13 @@ int main(int argc, char** argv){
     }
     // init the node handle
     ros::init(argc,argv, "vision_node");
-    // node for testing  
-
+    
+    //make a pointer to a node handle, I'm actually not even sure we need the node handle...
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     VisionNode node(n,argv[1]);
 
     
-    Server server(*n, "vision_example", boost::bind(&VisionNode::test_execute, _1 , &server), false);
-    server.start();
-    
-    ros::Rate r(10); // 10 hz
+    ros::Rate r(.1); // 10 hz
     while(ros::ok()){
         node.update();
         r.sleep(); //you update this time in the second argument to the VisionNode constructor

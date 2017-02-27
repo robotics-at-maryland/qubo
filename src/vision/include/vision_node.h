@@ -23,7 +23,7 @@ class VisionNode{
     public:
 
     //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
-    VisionNode(std::shared_ptr<ros::NodeHandle>, std::string feed);
+    VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed);
     ~VisionNode();
     void update(); //this will just pull the next image in
 
@@ -38,22 +38,16 @@ class VisionNode{
     bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
 
-    //function
-
-    //function
-
-    //...
-
-
-    //end service protypes
-    //sg: not entirely sure we'll keep action executes in here, may make every action server a seperate class not sure yet.
+    
+    //sg: put action definitions here
     //=================================================================================================================
 
     static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
 
 
+    
     protected:
-
+    
 
     std::shared_ptr<ros::NodeHandle> n;
     //cap is the object holding the video feed, either real or from an existing avi file
@@ -69,4 +63,12 @@ class VisionNode{
     ros::ServiceServer buoy_detect_srv;
     ros::ServiceServer test_srv;
 
+    
+    //declare an action server object for your action here
+    //======================================================================
+    //the VisionExampleAction name here comes from the .action file in qubo/ram_msgs/action.
+    //the build system appends the word Action to whatever the file name is in the ram_msgs directory
+    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> example_server;
+  
+   
 };

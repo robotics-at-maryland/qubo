@@ -1,21 +1,20 @@
 //sg: this is going to be the primary vision node for qubo (or future robots, whatever)
 #include "vision_node.h"
 
-//you need to pass in a node handle, a rate to poll at, and 3 camera feeds, which should be a file path either to a physical device or to a video file
-//feed0 and feed1 need to correspond to the two forward facing cameras, feedb is the bottom facing camera. 
-//note you always need to pass 3 feeds even if you're just testing monocualar tasks
-VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed){
+//you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
+VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed)
+    //initialize your server here, it's sort of a mess
+    :example_server(*n, "vision_example", boost::bind(&VisionNode::test_execute, _1 , &example_server), false)
+{
     //take in the node handle
     this->n = n;
-    
-    //this is really kind of ugly but eh.. we just make sure that all the camera feeds were valid.
     
     //init the first VideoCapture object
     cap = cv::VideoCapture(feed);
     
     //make sure we have something valid
     if(!cap.isOpened()){           
-        ROS_ERROR("couldn't open file/camera 0  %s\n now exiting" ,feed.c_str());
+        ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
         exit(0);
     }
     
@@ -23,6 +22,13 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed){
     //=====================================================================
     test_srv = this->n->advertiseService("service_test", &VisionNode::service_test, this);
     buoy_detect_srv = this->n->advertiseService("buoy_detect", &VisionNode::buoy_detector, this);
+
+
+    //start your action servers here
+    //=====================================================================
+    
+    example_server.start();
+    
     
 }
 
