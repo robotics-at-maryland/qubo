@@ -19,12 +19,12 @@ find_package(catkin
   actionlib_msgs
   actionlib
   
-  VISP
 )
 
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 find_package(OpenCV REQUIRED)
 
+find_package(VISP REQUIRED)
 
 
 #generate messages used by the server and client from vison.action

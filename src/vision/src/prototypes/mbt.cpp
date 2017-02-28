@@ -8,7 +8,20 @@ int main()
     vpImage<unsigned char> I;
     vpCameraParameters cam;
     vpHomogeneousMatrix cMo;
-    vpImageIo::read(I, "teabox.pgm");
+
+    //TODO don't make this not 
+    std::string videoname = "/home/sgillen/video/nbrf_video/comp/comp_channel/20100714085001.avi";
+    
+    // vpVideoReader g;
+    //g.setFileName(videoname);
+    //    g.open(I);
+    //std::cout << "video name: " << videoname << std::endl;
+    //std::cout << "video framerate: " << g.getFramerate() << "Hz" << std::endl;
+    //std::cout << "video dimension: " << I.getWidth() << " " << I.getHeight() << std::endl;
+
+    
+    vpImageIo::read(I, videoname);
+    
 #if defined(VISP_HAVE_X11)
     vpDisplayX display(I,100,100,"Model-based edge tracker");;
 #elif defined(VISP_HAVE_GDI)
