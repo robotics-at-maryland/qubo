@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
-#set(OpenCV_DIR /usr/share/OpenCV/)
+#
 
 #Find stuff we need
 find_package(catkin
@@ -18,16 +18,14 @@ find_package(catkin
 
   actionlib_msgs
   actionlib
+  
+  VISP
 )
 
+#we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 find_package(OpenCV REQUIRED)
-#sg: these used to be here but I have reason to believe they do not do anything, so I'm getting rid of them
 
 
-#find_package(
-#  Boost
-#  REQUIRED COMPONENTS algorithm
-#)
 
 #generate messages used by the server and client from vison.action
 add_action_files(DIRECTORY ../ram_msgs/action FILES VisionExample.action)
@@ -54,6 +52,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${VISP_INCLUDE_DIRS}
   include/
 )
 
@@ -72,7 +71,6 @@ set(GPU_VISION_SRC_FILES
 set(CANNY_TUNER_FILES
   src/tuners/canny_tuner.cpp
   )
-
 
 #Prototype algorithms
 
@@ -96,6 +94,9 @@ set(GFIT_FILES
  src/prototypes/g_fit.cpp
  )
 
+set(MBT_FILES
+  src/prototypes/mbt.cpp
+  )
 ##############################
 # Add Executables ############
 ##############################
@@ -128,9 +129,11 @@ target_link_libraries(mog_test ${OpenCV_LIBRARIES})
 add_executable(em_test ${EM_FILES})
 target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
-#add_executable(gfit_test ${GFIT_FILES})
-#target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+add_executable(gfit_test ${GFIT_FILES})
+target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
+add_executable(mbt_test ${MBT_FILES})
+target_link_libraries(mbt_test ${VISP_LIBRARIES})
 ##############################
 # Installable Targets ########
 ##############################
