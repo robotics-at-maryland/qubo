@@ -100,9 +100,10 @@ set(GFIT_FILES
 # Add Executables ############
 ##############################
 
-add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES}) 
-target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
-target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
+#still needs to be updated to 3.0
+# add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES}) 
+# target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
+# target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
 
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
@@ -127,8 +128,8 @@ target_link_libraries(mog_test ${OpenCV_LIBRARIES})
 add_executable(em_test ${EM_FILES})
 target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
-add_executable(gfit_test ${GFIT_FILES})
-target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+#add_executable(gfit_test ${GFIT_FILES})
+#target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
 ##############################
 # Installable Targets ########
