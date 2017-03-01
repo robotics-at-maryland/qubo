@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/gpu/gpu.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include "opencv2/core/cuda.hpp"
+
 
 #include "ros/ros.h"
 #include <iostream>
@@ -17,7 +18,7 @@ public:
 	GpuVisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed0, std::string feed1, std::string feedb);
 	~GpuVisionNode();
 	void update();
-
-protected:
+    
+    protected:
 	std::shared_ptr<ros::NodeHandle> n;
 };
