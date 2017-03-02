@@ -6,6 +6,9 @@
 #include "opencv2/videoio.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/video.hpp>
+#include <opencv2/opencv.hpp>
+
+
 //C
 #include <stdio.h>
 //C++
@@ -32,7 +35,8 @@ void help()
     << "Usage:"                                                                     << endl
     << "./bs {-vid <video filename>|-img <image filename>}"                         << endl
     << "for example: ./bs -vid video.avi"                                           << endl
-    << "or: ./bs -img /data/images/1.png"                                           << endl
+    << "or: ./bs -img /data/images/1.png"					    << endl
+    << "or: rosrun vision mog_test -cam cam"				       	    << endl
     << "--------------------------------------------------------------------------" << endl
     << endl;
 }
@@ -41,17 +45,17 @@ int main(int argc, char* argv[])
     //print help information
     help();
     //check for the input parameter correctness
-    if(argc != 3) {
+    if(argc != 3){
         cerr <<"Incorrect input list" << endl;
         cerr <<"exiting..." << endl;
         return EXIT_FAILURE;
     }
     //create GUI windows
-    namedWindow("Frame");
+    //namedWindow("Frame");
     namedWindow("FG Mask MOG 2");
     //create Background Subtractor objects
     pMOG2 = createBackgroundSubtractorMOG2(); //MOG2 approach
-    if(strcmp(argv[1], "-vid") == 0) {
+    if(strcmp(argv[1], "-vid") == 0 || strcmp(argv[1],"-cam")  ==0) {
         //input data coming from a video
         processVideo(argv[2]);
     }
@@ -71,14 +75,20 @@ int main(int argc, char* argv[])
 }
 void processVideo(char* videoFilename) {
     //create the capture object
-    VideoCapture capture(videoFilename);
+    VideoCapture capture;	
+    if(strcmp(videoFilename, "cam") == 0){
+	   capture.open(0);
+    }
+    else{
+        capture.open(videoFilename);
+    }		
+
     if(!capture.isOpened()){
         //error in opening the video input
         cerr << "Unable to open video file: " << videoFilename << endl;
         exit(EXIT_FAILURE);
     }
 
-    
     VideoWriter outputVideo; //output video object
     Size S = Size((int) capture.get(CV_CAP_PROP_FRAME_WIDTH),    //Acquire input size
                   (int) capture.get(CV_CAP_PROP_FRAME_HEIGHT));
@@ -94,21 +104,17 @@ void processVideo(char* videoFilename) {
         cout << capture.get(CV_CAP_PROP_FPS) << endl;
     }
 
-
-
     //read input data. ESC or 'q' for quitting
     while( (char)keyboard != 'q' && (char)keyboard != 27 ){
-        //read the current frame
+     	 
+
+	//read the current frame
         if(!capture.read(frame)) {
             cerr << "Unable to read next frame." << endl;
             cerr << "Exiting..." << endl;
             exit(EXIT_FAILURE);
         }
 
-        
-        cvtColor(frame,frame,cv::COLOR_RGB2HSV);
-
-        
         //update the background model
         pMOG2->apply(frame, fgMaskMOG2);
 
@@ -121,11 +127,87 @@ void processVideo(char* videoFilename) {
         putText(frame, frameNumberString.c_str(), cv::Point(15, 15),
                 FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
         //show the current frame and the fg masks
-        imshow("Frame", frame);
         imshow("FG Mask MOG 2", fgMaskMOG2);
-        Mat copy;
-        cvtColor(fgMaskMOG2,copy, CV_GRAY2RGB);
-      
+       // imshow("Frame", frame);
+
+        Mat copy, thresh, final, gauss, mask;
+
+        //blurs the image
+        GaussianBlur(fgMaskMOG2, gauss, Size(3,3), 0,0);
+       // imshow("GaussianBlur", gauss);
+
+        // Define the structuring elements to be used in eroding and dilating the image 
+        Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
+        Mat se2 = getStructuringElement(MORPH_RECT, Size(5, 5));
+
+        // Perform dialting and eroding helps to elminate background noise 
+        morphologyEx(gauss, mask, MORPH_CLOSE, se1);
+        morphologyEx(gauss, mask, MORPH_OPEN, se2);
+       // imshow("mask", mask);
+
+
+        //inverts the colors 
+        bitwise_not(mask, final, noArray());
+        imshow("invert",final);
+        
+
+        // Setup SimpleBlobDetector parameters.
+        SimpleBlobDetector::Params params;
+         
+        // Change thresholds
+        params.minThreshold = 0;
+        params.maxThreshold = 256;
+
+        params.filterByColor = true;
+        params.blobColor= 0;
+         
+        // Filter by Area.
+        params.filterByArea = true;
+        params.minArea = 500;
+         
+        // Filter by Circularity
+        params.filterByCircularity = true;
+        params.minCircularity = 0.5;
+         
+        // Filter by Convexity
+        params.filterByConvexity = true;
+        params.minConvexity = 0.80;
+         
+        // Filter by Inertia
+        params.filterByInertia = true;
+        params.minInertiaRatio = 0.40;
+
+        // Storage for blobs
+        vector<KeyPoint> keypoints;
+         
+        #if CV_MAJOR_VERSION < 3   // If you are using OpenCV 2
+         
+        // Set up detector with params
+          SimpleBlobDetector detector(params);
+         
+          // You can use the detector this way
+          detector.detect( final, keypoints);
+         
+        #else
+         
+          // Set up detector with params
+          Ptr<SimpleBlobDetector> detector = SimpleBlobDetector::create(params);
+         
+          // SimpleBlobDetector::create creates a smart pointer. 
+          // So you need to use arrow ( ->) instead of dot ( . )
+          detector->detect( final, keypoints);
+         
+        #endif        
+
+        // Draw detected blobs as red circles.
+        // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures
+        // the size of the circle corresponds to the size of blob
+
+        Mat im_with_keypoints;
+        drawKeypoints(frame, keypoints, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
+
+        // Shows blobs
+        imshow("keypoints", im_with_keypoints );            
         
         outputVideo << copy;
         
@@ -135,6 +217,7 @@ void processVideo(char* videoFilename) {
     //delete capture object
     capture.release();
 }
+
 void processImages(char* fistFrameFilename) {
     //read the first file of the sequence
     frame = imread(fistFrameFilename);

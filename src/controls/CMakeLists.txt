@@ -8,6 +8,7 @@ project(controls)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
+
     image_transport
     ram_cpp_utils
     ram_msgs

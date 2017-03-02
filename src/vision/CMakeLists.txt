@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
+
 #Find stuff we need
 
 find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   roslib
-  image_transport
 
-  cv_bridge
   ram_msgs
   genmsg
 
@@ -20,10 +19,13 @@ find_package(catkin
   actionlib_msgs
   actionlib
 
+
 )
 
-
+#we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 find_package(OpenCV REQUIRED)
+
+find_package(VISP REQUIRED)
 
 
 #generate messages used by the server and client from vison.action
@@ -33,6 +35,8 @@ add_service_files(DIRECTORY ../ram_msgs/srv FILES bool_bool.srv)
 generate_messages(DEPENDENCIES actionlib_msgs std_msgs)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
+#find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
 
 #Stuff other packages that depend on us need
 catkin_package(
@@ -49,6 +53,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${VISP_INCLUDE_DIRS}
   include/
 )
 
@@ -65,36 +70,39 @@ set(GPU_VISION_SRC_FILES
 ##Tuners
 
 set(CANNY_TUNER_FILES
-  src/canny_tuner.cpp
+  src/tuners/canny_tuner.cpp
   )
 
-
-##Prototype algorithms
+#Prototype algorithms
 
 set(SEGMENT_FILES
-  src/prototypes/segmentation.cpp
-  )
+ src/prototypes/segmentation.cpp
+ )
 
 set(EDGE_FILES
-  src/prototypes/edge_detection.cpp
-  )
+ src/prototypes/edge_detection.cpp
+ )
 
 set(MOG_FILES
-  src/prototypes/mog.cpp
-  )
+ src/prototypes/mog.cpp
+ )
 
 set(EM_FILES
-  src/prototypes/em.cpp
-  )
+ src/prototypes/em.cpp
+ )
 
 set(GFIT_FILES
-  src/prototypes/g_fit.cpp
-  )
+ src/prototypes/g_fit.cpp
+ )
 
+set(MBT_FILES
+  src/prototypes/mbt.cpp
+  )
 ##############################
 # Add Executables ############
 ##############################
 
+#still needs to be updated to 3.0
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
 target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
@@ -124,6 +132,9 @@ target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
 add_executable(gfit_test ${GFIT_FILES})
 target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+
+# add_executable(mbt_test ${MBT_FILES})
+# target_link_libraries(mbt_test ${VISP_LIBRARIES})
 
 ##############################
 # Installable Targets ########
