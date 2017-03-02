@@ -73,11 +73,13 @@ void DvlQuboNode::update(){
 
 	if(!dvl->isOpen()){
 		try{
+            dvl->openDevice();
 			setup_dvl();
             ROS_DEBUG("DVL succsesfully setup in update method");
 		}catch(DVLException& ex){
 			ROS_ERROR("Attempt %i to connect to the DVL failed", attempts++);
 			ROS_ERROR("%s", ex.what());
+            dvl->closeDevice();
 			if(attempts > DvlQuboNode::MAX_CONNECTION_ATTEMPTS){
 				ROS_ERROR("Failed to find DVL, exiting node.");
 				exit(-1);
@@ -94,7 +96,6 @@ void DvlQuboNode::update(){
         ROS_DEBUG("DVL data got succsesfully");
 	}catch(DVLException& ex){
 		ROS_WARN("%s", ex.what());
-		dvl->closeDevice();
 		return;
 	}
 
