@@ -1,5 +1,13 @@
 #include "lib/include/printfloat.h"
 
+int power(int base, int exp) {
+  int result = base;
+  for (int i = 1; i < exp; i++ ) {
+    result = result * base;
+  }
+  return result;
+}
+
 void reverse(char *str, int len)
 {
     int i=0, j=len-1, temp;
@@ -54,7 +62,7 @@ void ftoa(float n, char *res, int afterpoint)
         // Get the value of fraction part upto given no.
         // of points after dot. The third parameter is needed
         // to handle cases like 233.007
-        fpart = fpart * pow(10, afterpoint);
+        fpart = fpart * power(10, afterpoint);
 
         intToStr((int)fpart, res + i + 1, afterpoint);
     }

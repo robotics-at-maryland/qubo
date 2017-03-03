@@ -1,7 +1,7 @@
 #ifndef _PRINTFLOAT_H_
 #define _PRINTFLOAT_H_
 
-#include <math.h>
+int power(int base, int exp);
 
 void reverse(char *str, int len);
 
