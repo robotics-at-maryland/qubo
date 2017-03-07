@@ -105,7 +105,7 @@ set(MBT_FILES
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
 target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
-add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
 add_executable(vision_node ${VISION_SRC_FILES})
