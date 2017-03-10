@@ -8,10 +8,3 @@ http://docs.opencv.org/3.1.0/d6/d17/group__cudabgsegm.html#ga6742648a65458501354
 Documentation for the background subtraction
 
 
-
-
-
-
-
-
-
