@@ -26,7 +26,6 @@ int keyboard; //input from keyboard
 
 void help();
 void processVideo(char* videoFilename);
-void processImages(char* firstFrameFilename);
 void help()
 {
     cout
@@ -40,6 +39,8 @@ void help()
     << "--------------------------------------------------------------------------" << endl
     << endl;
 }
+
+
 int main(int argc, char* argv[])
 {
     //print help information
@@ -55,17 +56,16 @@ int main(int argc, char* argv[])
     namedWindow("FG Mask MOG 2");
     //create Background Subtractor objects
     pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
-    //pMOG =  createBackgroundSubtractorMOG(); //MOG approach
     pMOG2 = createBackgroundSubtractorMOG2(1000,16,false);
-
     
     processVideo(argv[1]);
-    
+
     //destroy GUI windows
     destroyAllWindows();
     return EXIT_SUCCESS;
 }
-void processVideo(char* videoFilename) {
+void processVideo(char* videoFilename) {   
+    Mat copy, thresh, invert, gauss, mask;
     //create the capture object
     VideoCapture capture;   
     if(strcmp(videoFilename, "cam") == 0){
@@ -86,9 +86,8 @@ void processVideo(char* videoFilename) {
                   (int) capture.get(CV_CAP_PROP_FRAME_HEIGHT));
 
     int ex = static_cast<int>(capture.get(CV_CAP_PROP_FOURCC));     // Get Codec Type- Int form
+    //outputVideo.open("/home/dlinko/Desktop/log.avi", ex , capture.get(CV_CAP_PROP_FPS),S,true);
 
-    //    outputVideo.open("/home/sgillen/Desktop/log.avi" , ex , capture.get(CV_CAP_PROP_FPS),S,true);
-    
     if(!outputVideo.isOpened()){
         cout << "something went wrong with opening the output video" << endl;
         cout << ex << endl;
@@ -123,13 +122,12 @@ void processVideo(char* videoFilename) {
 
         imshow("FG Mask MOG", fgMaskMOG);
         imshow("FG Mask MOG 2", fgMaskMOG2);
-        Mat copy, thresh, final, gauss, mask;
 
         //blurs the image uses the MOG background subrtaction
         GaussianBlur(fgMaskMOG, gauss, Size(3,3), 0,0);
 
         //blurs the image uses the MOG2 background subtraction 
-        //GaussianBlur(fgMaskMOG, gauss, Size(3,3), 0,0);
+        //GaussianBlur(fgMaskMOG2, gauss, Size(3,3), 0,0);
 
         // Define the structuring elements to be used in eroding and dilating the image 
         Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
@@ -138,12 +136,10 @@ void processVideo(char* videoFilename) {
         // Perform dialting and eroding helps to elminate background noise 
         morphologyEx(gauss, mask, MORPH_CLOSE, se1);
         morphologyEx(gauss, mask, MORPH_OPEN, se2);
-       // imshow("mask", mask);
-
 
         //inverts the colors 
-        bitwise_not(mask, final, noArray());
-        imshow("invert",final);
+        bitwise_not(mask, invert, noArray());
+        imshow("invert", invert);
         
 
         // Setup SimpleBlobDetector parameters.
@@ -154,12 +150,12 @@ void processVideo(char* videoFilename) {
         params.maxThreshold = 256;
 
         params.filterByColor = true;
-        params.blobColor= 0;
-         
-        // Filter by Area.
+        params.blobColor= 0;  
+        
+        //Filter by Area
         params.filterByArea = true;
         params.minArea = 500;
-         
+
         // Filter by Circularity
         params.filterByCircularity = true;
         params.minCircularity = 0.5;
@@ -181,7 +177,7 @@ void processVideo(char* videoFilename) {
         
         // SimpleBlobDetector::create creates a smart pointer. 
         // So you need to use arrow ( ->) instead of dot ( . )
-        detector->detect( final, keypoints);
+        detector->detect(invert, keypoints);
           
           
 
@@ -193,12 +189,13 @@ void processVideo(char* videoFilename) {
         drawKeypoints(frame, keypoints, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
 
         // Shows blobs
-        imshow("keypoints", im_with_keypoints );            
+        imshow("keypoints", im_with_keypoints);            
         
-        // outputVideo << copy;
+        //outputVideo.write(im_with_keypoints);
+
         
         //get the input from the keyboard
-        keyboard = waitKey( 10000 );
+        keyboard = waitKey(30);
     }
     //delete capture object
     capture.release();
