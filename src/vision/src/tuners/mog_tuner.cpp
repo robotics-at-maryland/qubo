@@ -52,31 +52,27 @@ void area( int, void* )
     //Filter by Area.
     params.filterByArea = true;
     params.minArea = slider_area;
-    params.maxArea = slider_area + 100;
 }
 
 void circularity( int, void* )
 {
     //Filter by Circularity.
     params.filterByCircularity = true; 
-    params.minCircularity = slider_circularity / MAX_circularity;
-    params.maxCircularity = (slider_circularity + 50) / MAX_circularity;
+    params.minCircularity = (float) slider_circularity / (float) MAX_circularity;
 }
 
 void convexity( int, void* )
 {
     //Filter by Convexity.
     params.filterByConvexity = true; 
-    params.minConvexity = slider_convexity / MAX_convexity;
-    params.maxCircularity = (slider_convexity + 50) / MAX_convexity;
+    params.minConvexity = (float) slider_convexity / (float) MAX_convexity;
 }
 
 void inertia( int, void* )
 {
     //Filter by ratio of the inertia.
     params.filterByInertia = true; 
-    params.minInertiaRatio = slider_ratio / MAX_ratio;
-    params.maxInertiaRatio = (slider_ratio + 50) / MAX_ratio;
+    params.minInertiaRatio = (float) slider_ratio / (float) MAX_ratio;
 }
 
 int main(int argc, char* argv[])
@@ -142,7 +138,9 @@ void processVideo(char* videoFilename) {
     int ex = static_cast<int>(capture.get(CV_CAP_PROP_FOURCC));     // Get Codec Type- Int form
 
     //    outputVideo.open("/home/sgillen/Desktop/log.avi" , ex , capture.get(CV_CAP_PROP_FPS),S,true);
-    
+   //outputVideo.open("/home/dlinko/Desktop/log1.avi" , ex , capture.get(CV_CAP_PROP_FPS),S,true);
+
+
     if(!outputVideo.isOpened()){
         cout << "something went wrong with opening the output video" << endl;
         cout << ex << endl;
@@ -182,11 +180,11 @@ void processVideo(char* videoFilename) {
         GaussianBlur(fgMaskMOG, gauss, Size(3,3), 0,0);
 
         //blurs the image uses the MOG2 background subtraction 
-        GaussianBlur(fgMaskMOG2, gauss, Size(3,3), 0,0);
+        //GaussianBlur(fgMaskMOG2, gauss, Size(3,3), 0,0);
 
         // Define the structuring elements to be used in eroding and dilating the image 
-        Mat se1 = getStructuringElement(MORPH_RECT, Size(6, 6));
-        Mat se2 = getStructuringElement(MORPH_RECT, Size(4, 4));
+        Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
+        Mat se2 = getStructuringElement(MORPH_RECT, Size(5, 5));
 
         // Perform dialting and eroding helps to elminate background noise 
         morphologyEx(gauss, mask, MORPH_CLOSE, se1);
@@ -194,7 +192,7 @@ void processVideo(char* videoFilename) {
 
         //inverts the colors 
         bitwise_not(mask, invert, noArray());
-        imshow("invert",invert);
+        imshow("invert", invert);
         
         // Change thresholds
         params.minThreshold = 0;
@@ -223,8 +221,8 @@ void processVideo(char* videoFilename) {
         // Shows blobs
         imshow("keypoints", im_with_keypoints );            
         
-        // outputVideo << copy;
-        
+        //outputVideo.write(im_with_keypoints);
+
         //get the input from the keyboard
         keyboard = waitKey( 60 );
     }
