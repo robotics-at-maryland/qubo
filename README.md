@@ -2,7 +2,7 @@
 
 ## Setup Instructions
 
-Project QUBO currently only supports Ubuntu 14.04.  Any other platforms may not (and probably will not) work correctly.
+Project QUBO currently only supports Ubuntu 16.04.  Any other platforms may not (and probably will not) work correctly.
 
 ### Compilation
 
