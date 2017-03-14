@@ -67,8 +67,8 @@ set(CANNY_TUNER_FILES
   )
 
 
-set(MOG_TUNER_FILES
-  src/tuners/mog_tuner.cpp
+set(BLOB_TUNER_FILES
+  src/tuners/blob_tuner.cpp
   )
 
 
@@ -82,8 +82,8 @@ set(EDGE_FILES
  src/prototypes/edge_detection.cpp
  )
 
-set(MOG_FILES
- src/prototypes/mog.cpp
+set(BLOB_FILES
+ src/prototypes/blob.cpp
  )
 
 set(EM_FILES
@@ -118,8 +118,8 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 add_executable(canny_tuner ${CANNY_TUNER_FILES})
 target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
-add_executable(mog_tuner ${MOG_TUNER_FILES})
-target_link_libraries(mog_tuner ${OpenCV_LIBRARIES})
+add_executable(blob_tuner ${BLOB_TUNER_FILES})
+target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
 add_executable(segment_test ${SEGMENT_FILES})
 target_link_libraries(segment_test ${OpenCV_LIBRARIES})
@@ -127,8 +127,8 @@ target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 add_executable(canny_test ${EDGE_FILES})
 target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-add_executable(mog_test ${MOG_FILES})
-target_link_libraries(mog_test ${OpenCV_LIBRARIES})
+add_executable(blob_test ${BLOB_FILES})
+target_link_libraries(blob_test ${OpenCV_LIBRARIES})
 
 add_executable(em_test ${EM_FILES})
 target_link_libraries(em_test ${OpenCV_LIBRARIES})

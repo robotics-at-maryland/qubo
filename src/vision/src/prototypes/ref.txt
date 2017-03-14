@@ -7,4 +7,6 @@ mat OpenCV C++ n-dimensional dense array class
 http://docs.opencv.org/3.1.0/d6/d17/group__cudabgsegm.html#ga6742648a654585013544eaa300f77b57
 Documentation for the background subtraction
 
+contour detection
+http://docs.opencv.org/2.4/doc/tutorials/imgproc/shapedescriptors/find_contours/find_contours.html
 
