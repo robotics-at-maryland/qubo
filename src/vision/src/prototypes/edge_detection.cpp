@@ -99,19 +99,7 @@ void processVideo(char* videoPath){
         /// Draw contours
         Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
         for( int i = 0; i< contours.size(); i++ )
-            {
-              result = cvApproxPoly(contour, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contour)*0.02, 0);
-                        
-              //if there are 3 vertices  in the contour and the area of the triangle is more than 100 pixels
-              if(result->total==3 && fabs(cvContourArea(result, CV_WHOLE_SEQ))>100 )
-                {
-                //iterating through each point
-                CvPoint *pt[3];
-                for(int i=0;i<3;i++){
-                    pt[i] = (CvPoint*)cvGetSeqElem(result, i);
-                    }
-
-
+            {               
                 Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
                 drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point() );
             }
