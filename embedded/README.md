@@ -21,7 +21,7 @@ Or on 16.04:
 
 ##Drivers
 [Tivaware drivers](http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html)(_EK-TM4C123GXL_)
-are included in the `drivers/` directory. You have to `make` in the `drivers/` directory to get the
+are included in the `drivers/` directory. You have to `make` in the `drivers/` and the `drivers/utils` directory to get the
 Tivaware objects in the correct place.
 
 The `drivers/` directory is where the Tivaware libraries are stored. The makefile in `drivers/` builds
