@@ -1,0 +1,16 @@
+<launch>
+  <!-- roslaunch sub8_launch perception.launch color_calibration:=gazebo_color_calibration.yaml -->
+  <arg name="color_calibration" default="default_color_calibration.yaml" />
+
+  <rosparam file="$(find sub8_launch)/config/course_geometry.yaml" />
+  <rosparam file="$(find sub8_launch)/config/$(arg color_calibration)" />
+
+  <node pkg="sub8_perception" type="buoy_2d.py" name="buoys" output="screen">
+    <rosparam file="$(find sub8_launch)/config/buoy_2d.yaml" command="load" ns="buoys" />
+  </node>
+
+  <node pkg="sub8_perception" type="follow_orange_pipes.py" name="orange_markers" output="screen">
+    <rosparam file="$(find sub8_launch)/config/follow_orange_pipes.yaml" command="load" ns="orange_markers" />
+  </node>
+
+</launch>
