@@ -49,7 +49,9 @@ IO_State initialize(void *io_host, raw_io_function read, raw_io_function write, 
 /*
  * Function to connect to the other device on the bus.
  */
-int connect(IO_State *state);
+int init_connect(IO_State *state);
+
+int wait_connect(IO_State *state);
 
 /*
  * Function to create transaction messages with a specified payload.

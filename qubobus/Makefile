@@ -1,4 +1,3 @@
-
 # Directory structure information
 INCDIR = include/
 SRCDIR = src/

@@ -38,7 +38,7 @@ enum {
     /* ID for errors encountered while completing a request. */
     MT_ERROR,
 
-    /* Invalid for message IDs, bookkeeping for the maximumof message types. */
+    /* Invalid for message IDs, bookkeeping for the maximum of message types. */
     MT_MAX,
 };
 
