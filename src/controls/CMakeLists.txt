@@ -1,15 +1,13 @@
-cmake_minimum_required(VERSION 2.8.3) 
+cmake_minimum_required(VERSION 2.8.3)
 project(controls)
 
 ##############################
 # Catkin Setup ###############
 ##############################
 
-find_package(catkin 
+find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-    cv_bridge #these two are used in the camera node
-    image_transport
     ram_cpp_utils
     ram_msgs
     tf2_ros
@@ -61,7 +59,7 @@ set(LCDSHOW_SRC_FILES
 
 #SG: maybe one day..
 set(TEST_FILES
-  
+
     )
 
 ##############################
@@ -83,7 +81,7 @@ target_link_libraries(controller_node ${catkin_LIBRARIES})
 ##############################
 
 
-#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in 
+#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in
 #install(TARGETS ${PROJECT_NAME}
 #  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
