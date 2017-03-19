@@ -1,0 +1,15 @@
+<launch>
+    <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="worlds/empty_underwater.world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+        <arg name="verbose" value="true"/>
+    </include>
+
+    <!-- Spawn our basic Qubo robot into the world -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find qubo_description)/urdf/basic_qubo.urdf -urdf -model basic_qubo" />
+</launch>

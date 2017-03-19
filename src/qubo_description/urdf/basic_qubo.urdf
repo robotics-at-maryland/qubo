@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!-- Basic URDF model of Qubo. -->
+<robot name="basic_qubo">
+
+  <!-- Rectangular base frame -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="1.0 1.0 1.0"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1.0 1.0 1.0"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- Note: these are just random mass and moment of inertia values, for now -->
+      <mass value="10"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+</robot>
