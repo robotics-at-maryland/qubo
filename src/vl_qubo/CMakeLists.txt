@@ -65,6 +65,7 @@ set(AHRS_BAUDRATE_SRC_FILES
 set(CONTROL_NODE_SRC_FILES
   src/main.cpp
   src/control_node.cpp
+  drivers/ahrs/src/AHRS.cpp
   )
 
 
