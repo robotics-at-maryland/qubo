@@ -49,8 +49,8 @@ ControlNode::~ControlNode(){
 void ControlNode::update(){}
 
 void ControlNode::updateAHRS(){
-    	static int id = 0;
-	static int attempts = 0;
+    static int id = 0;
+    static int attempts = 0;
 
 	//if we aren't connected yet, lets try a few more times
 	if(!_ahrs.isOpen()){
