@@ -1,4 +1,0 @@
-proxy1:
-    root: "/vision/serviceTest"
-proxy2:
-    root: "/vision/serviceTesting2"

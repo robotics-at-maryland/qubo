@@ -1,3 +1,0 @@
-<launch>
-        <include file="$(find sub8_actuator_driver)/launch/actuator_driver.launch"/>    
-</launch>
