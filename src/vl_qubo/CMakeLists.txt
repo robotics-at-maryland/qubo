@@ -94,7 +94,7 @@ add_dependencies(qubo_dvl_node ram_msgs_generate_messages_cpp)
 add_executable(qubo_control_node ${CONTROL_NODE_SRC_FILES})
 target_link_libraries(qubo_control_node ${catkin_LIBRARIES})
 
-add_exectuable(qubo_gazebo_control_node ${G_GONTROL_NODE_SRC_FILES})
+add_executable(qubo_gazebo_control_node ${G_CONTROL_NODE_SRC_FILES})
 target_link_libraries(qubo_gazebo_control_node ${catkin_LIBRARIES})
 
 ##############################

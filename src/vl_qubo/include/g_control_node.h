@@ -3,6 +3,7 @@
 
 //ros includes
 #include "ros/ros.h"
+#include "sensor_msgs/Imu.h"
 
 //c++ library includes
 #include <iostream>

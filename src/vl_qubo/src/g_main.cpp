@@ -3,6 +3,8 @@
 //includes for threading
 #include <thread>
 
+using namespace std; 
+
 void nodeThread(int argc, char* argv[]){
         
     ros::init(argc, argv, "control_node");
