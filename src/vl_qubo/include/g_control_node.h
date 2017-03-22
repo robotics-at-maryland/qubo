@@ -4,6 +4,7 @@
 //ros includes
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
+#include "nav_msgs/Odometry.h"
 
 //c++ library includes
 #include <iostream>
@@ -19,19 +20,24 @@ class GControlNode{
     void update();
 
     protected:
+
+
+    void orientCallback(const nav_msgs::Odometry::ConstPtr msg);
+
     std::string _node_name;
 
+    
 
 
     //--------------------------------------------------------------------------
     //for now I'm only going to populate the orientation parameters..
-    sensor_msgs::Imu _msg;
+       
+    ros::Subscriber _orientSub;
     
-    std::string pose_topic;
-
     ros::Publisher _orientPub;
-
-   
+    
+    sensor_msgs::Imu _fusedPose;
+    
 };
 
 #endif
