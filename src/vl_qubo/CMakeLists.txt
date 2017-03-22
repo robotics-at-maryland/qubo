@@ -68,7 +68,10 @@ set(CONTROL_NODE_SRC_FILES
   drivers/ahrs/src/AHRS.cpp
   )
 
-
+set(G_CONTROL_NODE_SRC_FILES
+  src/g_main.cpp
+  src/g_control_node.cpp
+  )
 
 ##############################
 # Add Executables ############
@@ -91,6 +94,8 @@ add_dependencies(qubo_dvl_node ram_msgs_generate_messages_cpp)
 add_executable(qubo_control_node ${CONTROL_NODE_SRC_FILES})
 target_link_libraries(qubo_control_node ${catkin_LIBRARIES})
 
+add_exectuable(qubo_gazebo_control_node ${G_GONTROL_NODE_SRC_FILES})
+target_link_libraries(qubo_gazebo_control_node ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########
@@ -101,7 +106,7 @@ target_link_libraries(qubo_control_node ${catkin_LIBRARIES})
  #       ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
  #       LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
  #      RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-#)
+ #)
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
