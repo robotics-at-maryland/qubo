@@ -25,7 +25,7 @@ find_package(catkin
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 find_package(OpenCV REQUIRED)
 
-find_package(VISP REQUIRED)
+#find_package(VISP REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
