@@ -56,7 +56,7 @@ bool writeUART0() {
   //disable the interrupt, there might be a race condition here
   ROM_UARTIntDisable(UART0_BASE, UART_INT_TX);
 
-  while( !ROM_UARTSpaceAvail(UART0_BASE) && (xQueueReceiveFromISR(write_uart0_queue, &buffer, NULL) == pdPASS) ) {
+  while( ROM_UARTSpaceAvail(UART0_BASE) && (xQueueReceiveFromISR(write_uart0_queue, &buffer, NULL) == pdPASS) ) {
     // Write buffer to UART
     //sg: this probably needs to be changed, we don't check the return value here.
     #ifdef DEBUG
