@@ -36,7 +36,7 @@ set(DVL_SRC_FILES
 set(AHRS_CONFIG_SRC_FILES
   drivers/ahrs/src/config.cpp
   drivers/ahrs/src/util.cpp
-  drivers/ahrs/src/AHRS.cpp # SG: maybe putting this here is not the best way to do this, but it will work for now 
+  drivers/ahrs/src/AHRS.cpp # SG: maybe putting this here is not the best way to do this, but it will work for now
   )
 
 set(AHRS_BAUDRATE_SRC_FILES
@@ -52,7 +52,7 @@ set(QSCU_SRC_FILES
   )
 
 ##sg: This does the same as set but it allows us to match everything in the
-#source directory 
+#source directory
 file(GLOB QUBOBUS_LIB_FILES
   drivers/qubobus/src/*.c
   )
@@ -88,7 +88,7 @@ target_link_libraries(test_io qubobus)
 add_executable(test_defs ${DEF_TEST_FILES})
 target_link_libraries(test_defs qubobus)
 
-#will probably change this back to a library at some point 
+#will probably change this back to a library at some point
 add_executable(qscu ${QSCU_SRC_FILES})
 target_link_libraries(qscu qubobus)
 

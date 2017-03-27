@@ -8,6 +8,9 @@
 
 #include "include/uart0_mutex.h"
 #include "include/uart1_mutex.h"
+#include "include/write_uart0_queue.h"
+
+#include "lib/include/rgb.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -16,7 +19,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include <semphr.h>
-//#include <queue.h>
+#include <queue.h>
 #include <heap_4.h>
 
 // Tiva
@@ -29,12 +32,20 @@
 #include <driverlib/sysctl.h>
 #include <driverlib/uart.h>
 
+#include <sys/types.h>
+
 SemaphoreHandle_t uart0_mutex;
 
 SemaphoreHandle_t uart1_mutex;
 
-void writeUART0(uint8_t *buffer, uint16_t size);
+volatile QueueHandle_t write_uart0_queue;
+
+static bool _finished_writing = false;
+
+bool writeUART0();
 
 void writeUART1(uint8_t *buffer, uint16_t size);
+
+ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size);
 
 #endif

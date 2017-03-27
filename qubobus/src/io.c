@@ -34,20 +34,20 @@ int init_connect(IO_State *state) {
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
     printf("message created\n");
-   
+
     write_message(state, &our_announce);
     printf("message sent\n");
     /*
      * SYNCHRONIZE WITH OTHER DEVICE
      */
 
-    /* 
-     * Read in the other client's announce message. 
+    /*
+     * Read in the other client's announce message.
      * This serves to synchronize the message frame alignment of both clients.
      */
     read_announce(state, &their_announce);
     printf("got response\n");
-    /* 
+    /*
      * In order to generate asymmetry, we compare the announce sequence numbers
      * If ours is lower, then we are the ones in control of the handshake.
      */
@@ -55,7 +55,7 @@ int init_connect(IO_State *state) {
 
     /* Save the other client's sequence number */
     state->remote_sequence_number = their_announce.header.sequence_number;
-    
+
     /*
      * NEGOTIATE PROTOCOL
      */
@@ -70,6 +70,7 @@ int init_connect(IO_State *state) {
 
     /* Attempt to read a protocol message from the opposite client. */
     read_message(state, &response, &buffer);
+    //printf("got protocol response\n");
 
     /* Send a reply to confirm or deny the connection. */
     if (!master) {
@@ -79,7 +80,7 @@ int init_connect(IO_State *state) {
         success = (response.header.message_type == MT_PROTOCOL && protocol_info->version == QUBOBUS_PROTOCOL_VERSION);
 
         /* If it didn't match, change the response from echo to error. */
-        if (!success) { 
+        if (!success) {
             response = create_error(&eProtocol, NULL);
         }
 
@@ -101,22 +102,22 @@ int wait_connect(IO_State *state) {
     Message our_announce, their_announce, protocol, response;
     char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     int master, success;
-    
+
     /*
      * SYNCHRONIZE WITH OTHER DEVICE
      */
 
-    /* 
-     * Read in the other client's announce message. 
+    /*
+     * Read in the other client's announce message.
      * This serves to synchronize the message frame alignment of both clients.
      */
     read_announce(state, &their_announce);
 
-    
+
     /*
      * ANNOUNCE THIS DEVICE
      */
-    
+
 
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
@@ -124,7 +125,7 @@ int wait_connect(IO_State *state) {
     write_message(state, &our_announce);
 
 
-    /* 
+    /*
      * In order to generate asymmetry, we compare the announce sequence numbers
      * If ours is lower, then we are the ones in control of the handshake.
      */
@@ -132,7 +133,7 @@ int wait_connect(IO_State *state) {
 
     /* Save the other client's sequence number */
     state->remote_sequence_number = their_announce.header.sequence_number;
-    
+
     /*
      * NEGOTIATE PROTOCOL
      */
@@ -156,7 +157,7 @@ int wait_connect(IO_State *state) {
         success = (response.header.message_type == MT_PROTOCOL && protocol_info->version == QUBOBUS_PROTOCOL_VERSION);
 
         /* If it didn't match, change the response from echo to error. */
-        if (!success) { 
+        if (!success) {
             response = create_error(&eProtocol, NULL);
         }
 
@@ -226,7 +227,7 @@ void write_message(IO_State *state, Message *message) {
      */
 
     /* Set the message size to include the core parts of the message. */
-    message->header.num_bytes = 
+    message->header.num_bytes =
         sizeof(struct Message_Header) +
         sizeof(struct Message_Footer) +
         message->payload_size;
@@ -295,8 +296,9 @@ static void read_announce(IO_State *state, Message *message) {
 
 static void safe_io(void *io_host, raw_io_function raw_io, void *data, size_t size) {
     size_t bytes_transferred = 0;
+    char *val = (char*) data;
     while (bytes_transferred != size) {
-        ssize_t ret = raw_io(io_host, data + bytes_transferred, size - bytes_transferred);
+        ssize_t ret = raw_io(io_host, val + bytes_transferred, size - bytes_transferred);
         if (ret <= 0) {
             break;
         }
@@ -319,4 +321,3 @@ static void create_message(Message *message, uint8_t message_type, uint8_t messa
     message->payload = payload;
     message->payload_size = payload_size;
 }
-

@@ -30,11 +30,23 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
 
-  ROM_IntEnable(INT_UART0);
+  // Configure the UART to communicate with the computer
+  ROM_UARTConfigSetExpClk(UART0_BASE, 16000000, 115200,
+      UART_CONFIG_PAR_NONE |UART_CONFIG_STOP_ONE | UART_CONFIG_WLEN_8);
+
+  ROM_UARTFIFOEnable(UART0_BASE);
+
+  ROM_UARTFIFOLevelSet(UART0_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
+
   // Disable the sending interrupt
-  ROM_UARTIntDisable(UART0_BASE,UART_INT_TX);
-  // Enable UART1 receive and receive timeout
+  ROM_UARTIntDisable(UART0_BASE, 0xFFFFFFFF);
+  // Enable UART0 receive and receive timeout
   ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
+
+  ROM_IntEnable(INT_UART0);
+
+  ROM_UARTEnable(UART0_BASE);
+
 
   #ifdef DEBUG
   //

@@ -42,6 +42,4 @@ static void read_uart0_task(void* params);
 
 static ssize_t read_queue(void* io_host, void* buffer, size_t size);
 
-static ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size);
-
 #endif

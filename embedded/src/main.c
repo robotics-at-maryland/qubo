@@ -53,6 +53,7 @@
 #include "include/rgb_mutex.h"
 #include "include/read_uart0_queue.h"
 #include "include/read_uart1_queue.h"
+#include "include/write_uart0_queue.h"
 
 volatile uint32_t *i2c0_address;
 volatile uint8_t **i2c0_buffer;
@@ -119,7 +120,7 @@ int main() {
   ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ |
                      SYSCTL_OSC_MAIN);
 
-  
+
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
@@ -169,15 +170,17 @@ int main() {
   read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
 
+  write_uart0_queue = xQueueCreate(WRITE_UART0_Q_SIZE,sizeof(uint8_t));
+
 
   // Master enable interrupts
   ROM_IntMasterEnable();
-  
+
 
   configureUART();
   configureGPIO();
   configureI2C();
-  
+
   #ifdef DEBUG
   UARTprintf("Datastructures allocated\n");
   #endif
@@ -190,7 +193,7 @@ int main() {
       count++;
   }
   */
-  
+
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
@@ -200,39 +203,36 @@ int main() {
     while(1){}
   }
   */
-  
-  /*  
+
+  /*
   if ( example_blink_init() ) {
             while(1){}
   }
   */
 
-  /*
-  
+
+
+
+
+
+
+  // if ( example_uart_init() ) {
+  //   while(1){}
+  // }
+
   if ( read_uart0_init() ) {
       #ifdef DEBUG
       UARTprintf("readUART task init failed\n");
       #endif
-      
-      while(1){}
   }
-  */
-  
-
-  /*
-  if ( example_uart_init() ) {
-    while(1){}
-  }
-  */
-
 
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
   #endif
 
-  
-  
   vTaskStartScheduler();
 
-  while(1){}
+
+  while(1){
+  }
 }

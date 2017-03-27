@@ -10,6 +10,45 @@
 void UART0IntHandler(void) {
   uint32_t status = ROM_UARTIntStatus(UART_DEVICE, true);
 
+  #ifdef DEBUG
+  //UARTprintf("interrupt triggered\n");
+  #endif
+
+  if( status & UART_INT_RX ){
+      //clear just the read interrupt
+      ROM_UARTIntClear(UART_DEVICE, UART_INT_RX);
+
+      if( !ROM_UARTCharsAvail(UART_DEVICE) ){
+          #ifdef DEBUG
+          UARTprintf("read interrupt triggerd, but nothing to read\n");
+          #endif
+      }
+      while( ROM_UARTCharsAvail(UART_DEVICE) ){
+          //get the value + cast to uint8_t
+          uint8_t c = (uint8_t) ROM_UARTCharGetNonBlocking(UART_DEVICE);
+          //push to the queue
+          if( xQueueSendToBackFromISR(read_uart0_queue, &c, NULL) != pdTRUE ){
+            #ifdef DEBUG
+            UARTprintf("error pushing to queue\n");
+            #endif
+          }
+      }
+
+  }
+  if( status & UART_INT_RT ){
+      ROM_UARTIntClear(UART_DEVICE, UART_INT_RT);
+      #ifdef DEBUG
+      UARTprintf("recieve timeout\n");
+      #endif
+  }
+
+  if( status & UART_INT_TX ){
+      ROM_UARTIntClear(UART_DEVICE, UART_INT_TX);
+      //push everything we need to write to the UART FIFO
+      writeUART0();
+      //writeUART1();
+  }
+  /*
   // Clear interrupt
   ROM_UARTIntClear(UART_DEVICE, status);
 
@@ -18,12 +57,17 @@ void UART0IntHandler(void) {
   }
 
   // Get one byte
- 
-  // Tivaware casts the byte to a int32_t for some reason, cast back to save space
-  uint8_t c = (uint8_t)(ROM_UARTCharGetNonBlocking(UART_DEVICE));
+  while( ROM_UARTCharsAvail(UART_DEVICE) ){
+      #ifdef DEBUG
+      UARTprintf("reading to queue");
+      #endif
+    // Tivaware casts the byte to a int32_t for some reason, cast back to save space
+    uint8_t c = (uint8_t)(ROM_UARTCharGet(UART_DEVICE));
 
-  //ROM_UARTCharPutNonBlocking(UART_DEVICE, c);
-  // Push to the queue
+    //ROM_UARTCharPutNonBlocking(UART_DEVICE, c);
+    // Push to the queue
 
-  xQueueSendToBackFromISR(read_uart0_queue, &c, NULL);
+    xQueueSendToBackFromISR(read_uart0_queue, &c, NULL);
+  }
+  */
 }
