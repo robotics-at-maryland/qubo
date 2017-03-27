@@ -35,7 +35,7 @@ bool read_uart0_init(void) {
 
 
     #ifdef DEBUG
-    UARTprintf("connected\n");
+    //UARTprintf("connected\n");
     //UARTprintf("error reads as %i\n", error);
     #endif
 

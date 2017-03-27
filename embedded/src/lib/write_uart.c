@@ -5,13 +5,16 @@
 
 #include "lib/include/write_uart.h"
 
+//warning: If size is bigger than the buffer, we will overflow
 ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
     // This is going to get really upset if we try to write more than 64 bytes at
     // a time...
     #ifdef DEBUG
-    UARTprintf("adding to queue\n");
+    //UARTprintf("adding to queue\n");
     #endif
+    //type "safety"
     const uint8_t *data = buffer;
+    //counter to make sure we write everthing we're given
     int i = 0;
     _finished_writing = false;
 
@@ -30,8 +33,10 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
         }
     }
 
+    //We need to call this at least once to begin the write_message
+    writeUART0();
 
-    //wait for the data to be removed from the queue, then stuff more in
+    //wait for the data to be removed from the queue
     while( (xQueueIsQueueEmptyFromISR(write_uart0_queue) != pdTRUE) ){
         #ifdef DEBUG
         //UARTprintf("still printing: %d\n", _finished_writing);
@@ -54,7 +59,7 @@ bool writeUART0() {
   uint8_t buffer;
 
   //disable the interrupt, there might be a race condition here
-  ROM_UARTIntDisable(UART0_BASE, UART_INT_TX);
+  ROM_IntDisable(INT_UART0);
 
   while( ROM_UARTSpaceAvail(UART0_BASE) && (xQueueReceiveFromISR(write_uart0_queue, &buffer, NULL) == pdPASS) ) {
     // Write buffer to UART
@@ -70,16 +75,17 @@ bool writeUART0() {
     ROM_UARTIntDisable(UART0_BASE, UART_INT_TX);
     _finished_writing = true;
     #ifdef DEBUG
-    UARTprintf("finished writing: %d\n", _finished_writing);
+    //UARTprintf("finished writing: %d\n", _finished_writing);
     #endif
   }else{
     ROM_UARTIntEnable(UART0_BASE, UART_INT_TX);
     #ifdef DEBUG
-    UARTprintf("not finished writing: %d\n", _finished_writing);
+    //UARTprintf("not finished writing: %d\n", _finished_writing);
     #endif
 
   }
-  //ROM_IntEnable(UART0_BASE);
+  //reenable interrupt
+  ROM_IntEnable(INT_UART0);
   // Maybe needed, if they're going to be dynamically allocated might as well free here
   // so its not forgotten
   // vPortFree(buffer);

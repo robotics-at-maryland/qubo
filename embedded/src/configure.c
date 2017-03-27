@@ -34,8 +34,8 @@ void configureUART(void)
   ROM_UARTConfigSetExpClk(UART0_BASE, 16000000, 115200,
       UART_CONFIG_PAR_NONE |UART_CONFIG_STOP_ONE | UART_CONFIG_WLEN_8);
 
+  //enable the FIFO, and configure it
   ROM_UARTFIFOEnable(UART0_BASE);
-
   ROM_UARTFIFOLevelSet(UART0_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
 
   // Disable the sending interrupt
