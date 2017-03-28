@@ -23,9 +23,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   drivers/ahrs/include
   drivers/dvl/include
+  drivers/imu/include
 
   ahrs/include
   dvl/include
+  imu/include
   include
 
 )
