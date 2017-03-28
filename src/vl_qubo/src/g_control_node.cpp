@@ -3,27 +3,28 @@
 using namespace std;
 using namespace ros;
 
-GControlNode::GControlNode(ros::NodeHandle n, string node_name, string pose_topic)
+GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pose_topic)
     :_node_name(node_name){
 
-    _orientSub = n.subscribe(pose_topic, 1000, &GControlNode::orientCallback, this);
+    string input_pose = "/basic_qubo/pose_gt";
     
-    _orientPub = n.advertise<sensor_msgs::Imu>(pose_topic.c_str(),1000);
+    _orientSub = n.subscribe(input_pose, 1000, &GControlNode::orientCallback, this);
+    _orientPub = n.advertise<sensor_msgs::Imu>(fused_pose_topic.c_str(),1000);
 
 }
 
 GControlNode::~GControlNode(){}
 
 void GControlNode::update(){
-    
     spinOnce();
+    _orientPub.publish(_fusedPose);
+
     
-    //_orientPub.publish(_msg);
 
 }
 
 void GControlNode::orientCallback(const nav_msgs::Odometry::ConstPtr msg){
-
+    //may have to convert to quaternions here..
     ROS_INFO("Seq: [%d]", msg->header.seq);
     ROS_INFO("Position-> x: [%f], y: [%f], z: [%f]", msg->pose.pose.position.x,msg->pose.pose.position.y, msg->pose.pose.position.z);
     ROS_INFO("Orientation-> x: [%f], y: [%f], z: [%f], w: [%f]", msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);

@@ -10,7 +10,7 @@ void nodeThread(int argc, char* argv[]){
     ros::init(argc, argv, "control_node");
     ros::NodeHandle nh;
 
-    GControlNode cn(nh, "control_node", "/basic_qubo/pose_gt");
+    GControlNode cn(nh, "control_node", "/qubo/pose/");
 
     while(1){
         cn.update();
@@ -19,22 +19,10 @@ void nodeThread(int argc, char* argv[]){
 }
 
 
-void thrusterThread(){
-    //for the gazebo version of this thread we need to subscribe to the pitch/roll/yaw commands and translate them
-    
-    while(1){
-        cout << "hey what's up I'm the thruster thread" << endl;
-        sleep(1);
-    }
-    
-}
-
-
 
 int main(int argc, char* argv[]){
 
     thread first(nodeThread, argc, argv);
-    thread second(thrusterThread);
     
     
     while(1){
