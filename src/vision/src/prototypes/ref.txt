@@ -9,4 +9,4 @@ Documentation for the background subtraction
 
 contour detection
 http://docs.opencv.org/2.4/doc/tutorials/imgproc/shapedescriptors/find_contours/find_contours.html
-
+http://opencv-srf.blogspot.com/2011/09/object-detection-tracking-using-contours.html
