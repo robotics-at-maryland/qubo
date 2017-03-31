@@ -30,7 +30,7 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="${prop_mesh_file}" scale="1 1 1"/>
+          <mesh filename="${prop_mesh_file}" scale=".5 .5 .5"/>
         </geometry>
       </visual>
       <collision>
@@ -132,44 +132,46 @@
     </plugin>
   </gazebo>
 
-
   <!-- yaw thrusters - Z = 5 inches from bottom, X = 9.28 inches from center, Y = 7.87 inches from center -->
   <!-- Z = .127 X = .23 Y = .1998 -->
   
   <!-- Attach thrusters to base link using macro defined above -->
-
+  
   <!-- thruster configs found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3 -->
   
   <xacro:thruster_macro namespace="${namespace}" thruster_id="0">
-    <origin xyz="-0.23 -0.1998 0.127" rpy="${0*d2r} ${0*d2r} ${-45*d2r}"/>
+    <origin xyz="-0.23 -0.1998 0" rpy="${0*d2r} ${0*d2r} ${-45*d2r}"/>
   </xacro:thruster_macro>
   <xacro:thruster_macro namespace="${namespace}" thruster_id="1">
-    <origin xyz="-0.23 0.1998 0.127" rpy="${0*d2r} ${0*d2r} ${45*d2r}"/>
+    <origin xyz="-0.23 0.1998 0" rpy="${0*d2r} ${0*d2r} ${45*d2r}"/>
   </xacro:thruster_macro>
   <xacro:thruster_macro namespace="${namespace}" thruster_id="2">
-    <origin xyz="0.23 0.1998 0.127" rpy="${0*d2r} ${0*d2r} ${135*d2r}"/>
+    <origin xyz="0.23 0.1998 0" rpy="${0*d2r} ${0*d2r} ${-45*d2r}"/>
   </xacro:thruster_macro>
   <xacro:thruster_macro namespace="${namespace}" thruster_id="3">
-    <origin xyz="0.23 -0.1998 0.127" rpy="${0*d2r} ${0*d2r} ${-135*d2r}"/>
+    <origin xyz="0.23 -0.1998 0" rpy="${0*d2r} ${0*d2r} ${45*d2r}"/>
   </xacro:thruster_macro>
 
 
   <!-- ${-74.53*d2r} ${53.21*d2r}" -->
   <!-- ${-105.47*d2r} ${53.21*d2r} -->
+
+  <!-- pitch roll thrusters -->
+  <!-- inches from bottom X1 = .149m X2 = .257m Y = .083m  Z = .213m -->
   
   
-  <!-- <xacro:thruster_macro namespace="${namespace}" thruster_id="4"> -->
-  <!--   <origin xyz="-0.412125 0.505415 0.129" rpy="${0*d2r} ${0*d2r} ${45*d2r}"/> -->
-  <!-- </xacro:thruster_macro> -->
-  <!-- <xacro:thruster_macro namespace="${namespace}" thruster_id="5"> -->
-  <!--   <origin xyz="-0.412125 -0.505415 0.129" rpy="${0*d2r} ${0*d2r} ${-45*d2r}"/> -->
-  <!-- </xacro:thruster_macro> -->
-  <!-- <xacro:thruster_macro namespace="${namespace}" thruster_id="6"> -->
-  <!--   <origin xyz="0.412125 0.505415 0.129" rpy="${0*d2r} ${0*d2r} ${135*d2r}"/> -->
-  <!-- </xacro:thruster_macro> -->
-  <!-- <xacro:thruster_macro namespace="${namespace}" thruster_id="7"> -->
-  <!--   <origin xyz="0.412125 -0.505415 0.129" rpy="${0*d2r} ${0*d2r} ${-135*d2r}"/> -->
-  <!-- </xacro:thruster_macro> -->
+  <xacro:thruster_macro namespace="${namespace}" thruster_id="4">
+    <origin xyz="-0.257 -.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
+  </xacro:thruster_macro>
+  <xacro:thruster_macro namespace="${namespace}" thruster_id="5">
+    <origin xyz="-0.257 0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
+  </xacro:thruster_macro>
+  <xacro:thruster_macro namespace="${namespace}" thruster_id="6">
+    <origin xyz="0.149 0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
+  </xacro:thruster_macro>
+  <xacro:thruster_macro namespace="${namespace}" thruster_id="7">
+    <origin xyz="0.149 -0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
+  </xacro:thruster_macro>
 
   <!-- Mount a 3D pose sensor -->
   <link name="${namespace}/pose_sensor_link">
