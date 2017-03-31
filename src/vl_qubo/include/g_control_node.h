@@ -36,7 +36,7 @@ class GControlNode{
     void rollCallback(const std_msgs::Float64::ConstPtr& msg);
     
     std::string _node_name;
-
+    std::string qubo_name;
     
     //--------------------------------------------------------------------------
     //for now I'm only going to populate the orientation parameters..

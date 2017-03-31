@@ -5,11 +5,13 @@ using namespace ros;
 
 GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pose_topic)
     :_node_name(node_name), _thruster_values(NUM_THRUSTERS), _thruster_pubs(NUM_THRUSTERS) {
-
-    string input_pose = "/basic_qubo/pose_gt";
-    string yaw_topic = "/qubo/controller/yaw";
-    string pitch_topic = "/qubo/controller/pitch";
-    string roll_topic = "/qubo/controller/roll";
+    
+    qubo_name = "/basic_qubo/";
+    
+    string input_pose = qubo_name + "pose_gt";
+    string yaw_topic = qubo_name + "controller/yaw";
+    string pitch_topic = qubo_name + "controller/pitch";
+    string roll_topic = qubo_name + "controller/roll";
     
     _orient_sub = n.subscribe(input_pose, 1000, &GControlNode::orientCallback, this);
     _orient_pub = n.advertise<sensor_msgs::Imu>(fused_pose_topic.c_str(),1000);
@@ -24,7 +26,10 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
         
     for(int i = 0; i < NUM_THRUSTERS; i++){
         _thruster_values[i] = 0;
+
+        t_topic = "/basic_qubo/thruster";
         t_topic += to_string(i);
+        
         _thruster_pubs[i] = n.advertise<std_msgs::Float64>(t_topic, 1000);
         cout << t_topic << endl;
 
