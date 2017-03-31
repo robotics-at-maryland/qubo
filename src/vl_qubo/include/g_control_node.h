@@ -16,6 +16,9 @@
 //tf includes
 #include "tf/tf.h"
 
+
+#define NUM_THRUSTERS 8
+
 class GControlNode{
     public:
     GControlNode(ros::NodeHandle n, std::string node_name, std::string pose_topic);
@@ -26,24 +29,15 @@ class GControlNode{
     protected:
 
 
-    void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
-    
 
-    
-    void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
-    
+    void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
     void yawCallback(const std_msgs::Float64::ConstPtr& msg);
-    
+    void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
     void rollCallback(const std_msgs::Float64::ConstPtr& msg);
     
-
-
-
     std::string _node_name;
 
     
-
-
     //--------------------------------------------------------------------------
     //for now I'm only going to populate the orientation parameters..
        
@@ -57,17 +51,22 @@ class GControlNode{
     //thruster variables
 
     //command subs
-    ros::Subscriber _roll_sub;
     ros::Subscriber _yaw_sub;
     ros::Subscriber _pitch_sub;
+    ros::Subscriber _roll_sub;
+    
+   
 
     //thruster pub
+    std::vector<double> _thruster_values;
     std::vector<ros::Publisher> _thruster_pubs;
 
     //thruster vars
-    double _yaw_command;
-    double _pitch_command;
-    double _roll_command;
+    double _yaw_command = 0;
+    double _pitch_command = 0;
+    double _roll_command = 0;
+
+
 };
 
 #endif
