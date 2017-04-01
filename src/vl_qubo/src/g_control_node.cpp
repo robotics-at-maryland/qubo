@@ -5,14 +5,18 @@ using namespace ros;
 
 GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pose_topic)
     :_node_name(node_name), _thruster_values(NUM_THRUSTERS), _thruster_pubs(NUM_THRUSTERS) {
-    
+
+	//robot namespace
     qubo_name = "/basic_qubo/";
-    
+
+	// topic names, channge them here if you need to
     string input_pose = qubo_name + "pose_gt";
     string yaw_topic = qubo_name + "controller/yaw";
     string pitch_topic = qubo_name + "controller/pitch";
     string roll_topic = qubo_name + "controller/roll";
-    
+
+
+	//set up all publishers and subscribers
     _orient_sub = n.subscribe(input_pose, 1000, &GControlNode::orientCallback, this);
     _orient_pub = n.advertise<sensor_msgs::Imu>(fused_pose_topic.c_str(),1000);
 
@@ -21,16 +25,18 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
     _roll_sub = n.subscribe(roll_topic, 1000, &GControlNode::rollCallback, this);
 
 
-    string t_topic = "/basic_qubo/thruster";
+
+	//register the thruster topics, we have 8
+	string t_topic =  qubo_name + "thruster";
             
-        
-    for(int i = 0; i < NUM_THRUSTERS; i++){
+	for(int i = 0; i < NUM_THRUSTERS; i++){
         _thruster_values[i] = 0;
 
-        t_topic = "/basic_qubo/thruster";
+        t_topic = "/basic_qubo/thrusters/";
         t_topic += to_string(i);
-        
-        _thruster_pubs[i] = n.advertise<std_msgs::Float64>(t_topic, 1000);
+		t_topic += "/input";
+		
+        _thruster_pubs[i] = n.advertise<uuv_gazebo_ros_plugins_msgs::FloatStamped>(t_topic, 1000);
         cout << t_topic << endl;
 
     }
@@ -42,7 +48,7 @@ GControlNode::~GControlNode(){}
 void GControlNode::update(){
     spinOnce(); //get all the callbacks
 
-    ROS_ERROR("yaw pitch roll = %d %d %d"); 
+    //ROS_ERROR("yaw pitch roll = %d %d %d"); 
     
     //!!!! sum roll/pitch/yaw into thruster commands here.
     
@@ -63,7 +69,7 @@ void GControlNode::orientCallback(const nav_msgs::Odometry::ConstPtr &msg){
     //tf::Quaternion ahrsData(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
 
     
-    _orient_pub.publish(*msg);
+	//    _orient_pub.publish(*msg);
 
 }
 

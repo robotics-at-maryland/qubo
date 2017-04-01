@@ -16,6 +16,8 @@
 //tf includes
 #include "tf/tf.h"
 
+//uuv includes
+#include "uuv_gazebo_ros_plugins_msgs/FloatStamped.h"
 
 #define NUM_THRUSTERS 8
 
