@@ -4,16 +4,16 @@ using namespace std;
 using namespace ros;
 
 GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pose_topic)
-    :_node_name(node_name), _thruster_values(NUM_THRUSTERS), _thruster_pubs(NUM_THRUSTERS) {
+    :_node_name(node_name), _thruster_commands(NUM_THRUSTERS), _thruster_pubs(NUM_THRUSTERS) {
 
 	//robot namespace
-    qubo_name = "/basic_qubo/";
+    qubo_namespace = "/basic_qubo/";
 
 	// topic names, channge them here if you need to
-    string input_pose = qubo_name + "pose_gt";
-    string yaw_topic = qubo_name + "controller/yaw";
-    string pitch_topic = qubo_name + "controller/pitch";
-    string roll_topic = qubo_name + "controller/roll";
+    string input_pose = qubo_namespace + "imu";
+    string yaw_topic = qubo_namespace + "controller/yaw";
+    string pitch_topic = qubo_namespace + "controller/pitch";
+    string roll_topic = qubo_namespace + "controller/roll";
 
 
 	//set up all publishers and subscribers
@@ -27,10 +27,10 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
 
 
 	//register the thruster topics, we have 8
-	string t_topic =  qubo_name + "thruster";
+	string t_topic =  qubo_namespace + "thruster";
             
 	for(int i = 0; i < NUM_THRUSTERS; i++){
-        _thruster_values[i] = 0;
+        _thruster_commands[i].data = 0;
 
         t_topic = "/basic_qubo/thrusters/";
         t_topic += to_string(i);
@@ -47,15 +47,38 @@ GControlNode::~GControlNode(){}
 
 void GControlNode::update(){
     spinOnce(); //get all the callbacks
+	
+	//!!!! sum roll/pitch/yaw into thruster commands here.
 
-    //ROS_ERROR("yaw pitch roll = %d %d %d"); 
-    
-    //!!!! sum roll/pitch/yaw into thruster commands here.
-    
-    
+	for(int i = 0; i < NUM_THRUSTERS; i++){
+		_thruster_commands[i].data = 0;
+		
+	}
+
+
+	//thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
+	//yaw thruster/surge thrusters
+	
+	_thruster_commands[0].data += _yaw_command;
+	_thruster_commands[1].data -= _yaw_command;
+	_thruster_commands[2].data -= _yaw_command;
+	_thruster_commands[3].data += _yaw_command;
+
+
+	//pitch/roll thrusters
+	_thruster_commands[4].data += ( _pitch_command + _roll_command);
+	_thruster_commands[5].data += ( _pitch_command - _roll_command);
+	_thruster_commands[6].data += (-_pitch_command - _roll_command);
+	_thruster_commands[7].data += (-_pitch_command + _roll_command);
+
+	for(int i = 0; i < NUM_THRUSTERS; i++){
+		_thruster_pubs[i].publish(_thruster_commands[i]);
+		cout << _thruster_commands[i].data << endl;
+	}
+	
 }
 
-void GControlNode::orientCallback(const nav_msgs::Odometry::ConstPtr &msg){
+void GControlNode::orientCallback(const sensor_msgs::Imu::ConstPtr &msg){
 
     //may have to convert to quaternions here..
     // ROS_INFO("Seq: [%d]", msg->header.seq);
@@ -67,9 +90,9 @@ void GControlNode::orientCallback(const nav_msgs::Odometry::ConstPtr &msg){
     //add this to the header?
 
     //tf::Quaternion ahrsData(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
-
-    
-	//    _orient_pub.publish(*msg);
+	
+    //right now I just pass the data from simulated right through
+	_orient_pub.publish(*msg);
 
 }
 

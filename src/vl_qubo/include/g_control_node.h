@@ -32,13 +32,13 @@ class GControlNode{
 
 
 
-    void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
+    void orientCallback(const sensor_msgs::Imu::ConstPtr& msg);
     void yawCallback(const std_msgs::Float64::ConstPtr& msg);
     void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
     void rollCallback(const std_msgs::Float64::ConstPtr& msg);
     
     std::string _node_name;
-    std::string qubo_name;
+    std::string qubo_namespace;
     
     //--------------------------------------------------------------------------
     //for now I'm only going to populate the orientation parameters..
@@ -57,17 +57,17 @@ class GControlNode{
     ros::Subscriber _pitch_sub;
     ros::Subscriber _roll_sub;
     
-   
-
-    //thruster pub
-    std::vector<double> _thruster_values;
-    std::vector<ros::Publisher> _thruster_pubs;
-
+    
     //thruster vars
     double _yaw_command = 0;
     double _pitch_command = 0;
     double _roll_command = 0;
-
+    
+    
+    //thruster pub
+    std::vector<uuv_gazebo_ros_plugins_msgs::FloatStamped> _thruster_commands;
+    std::vector<ros::Publisher> _thruster_pubs;
+    
 
 };
 
