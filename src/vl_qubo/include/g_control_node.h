@@ -59,7 +59,7 @@ class GControlNode{
     
     
     //thruster vars
-    double _yaw_command = 0;
+    double _yaw_command = 1000;
     double _pitch_command = 0;
     double _roll_command = 0;
     
