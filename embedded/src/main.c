@@ -43,6 +43,11 @@
 #include "include/i2c2_mutex.h"
 #include "include/i2c3_mutex.h"
 
+#include "include/i2c0_globals.h"
+#include "include/i2c1_globals.h"
+#include "include/i2c2_globals.h"
+#include "include/i2c3_globals.h"
+
 #include "include/uart0_mutex.h"
 #include "include/uart1_mutex.h"
 #include "include/rgb_mutex.h"
@@ -57,6 +62,34 @@ SemaphoreHandle_t i2c3_mutex;
 SemaphoreHandle_t uart0_mutex;
 SemaphoreHandle_t uart1_mutex;
 SemaphoreHandle_t rgb_mutex;
+
+uint32_t *i2c0_address;
+uint8_t **i2c0_read_buffer;
+uint8_t **i2c0_write_buffer;
+uint32_t *i2c0_read_count;
+uint32_t *i2c0_write_count;
+uint16_t *i2c0_int_state;
+
+uint32_t *i2c1_address;
+uint8_t **i2c1_read_buffer;
+uint8_t **i2c1_write_buffer;
+uint32_t *i2c1_read_count;
+uint32_t *i2c1_write_count;
+uint16_t *i2c1_int_state;
+
+uint32_t *i2c2_address;
+uint8_t **i2c2_read_buffer;
+uint8_t **i2c2_write_buffer;
+uint32_t *i2c2_read_count;
+uint32_t *i2c2_write_count;
+uint16_t *i2c2_int_state;
+
+uint32_t *i2c3_address;
+uint8_t **i2c3_read_buffer;
+uint8_t **i2c3_write_buffer;
+uint32_t *i2c3_read_count;
+uint32_t *i2c3_write_count;
+uint16_t *i2c3_int_state;
 
 volatile QueueHandle_t read_uart0_queue;
 volatile QueueHandle_t read_uart1_queue;
@@ -118,6 +151,34 @@ int main() {
 
   read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
+
+  i2c0_address = pvPortMalloc(sizeof(uint32_t));
+  i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c0_write_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c0_read_count = pvPortMalloc(sizeof(uint32_t));
+  i2c0_write_count = pvPortMalloc(sizeof(uint32_t));
+  i2c0_int_state = pvPortMalloc(sizeof(uint16_t));
+
+  i2c1_address = pvPortMalloc(sizeof(uint32_t));
+  i2c1_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c1_write_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c1_read_count = pvPortMalloc(sizeof(uint32_t));
+  i2c1_write_count = pvPortMalloc(sizeof(uint32_t));
+  i2c1_int_state = pvPortMalloc(sizeof(uint16_t));
+
+  i2c2_address = pvPortMalloc(sizeof(uint32_t));
+  i2c2_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c2_write_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c2_read_count = pvPortMalloc(sizeof(uint32_t));
+  i2c2_write_count = pvPortMalloc(sizeof(uint32_t));
+  i2c2_int_state = pvPortMalloc(sizeof(uint16_t));
+
+  i2c3_address = pvPortMalloc(sizeof(uint32_t));
+  i2c3_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c3_write_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c3_read_count = pvPortMalloc(sizeof(uint32_t));
+  i2c3_write_count = pvPortMalloc(sizeof(uint32_t));
+  i2c3_int_state = pvPortMalloc(sizeof(uint16_t));
 
   #ifdef DEBUG
   UARTprintf("Datastructures allocated\n");

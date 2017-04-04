@@ -6,15 +6,12 @@
 #include "lib/include/mcp9808.h"
 
 /**************************************************************************/
-/*!
+/*! 
     @brief  Setups the HW
 */
 /**************************************************************************/
-bool mcp9808_begin(uint32_t device, uint8_t addr) {
+bool begin(uint32_t device, uint8_t addr) {
 
-  #ifdef DEBUG
-  UARTprintf("In mcp9808 begin\n");
-  #endif
   // default case
   if ( addr == 0 )
     _i2caddr = MCP9808_I2CADDR_DEFAULT;
@@ -23,10 +20,6 @@ bool mcp9808_begin(uint32_t device, uint8_t addr) {
 
   uint8_t buffer[2];
   uint16_t result = 0;
-
-  #ifdef DEBUG
-  UARTprintf("Before readi2c\n");
-  #endif
 
   readI2C(device, _i2caddr, MCP9808_REG_MANUF_ID, buffer, 2);
   ARR_TO_16(result, buffer);
@@ -50,7 +43,7 @@ bool mcp9808_begin(uint32_t device, uint8_t addr) {
 
 */
 /**************************************************************************/
-float mcp9808_readTempC(uint32_t device)
+float readTempC(uint32_t device)
 {
   uint8_t buffer[2];
   uint16_t t = 0;
@@ -73,30 +66,24 @@ float mcp9808_readTempC(uint32_t device)
 // 1= shutdown / 0= wake up
 //*************************************************************************
 
-int mcp9808_shutdown_wake(uint32_t device, uint8_t sw_ID )
+int shutdown_wake(uint32_t device, uint8_t sw_ID )
 {
-  uint8_t buffer[3];
+  uint8_t buffer[2];
   uint16_t conf_shutdown ;
   uint16_t conf_register;
-  buffer[0] = MCP9808_REG_CONFIG;
-  // Fill last two parts of buffer
-  readI2C(device, _i2caddr, MCP9808_REG_CONFIG, &(buffer[1]), 2);
+  readI2C(device, _i2caddr, MCP9808_REG_CONFIG, buffer, 2);
   ARR_TO_16(conf_register, buffer);
   //= read16(MCP9808_REG_CONFIG);
   if (sw_ID == 1)
   {
       conf_shutdown = conf_register | MCP9808_REG_CONFIG_SHUTDOWN ;
-      buffer[2] = (conf_shutdown >> 8);
-      buffer[1] = (conf_shutdown & 0xFF);
-      writeI2C(device, _i2caddr, buffer, 3);
+      writeI2C(device, _i2caddr, MCP9808_REG_CONFIG, (uint8_t *)&conf_shutdown, 2);
       //write16(MCP9808_REG_CONFIG, conf_shutdown);
   }
   if (sw_ID == 0)
   {
-      buffer[2] = (conf_shutdown >> 8);
-      buffer[1] = (conf_shutdown & 0xFF);
       conf_shutdown = conf_register ^ MCP9808_REG_CONFIG_SHUTDOWN ;
-      writeI2C(device, _i2caddr, buffer, 3);
+      writeI2C(device, _i2caddr, MCP9808_REG_CONFIG, (uint8_t *)&conf_shutdown, 2);
       //write16(MCP9808_REG_CONFIG, conf_shutdown);
   }
 

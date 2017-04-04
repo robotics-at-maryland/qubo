@@ -10,6 +10,17 @@
 #ifndef _QUERY_I2C_H_
 #define _QUERY_I2C_H_
 
+#include "interrupts/include/i2c_states.h"
+
+#include "include/i2c0_mutex.h"
+#include "include/i2c1_mutex.h"
+#include "include/i2c2_mutex.h"
+#include "include/i2c3_mutex.h"
+#include "include/i2c0_globals.h"
+#include "include/i2c1_globals.h"
+#include "include/i2c2_globals.h"
+#include "include/i2c3_globals.h"
+
 #include <FreeRTOS.h>
 #include <semphr.h>
 #include <task.h>
@@ -31,11 +42,47 @@
 // These are pointers because they'll be addressed to the externs already declared
 SemaphoreHandle_t *i2c_mutex;
 
+// Generic pointers that will be overwritten with specified globals
+uint32_t *i2c_address;
+uint8_t **i2c_read_buffer;
+uint8_t **i2c_write_buffer;
+uint32_t *i2c_read_count;
+uint32_t *i2c_write_count;
+uint16_t *i2c_int_state;
+
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
 SemaphoreHandle_t i2c0_mutex;
 SemaphoreHandle_t i2c1_mutex;
 SemaphoreHandle_t i2c2_mutex;
 SemaphoreHandle_t i2c3_mutex;
+
+uint32_t *i2c0_address;
+uint8_t **i2c0_read_buffer;
+uint8_t **i2c0_write_buffer;
+uint32_t *i2c0_read_count;
+uint32_t *i2c0_write_count;
+uint16_t *i2c0_int_state;
+
+uint32_t *i2c1_address;
+uint8_t **i2c1_read_buffer;
+uint8_t **i2c1_write_buffer;
+uint32_t *i2c1_read_count;
+uint32_t *i2c1_write_count;
+uint16_t *i2c1_int_state;
+
+uint32_t *i2c2_address;
+uint8_t **i2c2_read_buffer;
+uint8_t **i2c2_write_buffer;
+uint32_t *i2c2_read_count;
+uint32_t *i2c2_write_count;
+uint16_t *i2c2_int_state;
+
+uint32_t *i2c3_address;
+uint8_t **i2c3_read_buffer;
+uint8_t **i2c3_write_buffer;
+uint32_t *i2c3_read_count;
+uint32_t *i2c3_write_count;
+uint16_t *i2c3_int_state;
 
 // ***************************************************************************
 // Functions

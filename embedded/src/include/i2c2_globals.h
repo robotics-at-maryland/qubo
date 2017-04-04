@@ -14,15 +14,21 @@
 // Variables
 // ****************************************************************************
 
-// Address of slave
-extern volatile uint32_t *i2c2_address;
+extern uint32_t *i2c2_address;
 
-// The variables that track the data to be transmitted or received.
-extern volatile uint8_t **i2c2_buffer;
-extern volatile uint32_t *i2c2_count;
+// Buffer from i2c stored in this buffer
+extern uint8_t **i2c2_read_buffer;
 
-// The current state of the interrupt handler state machine.
-extern volatile uint16_t *i2c2_int_state;
+// Stuff we want to write to i2c
+extern uint8_t **i2c2_write_buffer;
+
+// How much bytes to read from i2c
+extern uint32_t *i2c2_read_count;
+
+// How much bytes to write to i2c
+extern uint32_t *i2c2_write_count;
+
+extern uint16_t *i2c2_int_state;
 
 
 #endif

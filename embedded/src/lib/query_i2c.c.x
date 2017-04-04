@@ -21,8 +21,8 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
   // Set address
   ROM_I2CMasterSlaveAddrSet(device, addr, false);
 
-  // Put data for first send
-  ROM_I2CMasterDataPut(device, *data);
+  // Put data, increment pointer after
+  ROM_I2CMasterDataPut(device, (*data)++);
 
   if ( length == 1 ) {
     // Send byte
@@ -32,16 +32,10 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     while(ROM_I2CMasterBusy(device));
   }
 
-  // This will use the interrupt
   else {
-    *i2c_write_buffer = data;
-    *i2c_write_count = length - 1;
-    *i2c_int_state = STATE_WRITE;
-
     // Initiate burst send
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
 
-    /*
     while(ROM_I2CMasterBusy(device));
 
     //
@@ -55,7 +49,13 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
       // Wait till done transferring
       while(ROM_I2CMasterBusy(device));
     }
-    */
+
+    // put last byte
+    ROM_I2CMasterDataPut(device, *data);
+    // Send last byte
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    // wait till done transferring
+    while(ROM_I2CMasterBusy(device));
   }
 
   // Give semaphore back
@@ -67,7 +67,7 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
   assign_vars(device);
 
   // If the i2c bus is busy, yield task and then try again
-  while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) {
+  while (xSemaphoreTake(i2c0_mutex, 0) == pdFALSE) {
     taskYIELD();
   }
 
@@ -98,10 +98,6 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     *data = ROM_I2CMasterDataGet(device);
   }
   else {
-    *i2c_read_buffer = data;
-    *i2c_read_count = length;
-    *i2c_int_state = STATE_READ;
-
     // Initiate burst read
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
 
@@ -126,8 +122,6 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     while(ROM_I2CMasterBusy(device));
   }
 
-  while(*i2c_int_state != STATE_IDLE);
-
   // Give back semaphore
   xSemaphoreGive(*i2c_mutex);
 }
@@ -141,45 +135,21 @@ static void assign_vars(uint32_t device) {
   case I2C0_BASE:
     {
       i2c_mutex = &i2c0_mutex;
-      i2c_address = i2c0_address;
-      i2c_read_buffer = i2c0_read_buffer;
-      i2c_write_buffer = i2c0_write_buffer;
-      i2c_read_count = i2c0_read_count;
-      i2c_write_count = i2c0_write_count;
-      i2c_int_state = i2c0_int_state;
       break;
     }
   case I2C1_BASE:
     {
       i2c_mutex = &i2c1_mutex;
-      i2c_address = i2c1_address;
-      i2c_read_buffer = i2c1_read_buffer;
-      i2c_write_buffer = i2c1_write_buffer;
-      i2c_read_count = i2c1_read_count;
-      i2c_write_count = i2c1_write_count;
-      i2c_int_state = i2c1_int_state;
       break;
     }
   case I2C2_BASE:
     {
       i2c_mutex = &i2c2_mutex;
-      i2c_address = i2c2_address;
-      i2c_read_buffer = i2c2_read_buffer;
-      i2c_write_buffer = i2c2_write_buffer;
-      i2c_read_count = i2c2_read_count;
-      i2c_write_count = i2c2_write_count;
-      i2c_int_state = i2c2_int_state;
       break;
     }
   case I2C3_BASE:
     {
       i2c_mutex = &i2c3_mutex;
-      i2c_address = i2c3_address;
-      i2c_read_buffer = i2c3_read_buffer;
-      i2c_write_buffer = i2c3_write_buffer;
-      i2c_read_count = i2c3_read_count;
-      i2c_write_count = i2c3_write_count;
-      i2c_int_state = i2c3_int_state;
       break;
     }
   }
