@@ -29,6 +29,7 @@ int keyboard; //input from keyboard
 
 void help();
 void processVideo(char* videoFilename);
+void updateHistory(vector<KeyPoint> keypoints);
 void help()
 {
     cout
@@ -144,7 +145,6 @@ void processVideo(char* videoFilename) {
         bitwise_not(mask, invert, noArray());
         imshow("invert", invert);
         
-
         // Setup SimpleBlobDetector parameters.
         SimpleBlobDetector::Params params;
          
@@ -172,9 +172,8 @@ void processVideo(char* videoFilename) {
        // params.minInertiaRatio = 0.40;
 
         // Storage for blobs
+        
         vector<KeyPoint> keypoints;
-         
-         
         // Set up detector with params
         Ptr<SimpleBlobDetector> detector = SimpleBlobDetector::create(params);
         
@@ -182,50 +181,55 @@ void processVideo(char* videoFilename) {
         // So you need to use arrow ( ->) instead of dot ( . )
         detector->detect(invert, keypoints);
           
-          
-
         // Draw detected blobs as red circles.
         // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures
         // the size of the circle corresponds to the size of blob
 
         Mat im_with_keypoints;
         drawKeypoints(frame, keypoints, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
-        // unsigned char *input = (unsigned char*)(frame.data);
-        for(auto& point:keypoints ){    
-            Vec3b color = frame.at<Vec3b>(point.pt); 
-            bool insert = false;
-            float pointX = point.pt.x;
-            float pointY = point.pt.y;
-            
-            for(std::vector<tuple< Point2f, Vec3b, int >>::iterator it = history.begin(); it != history.end()|| insert; ++it){ 
-                float x = std::get<0>(*it).x;
-                float y = std::get<0>(*it).y;   
-                if(((pointX <= x+10) && (pointX >= x-10)) && ((pointY <= y+10) && (pointY >= y-10))){
-                    history.erase(it); 
-                    history.emplace_back(std::make_tuple (point.pt,color,0));
-                    insert = true;
-                }
-                else 
-                    std::get<2>(*it) += 1;
+        updateHistory(keypoints);
 
-                if(std::get<2>(*it) > 10){
-                    history.erase(it);
-                }
-            }
-            if(!insert)
-                history.emplace_back(std::make_tuple (point.pt, color, 0));
-          }
-
-       
         // Shows blobs
         imshow("keypoints", im_with_keypoints);            
 
         //outputVideo.write(im_with_keypoints);
 
-        
         //get the input from the keyboard
-        keyboard = waitKey();
+        keyboard = waitKey(30);
 
     }
     //delete capture object
     capture.release(); }
+
+void updateHistory(vector<KeyPoint> keypoints){
+    float pointX, pointY, x, y; 
+    bool insert; 
+    Vec3b color;
+    int age = 10, offSet = 20;//how long ago the blob was first seen and the offset of the center
+
+    //for every deteced blob either add it if its new or update current one 
+    for(auto& point:keypoints ){    
+        color = frame.at<Vec3b>(point.pt); 
+        insert = false;
+        pointX = point.pt.x;
+        pointY = point.pt.y;
+        for(std::vector<tuple< Point2f, Vec3b, int >>::iterator it = history.begin(); it != history.end(); it++){ 
+            x = std::get<0>(*it).x;
+            y = std::get<0>(*it).y;   
+
+            //if blob is within offSet pixels of a know blob update the blob to the new blobs location       
+            if(((pointX <= x + offSet) && (pointX >= x - offSet)) && ((pointY <= y + offSet && (pointY >= y - offSet)))){
+                history.erase(it);
+                history.emplace_back(std::make_tuple (point.pt,color,0));
+                insert = true;
+            }
+            std::get<2>(*it) += 1;
+            //if the blobs hasnt been updated in age frames remove it 
+            if(std::get<2>(*it) > age){
+                history.erase(it);
+            }
+        }
+        if(!insert)
+            history.emplace_back(std::make_tuple (point.pt, color, 0));
+    }
+} 
