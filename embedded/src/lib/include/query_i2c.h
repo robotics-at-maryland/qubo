@@ -56,33 +56,33 @@ SemaphoreHandle_t i2c1_mutex;
 SemaphoreHandle_t i2c2_mutex;
 SemaphoreHandle_t i2c3_mutex;
 
-uint32_t *i2c0_address;
-uint8_t **i2c0_read_buffer;
-uint8_t **i2c0_write_buffer;
-uint32_t *i2c0_read_count;
-uint32_t *i2c0_write_count;
-uint16_t *i2c0_int_state;
+volatile uint32_t *i2c0_address;
+volatile uint8_t **i2c0_read_buffer;
+volatile uint8_t **i2c0_write_buffer;
+volatile uint32_t *i2c0_read_count;
+volatile uint32_t *i2c0_write_count;
+volatile uint16_t *i2c0_int_state;
 
-uint32_t *i2c1_address;
-uint8_t **i2c1_read_buffer;
-uint8_t **i2c1_write_buffer;
-uint32_t *i2c1_read_count;
-uint32_t *i2c1_write_count;
-uint16_t *i2c1_int_state;
+volatile uint32_t *i2c1_address;
+volatile uint8_t **i2c1_read_buffer;
+volatile uint8_t **i2c1_write_buffer;
+volatile uint32_t *i2c1_read_count;
+volatile uint32_t *i2c1_write_count;
+volatile uint16_t *i2c1_int_state;
 
-uint32_t *i2c2_address;
-uint8_t **i2c2_read_buffer;
-uint8_t **i2c2_write_buffer;
-uint32_t *i2c2_read_count;
-uint32_t *i2c2_write_count;
-uint16_t *i2c2_int_state;
+volatile uint32_t *i2c2_address;
+volatile uint8_t **i2c2_read_buffer;
+volatile uint8_t **i2c2_write_buffer;
+volatile uint32_t *i2c2_read_count;
+volatile uint32_t *i2c2_write_count;
+volatile uint16_t *i2c2_int_state;
 
-uint32_t *i2c3_address;
-uint8_t **i2c3_read_buffer;
-uint8_t **i2c3_write_buffer;
-uint32_t *i2c3_read_count;
-uint32_t *i2c3_write_count;
-uint16_t *i2c3_int_state;
+volatile uint32_t *i2c3_address;
+volatile uint8_t **i2c3_read_buffer;
+volatile uint8_t **i2c3_write_buffer;
+volatile uint32_t *i2c3_read_count;
+volatile uint32_t *i2c3_write_count;
+volatile uint16_t *i2c3_int_state;
 
 // ***************************************************************************
 // Functions

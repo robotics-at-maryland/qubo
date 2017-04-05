@@ -28,13 +28,13 @@
 #include <utils/uartstdio.h>
 #endif
 
-uint32_t *i2c3_address;
+volatile uint32_t *i2c3_address;
 
-uint8_t **i2c3_buffer;
+volatile uint8_t **i2c3_buffer;
 
-uint32_t *i2c3_count;
+volatile uint32_t *i2c3_count;
 
-uint16_t *i2c3_int_state;
+volatile uint16_t *i2c3_int_state;
 
 void I2C3IntHandler(void);
 

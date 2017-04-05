@@ -14,21 +14,21 @@
 // Variables
 // ****************************************************************************
 
-extern uint32_t *i2c2_address;
+extern volatile uint32_t *i2c2_address;
 
 // Buffer from i2c stored in this buffer
-extern uint8_t **i2c2_read_buffer;
+extern volatile uint8_t **i2c2_read_buffer;
 
 // Stuff we want to write to i2c
-extern uint8_t **i2c2_write_buffer;
+extern volatile uint8_t **i2c2_write_buffer;
 
 // How much bytes to read from i2c
-extern uint32_t *i2c2_read_count;
+extern volatile uint32_t *i2c2_read_count;
 
 // How much bytes to write to i2c
-extern uint32_t *i2c2_write_count;
+extern volatile uint32_t *i2c2_write_count;
 
-extern uint16_t *i2c2_int_state;
+extern volatile uint16_t *i2c2_int_state;
 
 
 #endif

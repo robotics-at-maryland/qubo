@@ -28,21 +28,21 @@
 #include <utils/uartstdio.h>
 #endif
 
-uint32_t *i2c0_address;
+volatile uint32_t *i2c0_address;
 
 // Buffer from i2c stored in this buffer
-uint8_t **i2c0_read_buffer;
+volatile uint8_t **i2c0_read_buffer;
 
 // Stuff we want to write to i2c
-uint8_t **i2c0_write_buffer;
+volatile uint8_t **i2c0_write_buffer;
 
 // How much bytes to read from i2c
-uint32_t *i2c0_read_count;
+volatile uint32_t *i2c0_read_count;
 
 // How much bytes to write to i2c
-uint32_t *i2c0_write_count;
+volatile uint32_t *i2c0_write_count;
 
-uint16_t *i2c0_int_state;
+volatile uint16_t *i2c0_int_state;
 
 void I2C0IntHandler(void);
 
