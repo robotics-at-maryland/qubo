@@ -30,8 +30,6 @@ class GControlNode{
 
     protected:
 
-
-
     void orientCallback(const sensor_msgs::Imu::ConstPtr& msg);
     void yawCallback(const std_msgs::Float64::ConstPtr& msg);
     void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
@@ -59,7 +57,7 @@ class GControlNode{
     
     
     //thruster vars
-    double _yaw_command = 1000;
+    double _yaw_command = 0;
     double _pitch_command = 0;
     double _roll_command = 0;
     

@@ -62,11 +62,7 @@
 
 
   <!-- size of robot to meters X = .4064Z  Y = Z = .3048 --> 
-  
-  
-  <!-- pitch roll thrusters -->
-  <!-- inches from bottom Z = .213m X1 = .149m X2 = .257m Y = .083m -->
-  
+    
   <!-- Qubo's base link. Assume a right-handed coordinate system, with x forward and z up -->
   <link name="${namespace}/base_link">
     <visual>

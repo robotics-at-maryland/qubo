@@ -6,14 +6,21 @@ using namespace ros;
 GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pose_topic)
     :_node_name(node_name), _thruster_commands(NUM_THRUSTERS), _thruster_pubs(NUM_THRUSTERS) {
 
-	//robot namespace
-    qubo_namespace = "/basic_qubo/";
+	//robot namespaces
+	
+	//gazebo_namespace is the namespace used by gazebo for the bot, this controller tries to
+	//abstract it away
 
+	//cont_namespace is the namespace for anything we offer up to external nodes
+    string gazebo_namespace = "/basic_qubo/";
+	string cont_namespace = "/qubo/";
+	
 	// topic names, channge them here if you need to
     string input_pose = qubo_namespace + "imu";
-    string yaw_topic = qubo_namespace + "controller/yaw";
-    string pitch_topic = qubo_namespace + "controller/pitch";
-    string roll_topic = qubo_namespace + "controller/roll";
+	
+    string yaw_topic = cont_namespace + "yaw_command";
+    string pitch_topic = cont_namespace + "pitch_command";
+    string roll_topic = cont_namespace + "roll_command";
 
 
 	//set up all publishers and subscribers
@@ -44,6 +51,18 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
 }
 
 GControlNode::~GControlNode(){}
+
+
+
+/*
+Notes:
+need to change incoming angle commands so the range is between -1 1
+
+offer up thruster commands directly and add them in? 
+
+
+*/
+
 
 void GControlNode::update(){
     spinOnce(); //get all the callbacks
@@ -80,12 +99,11 @@ void GControlNode::update(){
 
 void GControlNode::orientCallback(const sensor_msgs::Imu::ConstPtr &msg){
 
-    //may have to convert to quaternions here..
+	
     // ROS_INFO("Seq: [%d]", msg->header.seq);
     // ROS_INFO("Position-> x: [%f], y: [%f], z: [%f]", msg->pose.pose.position.x,msg->pose.pose.position.y, msg->pose.pose.position.z);
     //ROS_INFO("Orientation-> x: [%f], y: [%f], z: [%f], w: [%f]", msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
     //ROS_INFO("Vel-> Linear: [%f], Angular: [%f]", msg->twist.twist.linear.x,msg->twist.twist.angular.z);
-
 
     //add this to the header?
 
@@ -97,6 +115,7 @@ void GControlNode::orientCallback(const sensor_msgs::Imu::ConstPtr &msg){
 }
 
 
+//callbacks called whenever we get a new pitch/roll/yaw command, just stores the data locally
 void GControlNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
     _yaw_command = msg->data;
 }
