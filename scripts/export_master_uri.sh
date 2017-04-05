@@ -3,10 +3,11 @@
 
 
 #uncomment this line to set the master URI to your localhost, this should work for everyone
-#export ROS_MASTER_URI=http://localhost:11311
+export ROS_MASTER_URI=http://localhost:11311
 
 #this one is for me (sean) should work for other people using
-export ROS_MASTER_URI=http://192.168.129.1:11311
+#export ROS_MASTER_URI=http://192.168.129.1:11311
+
 
 #in general yours should look like
 #export ROS_MASTER_URI=http://<ip_of_other_machine>:11311
