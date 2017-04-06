@@ -187,6 +187,8 @@ void processVideo(char* videoFilename) {
 
         Mat im_with_keypoints;
         drawKeypoints(frame, keypoints, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
+        
+        cvtColor(frame,frame,COLOR_BGR2HSV); 
         updateHistory(keypoints);
 
         // Shows blobs
@@ -205,11 +207,12 @@ void updateHistory(vector<KeyPoint> keypoints){
     float pointX, pointY, x, y; 
     bool insert; 
     Vec3b color;
-    int age = 10, offSet = 20;//how long ago the blob was first seen and the offset of the center
+    int age = 10, offSet = 20, filter = 30, offSet2 = 5;//how long ago the blob was first seen and the offset of the center and the value for the color we want to see 
 
     //for every deteced blob either add it if its new or update current one 
     for(auto& point:keypoints ){    
         color = frame.at<Vec3b>(point.pt); 
+        cout << color << endl;
         insert = false;
         pointX = point.pt.x;
         pointY = point.pt.y;
@@ -232,4 +235,9 @@ void updateHistory(vector<KeyPoint> keypoints){
         if(!insert)
             history.emplace_back(std::make_tuple (point.pt, color, 0));
     }
+    for(std::vector<tuple< Point2f, Vec3b, int >>::iterator it = history.begin(); it != history.end(); it++){
+        color = std::get<1>(*it);
+        if(color[0] >= filter - offSet2 && color[0] <= filter + offSet2)
+            cout << std::get<0>(*it) << endl; 
+    } 
 } 
