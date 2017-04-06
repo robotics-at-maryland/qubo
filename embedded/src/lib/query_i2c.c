@@ -57,6 +57,8 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     }
     */
   }
+  // Don't return until done
+  while(*i2c_int_state != STATE_IDLE);
 
   // Give semaphore back
   xSemaphoreGive(*i2c_mutex);
