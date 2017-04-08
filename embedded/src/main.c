@@ -201,8 +201,13 @@ int main() {
   }
   */
 
-
+  /*
   if ( read_uart0_init() ) {
+    while(1){}
+  }
+  */
+
+  if ( bme280_task_init()){
     while(1){}
   }
 

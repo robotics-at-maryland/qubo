@@ -8,7 +8,7 @@
 #include "lib/include/write_uart.h"
 
 bool bme280_task_init() {
-  if ( xTaskCreate(bme280_task_loop, (const portCHAR *)"I2C Test", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+  if ( xTaskCreate(bme280_task_loop, (const portCHAR *)"BME280 Task", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
   }
   return false;
@@ -30,6 +30,7 @@ static void bme280_task_loop(void *params) {
     #ifdef DEBUG
     UARTprintf("error in bme280 begin\n");
     #endif
+    while(1){}
   }
   #ifdef DEBUG
   UARTprintf("initialized sensor\n");

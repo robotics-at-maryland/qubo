@@ -20,6 +20,7 @@ bool bme280_begin(uint32_t device) {
 
   #ifdef DEBUG
   UARTprintf("After first query\n");
+  UARTprintf("buffer[0]: %x\n", buffer[0]);
   #endif
 
   if ( buffer[0] != 0x60 )
