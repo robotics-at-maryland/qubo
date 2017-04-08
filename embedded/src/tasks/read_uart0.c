@@ -70,7 +70,7 @@ static void read_uart0_task(void* params) {
             write_uart_wrapper(NULL, "-", 1);
             write_uart_wrapper(NULL, &also_data[1], 1);
             write_uart_wrapper(NULL, "/", 1);
-            write_uart_wrapper(NULL, &value, 1);
+            //write_uart_wrapper(NULL, &value, 1);
 
         }
         //vTaskDelay(25 / portTICK_RATE_MS);
@@ -79,11 +79,16 @@ static void read_uart0_task(void* params) {
 }
 
 static ssize_t read_queue(void* io_host, void* buffer, size_t size){
-    char *data = buffer;
+    uint8_t *data = buffer;
     int i = 0;
+
     while( (xQueueReceive(read_uart0_queue, &data[i], 0) == pdPASS) && (i < size) ){
+        #ifdef DEBUG
+        //UARTprintf("reading: %i", i);
+        #endif
         i++;
     }
+
     return i;
 
 }
