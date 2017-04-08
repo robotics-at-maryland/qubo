@@ -214,6 +214,7 @@ int main() {
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
   #endif
+
   vTaskStartScheduler();
 
   while(1){}

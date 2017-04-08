@@ -25,14 +25,10 @@ bool read_uart0_init(void) {
     }
 
 
-    IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 10);
 
     #ifdef DEBUG
     UARTprintf("qubobus initialized!\n");
     #endif
-
-    //int error = wait_connect(&state);
-
 
     #ifdef DEBUG
     //UARTprintf("connected\n");
@@ -46,6 +42,13 @@ bool read_uart0_init(void) {
 
 
 static void read_uart0_task(void* params) {
+    #ifdef DEBUG
+    UARTprintf("waiting for connect\n");
+    #endif
+
+    IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 10);
+
+    //int error = wait_connect(&state);
 
     // Qubobus driver code to assemble/interpret messages here
     uint8_t buffer;
@@ -54,31 +57,33 @@ static void read_uart0_task(void* params) {
     UARTprintf("began reading task\n");
     #endif
 
-    write_uart_wrapper(NULL, "This is a longer print message to test the UART\r\n", 49);
-    write_uart_wrapper(NULL, "an even longer message to print to make sure the UART can print over 64 characters\r\n", 84);
-
+    // int error = wait_connect(&state);
+    uint16_t data;
+    uint8_t *also_data;
+    also_data = &data;
+    uint8_t value = 49;
     for (;;) {
-        if ( xQueueReceive(read_uart0_queue, &buffer, 0) == pdPASS ) {
-
-            #ifdef DEBUG
-            UARTprintf("Got %d\n", buffer);
-            //blink_rgb(BLUE_LED, 1);
-            #endif
+        //write_uart_wrapper(NULL, &value, 1);
+        while(read_queue(NULL, also_data, 1)){
+            //value = 48;
+            write_uart_wrapper(NULL, also_data, 1);
+            write_uart_wrapper(NULL, "-", 1);
+            write_uart_wrapper(NULL, &also_data[1], 1);
+            write_uart_wrapper(NULL, "/", 1);
+            write_uart_wrapper(NULL, &value, 1);
 
         }
-        vTaskDelay(25 / portTICK_RATE_MS);
-        #ifdef DEBUG
-        UARTprintf("reading return\n");
-        #endif
-        return;
+        //vTaskDelay(25 / portTICK_RATE_MS);
+
     }
 }
 
 static ssize_t read_queue(void* io_host, void* buffer, size_t size){
-    if(xQueueReceive(read_uart0_queue, buffer, 0) == pdPASS){
-        return 1;
+    char *data = buffer;
+    int i = 0;
+    while( (xQueueReceive(read_uart0_queue, &data[i], 0) == pdPASS) && (i < size) ){
+        i++;
     }
-    else { return 0;}
-
+    return i;
 
 }
