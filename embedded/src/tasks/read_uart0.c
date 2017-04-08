@@ -58,20 +58,10 @@ static void read_uart0_task(void* params) {
     #endif
 
     // int error = wait_connect(&state);
-    uint16_t data;
-    uint8_t *also_data;
-    also_data = &data;
-    uint8_t value = 49;
+    uint8_t data = 0;
     for (;;) {
-        //write_uart_wrapper(NULL, &value, 1);
-        while(read_queue(NULL, also_data, 1)){
-            //value = 48;
-            write_uart_wrapper(NULL, also_data, 1);
-            write_uart_wrapper(NULL, "-", 1);
-            write_uart_wrapper(NULL, &also_data[1], 1);
-            write_uart_wrapper(NULL, "/", 1);
-            //write_uart_wrapper(NULL, &value, 1);
-
+        while(read_queue(NULL, &data, 1)){
+            write_uart_wrapper(NULL, &data, 1);
         }
         //vTaskDelay(25 / portTICK_RATE_MS);
 
@@ -82,13 +72,14 @@ static ssize_t read_queue(void* io_host, void* buffer, size_t size){
     uint8_t *data = buffer;
     int i = 0;
 
-    while( (xQueueReceive(read_uart0_queue, &data[i], 0) == pdPASS) && (i < size) ){
-        #ifdef DEBUG
-        //UARTprintf("reading: %i", i);
-        #endif
+    //sgillen@20175408-12:54 should maybe change this to so we don't rely on the order of the execution
+    //in the while loop
+    while((i < size) && (xQueueReceive(read_uart0_queue, data, 10) == pdPASS) ){
+        //   vTaskDelay(25);
         i++;
     }
 
+    
     return i;
 
 }
