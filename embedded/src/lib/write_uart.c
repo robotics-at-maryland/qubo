@@ -16,7 +16,6 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
     const uint8_t *data = buffer;
     //counter to make sure we write everthing we're given
     int i = 0;
-    _finished_writing = false;
 
     //enable the interrupt to begin sending things to the UART FIFO
     ROM_UARTIntEnable(UART0_BASE, UART_INT_TX);
@@ -26,7 +25,7 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
         #ifdef DEBUG
         //UARTprintf("%c", data[i]);
         #endif
-        if( (xQueueSend(write_uart0_queue, &(data[i]), portMAX_DELAY) == pdPASS) ){
+        if( (xQueueSend(write_uart0_queue, &(data[i]), 0) == pdPASS) ){
             i++;
         }else{
             taskYIELD();
@@ -49,7 +48,7 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
 }
 
 // Library routine implementation of sending UART
-bool writeUART0() {
+void writeUART0() {
 
   //If the UART is busy, yield task and then try again
   while (xSemaphoreTake(uart0_mutex, 0) == pdFALSE ) {
@@ -73,7 +72,6 @@ bool writeUART0() {
   if( xQueueIsQueueEmptyFromISR(write_uart0_queue) == pdTRUE ){
     //nothing to write, disable the interupt
     ROM_UARTIntDisable(UART0_BASE, UART_INT_TX);
-    _finished_writing = true;
     #ifdef DEBUG
     //UARTprintf("finished writing: %d\n", _finished_writing);
     #endif
@@ -90,7 +88,6 @@ bool writeUART0() {
   // so its not forgotten
   // vPortFree(buffer);
   xSemaphoreGive (uart0_mutex);
-  return _finished_writing;
 
 }
 

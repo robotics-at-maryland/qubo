@@ -53,6 +53,7 @@
 #include "include/rgb_mutex.h"
 #include "include/read_uart0_queue.h"
 #include "include/read_uart1_queue.h"
+#include "include/write_uart0_queue.h"
 
 SemaphoreHandle_t i2c0_mutex;
 SemaphoreHandle_t i2c1_mutex;
@@ -151,6 +152,7 @@ int main() {
 
   read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
+  write_uart0_queue = xQueueCreate(WRITE_UART0_Q_SIZE,sizeof(uint8_t));
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));
@@ -188,21 +190,22 @@ int main() {
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
 
+  /*
   if ( i2c_test_init() ) {
     while(1){}
   }
-
+  */
   /*
   if ( example_blink_init() ) {
     while(1){}
   }
   */
 
-  /*
+
   if ( read_uart0_init() ) {
     while(1){}
   }
-  */
+
 
   /*
   if ( example_uart_init() ) {
@@ -214,6 +217,7 @@ int main() {
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
   #endif
+
   vTaskStartScheduler();
 
   while(1){}
