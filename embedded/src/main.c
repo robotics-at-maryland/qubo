@@ -230,6 +230,10 @@ int main() {
   UARTprintf("\nTask's added, starting scheduler\n");
   #endif
 
+  #ifdef DEBUG
+  UARTprintf("uint8 size: %i\n", sizeof(uint8_t));
+  #endif
+
   vTaskStartScheduler();
 
 

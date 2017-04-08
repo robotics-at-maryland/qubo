@@ -40,9 +40,7 @@ SemaphoreHandle_t uart1_mutex;
 
 volatile QueueHandle_t write_uart0_queue;
 
-static bool _finished_writing = false;
-
-bool writeUART0();
+void writeUART0();
 
 void writeUART1(uint8_t *buffer, uint16_t size);
 
