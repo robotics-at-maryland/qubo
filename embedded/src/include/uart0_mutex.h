@@ -9,6 +9,8 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
-extern SemaphoreHandle_t uart0_mutex;
+extern SemaphoreHandle_t uart0_write_mutex;
+
+extern SemaphoreHandle_t uart0_read_mutex;
 
 #endif

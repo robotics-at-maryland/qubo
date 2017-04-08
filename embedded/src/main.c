@@ -60,7 +60,8 @@ SemaphoreHandle_t i2c1_mutex;
 SemaphoreHandle_t i2c2_mutex;
 SemaphoreHandle_t i2c3_mutex;
 
-SemaphoreHandle_t uart0_mutex;
+SemaphoreHandle_t uart0_read_mutex;
+SemaphoreHandle_t uart0_write_mutex;
 SemaphoreHandle_t uart1_mutex;
 SemaphoreHandle_t rgb_mutex;
 
@@ -146,13 +147,14 @@ int main() {
   i2c2_mutex = xSemaphoreCreateMutex();
   i2c3_mutex = xSemaphoreCreateMutex();
 
-  uart0_mutex = xSemaphoreCreateMutex();
+  uart0_read_mutex = xSemaphoreCreateMutex();
+  uart0_write_mutex = xSemaphoreCreateMutex();
   uart1_mutex = xSemaphoreCreateMutex();
   rgb_mutex = xSemaphoreCreateMutex();
 
   read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
-  write_uart0_queue = xQueueCreate(WRITE_UART0_Q_SIZE,sizeof(uint8_t));
+  write_uart0_queue = xQueueCreate(WRITE_UART0_Q_SIZE, sizeof(uint8_t));
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));

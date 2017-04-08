@@ -48,13 +48,23 @@ static void read_uart0_task(void* params) {
 
     IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 10);
 
+    RingBuffer *bf = createRingBuffer(2, sizeof(uint16_t));
     //int error = wait_connect(&state);
 
     // Qubobus driver code to assemble/interpret messages here
-    uint8_t buffer;
+    uint16_t buffer;
 
     #ifdef DEBUG
-    UARTprintf("began reading task\n");
+    UARTprintf("pushing to buffer\n");
+    buffer = 300;
+    push(bf, &buffer);
+    buffer = 301;
+    push(bf, &buffer);
+    //buffer = 302;
+    //push(bf, &buffer);
+    while(pop(bf, &buffer) == rbSUCCSES)
+        UARTprintf("read:%i\n", buffer);
+    UARTprintf("nothing else to print\n");
     #endif
 
     // int error = wait_connect(&state);
@@ -68,7 +78,7 @@ static void read_uart0_task(void* params) {
             //value = 48;
             write_uart_wrapper(NULL, also_data, 1);
             write_uart_wrapper(NULL, "-", 1);
-            write_uart_wrapper(NULL, &also_data[1], 1);
+            write_uart_wrapper(NULL, &(also_data[1]), 1);
             write_uart_wrapper(NULL, "/", 1);
             //write_uart_wrapper(NULL, &value, 1);
 
