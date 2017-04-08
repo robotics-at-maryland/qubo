@@ -5,13 +5,12 @@ project(ram_cpp_utils)
 # Catkin Setup ###############
 ##############################
 
-find_package(catkin 
+find_package(catkin
     REQUIRED COMPONENTS
     message_generation
     ram_msgs
     roscpp
-    cv_bridge
-    image_transport
+
 )
 
 catkin_package(

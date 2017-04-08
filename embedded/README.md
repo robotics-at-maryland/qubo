@@ -43,7 +43,15 @@ mkdir qubo/embedded/obj/lib/
 mkdir qubo/embedded/obj/interrupts/
 
 ##Flash
-Run `make flash` to flash the `image.bin` file onto the chip while you're in the `embedded/` directory.
+##Run `make flash` to flash the `image.bin` file onto the chip while you're in the `embedded/` directory.
+
+Don't do this ^^^ 
+
+run this instead sudo /opt/lm4flash/lm4flash/lm4flash image.bin
+or wherever you put your flash tool
+
+TODO standardize this process, everyone seems to have different ideas as to how to get this tool to work
+
 
 ##Serial/UART
 The TM4C123GXL's UART0 is connected to the In-Circuit Debug Interface(ICDI) which you can use the USB
