@@ -50,12 +50,17 @@ bool mcp9808_begin(uint32_t device, uint8_t addr) {
 
 */
 /**************************************************************************/
-float mcp9808_readTempC(uint32_t device)
-{
+float mcp9808_readTempC(uint32_t device) {
   uint8_t buffer[2];
   uint16_t t = 0;
 
+  #ifdef DEBUG
+  UARTprintf("In read temp\n");
+  #endif
   readI2C(device, _i2caddr, MCP9808_REG_AMBIENT_TEMP, buffer, 2);
+  #ifdef DEBUG
+  UARTprintf("got value\n");
+  #endif
   ARR_TO_16(t, buffer);
   //uint16_t t = read16(MCP9808_REG_AMBIENT_TEMP);
 
@@ -63,6 +68,9 @@ float mcp9808_readTempC(uint32_t device)
   temp /=  16.0;
   if (t & 0x1000) temp -= 256;
 
+  #ifdef DEBUG
+  UARTprintf("about to return\n");
+  #endif
   return temp;
 }
 
@@ -73,8 +81,7 @@ float mcp9808_readTempC(uint32_t device)
 // 1= shutdown / 0= wake up
 //*************************************************************************
 
-int mcp9808_shutdown_wake(uint32_t device, uint8_t sw_ID )
-{
+int mcp9808_shutdown_wake(uint32_t device, uint8_t sw_ID ) {
   uint8_t buffer[3];
   uint16_t conf_shutdown ;
   uint16_t conf_register;

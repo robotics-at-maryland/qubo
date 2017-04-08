@@ -1,0 +1,41 @@
+In file included from src/startup_gcc.c:35:0:
+src/interrupts/include/uart1_interrupt.h:10:0: warning: "UART_DEVICE" redefined
+ #define UART_DEVICE UART1_BASE
+ ^
+In file included from src/startup_gcc.c:34:0:
+src/interrupts/include/uart0_interrupt.h:10:0: note: this is the location of the previous definition
+ #define UART_DEVICE UART0_BASE
+ ^
+In file included from src/startup_gcc.c:38:0:
+src/interrupts/include/i2c1_interrupt.h:10:0: warning: "I2C_DEVICE" redefined
+ #define I2C_DEVICE I2C1_BASE
+ ^
+In file included from src/startup_gcc.c:37:0:
+src/interrupts/include/i2c0_interrupt.h:10:0: note: this is the location of the previous definition
+ #define I2C_DEVICE I2C0_BASE
+ ^
+In file included from src/startup_gcc.c:39:0:
+src/interrupts/include/i2c2_interrupt.h:10:0: warning: "I2C_DEVICE" redefined
+ #define I2C_DEVICE I2C2_BASE
+ ^
+In file included from src/startup_gcc.c:38:0:
+src/interrupts/include/i2c1_interrupt.h:10:0: note: this is the location of the previous definition
+ #define I2C_DEVICE I2C1_BASE
+ ^
+In file included from src/startup_gcc.c:40:0:
+src/interrupts/include/i2c3_interrupt.h:10:0: warning: "I2C_DEVICE" redefined
+ #define I2C_DEVICE I2C3_BASE
+ ^
+In file included from src/startup_gcc.c:39:0:
+src/interrupts/include/i2c2_interrupt.h:10:0: note: this is the location of the previous definition
+ #define I2C_DEVICE I2C2_BASE
+ ^
+src/lib/bme280.c: In function 'readCoefficients':
+src/lib/bme280.c:267:59: warning: pointer targets in passing argument 4 of 'readI2C' differ in signedness [-Wpointer-sign]
+   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H6, &(_bme280_calib.dig_H6), 1);
+                                                           ^
+In file included from src/lib/include/bme280.h:15:0,
+                 from src/lib/bme280.c:8:
+src/lib/include/query_i2c.h:97:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'int8_t * {aka signed char *}'
+ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t length);
+      ^
