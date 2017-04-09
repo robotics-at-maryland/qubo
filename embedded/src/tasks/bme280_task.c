@@ -28,9 +28,9 @@ static void bme280_task_loop(void *params) {
 
   if ( !bme280_begin(I2C0_BASE) ) {
     #ifdef DEBUG
-    UARTprintf("error in bme280 begin\n");
+    UARTprintf("bme280 amnessia\n");
     #endif
-    while(1){}
+    //while(1){}
   }
   #ifdef DEBUG
   UARTprintf("initialized sensor\n");
