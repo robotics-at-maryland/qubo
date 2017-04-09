@@ -28,6 +28,10 @@ bool bme280_begin(uint32_t device) {
 
   readCoefficients(device);
 
+  #ifdef DEBUG
+  UARTprintf("Done with readCoefficients()\n");
+  #endif
+
   // 16x oversampling
   // Set before CONTROL_meas (DS 5.4.3)
   buffer[0] = BME280_REGISTER_CONTROLHUMID;
@@ -187,70 +191,129 @@ static void readCoefficients(uint32_t device) {
   ARR_TO_16(_bme280_calib.dig_T1, buffer);
   LE(_bme280_calib.dig_T1);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 1st calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_T2, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_T2, buffer);
   LE(_bme280_calib.dig_T2);
+
+  #ifdef DEBUG
+  //UARTprintf("Done with 2nd calibration reading\n");
+  #endif
 
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_T3, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_T3, buffer);
   LE(_bme280_calib.dig_T3);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 3rd calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P1, buffer, 2);
   ARR_TO_16(_bme280_calib.dig_P1, buffer);
   LE(_bme280_calib.dig_P2);
+
+  #ifdef DEBUG
+  //UARTprintf("Done with 4th calibration reading\n");
+  #endif
 
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P2, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P2, buffer);
   LE(_bme280_calib.dig_P2);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 5th calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P3, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P3, buffer);
   LE(_bme280_calib.dig_P3);
+
+  #ifdef DEBUG
+  //UARTprintf("Done with 6th calibration reading\n");
+  #endif
 
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P4, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P4, buffer);
   LE(_bme280_calib.dig_P4);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 7th calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P5, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P5, buffer);
   LE(_bme280_calib.dig_P5);
+
+  #ifdef DEBUG
+  //UARTprintf("Done with 8th calibration reading\n");
+  #endif
 
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P6, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P6, buffer);
   LE(_bme280_calib.dig_P6);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 9th calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P7, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P7, buffer);
   LE(_bme280_calib.dig_P7);
+
+  #ifdef DEBUG
+  //UARTprintf("Done with 10th calibration reading\n");
+  #endif
 
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P8, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P8, buffer);
   LE(_bme280_calib.dig_P8);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 11th calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_P9, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_P9, buffer);
   LE(_bme280_calib.dig_P9);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 12th calibration reading\n");
+  #endif
+
   // Just reading one byte, so save directly to it
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H1, &(_bme280_calib.dig_H1), 1);
+
+  #ifdef DEBUG
+  //UARTprintf("Done with 13th calibration reading\n");
+  #endif
 
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H2, buffer, 2);
   // Signed version
   ARR_TO_S16(_bme280_calib.dig_H2, buffer);
   LE(_bme280_calib.dig_H2);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 14th calibration reading\n");
+  #endif
+
   readI2C(device, BME280_ADDRESS, BME280_REGISTER_DIG_H3, &(_bme280_calib.dig_H3), 1);
 
+  #ifdef DEBUG
+  //UARTprintf("Done with 15th calibration reading\n");
+  #endif
   // They do some weird stuff here, just copying it
   uint8_t temp1;
   uint8_t temp2;
