@@ -58,10 +58,10 @@ float mcp9808_readTempC(uint32_t device) {
   UARTprintf("In read temp\n");
   #endif
   readI2C(device, _i2caddr, MCP9808_REG_AMBIENT_TEMP, buffer, 2);
-  #ifdef DEBUG
-  UARTprintf("got value\n");
-  #endif
   ARR_TO_16(t, buffer);
+#ifdef DEBUG
+  UARTprintf("mcp9808: buffer[0] %x buffer[1] %x\nmcp9808: t %x\n", buffer[0], buffer[1], t);
+#endif
   //uint16_t t = read16(MCP9808_REG_AMBIENT_TEMP);
 
   float temp = t & 0x0FFF;
@@ -92,19 +92,34 @@ int mcp9808_shutdown_wake(uint32_t device, uint8_t sw_ID ) {
   //= read16(MCP9808_REG_CONFIG);
   if (sw_ID == 1)
   {
+#ifdef DEBUG
+    UARTprintf("mcp9808: shutdown before sending 3 bytes\n");
+#endif
       conf_shutdown = conf_register | MCP9808_REG_CONFIG_SHUTDOWN ;
       buffer[2] = (conf_shutdown >> 8);
       buffer[1] = (conf_shutdown & 0xFF);
       writeI2C(device, _i2caddr, buffer, 3);
+#ifdef DEBUG
+      UARTprintf("mcp9808: shutdown sent 3 bytes\n");
+      UARTprintf("mcp9808: %x %x %x\n", buffer[0], buffer[1], buffer[2]);
+#endif
+
       //write16(MCP9808_REG_CONFIG, conf_shutdown);
   }
   if (sw_ID == 0)
   {
+    #ifdef DEBUG
+    UARTprintf("mcp9808: wakeup before sending 3 bytes\n");
+    #endif
       buffer[2] = (conf_shutdown >> 8);
       buffer[1] = (conf_shutdown & 0xFF);
       conf_shutdown = conf_register ^ MCP9808_REG_CONFIG_SHUTDOWN ;
       writeI2C(device, _i2caddr, buffer, 3);
       //write16(MCP9808_REG_CONFIG, conf_shutdown);
+      #ifdef DEBUG
+      UARTprintf("mcp9808: wakeup sent 3 bytes\n");
+      UARTprintf("mcp9808: %x %x %x\n", buffer[0], buffer[1], buffer[2]);
+      #endif
   }
 
 
