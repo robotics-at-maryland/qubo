@@ -13,7 +13,7 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
   // If the i2c bus is busy, yield task and then try again
   while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) {
     #ifdef DEBUG
-    UARTprintf("Semaphore busy\n");
+    UARTprintf("query_i2c: Semaphore busy\n");
     #endif
     taskYIELD();
   }
@@ -34,12 +34,19 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
 
   // This will use the interrupt
   else {
-    *i2c_write_buffer = data;
-    *i2c_write_count = length - 1;
+    *i2c_write_buffer = (data + 1);
+    *i2c_write_count = (length - 1);
     *i2c_int_state = STATE_WRITE;
+    #ifdef DEBUG
+    UARTprintf("query_i2c: Setting STATE_WRITE\n");
+    #endif
 
     // Initiate burst send
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
+
+    #ifdef DEBUG
+    UARTprintf("query_i2c: Init burst write\n");
+    #endif
 
     /*
     while(ROM_I2CMasterBusy(device));
@@ -58,7 +65,9 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     */
   }
   // Don't return until done
-  while(*i2c_int_state != STATE_IDLE);
+  while(*i2c_int_state != STATE_IDLE) {
+    vTaskDelay(250);
+  }
 
   // Give semaphore back
   xSemaphoreGive(*i2c_mutex);
@@ -81,14 +90,14 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
   ROM_I2CMasterDataPut(device, reg);
 
   #ifdef DEBUG
-  //UARTprintf("Write register\n");
+  UARTprintf("query_i2c: Write register\n");
   #endif
 
   //send control byte and register address byte to slave device
   ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
 
   #ifdef DEBUG
-  //UARTprintf("wrote register\n");
+  UARTprintf("query_i2c: wrote register\n");
   #endif
 
   //wait for MCU to finish transaction
@@ -112,7 +121,7 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     *i2c_read_count = length;
     *i2c_int_state = STATE_READ;
     #ifdef DEBUG
-    //UARTprintf("STATE_READ set\n");
+    UARTprintf("query_i2c: STATE_READ set\n");
     #endif
 
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
@@ -141,19 +150,17 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
 
     while(ROM_I2CMasterBusy(device));
     */
-  }
-
-  while(*i2c_int_state != STATE_IDLE) {
-    // Issues without the yeild, also better practice.
-    vTaskDelay(100);
-    taskYIELD();
     #ifdef DEBUG
-    //UARTprintf("Idling during readI2C()\n");
+    UARTprintf("query_i2c: Test\n");
     #endif
   }
 
+  while(*i2c_int_state != STATE_IDLE) {
+    vTaskDelay(250);
+  }
+
   #ifdef DEBUG
-  //UARTprintf("Not in idle anymore\n");
+  UARTprintf("query_i2c: Not in idle anymore\n");
   #endif
 
   // Give back semaphore

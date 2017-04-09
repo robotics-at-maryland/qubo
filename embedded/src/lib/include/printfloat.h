@@ -1,6 +1,8 @@
 #ifndef _PRINTFLOAT_H_
 #define _PRINTFLOAT_H_
 
+#define PFLOAT(A) *(int*)&A
+
 int power(int base, int exp);
 
 void reverse(char *str, int len);

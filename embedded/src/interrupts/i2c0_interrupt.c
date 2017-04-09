@@ -18,10 +18,18 @@ void I2C0IntHandler(void) {
     case STATE_IDLE:
       {
         // Nothing happening
+        #ifdef DEBUG
+        UARTprintf("In idle .... \n");
+        #endif
         break;
       }
     case STATE_WRITE:
       {
+				#ifdef DEBUG
+        UARTprintf("intrpt: In STATE_WRITE\n");
+        UARTprintf("intrpt: buffer: %x\n", **i2c0_write_buffer);
+        UARTprintf("intrpt: counter: %d\n", *i2c0_write_count);
+				#endif
         // Put the current data in the buffer
         ROM_I2CMasterDataPut(I2C_DEVICE, **i2c0_write_buffer);
         // Decrement the count pointer
@@ -29,24 +37,25 @@ void I2C0IntHandler(void) {
         // Point to the next byte
         *i2c0_write_buffer = *i2c0_write_buffer + 1;
         // Send the data
-        ROM_I2CMasterDataPut(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
+        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
 
         // If on last byte, go to final stage
         if ( *i2c0_write_count <= 1 )
-          *i2c0_int_state = STATE_WRITE_QUERY_FINAL;
+          *i2c0_int_state = STATE_WRITE_FINAL;
 
         break;
       }
     case STATE_WRITE_FINAL:
       {
+        #ifdef DEBUG
+        UARTprintf("intrpt: In STATE_WRITE_final\n");
+        UARTprintf("intrpt: buffer: %x\n", **i2c0_write_buffer);
+        UARTprintf("intrpt: counter: %d\n", *i2c0_write_count);
+        #endif
         // Put data in buffer
         ROM_I2CMasterDataPut(I2C_DEVICE, **i2c0_write_buffer);
         // Send last byte
         ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_FINISH);
-
-        // Put the master in recieve mode
-        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c0_address, true);
-        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_RECEIVE_START);
 
         // Since this is a query, next state is read
         *i2c0_int_state = STATE_IDLE;
@@ -88,6 +97,9 @@ void I2C0IntHandler(void) {
       }
     case STATE_READ:
       {
+        #ifdef DEBUG
+        //UARTprintf("in STATE_READ\n");
+        #endif
         // Save a byte
         **i2c0_read_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
         // Increment the buffer
@@ -105,6 +117,9 @@ void I2C0IntHandler(void) {
       }
     case STATE_READ_FINAL:
       {
+        #ifdef DEBUG
+        //UARTprintf("in STATE_READ_FINAL\n");
+        #endif
         // Save last byte
         **i2c0_read_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
 
