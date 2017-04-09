@@ -13,7 +13,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <stdarg.h>
- 
+
 // Header include
 #include "QSCU.h"
 
@@ -23,13 +23,13 @@
 
 #include <stdio.h>
 
-QSCU::QSCU(std::string deviceFile, speed_t baud) 
+QSCU::QSCU(std::string deviceFile, speed_t baud)
     : _deviceFile(deviceFile),
       _termBaud(baud),
       _deviceFD(-1),
       _timeout({10,0})
-{ 
-   
+{
+
 }
 
 QSCU::~QSCU() { closeDevice(); }
@@ -47,9 +47,9 @@ void QSCU::openDevice() {
         throw QSCUException("Device '"+_deviceFile+"' unavaliable.");
     // Read the config of the interface.
     // if(// tcgetattr
-    //   (fd, &termcfg)) 
+    //   (fd, &termcfg))
     //    throw QSCUException("Unable to read terminal configuration.");
-   
+
     // Set the baudrate for the terminal
     if(cfsetospeed(&termcfg, _termBaud))
         throw QSCUException("Unable to set terminal output speed.");
@@ -94,7 +94,7 @@ bool QSCU::isOpen() {return _deviceFD >= 0;}
 void QSCU::assertOpen() { if (!isOpen()) throw QSCUException("Device needs to be open!"); }
 
 void QSCU::closeDevice() {
-    if (isOpen()) 
+    if (isOpen())
         close(_deviceFD);
     _deviceFD = -1;
 }
@@ -118,7 +118,7 @@ ssize_t QSCU::serialWrite(void *io_host, void *buffer, size_t size) {
 
 /*
 ssize_t QSCU::readRaw(void* io_host, void* blob, size_t bytes_to_read)
-{  
+{
     // Keep track of the number of bytes read, and the number of fds that are ready.
     int bytes_read = 0, current_read = 0, fds_ready = 0;
     // Sets of file descriptors for use with select(2).
@@ -139,7 +139,7 @@ ssize_t QSCU::readRaw(void* io_host, void* blob, size_t bytes_to_read)
             fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
             if (fds_ready == 1) {
                 // The filedescriptor is ready to read.
-                current_read = read(_deviceFD, (((char*)blob) + bytes_read), 
+                current_read = read(_deviceFD, (((char*)blob) + bytes_read),
                         (bytes_to_read - bytes_read));
                 // If the read was successful, record the number of bytes read.
                 if (current_read > 0) {
@@ -175,7 +175,7 @@ ssize_t QSCU::writeRaw(void* io_host, void* blob, size_t bytes_to_write)
             fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
             if (fds_ready == 1) {
                 // The filedescriptor is ready to write.
-                current_write = write(_deviceFD, (((char*)blob) + bytes_written), 
+                current_write = write(_deviceFD, (((char*)blob) + bytes_written),
                         (bytes_to_write - bytes_written));
                 // If the write was successful, record the number of bytes written.
                 if (current_write > 0) {
@@ -232,7 +232,5 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
 
 
 
-    
+
 }
-
-

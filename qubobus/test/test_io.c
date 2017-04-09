@@ -74,7 +74,7 @@ int child_program() {
     return error;
 }
 
-int main() { 
+int main() {
     int error = 0, child_pid;
 
     if (pipe(tx_fd) < 0) {

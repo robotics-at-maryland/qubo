@@ -46,44 +46,26 @@ static void read_uart0_task(void* params) {
     UARTprintf("waiting for connect\n");
     #endif
 
-    IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 10);
-
-    RingBuffer *bf = createRingBuffer(2, sizeof(uint16_t));
-    //int error = wait_connect(&state);
+    IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 1);
 
     // Qubobus driver code to assemble/interpret messages here
-    uint16_t buffer;
+    int error = wait_connect(&state);
 
     #ifdef DEBUG
-    UARTprintf("pushing to buffer\n");
-    buffer = 300;
-    push(bf, &buffer);
-    buffer = 301;
-    push(bf, &buffer);
-    //buffer = 302;
-    //push(bf, &buffer);
-    while(pop(bf, &buffer) == rbSUCCSES)
-        UARTprintf("read:%i\n", buffer);
-    UARTprintf("nothing else to print\n");
+    UARTprintf("connected\n");
     #endif
+    vTaskDelay(pdMS_TO_TICKS(20));
+    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+    Message message;
+    struct Depth_Status d_s = { .depth_m = 2.71, .warning_level = 1};
+    // uncomment these to break the code above, don't know why
+    // read_message(&state, &message, buffer);
+    // message = create_response(&tDepthStatus, &d_s);
+    // write_message(&state, &message);
 
-    // int error = wait_connect(&state);
-    uint16_t data;
-    uint8_t *also_data;
-    also_data = &data;
-    uint8_t value = 49;
+
     for (;;) {
-        //write_uart_wrapper(NULL, &value, 1);
-        while(read_queue(NULL, also_data, 1)){
-            //value = 48;
-            write_uart_wrapper(NULL, also_data, 1);
-            write_uart_wrapper(NULL, "-", 1);
-            write_uart_wrapper(NULL, &(also_data[1]), 1);
-            write_uart_wrapper(NULL, "/", 1);
-            //write_uart_wrapper(NULL, &value, 1);
 
-        }
-        //vTaskDelay(25 / portTICK_RATE_MS);
 
     }
 }
@@ -91,14 +73,20 @@ static void read_uart0_task(void* params) {
 static ssize_t read_queue(void* io_host, void* buffer, size_t size){
     uint8_t *data = buffer;
     int i = 0;
+    //If the UART is busy, yield task and then try again
+    while (xSemaphoreTake(uart0_write_mutex, 0) == pdFALSE ) {
+      taskYIELD();
+    }
 
-    while( (xQueueReceive(read_uart0_queue, &data[i], 0) == pdPASS) && (i < size) ){
-        #ifdef DEBUG
-        //UARTprintf("reading: %i", i);
-        #endif
+    while(i < size){
+        if(xQueueReceive(read_uart0_queue, data, 10) != pdPASS){
+            xSemaphoreGive (uart0_write_mutex);
+            return i;
+        }
         i++;
     }
 
+    xSemaphoreGive (uart0_write_mutex);
     return i;
 
 }

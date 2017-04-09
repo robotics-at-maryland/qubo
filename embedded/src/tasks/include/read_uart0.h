@@ -9,6 +9,8 @@
 #include "lib/include/rgb.h"
 #include "lib/include/write_uart.h"
 #include "include/read_uart0_queue.h"
+#include "include/uart0_mutex.h"
+#include "include/uart1_mutex.h"
 #include "lib/include/ring_buffer.h"
 
 // FreeRTOS

@@ -208,6 +208,11 @@ int main() {
     while(1){}
   }
 
+  /*
+  if ( bme280_task_init()){
+    while(1){}
+  }
+  */
 
   /*
   if ( example_uart_init() ) {
