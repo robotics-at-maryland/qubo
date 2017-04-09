@@ -1,14 +1,18 @@
 /* Ross Baehr
  * R@M 2017
  * ross.baehr@gmail.com
+ * edits by Jeremy Weed
  */
 
 #include "lib/include/write_uart.h"
 
 //warning: If size is bigger than the buffer, we will overflow
 ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
-    // This is going to get really upset if we try to write more than 64 bytes at
-    // a time...
+
+    //If the UART is busy, yield task and then try again
+    while (xSemaphoreTake(uart0_read_mutex, 0) == pdFALSE ) {
+      taskYIELD();
+    }
     #ifdef DEBUG
     //UARTprintf("adding to queue\n");
     #endif
@@ -30,18 +34,20 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
         }else{
             taskYIELD();
         }
+
     }
 
     //We need to call this at least once to begin the write_message
     writeUART0();
 
     //wait for the data to be removed from the queue
-    while( (xQueueIsQueueEmptyFromISR(write_uart0_queue) != pdTRUE) ){
+    while( (uxQueueMessagesWaiting(write_uart0_queue) != 0) ){
         #ifdef DEBUG
         //UARTprintf("still printing: %d\n", _finished_writing);
         #endif
         taskYIELD();
     }
+    xSemaphoreGive (uart0_read_mutex);
 
     return size;  //sg: this return needs to change at some point for sure.
 
@@ -49,11 +55,6 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
 
 // Library routine implementation of sending UART
 void writeUART0() {
-
-  //If the UART is busy, yield task and then try again
-  while (xSemaphoreTake(uart0_mutex, 0) == pdFALSE ) {
-    taskYIELD();
-  }
 
   uint8_t buffer;
 
@@ -87,7 +88,6 @@ void writeUART0() {
   // Maybe needed, if they're going to be dynamically allocated might as well free here
   // so its not forgotten
   // vPortFree(buffer);
-  xSemaphoreGive (uart0_mutex);
 
 }
 

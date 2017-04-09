@@ -61,13 +61,13 @@ class QSCU
         QSCU(std::string deviceFile, speed_t baud);
         /** Destructor that cleans up and closes the device. */
         ~QSCU();
-        /** 
-         * Opens the device and configures the I/O terminal. 
+        /**
+         * Opens the device and configures the I/O terminal.
          * Requires dialout permissions to the device in _deviceFile.
          */
         void openDevice();
-        /** 
-         * Checks if the QSCU is currently open and avaiable 
+        /**
+         * Checks if the QSCU is currently open and avaiable
          * @return (bool) whether the DVL is avaliable for other API operations.
          */
         bool isOpen();
@@ -75,6 +75,10 @@ class QSCU
         void assertOpen();
         /** Disconnectes from the device and closes the teriminal. */
         void closeDevice();
+        // TEMPORARLY MOVED TO PUBLIC
+        /** Write a command with variable args and read something back */
+        void sendMessage(Transaction *transaction, void *payload, void *response);
+        // --------------------------
     private: // Internal functionality.
         /** Unix file name to connect to */
         std::string _deviceFile;
@@ -91,14 +95,13 @@ class QSCU
         // ssize_t readRaw(void*, void* blob, size_t bytes_to_read);
         /** Write bytes from a blob, return the bytes not written. */
         //ssize_t writeRaw(void*, void* blob, size_t bytes_to_write);
-        
-        /** Write a command with variable args and read something back */
-        void sendMessage(Transaction *transaction, void *payload, void *response);
 
-         
-        static ssize_t serialRead(void *io_host, void *buffer, size_t size); 
-        
-        static ssize_t serialWrite(void *io_host, void *buffer, size_t size); 
+
+
+
+        static ssize_t serialRead(void *io_host, void *buffer, size_t size);
+
+        static ssize_t serialWrite(void *io_host, void *buffer, size_t size);
 
 };
 
