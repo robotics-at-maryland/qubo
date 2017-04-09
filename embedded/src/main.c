@@ -219,7 +219,16 @@ int main() {
     while(1){}
   }
   */
+  #ifdef DEBUG
+  float f1, f2;
+  int i1, i2;
+  f1 = 7.3245;
+  f2 = 123.213;
 
+  i1 = *(int *)&f1;
+  i2 = *(int *)&f2;
+  UARTprintf("i1: %x\ni2: %x\n", i1, i2);
+  #endif
 
   #ifdef DEBUG
   UARTprintf("\nTask's added, starting scheduler\n");
