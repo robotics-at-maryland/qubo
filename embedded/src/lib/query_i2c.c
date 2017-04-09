@@ -81,14 +81,14 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
   ROM_I2CMasterDataPut(device, reg);
 
   #ifdef DEBUG
-  UARTprintf("Write register\n");
+  //UARTprintf("Write register\n");
   #endif
 
   //send control byte and register address byte to slave device
   ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
 
   #ifdef DEBUG
-  UARTprintf("wrote register\n");
+  //UARTprintf("wrote register\n");
   #endif
 
   //wait for MCU to finish transaction
@@ -112,7 +112,7 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     *i2c_read_count = length;
     *i2c_int_state = STATE_READ;
     #ifdef DEBUG
-    UARTprintf("STATE_READ set\n");
+    //UARTprintf("STATE_READ set\n");
     #endif
 
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
@@ -143,10 +143,17 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     */
   }
 
-  while(*i2c_int_state != STATE_IDLE) {}
+  while(*i2c_int_state != STATE_IDLE) {
+    // Issues without the yeild, also better practice.
+    vTaskDelay(100);
+    taskYIELD();
+    #ifdef DEBUG
+    //UARTprintf("Idling during readI2C()\n");
+    #endif
+  }
 
   #ifdef DEBUG
-  UARTprintf("Not in idle anymore\n");
+  //UARTprintf("Not in idle anymore\n");
   #endif
 
   // Give back semaphore
