@@ -3,7 +3,8 @@
    ross.baehr@gmail.com
 */
 
-// Ported from arduino
+// Ported from https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
+
 
 /***************************************************
   This is a library for our Adafruit 16-channel PWM & Servo driver
