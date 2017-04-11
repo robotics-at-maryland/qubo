@@ -63,15 +63,15 @@ set(AHRS_BAUDRATE_SRC_FILES
   drivers/ahrs/src/AHRS.cpp #SG: ditto above
   )
 
-set(CONTROL_NODE_SRC_FILES
+set(HARDWARE_NODE_SRC_FILES
   src/main.cpp
   src/control_node.cpp
   drivers/ahrs/src/AHRS.cpp
   )
 
-set(G_CONTROL_NODE_SRC_FILES
-  src/g_main.cpp
-  src/g_control_node.cpp
+set(G_HARDWARE_NODE_SRC_FILES
+  src/gazebo_main.cpp
+  src/gazebo_hardware_node.cpp
   )
 
 ##############################
@@ -92,11 +92,11 @@ add_executable(qubo_dvl_node ${DVL_SRC_FILES})
 target_link_libraries(qubo_dvl_node ${catkin_LIBRARIES})
 add_dependencies(qubo_dvl_node ram_msgs_generate_messages_cpp)
 
-add_executable(qubo_control_node ${CONTROL_NODE_SRC_FILES})
-target_link_libraries(qubo_control_node ${catkin_LIBRARIES})
+add_executable(qubo_hardware_node ${HARDWARE_NODE_SRC_FILES})
+target_link_libraries(qubo_hardware_node ${catkin_LIBRARIES})
 
-add_executable(qubo_gazebo_control_node ${G_CONTROL_NODE_SRC_FILES})
-target_link_libraries(qubo_gazebo_control_node ${catkin_LIBRARIES})
+add_executable(qubo_gazebo_hardware_node ${G_HARDWARE_NODE_SRC_FILES})
+target_link_libraries(qubo_gazebo_hardware_node ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########

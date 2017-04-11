@@ -34,12 +34,12 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
 
 
 	//register the thruster topics, we have 8
-	string t_topic =  qubo_namespace + "thruster";
+	string t_topic =  gazebo_namespace + "thrusters";
             
 	for(int i = 0; i < NUM_THRUSTERS; i++){
         _thruster_commands[i].data = 0;
 
-        t_topic = "/basic_qubo/thrusters/";
+        t_topic = gazebo_namespace + "thrusters/";
         t_topic += to_string(i);
 		t_topic += "/input";
 		
