@@ -1,6 +1,7 @@
 #include "tasks/include/i2c_test.h"
 #include "lib/include/printfloat.h"
-//#include <stdio.h>
+#include "lib/include/write_uart.h"
+#include <stdio.h>
 
 bool i2c_test_init() {
   if ( xTaskCreate(i2c_test_task, (const portCHAR *)"I2C Test", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
@@ -20,7 +21,7 @@ static void i2c_test_task(void *params) {
   UARTprintf("Starting task\n");
   #endif
 
-  if ( !mcp9808_begin(I2C0_BASE) ) {
+  if ( !mcp9808_begin(I2C0_BASE, 0) ) {
     #ifdef DEBUG
     UARTprintf("error in mcp9808 begin\n");
     #endif
@@ -30,23 +31,42 @@ static void i2c_test_task(void *params) {
   #endif
 
   char string[8];
-  float a = 3;
-  ftoa(a, string, 5);
+  uint32_t test = 10;
+  float a = 10.0;
+  //ftoa(a, string, 5);
   //ROM_I2CMasterSlaveAddrSet(I2C0_BASE, 0x3C, false);
 
 
   for (;;) {
 
-    a = mcp9808_readTempC(I2C0_BASE);
+
     #ifdef DEBUG
-    UARTprintf("finished function call, now in i2c_test task\n");
+    UARTprintf("-----WAKE UP-----\n");
     #endif
-    ftoa(a, string, 5);
+    mcp9808_shutdown_wake(I2C0_BASE, 0);
+
+    vTaskDelay(500);
+
+    #ifdef DEBUG
+    UARTprintf("----READ TEMP-----\n");
+    #endif
+    a = mcp9808_readTempC(I2C0_BASE);
+    //sprintf(string, "%+6.*f", 3, a);
+    #ifdef DEBUG
+    UARTprintf("/\/\/\ TEMP DATA: %x\n", PFLOAT(a));
+    UARTprintf("-----SHUT DOWN-----\n");
+    #endif
+
+    mcp9808_shutdown_wake(I2C0_BASE, 1);
+    //ftoa(a, string, 5);
     //sprintf(string, "%f", a);
 
     #ifdef DEBUG
-    UARTprintf("%s\n", string);
+    //UARTprintf("%s\n", string);
     #endif
+
+    vTaskDelay(3250);
+
     /*
 		#ifdef DEBUG
     UARTprintf("sending data on i2c");
@@ -56,7 +76,6 @@ static void i2c_test_task(void *params) {
     UARTprintf("Temp: %f\n");
     #endif
     */
-
   }
 }
 

@@ -8,18 +8,17 @@
 
 #include "lib/include/query_i2c.h"
 
-// Macro that mimics original _LE functions
-#define LE(X) ( X = (X >> 8) | (X << 8) )
-
 // Macro to convert a 2-array of uint8_t to signed int16_t
-#define ARR_TO_S16(X,Y) ( X = (int16_t)(Y[0] | (Y[1] << 8)) )
+//#define ARR_TO_S16(X,Y) ( X = (int16_t)(Y[0] | (Y[1] << 8)) )
+#define ARR_TO_S16(X,Y) ( X = (int16_t)(Y[1] | (Y[0] << 8)) )
 
 // Macro to convert a 2-array of uint8_t to uint16_t
-#define ARR_TO_16(X,Y) ( X = Y[0] | (Y[1] << 8) )
+//#define ARR_TO_16(X,Y) ( X = Y[0] | (Y[1] << 8) )
+#define ARR_TO_16(X,Y) ( X = Y[1] | (Y[0] << 8) )
 
 // Macro to convert a 3-array of uint8_t to uint32_t
-#define ARR_TO_32(X,Y) ( X = Y[0] | (Y[1] << 8) | (Y[2] << 16) )
-
+//#define ARR_TO_32(X,Y) ( X = Y[0] | (Y[1] << 8) | (Y[2] << 16) )
+#define ARR_TO_32(X,Y) ( X = Y[2] | (Y[1] << 8) | (Y[0] << 16) )
 
 #define MCP9808_I2CADDR_DEFAULT        0x18
 #define MCP9808_REG_CONFIG             0x01

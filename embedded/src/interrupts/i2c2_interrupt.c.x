@@ -6,18 +6,10 @@
 #include "interrupts/include/i2c2_interrupt.h"
 
 void I2C2IntHandler(void) {
-    //
     // Clear the I2C interrupt.
-    //
     ROM_I2CMasterIntClear(I2C_DEVICE);
 
-    #ifdef DEBUG
-    UARTprintf("Got to i2c int\n");
-    #endif
-
-    //
     // Determine what to do based on the current state.
-    //
     switch(*i2c2_int_state)
     {
       //
@@ -25,233 +17,114 @@ void I2C2IntHandler(void) {
       //
     case STATE_IDLE:
       {
-        //
-        // There is nothing to be done.
-        //
+        // Nothing happening
+        #ifdef DEBUG
+        UARTprintf("In idle .... \n");
+        #endif
         break;
       }
-
-      //
-      // The state for the middle of a burst write.
-      //
-    case STATE_WRITE_NEXT:
+    case STATE_WRITE:
       {
-        //
-        // Write the next byte to the data register.
-        //
-        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_buffer);
-        *i2c2_buffer = (*i2c2_buffer) + 1;
-        *i2c2_count = *i2c2_count - 1;
-        //
-        // Continue the burst write.
-        //
+				#ifdef DEBUG
+        UARTprintf("intrpt: In STATE_WRITE\n");
+        UARTprintf("intrpt: buffer: %x\n", **i2c2_write_buffer);
+        UARTprintf("intrpt: counter: %d\n", *i2c2_write_count);
+				#endif
+        // Put the current data in the buffer
+        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_write_buffer);
+        // Decrement the count pointer
+        *i2c2_write_count = *i2c2_write_count - 1;
+        // Point to the next byte
+        *i2c2_write_buffer = *i2c2_write_buffer + 1;
+        // Send the data
         ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
-        //
-        // If there is one byte left, set the next state to the final write
-        // state.
-        //
-        if(*i2c2_count == 1)
-          {
-            *i2c2_int_state = STATE_WRITE_FINAL;
-          }
-        //
-        // This state is done.
-        //
+
+        // If on last byte, go to final stage
+        if ( *i2c2_write_count <= 1 )
+          *i2c2_int_state = STATE_WRITE_FINAL;
+
         break;
       }
-      //
-      // The state for the final write of a burst sequence.
-      //
     case STATE_WRITE_FINAL:
       {
-        //
-        // Write the final byte to the data register.
-        //
-        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_buffer);
-        *i2c2_buffer = (*i2c2_buffer) + 1;
-        *i2c2_count = *i2c2_count - 1;
-        //
-        // Finish the burst write.
-        //
-        ROM_I2CMasterControl(I2C_DEVICE,
-                             I2C_MASTER_CMD_BURST_SEND_FINISH);
-        //
-        // The next state is to wait for the burst write to complete.
-        //
-        *i2c2_int_state = STATE_SEND_ACK;
-        //
-        // This state is done.
-        //
-        break;
-      }
-      //
-      // Wait for an ACK on the read after a write.
-      //
-    case STATE_WAIT_ACK:
-      {
-        //
-        // See if there was an error on the previously issued read.
-        //
-        if(ROM_I2CMasterErr(I2C_DEVICE) == I2C_MASTER_ERR_NONE)
-          {
-            //
-            // Read the byte received.
-            //
-            ROM_I2CMasterDataGet(I2C_DEVICE);
-            //
-            // There was no error, so the state machine is now idle.
-            //
-            *i2c2_int_state = STATE_IDLE;
-            //
-            // This state is done.
-            //
-            break;
-          }
-        //
-        // Fall through to STATE_SEND_ACK.
-        //
-      }
+        #ifdef DEBUG
+        UARTprintf("intrpt: In STATE_WRITE_final\n");
+        UARTprintf("intrpt: buffer: %x\n", **i2c2_write_buffer);
+        UARTprintf("intrpt: counter: %d\n", *i2c2_write_count);
+        #endif
+        // Put data in buffer
+        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_write_buffer);
+        // Send last byte
+        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_FINISH);
 
-      //
-      // Send a read request, looking for the ACK to indicate that the write
-      // is done.
-      //
-    case STATE_SEND_ACK:
+        // Since this is a query, next state is read
+        *i2c2_int_state = STATE_IDLE;
+
+        break;
+      }
+    case STATE_WRITE_QUERY:
       {
-        //
-        // Put the I2C master into receive mode.
-        //
+        // Put the current data in the buffer
+        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_write_buffer);
+        // Decrement the count pointer
+        *i2c2_write_count = *i2c2_write_count - 1;
+        // Point to the next byte
+        *i2c2_write_buffer = *i2c2_write_buffer + 1;
+        // Send the data
+        ROM_I2CMasterDataPut(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_CONT);
+
+        // If on last byte, go to final stage
+        if ( *i2c2_write_count <= 1 )
+          *i2c2_int_state = STATE_WRITE_QUERY_FINAL;
+
+        break;
+      }
+    case STATE_WRITE_QUERY_FINAL:
+      {
+        // Put data in buffer
+        ROM_I2CMasterDataPut(I2C_DEVICE, **i2c2_write_buffer);
+        // Send last byte
+        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+
+        // Put the master in recieve mode
         ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c2_address, true);
-        //
-        // Perform a single byte read.
-        //
-        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
-        //
-        // The next state is the wait for the ack.
-        //
-        *i2c2_int_state = STATE_WAIT_ACK;
-        //
-        // This state is done.
-        //
+        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_RECEIVE_START);
+
+        // Since this is a query, next state is read
+        *i2c2_int_state = STATE_READ;
+
         break;
       }
-      //
-      // The state for a single byte read.
-      //
-    case STATE_READ_ONE:
+    case STATE_READ:
       {
-        //
-        // Put the I2C master into receive mode.
-        //
-        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c2_address, true);
-        //
-        // Perform a single byte read.
-        //
-        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_SINGLE_RECEIVE);
-        //
-        // The next state is the wait for final read state.
-        //
-        *i2c2_int_state = STATE_READ_WAIT;
-        //
-        // This state is done.
-        //
+        #ifdef DEBUG
+        //UARTprintf("in STATE_READ\n");
+        #endif
+        // Save a byte
+        **i2c2_read_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
+        // Increment the buffer
+        *i2c2_read_buffer = *i2c2_read_buffer + 1;
+        // Decrement the count
+        *i2c2_read_count = *i2c2_read_count - 1;
+
+        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
+
+        // If at last byte, go to final state
+        if ( *i2c2_read_count <= 1 )
+          *i2c2_int_state = STATE_READ_FINAL;
+
         break;
       }
-      //
-      // The state for the start of a burst read.
-      //
-    case STATE_READ_FIRST:
-      {
-        //
-        // Put the I2C master into receive mode.
-        //
-        ROM_I2CMasterSlaveAddrSet(I2C_DEVICE, *i2c2_address, true);
-        //
-        // Start the burst receive.
-        //
-        ROM_I2CMasterControl(I2C_DEVICE,
-                             I2C_MASTER_CMD_BURST_RECEIVE_START);
-        //
-        // The next state is the middle of the burst read.
-        //
-        *i2c2_int_state = STATE_READ_NEXT;
-        //
-        // This state is done.
-        //
-        break;
-      }
-      //
-      // The state for the middle of a burst read.
-      //
-    case STATE_READ_NEXT:
-      {
-        //
-        // Read the received character.
-        //
-        **i2c2_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
-        *i2c2_buffer = (*i2c2_buffer) + 1;
-        *i2c2_count = *i2c2_count - 1;
-        //
-        // Continue the burst read.
-        //
-        ROM_I2CMasterControl(I2C_DEVICE,
-                             I2C_MASTER_CMD_BURST_RECEIVE_CONT);
-        //
-        // If there are two characters left to be read, make the next
-        // state be the end of burst read state.
-        //
-        if(*i2c2_count == 2)
-          {
-            *i2c2_int_state = STATE_READ_FINAL;
-          }
-        //
-        // This state is done.
-        //
-        break;
-      }
-      //
-      // The state for the end of a burst read.
-      //
     case STATE_READ_FINAL:
       {
-        //
-        // Read the received character.
-        //
-        **i2c2_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
-        *i2c2_buffer = (*i2c2_buffer) + 1;
-        *i2c2_count = *i2c2_count - 1;
-        //
-        // Finish the burst read.
-        //
-        ROM_I2CMasterControl(I2C_DEVICE,
-                             I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
-        //
-        // The next state is the wait for final read state.
-        //
-        *i2c2_int_state = STATE_READ_WAIT;
-        //
-        // This state is done.
-        //
-        break;
-      }
-      //
-      // This state is for the final read of a single or burst read.
-      //
-    case STATE_READ_WAIT:
-      {
-        //
-        // Read the received character.
-        //
-        **i2c2_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
-        *i2c2_buffer = (*i2c2_buffer) + 1;
-        *i2c2_count = *i2c2_count - 1;
-        //
-        // The state machine is now idle.
-        //
+        #ifdef DEBUG
+        //UARTprintf("in STATE_READ_FINAL\n");
+        #endif
+        // Save last byte
+        **i2c2_read_buffer = ROM_I2CMasterDataGet(I2C_DEVICE);
+
+        ROM_I2CMasterControl(I2C_DEVICE, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
         *i2c2_int_state = STATE_IDLE;
-        //
-        // This state is done.
-        //
         break;
       }
     }
