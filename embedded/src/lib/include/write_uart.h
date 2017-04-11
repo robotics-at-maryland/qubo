@@ -42,7 +42,7 @@ volatile QueueHandle_t write_uart0_queue;
 
 void writeUART0();
 
-void writeUART1(uint8_t *buffer, uint16_t size);
+void writeUART1(uint8_t *buffer, uint16_t siz);
 
 ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size);
 

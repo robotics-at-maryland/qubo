@@ -1,7 +1,7 @@
 /* Ross Baehr
  * R@M 2017
  * ross.baehr@gmail.com
- * edits by Jeremy Weed
+ * edits by Jeremy
  */
 
 #include "lib/include/write_uart.h"
