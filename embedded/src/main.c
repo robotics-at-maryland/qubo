@@ -192,11 +192,11 @@ int main() {
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
 
-
+/*
   if ( i2c_test_init() ) {
     while(1){}
   }
-
+*/
   /*
   if ( example_blink_init() ) {
     while(1){}
@@ -204,11 +204,11 @@ int main() {
   */
 
 
-  /*
+
   if ( read_uart0_init() ) {
     while(1){}
   }
-  */
+  
 
   /*
   if ( bme280_task_init()){
