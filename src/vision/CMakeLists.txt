@@ -27,13 +27,6 @@ find_package(OpenCV REQUIRED)
 
 #find_package(VISP REQUIRED)
 
-
-#generate messages used by the server and client from vison.action
-add_action_files(DIRECTORY ../ram_msgs/action FILES VisionExample.action)
-#the files used by services
-add_service_files(DIRECTORY ../ram_msgs/srv FILES bool_bool.srv)
-generate_messages(DEPENDENCIES actionlib_msgs std_msgs)
-
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
@@ -73,6 +66,12 @@ set(CANNY_TUNER_FILES
   src/tuners/canny_tuner.cpp
   )
 
+
+set(MOG_TUNER_FILES
+  src/tuners/mog_tuner.cpp
+  )
+
+
 #Prototype algorithms
 
 set(SEGMENT_FILES
@@ -106,6 +105,9 @@ set(MBT_FILES
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
 target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
+add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+
+
 
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
@@ -117,6 +119,9 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 add_executable(canny_tuner ${CANNY_TUNER_FILES})
 target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+
+add_executable(mog_tuner ${MOG_TUNER_FILES})
+target_link_libraries(mog_tuner ${OpenCV_LIBRARIES})
 
 add_executable(segment_test ${SEGMENT_FILES})
 target_link_libraries(segment_test ${OpenCV_LIBRARIES})
@@ -135,6 +140,8 @@ target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
 # add_executable(mbt_test ${MBT_FILES})
 # target_link_libraries(mbt_test ${VISP_LIBRARIES})
+
+
 
 ##############################
 # Installable Targets ########
