@@ -4,6 +4,7 @@
 //ros includes
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
+#include "sensor_msgs/FluidPressure.h"
 #include "nav_msgs/Odometry.h"
 #include "std_msgs/Float64.h"
 
@@ -29,34 +30,34 @@ class GControlNode{
     void update();
 
     protected:
-
-    void orientCallback(const sensor_msgs::Imu::ConstPtr& msg);
-    void yawCallback(const std_msgs::Float64::ConstPtr& msg);
-    void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
-    void rollCallback(const std_msgs::Float64::ConstPtr& msg);
-    
+	
     std::string _node_name;
-    std::string qubo_namespace;
+   
     
     //--------------------------------------------------------------------------
     //for now I'm only going to populate the orientation parameters..
        
     ros::Subscriber _orient_sub;
+	void orientCallback(const sensor_msgs::Imu::ConstPtr& msg);
+	
     ros::Publisher _orient_pub;
     
     sensor_msgs::Imu _fused_pose;
-
     
     //--------------------------------------------------------------------------
     //thruster variables
 
     //command subs
     ros::Subscriber _yaw_sub;
+	void yawCallback(const std_msgs::Float64::ConstPtr& msg);
+
     ros::Subscriber _pitch_sub;
+	void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
+	
     ros::Subscriber _roll_sub;
+	void rollCallback(const std_msgs::Float64::ConstPtr& msg);
     
-    
-    //thruster vars
+    //thruster vars may be able to get rid of these if we store messages..
     double _yaw_command = 0;
     double _pitch_command = 0;
     double _roll_command = 0;
@@ -65,7 +66,15 @@ class GControlNode{
     //thruster pub
     std::vector<uuv_gazebo_ros_plugins_msgs::FloatStamped> _thruster_commands;
     std::vector<ros::Publisher> _thruster_pubs;
+
+    //--------------------------------------------------------------------------
+    //depth/pressure subs
     
+    ros::Subscriber _pressure_sub;
+	void pressureCallback(const sensor_msgs::FluidPressure::ConstPtr& msg);
+	double _pressure = 0;
+	
+	ros::Publisher  _depth_pub;
 
 };
 

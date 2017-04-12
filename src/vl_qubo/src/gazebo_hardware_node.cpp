@@ -1,5 +1,8 @@
 #include "g_control_node.h"
 
+#define WATER_DENSITY 1028.0 //gazebo gets this in the basic_qubo.xacro file in qubo_gazebo
+#define GRAVITY 9.8 //should put both of these into the parameter server probably..
+
 using namespace std;
 using namespace ros;
 
@@ -11,9 +14,10 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
 	//gazebo_namespace is the namespace used by gazebo for the bot, this controller tries to
 	//abstract it away
 
-	//cont_namespace is the namespace for anything we offer up to external nodes
+	//cont_namespace is the namespace for anything we offer up to external nodes, should probably put in header..
     string gazebo_namespace = "/basic_qubo/";
-	string cont_namespace = "/qubo/";
+	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
+	string qubo_namespace = "/qubo/";
 	
 	// topic names, channge them here if you need to
     string input_pose = qubo_namespace + "imu";
@@ -22,7 +26,6 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
     string pitch_topic = cont_namespace + "pitch_command";
     string roll_topic = cont_namespace + "roll_command";
 
-
 	//set up all publishers and subscribers
     _orient_sub = n.subscribe(input_pose, 1000, &GControlNode::orientCallback, this);
     _orient_pub = n.advertise<sensor_msgs::Imu>(fused_pose_topic.c_str(),1000);
@@ -30,9 +33,7 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
     _yaw_sub = n.subscribe(yaw_topic, 1000, &GControlNode::yawCallback, this);
     _pitch_sub = n.subscribe(pitch_topic, 1000, &GControlNode::pitchCallback, this);
     _roll_sub = n.subscribe(roll_topic, 1000, &GControlNode::rollCallback, this);
-
-
-
+	
 	//register the thruster topics, we have 8
 	string t_topic =  gazebo_namespace + "thrusters";
             
@@ -47,7 +48,19 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
         cout << t_topic << endl;
 
     }
+	
+	
+	
+    //pressure sub, pressure comes in as pascals we're going to convert that to meters
+	//see update for that conversion
+	string pressure_topic = gazebo_namespace + "pressure";
+	_pressure_sub = n.subscribe(pressure_topic, 1000, &GControlNode::pressureCallback, this);
 
+	//this is going to be in meters
+	string depth_topic = cont_namespace + "depth";
+	n.advertise<sensor_msgs::FluidPressure>(depth_topic.c_str(), 1000);
+
+				  
 }
 
 GControlNode::~GControlNode(){}
@@ -92,13 +105,22 @@ void GControlNode::update(){
 
 	for(int i = 0; i < NUM_THRUSTERS; i++){
 		_thruster_pubs[i].publish(_thruster_commands[i]);
-		cout << _thruster_commands[i].data << endl;
+		//	cout << _thruster_commands[i].data << endl;
 	}
+
+
+	//sgillen@20171312-14:13 might want to move to an update function for
+	//every piece of hardware but too lazy to do it rn
+	//_depth = WATER_DENSITY*GRAVITY/_pressure;
+	
+	//TODO put this in a float64(?) message.
+	//have depth update separately, clean up namespace strings (is there another way to do this with arguments to the node? is that worth it?)
+	//clean up other things
+	//test
 	
 }
 
 void GControlNode::orientCallback(const sensor_msgs::Imu::ConstPtr &msg){
-
 	
     // ROS_INFO("Seq: [%d]", msg->header.seq);
     // ROS_INFO("Position-> x: [%f], y: [%f], z: [%f]", msg->pose.pose.position.x,msg->pose.pose.position.y, msg->pose.pose.position.z);
@@ -128,3 +150,7 @@ void GControlNode::rollCallback(const std_msgs::Float64::ConstPtr& msg){
     _roll_command = msg->data;
 }
 
+
+void GControlNode::pressureCallback(const sensor_msgs::FluidPressure::ConstPtr& msg){
+	_pressure = msg->fluid_pressure;
+}
