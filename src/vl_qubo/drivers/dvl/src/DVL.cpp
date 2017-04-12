@@ -22,7 +22,7 @@
 
 #include <stdio.h>
 
-DVL::DVL(std::string deviceFile, DVLSpeed speed) 
+DVL::DVL(std::string deviceFile, DVLSpeed speed)
     : _deviceFile(deviceFile), _termBaud(speed.baud), _deviceFD(-1), _timeout({10,0})
 { }
 
@@ -40,7 +40,7 @@ void DVL::openDevice() {
     if (fd == -1)
         throw DVLException("Device '"+_deviceFile+"' unavaliable.");
     // Read the config of the interface.
-    if(tcgetattr(fd, &termcfg)) 
+    if(tcgetattr(fd, &termcfg))
         throw DVLException("Unable to read terminal configuration.");
 
     // Set the baudrate for the terminal
@@ -82,7 +82,7 @@ bool DVL::isOpen() {return _deviceFD >= 0;}
 void DVL::assertOpen() { if (!isOpen()) throw DVLException("Device needs to be open!"); }
 
 void DVL::closeDevice() {
-    if (isOpen()) 
+    if (isOpen())
         close(_deviceFD);
     _deviceFD = -1;
 }
@@ -94,7 +94,7 @@ void DVL::closeDevice() {
 
 void DVL::sendBreak() {
     // Send a break in the data line for n deciseconds.
-    // The DVL specs for more than 300ms, 
+    // The DVL specs for more than 300ms,
     // but it 'may respond to breaks shorter than this'
     // Here we will spec for 400ms of break time.
     ioctl(_deviceFD, TCSBRKP, 4);
@@ -110,7 +110,7 @@ DVL::checksum_t DVL::crc16(checksum_t crc, const void* ptr, int bytes) {
 }
 
 int DVL::readRaw(void* blob, int bytes_to_read)
-{  
+{
     // Keep track of the number of bytes read, and the number of fds that are ready.
     int bytes_read = 0, current_read = 0, fds_ready = 0;
     // Sets of file descriptors for use with select(2).
@@ -131,7 +131,7 @@ int DVL::readRaw(void* blob, int bytes_to_read)
             fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
             if (fds_ready == 1) {
                 // The filedescriptor is ready to read.
-                current_read = read(_deviceFD, (((char*)blob) + bytes_read), 
+                current_read = read(_deviceFD, (((char*)blob) + bytes_read),
                         (bytes_to_read - bytes_read));
                 // If the read was successful, record the number of bytes read.
                 if (current_read > 0) {
@@ -167,7 +167,7 @@ int DVL::writeRaw(void* blob, int bytes_to_write)
             fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
             if (fds_ready == 1) {
                 // The filedescriptor is ready to write.
-                current_write = write(_deviceFD, (((char*)blob) + bytes_written), 
+                current_write = write(_deviceFD, (((char*)blob) + bytes_written),
                         (bytes_to_write - bytes_written));
                 // If the write was successful, record the number of bytes written.
                 if (current_write > 0) {
@@ -355,7 +355,7 @@ DVL::Message DVL::readPD5()
     return message;
 }
 
-DVL::Message DVL::readPD6() 
+DVL::Message DVL::readPD6()
 {
     // Create a Message that we can return to the caller.
     Message message = {FORMAT_PD6, std::make_shared<Payload>()};
@@ -388,7 +388,7 @@ DVL::Message DVL::readPD6()
 
         // If we managed to read at least three chars (:XX) then take a look at what we read.
         if ((message.payload->size() - start) < 3)
-            throw new DVLException("Line was too short to interpret.");
+            throw DVLException("Line was too short to interpret.");
         // Look at the first command char.
         switch(message.payload->at(start + 1)) {
             case 'S': // System Attitude Data
@@ -549,4 +549,3 @@ DVL::Message DVL::sendCommand(Command cmd, ...)
     va_end(argv);
     return readMessage();
 }
-

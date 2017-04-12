@@ -6,10 +6,10 @@ project(joystick)
 ##############################
 
 
-find_package(catkin 
+find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-    cv_bridge #these two are used in the camera node
+
     image_transport
     ram_cpp_utils
 )
@@ -36,14 +36,14 @@ set (JOY_SRC_FILES
 )
 
 set(TEST_FILES
-  
+
     )
 
 ##############################
 # Add Executables ############
 ##############################
 
-add_executable(joy_reader ${JOY_SRC_FILES}) 
+add_executable(joy_reader ${JOY_SRC_FILES})
 target_link_libraries(joy_reader ${catkin_LIBRARIES})
 
 ##############################
@@ -51,7 +51,7 @@ target_link_libraries(joy_reader ${catkin_LIBRARIES})
 ##############################
 
 
-#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in 
+#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in
 #install(TARGETS ${PROJECT_NAME}
 #  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)

@@ -6,16 +6,21 @@ project(ram_msgs)
 ##############################
 
 find_package(
-    catkin REQUIRED COMPONENTS 
+    catkin REQUIRED COMPONENTS
     std_msgs
     sensor_msgs
     message_generation
     roscpp
     rospy
+
+    #sg: action lib tutorial  told me to add these
+     genmsg 
+     actionlib_msgs 
+     actionlib
 )
 
 ##############################
-# Message Generation #########
+# Messages #########
 ##############################
 
 add_message_files(
@@ -37,20 +42,40 @@ add_message_files(
     Sim_Temperature.msg
     Sim_Led.msg
     Led.msg
-    
+
+    #Qubo specific messages
+    DVL_qubo.msg
 )
 
 ##############################
-# Service Generation##########
+# Services##########
 ##############################
 add_service_files(
     FILES
     sonar_data.srv
+
+    bool_bool.srv
 )
+
+
+##############################
+#Actions##########
+##############################
+
+add_action_files(DIRECTORY action
+
+  FILES 
+  VisionExample.action
+)
+
+##############################
+#Generation##########
+##############################
 
 generate_messages(
     DEPENDENCIES
     std_msgs
+    actionlib_msgs
 )
 
 ##############################
@@ -60,4 +85,3 @@ generate_messages(
 catkin_package(
     CATKIN_DEPENDS message_runtime std_msgs
 )
-

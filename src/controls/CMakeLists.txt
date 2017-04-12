@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3) 
+cmake_minimum_required(VERSION 2.8.3)
 project(controls)
 
 ##############################
@@ -9,18 +9,20 @@ find_package(catkin REQUIRED COMPONENTS
   ram_cpp_utils
   ram_msgs
   roscpp
+  tf2_ros
+
 )
 
 find_package(Eigen3)
 
 catkin_package(
   LIBRARIES
-    	${PROJECT_NAME}
+  ${PROJECT_NAME}
   CATKIN_DEPENDS
-    cmake_modules
-    roscpp
-    ram_cpp_utils
-    ram_msgs
+  cmake_modules
+  roscpp
+  ram_cpp_utils
+  ram_msgs
   DEPENDS EIGEN3
 )
 
@@ -35,6 +37,7 @@ include_directories(
   include/
 )
 
+
 ##############################
 # Add Executables ############
 ##############################
@@ -42,7 +45,8 @@ include_directories(
 add_executable(pid_controller_node
   src/pid_controller.cpp
   src/pid_controller_node.cpp
-)
+  )
+
 target_link_libraries(pid_controller_node
   ${catkin_LIBRARIES}
 )
@@ -50,6 +54,15 @@ target_link_libraries(pid_controller_node
 ##############################
 # Installable Targets ########
 ##############################
+
+
+
+#SG: I'll be honest, I don't entirely know what this commented out code does, but it breaks when I leave it in
+#install(TARGETS ${PROJECT_NAME}
+#  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
+
+
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
