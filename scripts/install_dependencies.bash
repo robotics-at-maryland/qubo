@@ -31,7 +31,15 @@ sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dy
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
 # Setup environment variables for ROS.
-echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+echo "Do you want to add \"source /opt/ros/kinetic/setup.bash\" to your .bashrc?"
+select yn in "Yes" "No"; do
+    case $yn in
+       Yes ) echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc;
+             break;;
+       No ) break;;
+    esac
+done
+
 source ~/.bashrc
 
 # Initialize rosdep if it is not already initialized.
