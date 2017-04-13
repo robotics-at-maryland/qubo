@@ -1,0 +1,6 @@
+<launch>
+
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find vl_qubo)/rosconsole.conf" />
+	<node name="ahrs_node" pkg="vl_qubo" type="qubo_ahrs_node" args="/dev/ttyUSB0" />
+
+</launch>
