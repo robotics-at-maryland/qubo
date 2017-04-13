@@ -1,6 +1,4 @@
-#include "pid_controller.h"
-
-namespace Controls {
+#include "depth_pid_controller.h"
 
 PIDController::PIDController(ros::NodeHandle *nh) {
     // Initialize all instance variables to 0
@@ -21,7 +19,7 @@ void PIDController::run() {
     ros::spin();
 }
 
-void PIDController::robot_state_callback(const nav_msgs::OdometryConstPtr& current_state) {
+void PIDController::robot_state_callback(const std_msgs::OdometryConstPtr& current_state) {
     // Calculate time passed since previous loop
     ros::Duration dt = ros::Time::now() - prev_time;
     prev_time = ros::Time::now();
@@ -92,5 +90,3 @@ void PIDController::desired_state_callback(const nav_msgs::OdometryConstPtr& des
     desired_z = desired_state->pose.pose.position.z;
     desired_t = tf::getYaw(desired_state->pose.pose.orientation);
 }
-
-} // namespace Controls
