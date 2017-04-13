@@ -25,8 +25,6 @@ find_package(catkin
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 find_package(OpenCV REQUIRED)
 
-find_package(VISP REQUIRED)
-
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
@@ -97,6 +95,13 @@ set(GFIT_FILES
 set(MBT_FILES
   src/prototypes/mbt.cpp
   )
+
+#Cascades
+
+set(CASCADE_TEST
+ src/cascades/CascadeTest.cpp
+)
+
 ##############################
 # Add Executables ############
 ##############################
@@ -140,6 +145,9 @@ target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
 # add_executable(mbt_test ${MBT_FILES})
 # target_link_libraries(mbt_test ${VISP_LIBRARIES})
+
+add_executable(cascade_test ${CASCADE_TEST})
+target_link_libraries(cascade_test ${OpenCV_LIBS})
 
 
 
