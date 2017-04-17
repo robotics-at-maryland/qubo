@@ -10,6 +10,8 @@ GControlNode::GControlNode(ros::NodeHandle n, string node_name, string fused_pos
     :_node_name(node_name), _thruster_commands(NUM_THRUSTERS), _thruster_pubs(NUM_THRUSTERS) {
 
 	//robot namespaces
+	//TODO put these in the parameter server
+	
 	
 	//gazebo_namespace is the namespace used by gazebo for the bot, this controller tries to
 	//abstract it away
@@ -113,8 +115,6 @@ void GControlNode::update(){
 		_thruster_pubs[i].publish(_thruster_commands[i]);
 		//	cout << _thruster_commands[i].data << endl;
 	}
-
-
 	
 }
 

@@ -1,6 +1,9 @@
-#include "depth_pid_controller.h"
+#include "depth_controller.h"
 
-DepthController::DepthController(ros::NodeHandle *nh) {
+using namespace ros;
+using namespace ros; 
+
+DepthController::DepthController(NodeHandle nh) {
 
 	//TODO how accurate is ros::Time going to be for control purposes?
 	//    _prev_time = ros::Time::now();

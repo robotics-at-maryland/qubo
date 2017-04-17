@@ -38,18 +38,24 @@ include_directories(
 )
 
 
-##############################
-# Add Executables ############
-##############################
-
-add_executable(pid_controller_node
+set(PID_CONTROLLER_FILES
   src/pid_controller.cpp
   src/pid_controller_main.cpp
   )
 
-target_link_libraries(pid_controller_node
-  ${catkin_LIBRARIES}
-)
+set(DEPTH_CONTROLLER_FILES
+  src/depth_controller.cpp
+  src/depth_main.cpp
+  )
+##############################
+# Add Executables ############
+##############################
+
+add_executable(pid_controller_node ${PID_CONTROLLER_FILES})
+target_link_libraries(pid_controller_node ${catkin_LIBRARIES})
+
+add_executable(depth_controller ${DEPTH_CONTROLLER_FILES})
+target_link_libraries(depth_controller ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########
