@@ -5,8 +5,8 @@ project(controls)
 # Catkin Setup ###############
 ##############################
 
-find_package(catkin REQUIRED COMPONENTS
-  ram_cpp_utils
+find_package(catkin
+  REQUIRED COMPONENTS
   ram_msgs
   roscpp
   tf2_ros

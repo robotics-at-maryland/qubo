@@ -1,4 +1,4 @@
-#include "g_control_node.h"
+#include "gazebo_hardware_node.h"
 
 //includes for threading
 #include <thread>
@@ -27,10 +27,10 @@ int main(int argc, char* argv[]){
 	//    thread first(nodeThread, argc, argv);
     
 	
-    ros::init(argc, argv, "control_node");
+    ros::init(argc, argv, "hardware_node");
     ros::NodeHandle nh;
 
-	GControlNode cn(nh, "control_node", "/qubo/pose/");
+	GazeboHardwareNode cn(nh, "hardware_node", "/qubo/pose/");
 	
     while(1){
         cn.update();
