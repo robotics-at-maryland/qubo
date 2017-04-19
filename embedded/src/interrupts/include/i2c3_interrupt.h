@@ -7,6 +7,7 @@
 #define _I2C3_INTERRUPT_H_
 
 // Change this to the i2c device to use
+#undef I2C_DEVICE
 #define I2C_DEVICE I2C3_BASE
 
 #include <stdbool.h>
