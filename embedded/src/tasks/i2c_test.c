@@ -1,6 +1,5 @@
 #include "tasks/include/i2c_test.h"
 #include "lib/include/printfloat.h"
-#include "lib/include/write_uart.h"
 #include <stdio.h>
 
 bool i2c_test_init() {

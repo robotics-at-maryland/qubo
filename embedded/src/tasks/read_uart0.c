@@ -10,15 +10,15 @@
 */
 
 #include "tasks/include/read_uart0.h"
-#include "lib/include/rgb.h"
+#include "lib/include/uart_queue.h"
 
 
 //qubobus
 #include "qubobus.h"
 #include "io.h"
 
-// For testing purposes
-//#include "lib/include/write_uart.h"
+extern struct UART_Queue uart0_queue;
+static char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
 bool read_uart0_init(void) {
     if ( xTaskCreate(read_uart0_task, (const portCHAR *)"Read UART0", 128, NULL,
@@ -26,75 +26,71 @@ bool read_uart0_init(void) {
         return true;
     }
 
-
-
-    #ifdef DEBUG
-    UARTprintf("qubobus initialized!\n");
-    #endif
-
-    #ifdef DEBUG
-    //UARTprintf("connected\n");
-    //UARTprintf("error reads as %i\n", error);
-    #endif
-
-
     return false;
 }
 
 
+ssize_t test_read_uart_queue(void *uart_queue, void* buffer, size_t size) {
+    blink_rgb(BLUE_LED, 1);
+    ssize_t ret = read_uart_queue(uart_queue, buffer, size);
+    if (ret == size) {
+        blink_rgb(BLUE_LED|GREEN_LED, 1);
+    } else {
+        blink_rgb(BLUE_LED|RED_LED, 1);
+    }
+    return ret;
+}
+ssize_t test_write_uart_queue(void *uart_queue, void* buffer, size_t size) {
+    blink_rgb(GREEN_LED, 1);
+    ssize_t ret = write_uart_queue(uart_queue, buffer, size);
+    if (ret == size) {
+        blink_rgb(BLUE_LED|GREEN_LED, 1);
+    } else {
+        blink_rgb(GREEN_LED|RED_LED, 1);
+    }
+    return ret;
+}
 
 static void read_uart0_task(void* params) {
     blink_rgb(RED_LED, 1);
-    #ifdef DEBUG
-    UARTprintf("waiting for connect\n");
-    #endif
+    int error = 1;
 
-    IO_State state = initialize(UART0_BASE, &read_queue, &write_uart_wrapper, 1);
+    IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
 
     // Qubobus driver code to assemble/interpret messages here
-    int error = wait_connect(&state);
-    blink_rgb(RED_LED, 1);
+    if (wait_connect(&state, buffer)) {
+        goto fail;
+    }
 
-    #ifdef DEBUG
-    UARTprintf("connected, error: %i\n", error);
-    #endif
     vTaskDelay(pdMS_TO_TICKS(2000));
-    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
-    Message message;
+
     struct Depth_Status d_s = { .depth_m = 2.71, .warning_level = 1};
-    write_uart_wrapper(NULL, "hello world", 11);
-    // uncomment these to break the code above, don't know why
-    read_message(&state, &message, buffer);
-    // message = create_response(&tDepthStatus, &d_s);
-    // write_message(&state, &message);
+
+    /*
+    Message message;
+    if (read_message(&state, &message, buffer)) {
+        goto fail;
+    }
+    message = create_response(&tDepthStatus, &d_s);
+    if (write_message(&state, &message)) {
+        goto fail;
+    }
+    */
+
     // Message t_ann, o_ann;
     // read_message(state, &t_ann);
     // create_message(&o_ann, MT_ANNOUNCE, 0, NULL, 0);
     // write_message(state, &o_ann);
 
+    error = 0;
+
+fail:
+
     for (;;) {
-
-
-    }
-}
-
-static ssize_t read_queue(void* io_host, void* buffer, size_t size){
-    uint8_t *data = buffer;
-    int i = 0;
-    //If the UART is busy, yield task and then try again
-    while (xSemaphoreTake(uart0_write_mutex, 0) == pdFALSE ) {
-      taskYIELD();
-    }
-
-    while(i < size){
-        if(xQueueReceive(read_uart0_queue, data, 10) != pdPASS){
-            xSemaphoreGive (uart0_write_mutex);
-            return i;
+        if (error) {
+            blink_rgb(RED_LED, 1);
+        } else  {
+            blink_rgb(GREEN_LED, 1);
         }
-        i++;
     }
-
-    xSemaphoreGive (uart0_write_mutex);
-    return i;
-
 }

@@ -6,9 +6,7 @@
 #ifndef _EXAMPLE_UART_H_
 #define _EXAMPLE_UART_H_
 
-#include "include/read_uart0_queue.h"
 #include "include/read_uart1_queue.h"
-#include "lib/include/write_uart.h"
 #include "lib/include/rgb.h"
 
 // FreeRTOS

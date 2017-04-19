@@ -47,11 +47,14 @@ typedef struct _Message {
 IO_State initialize(void *io_host, raw_io_function read, raw_io_function write, uint16_t priority);
 
 /*
- * Function to connect to the other device on the bus.
+ * Function to actively connect to the other device.
  */
-int init_connect(IO_State *state);
+int init_connect(IO_State *state, void *payload);
 
-int wait_connect(IO_State *state);
+/*
+ * Function to passively wait for the other device to connect.
+ */
+int wait_connect(IO_State *state, void *payload);
 
 /*
  * Function to create transaction messages with a specified payload.
@@ -65,14 +68,14 @@ Message create_error(Error const *error, void *payload);
  * This assembles the message based on the configuration of the message.
  * The message is modified to reflect the message that will be recieved on the other end.
  */
-void write_message(IO_State *state, Message *message);
+int write_message(IO_State *state, Message *message);
 
 /*
  * Function to read an incoming message from the data bus.
  * Takes a void* to buffer memory to use for storing the read payload
  * This buffer should have sufficient size to recieve any message
  */
-void read_message(IO_State *state, Message *message, void *buffer);
+int read_message(IO_State *state, Message *message, void *buffer);
 
 uint16_t checksum_message(Message *message);
 
