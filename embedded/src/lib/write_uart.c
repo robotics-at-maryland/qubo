@@ -10,7 +10,7 @@
 ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
 
     //If the UART is busy, yield task and then try again
-    while (xSemaphoreTake(uart0_read_mutex, 0) == pdFALSE ) {
+    while (xSemaphoreTake(uart0_write_mutex, 0) == pdFALSE ) {
       taskYIELD();
     }
     #ifdef DEBUG
@@ -47,7 +47,7 @@ ssize_t write_uart_wrapper(void* io_host, void* buffer, size_t size){
         #endif
         taskYIELD();
     }
-    xSemaphoreGive (uart0_read_mutex);
+    xSemaphoreGive (uart0_write_mutex);
 
     return size;  //sg: this return needs to change at some point for sure.
 

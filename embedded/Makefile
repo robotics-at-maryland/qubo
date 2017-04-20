@@ -32,6 +32,7 @@ CFLAGS = -g -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 CFLAGS +=-Os -ffunction-sections -fdata-sections -MD -std=c99
 CFLAGS += -pedantic -DPART_TM4C123GH6PM -c
 CFLAGS += -DTARGET_IS_TM4C123_RB2
+CFLAGS += -Dgcc
 #CFLAGS = -mcpu=cortex-m4 -march=armv7e-m -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Dgcc -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -ffunction-sections -fdata-sections -g -gdwarf-3 -gstrict-dwarf -specs="nosys.specs" -MD -std=c99 -I$(TC_PATH)arm-none-eabi/include/
 
 LDFLAGS = -T $(LINKER_SCRIPT) --entry ResetISR --gc-sections
@@ -108,7 +109,7 @@ DRIVERLIB_OBJS := $(DRIVERLIB_OBJS) $(wildcard $(OBJDIR)driverlib/*.a)
 UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
 
 TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS)
- 
+
 # List of source file objects. Adds any c file in $(SRC) and $(SRC)$(TASKDIR)
 SRC_C_FILES = $(wildcard $(SRC)*.c) $(wildcard $(SRC)$(TASKDIR)*.c) $(wildcard $(SRC)lib/*.c) $(wildcard $(SRC)$(INTERRUPTS)*.c)
 SRC_OBJS := $(SRC_C_FILES:$(SRC)%=%)
@@ -192,7 +193,7 @@ $(OBJDIR)%.o: $(QUBOBUS_SRC)%.c $(INC_QUBOBUS)*
 
 clean_obj :
 	$(RM) $(OBJDIR)*.o $(OBJDIR)*.d
-	$(RM) $(OBJDIR)$(TASKDIR)*.o $(OBJDIR)$(TASKDIR)*.d 
+	$(RM) $(OBJDIR)$(TASKDIR)*.o $(OBJDIR)$(TASKDIR)*.d
 	$(RM) $(OBJDIR)lib/*.o	$(RM) $(OBJDIR)lib/*.d
 	$(RM) $(OBJDIR)$(INTERRUPTS)*.o $(OBJDIR)$(INTERRUPTS)*.d
 
