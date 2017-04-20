@@ -1,8 +1,8 @@
 #include <io.h>
 
 /* Local function definitions. */
-static void read_announce(IO_State *state, Message *message);
-static void safe_io(void *io_host, raw_io_function raw_io, void *data, size_t size);
+static int read_announce(IO_State *state, Message *message);
+static int safe_io(void *io_host, raw_io_function raw_io, void *data, size_t size);
 static uint16_t crc16(uint16_t crc, const void *data, size_t bytes);
 static void create_message(Message *message, uint8_t message_type, uint8_t message_id, void *payload, size_t payload_size);
 
@@ -22,9 +22,8 @@ IO_State initialize(void *io_host, raw_io_function read_raw, raw_io_function wri
     return state;
 }
 
-int init_connect(IO_State *state) {
+int init_connect(IO_State *state, void *buffer) {
     Message our_announce, their_announce, protocol, response;
-    char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     int master, success;
 
     /*
@@ -33,10 +32,8 @@ int init_connect(IO_State *state) {
 
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
-    printf("message created\n");
 
     write_message(state, &our_announce);
-    printf("message sent\n");
     /*
      * SYNCHRONIZE WITH OTHER DEVICE
      */
@@ -46,7 +43,6 @@ int init_connect(IO_State *state) {
      * This serves to synchronize the message frame alignment of both clients.
      */
     read_announce(state, &their_announce);
-    printf("got response\n");
     /*
      * In order to generate asymmetry, we compare the announce sequence numbers
      * If ours is lower, then we are the ones in control of the handshake.
@@ -69,7 +65,7 @@ int init_connect(IO_State *state) {
     }
 
     /* Attempt to read a protocol message from the opposite client. */
-    read_message(state, &response, &buffer);
+    read_message(state, &response, buffer);
     //printf("got protocol response\n");
 
     /* Send a reply to confirm or deny the connection. */
@@ -98,9 +94,8 @@ int init_connect(IO_State *state) {
 }
 
 
-int wait_connect(IO_State *state) {
+int wait_connect(IO_State *state, void *buffer) {
     Message our_announce, their_announce, protocol, response;
-    char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     int master, success;
 
     /*
@@ -147,7 +142,7 @@ int wait_connect(IO_State *state) {
     }
 
     /* Attempt to read a protocol message from the opposite client. */
-    read_message(state, &response, &buffer);
+    read_message(state, &response, buffer);
 
     /* Send a reply to confirm or deny the connection. */
     if (!master) {
@@ -193,12 +188,15 @@ Message create_error(Error const *error, void *payload) {
     return message;
 }
 
-void read_message(IO_State *state, Message *message, void *buffer) {
+int read_message(IO_State *state, Message *message, void *buffer) {
     struct Message_Header header;
     size_t payload_size;
+    int rc = -1;
 
     /* Read in just the message header. */
-    safe_io(state->io_host, state->read_raw, &header, sizeof(struct Message_Header));
+    if (safe_io(state->io_host, state->read_raw, &header, sizeof(struct Message_Header))) {
+        goto fail;
+    }
 
     /* Compute the payload size by subtracting known message structure sizes. */
     payload_size = header.num_bytes
@@ -212,15 +210,25 @@ void read_message(IO_State *state, Message *message, void *buffer) {
     message->header = header;
 
     /* Read in the data payload. */
-    safe_io(state->io_host, state->read_raw, message->payload, message->payload_size);
+    if (safe_io(state->io_host, state->read_raw, message->payload, message->payload_size)) {
+        goto fail;
+    }
 
     /* Read in the message footer. */
-    safe_io(state->io_host, state->read_raw, &(message->footer), sizeof(struct Message_Footer));
+    if (safe_io(state->io_host, state->read_raw, &(message->footer), sizeof(struct Message_Footer))) {
+        goto fail;
+    }
 
     state->remote_sequence_number++;
+
+    rc = 0;
+
+fail:
+
+    return rc;
 }
 
-void write_message(IO_State *state, Message *message) {
+int write_message(IO_State *state, Message *message) {
 
     /*
      * ASSEMBLE HEADER & FOOTER
@@ -242,14 +250,10 @@ void write_message(IO_State *state, Message *message) {
      * WRITE THE MESSAGE
      */
 
-    /* Write the message header to the bus. */
-    safe_io(state->io_host, state->write_raw, &(message->header), sizeof(struct Message_Header));
-
-    /* Write the data payload */
-    safe_io(state->io_host, state->write_raw, message->payload, message->payload_size);
-
-    /* Write the data footer. */
-    safe_io(state->io_host, state->write_raw, &(message->footer), sizeof(struct Message_Footer));
+    /* Write the message to the bus. */
+    return safe_io(state->io_host, state->write_raw, &(message->header), sizeof(struct Message_Header)) ||
+        safe_io(state->io_host, state->write_raw, message->payload, message->payload_size) ||
+        safe_io(state->io_host, state->write_raw, &(message->footer), sizeof(struct Message_Footer));
 
 }
 
@@ -267,10 +271,11 @@ uint16_t checksum_message(Message *message) {
 
 #define ANNOUNCE_SIZE sizeof(struct Message_Header) + sizeof(struct Message_Footer)
 
-static void read_announce(IO_State *state, Message *message) {
+static int read_announce(IO_State *state, Message *message) {
     uint8_t buffer[ANNOUNCE_SIZE];
     struct Message_Header *header = (struct Message_Header*) buffer;
     struct Message_Footer *footer = (struct Message_Footer*) (buffer + sizeof(struct Message_Header));
+    int rc = -1;
 
     /* Read an entire message worth of data */
     safe_io(state->io_host, state->read_raw, buffer + 1, ANNOUNCE_SIZE - 1);
@@ -279,7 +284,9 @@ static void read_announce(IO_State *state, Message *message) {
         for (i = 1; i < ANNOUNCE_SIZE; i++) {
             buffer[i-1] = buffer[i];
         }
-        safe_io(state->io_host, state->read_raw, buffer + ANNOUNCE_SIZE - 1, 1);
+        if (safe_io(state->io_host, state->read_raw, buffer + ANNOUNCE_SIZE - 1, 1)) {
+            goto fail;
+        }
     } while (
             header->num_bytes != ANNOUNCE_SIZE ||
             header->message_type != MT_ANNOUNCE ||
@@ -290,11 +297,17 @@ static void read_announce(IO_State *state, Message *message) {
     message->footer = *footer;
     message->payload = NULL;
     message->payload_size = 0;
+
+    rc = 0;
+
+fail:
+
+    return rc;
 }
 
 #undef ANNOUNCE_SIZE
 
-static void safe_io(void *io_host, raw_io_function raw_io, void *data, size_t size) {
+static int safe_io(void *io_host, raw_io_function raw_io, void *data, size_t size) {
     size_t bytes_transferred = 0;
     char *val = (char*) data;
     while (bytes_transferred != size) {
@@ -304,6 +317,8 @@ static void safe_io(void *io_host, raw_io_function raw_io, void *data, size_t si
         }
         bytes_transferred += ret;
     }
+
+    return bytes_transferred != size;
 }
 
 static uint16_t crc16(uint16_t crc, const void* ptr, size_t bytes) {

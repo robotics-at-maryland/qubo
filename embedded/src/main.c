@@ -37,6 +37,8 @@
 #include <utils/uartstdio.h>
 #endif
 
+#include "lib/include/uart_queue.h"
+
 // Globals
 #include "include/i2c0_mutex.h"
 #include "include/i2c1_mutex.h"
@@ -48,20 +50,15 @@
 #include "include/i2c2_globals.h"
 #include "include/i2c3_globals.h"
 
-#include "include/uart0_mutex.h"
 #include "include/uart1_mutex.h"
 #include "include/rgb_mutex.h"
-#include "include/read_uart0_queue.h"
 #include "include/read_uart1_queue.h"
-#include "include/write_uart0_queue.h"
 
 SemaphoreHandle_t i2c0_mutex;
 SemaphoreHandle_t i2c1_mutex;
 SemaphoreHandle_t i2c2_mutex;
 SemaphoreHandle_t i2c3_mutex;
 
-SemaphoreHandle_t uart0_read_mutex;
-SemaphoreHandle_t uart0_write_mutex;
 SemaphoreHandle_t uart1_mutex;
 SemaphoreHandle_t rgb_mutex;
 
@@ -93,9 +90,9 @@ volatile uint32_t *i2c3_read_count;
 volatile uint32_t *i2c3_write_count;
 volatile uint16_t *i2c3_int_state;
 
-volatile QueueHandle_t read_uart0_queue;
 volatile QueueHandle_t read_uart1_queue;
 
+struct UART_Queue uart0_queue;
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -147,14 +144,13 @@ int main() {
   i2c2_mutex = xSemaphoreCreateMutex();
   i2c3_mutex = xSemaphoreCreateMutex();
 
-  uart0_read_mutex = xSemaphoreCreateMutex();
-  uart0_write_mutex = xSemaphoreCreateMutex();
   uart1_mutex = xSemaphoreCreateMutex();
   rgb_mutex = xSemaphoreCreateMutex();
 
-  read_uart0_queue = xQueueCreate(READ_UART0_Q_SIZE, sizeof(uint8_t));
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
-  write_uart0_queue = xQueueCreate(WRITE_UART0_Q_SIZE, sizeof(uint8_t));
+
+  // Initialize the UART Queue for UART0.
+  INIT_UART_QUEUE(uart0_queue, 512, INT_UART0, UART0_BASE, portMAX_DELAY);
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));

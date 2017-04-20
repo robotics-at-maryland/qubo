@@ -82,8 +82,11 @@ void QSCU::openDevice() {
     _deviceFD = fd;
 
     _state = initialize(&_deviceFD, QSCU::serialRead, QSCU::serialWrite, 10);
+
+    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+
     // Prepare to begin communication with the device.
-    if (init_connect(&_state)) {
+    if (init_connect(&_state, buffer)) {
         closeDevice();
         throw QSCUException("Unable to sychronize the remote connection!");
     }
@@ -106,11 +109,15 @@ void QSCU::closeDevice() {
 
 
 ssize_t QSCU::serialRead(void *io_host, void *buffer, size_t size) {
-    return read(*((int*)io_host), buffer, size);
+    ssize_t ret = read(*((int*)io_host), buffer, size);
+    printf("read %zd bytes\n", ret);
+    return ret;
 }
 
 ssize_t QSCU::serialWrite(void *io_host, void *buffer, size_t size) {
-    return write(*((int*)io_host), buffer, size);
+    ssize_t ret = write(*((int*)io_host), buffer, size);
+    printf("wrote %zd bytes\n", ret);
+    return ret;
 }
 
 

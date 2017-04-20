@@ -7,9 +7,6 @@
 #define _READUART0_H_
 
 #include "lib/include/rgb.h"
-#include "lib/include/write_uart.h"
-#include "include/read_uart0_queue.h"
-#include "include/uart0_mutex.h"
 #include "include/uart1_mutex.h"
 #include "lib/include/ring_buffer.h"
 
@@ -37,12 +34,8 @@
 #include <utils/uartstdio.h>
 #endif
 
-volatile QueueHandle_t read_uart0_queue;
-
 bool read_uart0_init(void);
 
 static void read_uart0_task(void* params);
-
-static ssize_t read_queue(void* io_host, void* buffer, size_t size);
 
 #endif
