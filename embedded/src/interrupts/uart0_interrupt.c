@@ -32,6 +32,6 @@ void UART0IntHandler(void) {
         fill_tx_buffer(queue);
 	}
 
-    ROM_UARTIntClear(queue->hardware_base_address, status);
+    ROM_UARTIntClear(queue->hardware_base_address, ( UART_INT_TX | UART_INT_RX | UART_INT_RT));
 
 }

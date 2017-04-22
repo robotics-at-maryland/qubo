@@ -1,4 +1,4 @@
-/* 
+/*
  * Greg Harris
  * R@M 2017
  * gharris1727@gmail.com
@@ -40,16 +40,16 @@ struct UART_Queue {
     uint32_t hardware_interrupt_address;
     uint32_t hardware_base_address;
 
-    /* 
+    /*
      * Queues of data to send and receive.
      */
-    QueueHandle_t read_queue;
-    QueueHandle_t write_queue;
+    volatile QueueHandle_t read_queue;
+    volatile QueueHandle_t write_queue;
 
     /*
-     * Lock to keep modifications of the queue from tasks atomic. 
+     * Lock to keep modifications of the queue from tasks atomic.
      */
-    SemaphoreHandle_t lock;
+    volatile SemaphoreHandle_t lock;
 
     /*
      * Timeout for transfers on the bus before failing to read.
@@ -60,11 +60,12 @@ struct UART_Queue {
 /*
  * Macros for interacting with the uart state.
  */
-#define INIT_UART_QUEUE(queue_v, read_buffer_size_v, hardware_interrupt_address_v, hardware_base_address_v, transfer_timeout_v) do { \
+#define INIT_UART_QUEUE(queue_v, read_buffer_size_v, write_buffer_size_v, hardware_interrupt_address_v, hardware_base_address_v, transfer_timeout_v) do { \
     (queue_v).hardware_interrupt_address = hardware_interrupt_address_v; \
     (queue_v).hardware_base_address = hardware_base_address_v; \
     (queue_v).transfer_timeout = transfer_timeout_v; \
     (queue_v).read_queue = xQueueCreate(read_buffer_size_v, sizeof(uint8_t)); \
+    (queue_v).write_queue = xQueueCreate(write_buffer_size_v, sizeof(uint8_t)); \
     (queue_v).lock = xSemaphoreCreateMutex(); \
 } while (0)
 
