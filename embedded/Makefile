@@ -152,6 +152,15 @@ tiva:
 
 rebuild : clean
 
+setenv:
+	source setenv.sh
+
+dbgrun:
+	./start_openocd.sh
+
+dbg: $(ELF_IMAGE)
+	arm-none-eabi-gdb $(ELF_IMAGE)
+
 $(TARGET) : $(OBJDIR) $(ELF_IMAGE)
 	$(OBJCOPY) -O binary $(word 2,$^) $@
 
@@ -213,4 +222,4 @@ flash:
 
 print-%  : ; @echo $* = $($*)
 
-.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help
+.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help dbgrun dbg setenv

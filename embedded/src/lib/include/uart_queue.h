@@ -19,13 +19,6 @@
 #include <driverlib/rom.h>
 #include <driverlib/uart.h>
 
-#if 0
-// TODO: clear these includes if we dont need them.
-#include <inc/hw_nvic.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#endif
-
 #ifndef UART_QUEUE_H
 #define UART_QUEUE_H
 
