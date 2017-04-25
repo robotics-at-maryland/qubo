@@ -38,7 +38,7 @@ ssize_t write_uart_queue(void *uart_queue, void* buffer, size_t size) {
     for (i = 0; i < size; i++){
 
         // Attempt to push the data to the queue, and break if the write fails.
-        if (xQueueSend(queue->read_queue, *(uint8_t *)buffer, queue->transfer_timeout) != pdPASS) {
+        if (xQueueSend(queue->write_queue, (uint8_t *)buffer + i, queue->transfer_timeout) != pdPASS) {
             break;
         }
     }
@@ -88,7 +88,7 @@ void fill_tx_buffer(struct UART_Queue *queue) {
         ROM_UARTCharPutNonBlocking(queue->hardware_base_address, data);
     }
 
-    if (xQueueIsQueueEmptyFromISR(queue->write_queue) == pdFALSE) {
+    if (xQueueIsQueueEmptyFromISR(queue->write_queue) != pdFALSE) {
 
         ROM_UARTIntDisable(queue->hardware_base_address, UART_INT_TX);
     } else {

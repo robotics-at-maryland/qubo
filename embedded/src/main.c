@@ -38,6 +38,7 @@
 #endif
 
 #include "lib/include/uart_queue.h"
+#include "interrupts/include/uart0_interrupt.h"
 
 // Globals
 #include "include/i2c0_mutex.h"
@@ -92,7 +93,7 @@ volatile uint16_t *i2c3_int_state;
 
 volatile QueueHandle_t read_uart1_queue;
 
-struct UART_Queue uart0_queue;
+volatile struct UART_Queue uart0_queue;
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -150,7 +151,7 @@ int main() {
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
 
   // Initialize the UART Queue for UART0.
-  INIT_UART_QUEUE(uart0_queue, 64, 64, INT_UART0, UART0_BASE, portMAX_DELAY);
+  INIT_UART_QUEUE(uart0_queue, 24, 24, INT_UART0, UART0_BASE, portMAX_DELAY);
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));

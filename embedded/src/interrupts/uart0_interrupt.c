@@ -14,13 +14,12 @@
 #include <driverlib/rom.h>
 #include <driverlib/uart.h>
 
+#include "interrupts/include/uart0_interrupt.h"
 #include "lib/include/uart_queue.h"
-
-extern struct UART_Queue uart0_queue;
 
 // Handle an interrupt triggered for UART0
 void UART0IntHandler(void) {
-    struct UART_Queue *queue = &uart0_queue;
+    volatile struct UART_Queue *queue = &uart0_queue;
 
 	uint32_t status = ROM_UARTIntStatus(queue->hardware_base_address, true);
 
