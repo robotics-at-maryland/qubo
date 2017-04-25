@@ -47,6 +47,12 @@ set(DEPTH_CONTROLLER_FILES
   src/depth_controller.cpp
   src/depth_main.cpp
   )
+
+
+set(YAW_CONTROLLER_FILES
+  src/yaw_controller.cpp
+  src/yaw_main.cpp
+  )
 ##############################
 # Add Executables ############
 ##############################
@@ -56,6 +62,9 @@ target_link_libraries(pid_controller_node ${catkin_LIBRARIES})
 
 add_executable(depth_controller ${DEPTH_CONTROLLER_FILES})
 target_link_libraries(depth_controller ${catkin_LIBRARIES})
+
+add_executable(yaw_controller ${YAW_CONTROLLER_FILES})
+target_link_libraries(yaw_controller ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########

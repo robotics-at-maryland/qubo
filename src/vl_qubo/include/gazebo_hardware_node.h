@@ -49,37 +49,43 @@ class GazeboHardwareNode{
 	ros::Subscriber m_depth_sub;
 	void depthCallback(const std_msgs::Float64::ConstPtr& msg);
 
+	//Euler angle subs
+	ros::Publisher m_roll_pub;
+	std_msgs::Float64 m_roll_msg;
 	
-    //thruster vars may be able to get rid of these if we store messages..
+	ros::Publisher m_pitch_pub;
+	std_msgs::Float64 m_pitch_msg;
+	
+	ros::Publisher m_yaw_pub;
+	std_msgs::Float64 m_yaw_msg;
+	
+	//thruster vars may be able to get rid of these if we store messages..
     double m_yaw_command = 0;
     double m_pitch_command = 0;
     double m_roll_command = 0;
     double m_depth_command = 0;
 
-	
-    //thruster pubs
-    std::vector<uuv_gazebo_ros_plugins_msgs::FloatStamped> m_thruster_commands;
-    std::vector<ros::Publisher> m_thruster_pubs;
 
-    //--------------------------------------------------------------------------
     //depth/pressure subs
-    
-    ros::Subscriber m_pressure_sub;
+	ros::Subscriber m_pressure_sub;
 	void pressureCallback(const sensor_msgs::FluidPressure::ConstPtr& msg);
 
 	std_msgs::Float64 m_depth; 
 	ros::Publisher  m_depth_pub;
-
+	
+    //thruster pubs
+    std::vector<uuv_gazebo_ros_plugins_msgs::FloatStamped> m_thruster_commands;
+    std::vector<ros::Publisher> m_thruster_pubs;
+	
 	    
     //--------------------------------------------------------------------------
     //for now I'm only going to populate the orientation parameters..
        
     ros::Subscriber m_orient_sub;
-	void orientCallback(const sensor_msgs::Imu::ConstPtr& msg);
+	void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
 	
-	sensor_msgs::Imu m_fused_pose;
-	ros::Publisher m_orient_pub;
-    
+		
+	
 	
 };
 

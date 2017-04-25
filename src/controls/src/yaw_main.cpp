@@ -1,4 +1,4 @@
-#include "depth_controller.h"
+#include "yaw_controller.h"
 #include <thread>
 
 using namespace std;
@@ -6,10 +6,10 @@ using namespace ros;
 
 int main(int argc, char* argv[]){
 	
-	init(argc, argv, "depth_controller");
+	init(argc, argv, "yaw_controller");
 	NodeHandle nh;
 
-	DepthController node(nh);
+	YawController node(nh);
 	
 	while(1){
 		node.update();

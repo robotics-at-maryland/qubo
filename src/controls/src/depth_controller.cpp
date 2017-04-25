@@ -14,7 +14,7 @@ DepthController::DepthController(NodeHandle n) {
 	string sensor_topic = qubo_namespace + "depth";
 	m_sensor_sub = n.subscribe(sensor_topic, 1000, &DepthController::sensorCallback, this);
 	
-	string command_topic = qubo_namespace + "depth_command";
+	string command_topic = qubo_namespace + "depth_cmd";
 	m_command_pub = n.advertise<std_msgs::Float64>(command_topic, 1000);
 
 	m_depth_command.data = 5;

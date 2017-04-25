@@ -22,26 +22,38 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
 	string qubo_namespace = "/qubo/";
 	
-	// topic names, channge them here if you need to
+
+
+	//topic names, channge them here if you need to
     
-	
 	//set up all publishers and subscribers
-	string input_pose = qubo_namespace + "imu";
+	string input_pose = gazebo_namespace + "pose_gt";
     m_orient_sub = n.subscribe(input_pose, 1000, &GazeboHardwareNode::orientCallback, this);
-    m_orient_pub = n.advertise<sensor_msgs::Imu>(fused_pose_topic.c_str(),1000);
 
+	//pressure sub, pressure comes in as Kilo pascals we're going to convert that to meters
+	//giving us the data we publish over the depth topic. see update for that conversion
+	string pressure_topic = gazebo_namespace + "pressure";
+	m_pressure_sub = n.subscribe(pressure_topic, 1000, &GazeboHardwareNode::pressureCallback, this);
 	
-    string yaw_topic = cont_namespace + "yaw_command";
-    string pitch_topic = cont_namespace + "pitch_command";
-    string roll_topic = cont_namespace + "roll_command";
-	string depth_command_topic = cont_namespace + "depth_command";
 	
-	m_yaw_sub = n.subscribe(yaw_topic, 1000, &GazeboHardwareNode::yawCallback, this);
-    m_pitch_sub = n.subscribe(pitch_topic, 1000, &GazeboHardwareNode::pitchCallback, this);
-    m_roll_sub = n.subscribe(roll_topic, 1000, &GazeboHardwareNode::rollCallback, this);
-	m_depth_sub = n.subscribe(depth_command_topic, 1000, &GazeboHardwareNode::depthCallback, this);
+	//roll pitch yaw + depth topics. We output our current best guess at these parameters using the
+	//topic strings below, we subscribe to commands for each DOF on the <axis>_cmd topics. 
+	string roll_topic = cont_namespace + "roll";
+    string pitch_topic = cont_namespace + "pitch";
+	string yaw_topic = cont_namespace + "yaw";
+	string depth_topic = cont_namespace + "depth";
 
-	
+	m_roll_sub = n.subscribe(roll_topic + "_cmd", 1000, &GazeboHardwareNode::rollCallback, this);
+	m_pitch_sub = n.subscribe(pitch_topic + "_cmd", 1000, &GazeboHardwareNode::pitchCallback, this);
+	m_yaw_sub = n.subscribe(yaw_topic + "_cmd", 1000, &GazeboHardwareNode::yawCallback, this);
+	m_depth_sub = n.subscribe(depth_topic + "_cmd", 1000, &GazeboHardwareNode::depthCallback, this);
+
+	m_roll_pub = n.advertise<std_msgs::Float64>(roll_topic, 1000);
+	m_pitch_pub = n.advertise<std_msgs::Float64>(pitch_topic, 1000);
+	m_yaw_pub = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
+	m_depth_pub = n.advertise<std_msgs::Float64>(depth_topic, 1000);
+
+		
 	//register the thruster topics, we have 8
 	string t_topic =  gazebo_namespace + "thrusters";
             
@@ -58,15 +70,7 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
     }
 	
 	
-    //pressure sub, pressure comes in as Kilo pascals we're going to convert that to meters
-	//see update for that conversion
-	string pressure_topic = gazebo_namespace + "pressure";
-	m_pressure_sub = n.subscribe(pressure_topic, 1000, &GazeboHardwareNode::pressureCallback, this);
-
-	//this is going to be in meters
-	string depth_topic = cont_namespace + "depth";
-	m_depth_pub = n.advertise<std_msgs::Float64>(depth_topic.c_str(), 1000);
-
+    
 				  
 }
 
@@ -153,15 +157,20 @@ void GazeboHardwareNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
 // Data callbacks, these take info from the simulator and pass it on in a way
 // that should appear identical to how the real qubo will present it's data
 
-void GazeboHardwareNode::orientCallback(const sensor_msgs::Imu::ConstPtr &msg){
+void GazeboHardwareNode::orientCallback(const nav_msgs::Odometry::ConstPtr &msg){
 	
-    // ROS_INFO("Seq: [%d]", msg->header.seq);
-    // ROS_INFO("Position-> x: [%f], y: [%f], z: [%f]", msg->pose.pose.position.x,msg->pose.pose.position.y, msg->pose.pose.position.z);
-    //ROS_INFO("Orientation-> x: [%f], y: [%f], z: [%f], w: [%f]", msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
-    //ROS_INFO("Vel-> Linear: [%f], Angular: [%f]", msg->twist.twist.linear.x,msg->twist.twist.angular.z);
+    
+    //this is a little clunky, but it's the best way I could find to convert from a quaternion to Euler Angles
+	tf::Quaternion q(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
+	tf::Matrix3x3 m(q);
+	std_msgs::Float64 roll, pitch, yaw;
+	m.getRPY(roll.data, pitch.data, yaw.data); //roll pitch and yaw are populated
 	
-    //right now I just pass the data from simulated right through
-	m_orient_pub.publish(*msg);
+	
+	//m_orient_pub.publish(*msg);
+	m_roll_pub.publish(roll);
+	m_pitch_pub.publish(pitch);
+	m_yaw_pub.publish(yaw);
 
 }
 

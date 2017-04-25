@@ -1,0 +1,23 @@
+<!-- Launches Gazebo with a basic Qubo robot spawned in the empty underwater world. -->
+<launch>
+    <!-- Launch Gazebo with the empty underwater world -->
+    <include file="empty_underwater_world.launch" />
+
+    <!-- Spawn basic Qubo robot into the world -->
+    <include file="spawn_basic_qubo.launch">
+        <arg name="namespace" value="qubo_test"/>
+    </include>
+
+    <node name="depth_pid" pkg="pid" type="controller" ns ="qubo/depth" >
+      <param name="Kp" value="5.0" />
+      <param name="Ki" value="0.0" />
+      <param name="Kd" value="0.0" />
+      <param name="upper_limit" value="10" />
+      <param name="lower_limit" value="-10" />
+      <param name="windup_limit" value="10" />
+      <param name="diagnostic_period" value="0.25" />
+      <param name="max_loop_frequency" value="100.0" />
+      <param name="min_loop_frequency" value="100.0" />
+    </node>
+    
+</launch>
