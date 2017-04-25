@@ -21,7 +21,7 @@ extern struct UART_Queue uart0_queue;
 static char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
 bool read_uart0_init(void) {
-    if ( xTaskCreate(read_uart0_task, (const portCHAR *)"Read UART0", 512, NULL,
+    if ( xTaskCreate(read_uart0_task, (const portCHAR *)"Read UART0", 128, NULL,
                      tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
         return true;
     }
@@ -55,8 +55,7 @@ static void read_uart0_task(void* params) {
     blink_rgb(RED_LED, 1);
     int error = 1;
 
-    test_write_uart_queue(&uart0_queue, "hello\n", 6);
-    goto fail;
+    //test_write_uart_queue(&uart0_queue, "hello\n", 6);
     IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
 
     // Qubobus driver code to assemble/interpret messages here

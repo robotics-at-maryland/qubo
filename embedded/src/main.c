@@ -151,7 +151,7 @@ int main() {
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
 
   // Initialize the UART Queue for UART0.
-  INIT_UART_QUEUE(uart0_queue, 24, 24, INT_UART0, UART0_BASE, portMAX_DELAY);
+  INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, portMAX_DELAY);
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));
