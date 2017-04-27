@@ -13,10 +13,10 @@ int main(int argc, char* argv[]){
 
 		
 	PIDController depth_node(nh, "depth");
-	PIDController yaw_node(nh, "yaw");
-	
+	//PIDController yaw_node(nh, "yaw");
 	while(1){
-		node.update();
+		depth_node.update();
+		//	yaw_node.update();
 		this_thread::sleep_for(chrono::seconds(1)); //this is really slow right now
 	}
 	
