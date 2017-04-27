@@ -106,7 +106,7 @@ int wait_connect(IO_State *state, void *buffer) {
      * Read in the other client's announce message.
      * This serves to synchronize the message frame alignment of both clients.
      */
-    read_announce(state, &their_announce);
+    while( read_announce(state, &their_announce) != 0 );
 
 
     /*
@@ -117,7 +117,9 @@ int wait_connect(IO_State *state, void *buffer) {
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
 
-    write_message(state, &our_announce);
+    if (success = write_message(state, &our_announce) != 0){
+        return success;
+    }
 
 
     /*
@@ -137,12 +139,14 @@ int wait_connect(IO_State *state, void *buffer) {
     if (master) {
         struct Protocol_Info protocol_info = {QUBOBUS_PROTOCOL_VERSION};
         create_message(&protocol, MT_PROTOCOL, 0, &protocol_info, sizeof(struct Protocol_Info));
-        write_message(state, &protocol);
+        if (success = write_message(state, &protocol) != 0){
+            return success;
+        }
 
     }
 
     /* Attempt to read a protocol message from the opposite client. */
-    read_message(state, &response, buffer);
+    while( read_message(state, &response, buffer) != 0 );
 
     /* Send a reply to confirm or deny the connection. */
     if (!master) {

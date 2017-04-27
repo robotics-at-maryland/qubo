@@ -3,7 +3,7 @@
 
 #ifndef QUBOBUS_IO_H
 #define QUBOBUS_IO_H
-
+#define READ_TIMEOUT_MSEC 2000
 typedef ssize_t (*raw_io_function)(void*, void*, size_t);
 
 typedef struct _IO_State {
@@ -23,14 +23,14 @@ typedef struct _IO_State {
 } IO_State;
 
 typedef struct _Message {
-    /* 
+    /*
      * Details about the message structure itself
-     * These 
+     * These
      */
     struct Message_Header header;
     struct Message_Footer footer;
 
-    /* 
+    /*
      * Details about the payload that was read from the message.
      * This includes the pointer to the payload and it's size,
      * as well as a flag for tracking whether the payload was dynamically allocated.
@@ -41,7 +41,7 @@ typedef struct _Message {
 } Message;
 
 
-/* 
+/*
  * Function to initialize the IO_State struct with needed data to start interacting across the bus.
  */
 IO_State initialize(void *io_host, raw_io_function read, raw_io_function write, uint16_t priority);
