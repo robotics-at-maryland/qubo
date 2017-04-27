@@ -31,14 +31,11 @@ sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dy
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
 # Setup environment variables for ROS.
-echo "Do you want to add \"source /opt/ros/kinetic/setup.bash\" to your .bashrc?"
-select yn in "Yes" "No"; do
-    case $yn in
-       Yes ) echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc;
-             break;;
-       No ) break;;
-    esac
-done
+read -p "Do you want to add \"source /opt/ros/kinetic/setup.bash\" to your .bashrc?i [Y/n]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+fi
 
 source ~/.bashrc
 
@@ -53,18 +50,16 @@ sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdis
 
 # Install QtCreator and its ROS plugin.
 # Due to a quirk of the plugin, qtcreator MUST be installed twice.
-echo "Do you want to install optional IDE QtCreator and associated ROS plugin?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) sudo apt install qtcreator; 
-# This command broke the install on ubuntu 16.04.2
-#sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
-#https://github.com/ros-industrial/ros_qtc_plugin/wiki/1.-How-to-Install-(Users)
-#sudo add-apt-repository --remove ppa:beineri/opt-qt57-xenial
-sudo add-apt-repository ppa:levi-armstrong/qt-libraries-xenial 
-sudo add-apt-repository ppa:levi-armstrong/ppa;
-sudo apt-get update && sudo apt-get install qt57creator-plugin-ros;
-sudo apt install qtcreator; break;;
-        No ) exit;;
-    esac
-done
+read -p "Do you want to install optional IDE QtCreator and associated ROS plugin? [Y/n]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+   sudo apt install qtcreator; 
+   # This command broke the install on ubuntu 16.04.2
+   # sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
+   # https://github.com/ros-industrial/ros_qtc_plugin/wiki/1.-How-to-Install-(Users)
+   # sudo add-apt-repository --remove ppa:beineri/opt-qt57-xenial
+   sudo add-apt-repository ppa:levi-armstrong/qt-libraries-xenial 
+   sudo add-apt-repository ppa:levi-armstrong/ppa
+   sudo apt-get update && sudo apt-get install qt57creator-plugin-ros
+   sudo apt install qtcreator
+fi
