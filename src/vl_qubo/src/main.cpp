@@ -3,7 +3,14 @@
 //includes for threading
 #include <thread>
 
+//include for exiting
+#include <csignal>
+
 using namespace std;
+
+void signal_handler(int sig) {
+  exit(SIGINT);
+}
 
 void nodeThread(int argc, char* argv[]){
     
@@ -16,6 +23,8 @@ void nodeThread(int argc, char* argv[]){
     //    ControlNode cn(nh, "control_node", "/dev/something","/dev/something");
 
     //    ros::spin();
+
+    signal(SIGINT, signal_handler);
     while(1){
         cout << "hello I'm the node thread" << endl;
         sleep(.5);
@@ -24,6 +33,7 @@ void nodeThread(int argc, char* argv[]){
 }
 
 void tivaThread(){
+    signal(SIGINT, signal_handler);
     while(1){
         cout << "hello I'm the tiva thread" << endl;
         sleep(1);
@@ -32,7 +42,8 @@ void tivaThread(){
 
 
 int main(int argc, char* argv[]){
-
+    signal(SIGINT, signal_handler);
+  
     thread first(nodeThread, argc, argv);
     thread second(tivaThread);
 

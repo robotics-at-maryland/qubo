@@ -1,4 +1,4 @@
-#include "g_control_node.h"
+#include "gazebo_hardware_node.h"
 
 //includes for threading
 #include <thread>
@@ -23,14 +23,14 @@ using namespace std;
 //ros makes that hard though. If you want to do it you'll need to manually get the global callback
 //queue
 int main(int argc, char* argv[]){
-
+	
 	//    thread first(nodeThread, argc, argv);
     
 	
-    ros::init(argc, argv, "control_node");
+    ros::init(argc, argv, "hardware_node");
     ros::NodeHandle nh;
-
-	GControlNode cn(nh, "control_node", "/qubo/pose/");
+	
+	GazeboHardwareNode cn(nh, "hardware_node", "/qubo/pose/");
 	
     while(1){
         cn.update();

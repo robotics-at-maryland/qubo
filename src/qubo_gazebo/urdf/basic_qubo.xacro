@@ -11,7 +11,7 @@
   <xacro:property name="prop_mesh_file" value="file://$(find uuv_descriptions)/models/rexrov/mesh/prop.dae"/>
 
   <!-- Qubo's mass, volume, and center of buoyancy -->
-  <xacro:property name="mass" value="1862.87"/>
+  <xacro:property name="mass" value="18.6287"/>
   <xacro:property name="volume" value="1.83826"/>
   <xacro:property name="center_of_buoyancy" value="0.0 0.0 0.3"/>
 
@@ -52,13 +52,11 @@
         </dynamics>
         <conversion>
           <type>Basic</type>
-          <rotorConstant>0.00031</rotorConstant>
+          <rotorConstant>-1</rotorConstant>
         </conversion>
       </plugin>
     </gazebo>
   </xacro:macro>
-
-
 
 
   <!-- size of robot to meters X = .4064Z  Y = Z = .3048 --> 
@@ -93,36 +91,36 @@
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
 
-  <!-- Set up hydrodynamic plugin -->
+  <!-- Set up hydrodynamic plugin  -->
   <gazebo>
     <plugin name="uuv_plugin" filename="libunderwater_object_ros_plugin.so">
-      <fluid_density>1028.0</fluid_density>
+      <fluid_density>10.280</fluid_density>
       <flow_velocity_topic>hydrodynamics/current_velocity</flow_velocity_topic>
       <debug>${debug}</debug>
       <link name="${namespace}/base_link">
         <neutrally_buoyant>0</neutrally_buoyant>
         <volume>${volume}</volume>
         <box>
-          <width>1.0</width>
-          <length>1.0</length>
-          <height>1.0</height>
+          <width>.4064</width>
+          <length>.3048</length>
+          <height>.3048</height>
         </box>
         <center_of_buoyancy>${center_of_buoyancy}</center_of_buoyancy>
-        <!-- Added mass: see p.28 in Berg2012 -->
+  <!-- Added mass: see p.28 in Berg2012 -->
         <hydrodynamic_model>
           <type>fossen</type>
           <added_mass>
-             779.79 -6.8773 -103.32 8.5426 -165.54 -7.8033
-            -6.8773 1222 51.29 409.44 -5.8488 62.726
-              -103.32 51.29 3659.9 6.1112 -386.42 10.774
-              8.5426 409.44 6.1112 534.9 -10.027 21.019
-              -165.54 -5.8488 -386.42 -10.027 842.69 -1.1162
-              -7.8033 62.726 10.775 21.019 -1.1162 224.32
+             7.7979 -0.068773 -1.0332 .085426 -1.6554 -.078033
+            -.068773 12.22 0.5129 4.0944 -0.058488 0.62726
+              -1.0332 0.5129 36.599 0.61112 -3.8642 0.10774
+              .085426 4.0944 .061112 5.349 -0.10027 0.21019
+              -1.6554 -.058488 -3.8642 -0.10027 8.4269 -.011162
+              -.078033 0.62726 0.10775 0.21019 -.011162 2.2432
           </added_mass>
-          <!-- Linear damping: see p.31 in Berg2012 -->
-          <linear_damping>-74.82 -69.48 -728.4 -268.8 -309.77 -105</linear_damping>
+           <!-- Linear damping: see p.31 in Berg2012 -->
+          <linear_damping>-0.7482 -0.6948 -7.284 -2.688 -3.0977 -105</linear_damping>
           <!-- Non-linear damping: see p.30 in Berg2012 -->
-          <quadratic_damping>-748.22 -992.53 -1821.01 -672 -774.44 -523.27</quadratic_damping>
+          <quadratic_damping>-7.4822 -9.9253 -18.2101 -6.72 -7.7444 -5.2327</quadratic_damping>
         </hydrodynamic_model>
       </link>
     </plugin>
@@ -201,26 +199,26 @@
     </plugin>
   </gazebo>
 
-  <!-- DVL -->
+  <!-- DVL --> 
   <xacro:default_dvl namespace="${namespace}" parent_link="${namespace}/base_link">
     <origin xyz="-1.4 0 -0.312" rpy="0 ${0.5*pi} 0"/>
   </xacro:default_dvl>
-
+  
   <!-- Pressure  -->
   <xacro:default_pressure namespace="${namespace}" parent_link="${namespace}/base_link">
-    <origin xyz="-1.32 0.5 0.85" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:default_pressure>
-
-  <!-- IMU  -->
+  
+  <!-- IMU  --> 
   <xacro:default_imu namespace="${namespace}" parent_link="${namespace}/base_link">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:default_imu>
-
+    
   <!-- Camera -->
   <xacro:default_camera namespace="${namespace}" parent_link="${namespace}/base_link">
     <origin xyz="1.15 0 0.4" rpy="0 0.6 0"/>
   </xacro:default_camera>
-
-  <!-- Joint state publisher -->
-  <xacro:default_joint_state_publisher namespace="qubo_test" update_rate="500"/>
+  
+  <!-- Joint state publisher --> 
+<!--  <xacro:default_joint_state_publisher namespace="qubo_test" update_rate="500"/> -->
 </robot>

@@ -1,85 +1,59 @@
-#ifndef PID_CONTROLLER_H
-#define PID_CONTROLLER_H
+#ifndef DEPTH_CONTROLLER_H
+#define DEPTH_CONTROLLER_H
 
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h>
-#include <nav_msgs/Odometry.h>
-#include <std_msgs/Int64MultiArray.h>
+#include "std_msgs/Float64.h"
 
-namespace Controls {
 
-/*
- * Basic implementation of a PID Controller for four degrees of freedom (x, y,
- * z, theta).
- */
+#include <dynamic_reconfigure/server.h>
+#include <controls/TestConfig.h>
+
+
 class PIDController {
     public:
-        /* 
-         * Constructor. Accepts a node handle to set up subscribers.
-         */
-        PIDController(ros::NodeHandle *nh);
+    PIDController(ros::NodeHandle n, std::string topic_name);
+    ~PIDController();
 
-        /* 
-         * Destructor.
-         */
-        ~PIDController();
+	void update();
+	
+    protected:
+    
+    ros::Time m_prev_time; 
 
-        /*
-         * Call this method after the PID Controller has been constructed to
-         * run the controller.
-         */
-        void run();
+    ros::Subscriber m_sensor_sub;
+    void sensorCallback(const std_msgs::Float64::ConstPtr& msg);
+    double m_current;
 
-        /*
-         * Callback method for the current state of the robot. The actual PID
-         * loop computations are performed in this method.
-         */
-        void robot_state_callback(const nav_msgs::OdometryConstPtr& current_state);
+	ros::Publisher m_command_pub;
+    //will want this eventually
+    //void commandCallback(const std_msgs::Float64::ConstPtr& msg);
+    std_msgs::Float64  m_command_msg;
 
-        /*
-         * Callback method for the desired state of the robot. Simply stored
-         * the given desired state in instance variables.
-         */
-        void desired_state_callback(const nav_msgs::OdometryConstPtr& desired_state);
-        
-    private:
-        // Kp, Ki, and Kd terms for x, y, and z
-        static constexpr double Kp_x = 0.0;
-        static constexpr double Ki_x = 0.0;
-        static constexpr double Kd_x = 0.0;
-        static constexpr double Kp_y = 0.0;
-        static constexpr double Ki_y = 0.0;
-        static constexpr double Kd_y = 0.0;
-        static constexpr double Kp_z = 0.0;
-        static constexpr double Ki_z = 0.0;
-        static constexpr double Kd_z = 0.0;
-        static constexpr double Kp_t = 0.0;
-        static constexpr double Ki_t = 0.0;
-        static constexpr double Kd_t = 0.0;
+	double m_desired = 5;
 
-        // Upper and lower limits for control effort
-        static constexpr double upper_limit = 1000.0;
-        static constexpr double lower_limit = -1000.0;
-   
-        // Most recently received desired state for the robot 
-        double desired_x, desired_y, desired_z, desired_t;
+    
+    //P,I, and D terms, as it where. 
+    double m_error;
+    double m_error_integral;
+    double m_error_derivative; 
 
-        // Integral and previous errors need to persist between iterations
-        double integral_error_x, integral_error_y, integral_error_z, integral_error_t;
-        double prev_error_x, prev_error_y, prev_error_z, prev_error_t;
-        
-        // Time of last iteration, need to keep track of this for calculating
-        // derivative term.
-        ros::Time prev_time;
+	double m_prev_error;
 
-        // ROS subscribers for robot's current state and goal state
-        ros::Subscriber robot_state_sub;
-        ros::Subscriber desired_state_sub;
+    //gains
+    double m_kp = 1;
+    double m_ki = 0;
+    double m_kd = 0;
 
-        // ROS publisher for sending input to thrusters
-        ros::Publisher thruster_pub;
+	dynamic_reconfigure::Server<controls::TestConfig> server;
+	dynamic_reconfigure::Server<controls::TestConfig>::CallbackType f;
+
+    void configCallback(controls::TestConfig &config, uint32_t level);
+
+	
 };
 
-} // namespace Controls
 
 #endif //PID_CONTROLLER_H
+
+
+	

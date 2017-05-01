@@ -4,6 +4,14 @@ using namespace std;
 using namespace ros;
 
 
+
+void callback(controls::TestConfig &config, uint32_t level) {
+	ROS_INFO("Reconfigure Request: %f %f %f %f", 
+			 config.kp, config.ki, config.kd, config.target
+			 );
+}
+
+
 PIDController::PIDController(NodeHandle n, string control_topic) {
 
 	//TODO how accurate is ros::Time going to be for control purposes?
@@ -20,8 +28,13 @@ PIDController::PIDController(NodeHandle n, string control_topic) {
 
 	m_command_msg.data = 5;
 
+
+
 	
-	f = boost::bind(&PIDController::configCallback, this, _1, _2);
+	dynamic_reconfigure::Server<controls::TestConfig> server;
+	dynamic_reconfigure::Server<controls::TestConfig>::CallbackType f;
+	
+	f = boost::bind(&callback, _1, _2);
 	server.setCallback(f);
 	
     
@@ -47,22 +60,12 @@ void PIDController::update() {
 
 	//sum everything weighted by the given gains. 
 	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative); 
-	m_command_pub.publish(m_command_msg);
+	m_command_pub.publish(m_command);
 	
 }
 
 void PIDController::sensorCallback(const std_msgs::Float64::ConstPtr& msg) {
 	m_current = msg->data;
-	
-}
-
-
-void PIDController::configCallback(controls::TestConfig &config, uint32_t level) {
-	ROS_INFO("Reconfigure Request: %f %f %f %f", config.kp, config.ki, config.kd, config.target);
-	m_kp = config.kp;
-	m_ki = config.ki;
-	m_kd = config.kd;
-	m_desired = config.target;
 	
 }
 
