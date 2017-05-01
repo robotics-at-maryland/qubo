@@ -12,8 +12,8 @@
 
   <!-- Qubo's mass, volume, and center of buoyancy -->
   <xacro:property name="mass" value="18.6287"/>
-  <xacro:property name="volume" value="1.83826"/>
-  <xacro:property name="center_of_buoyancy" value="0.0 0.0 0.3"/>
+  <xacro:property name="volume" value="0.037"/>
+  <xacro:property name="center_of_buoyancy" value="-0.02 0.0 0.16"/>
 
   <!-- Thruster joint and link macro -->
   <xacro:macro name="thruster_macro" params="namespace thruster_id *origin">
@@ -94,7 +94,7 @@
   <!-- Set up hydrodynamic plugin  -->
   <gazebo>
     <plugin name="uuv_plugin" filename="libunderwater_object_ros_plugin.so">
-      <fluid_density>10.280</fluid_density>
+      <fluid_density>1000.0</fluid_density>
       <flow_velocity_topic>hydrodynamics/current_velocity</flow_velocity_topic>
       <debug>${debug}</debug>
       <link name="${namespace}/base_link">
@@ -198,11 +198,6 @@
       <updateRate>30</updateRate>
     </plugin>
   </gazebo>
-
-  <!-- DVL --> 
-  <xacro:default_dvl namespace="${namespace}" parent_link="${namespace}/base_link">
-    <origin xyz="-1.4 0 -0.312" rpy="0 ${0.5*pi} 0"/>
-  </xacro:default_dvl>
   
   <!-- Pressure  -->
   <xacro:default_pressure namespace="${namespace}" parent_link="${namespace}/base_link">
@@ -216,7 +211,7 @@
     
   <!-- Camera -->
   <xacro:default_camera namespace="${namespace}" parent_link="${namespace}/base_link">
-    <origin xyz="1.15 0 0.4" rpy="0 0.6 0"/>
+    <origin xyz="0.25 0 0" rpy="0 1.57 0"/>
   </xacro:default_camera>
   
   <!-- Joint state publisher --> 
