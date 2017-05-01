@@ -1,5 +1,0 @@
-<!-- -->
-<launch>
-<!-- This launch script was made for June 6th 2016 dive test --> 
-<node name="controller_node" pkg="controls" type="pid_controller_node" output="screen" />
-</launch>

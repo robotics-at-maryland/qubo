@@ -10,7 +10,7 @@ find_package(catkin
     roscpp
 
     image_transport
-    ram_cpp_utils
+
     ram_msgs
     tf2_ros
 )
