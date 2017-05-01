@@ -7,8 +7,7 @@ using namespace ros;
 
 TODO
 pass in topic to main rather than in main (low priority)
-actually set target and gains
-put callback in the PIDController class
+
 add surge to hardware node
 
 */
@@ -31,7 +30,7 @@ PIDController::PIDController(NodeHandle n, string control_topic) {
 	m_command_msg.data = 5;
 
 	
-	f = boost::bind(&callback, _1, _2);
+	f = boost::bind(&PIDController::configCallback, this, _1, _2);
 	server.setCallback(f);
 	
     
@@ -67,10 +66,13 @@ void PIDController::sensorCallback(const std_msgs::Float64::ConstPtr& msg) {
 }
 
 
-void callback(controls::TestConfig &config, uint32_t level) {
-	ROS_INFO("Reconfigure Request: %f %f %f %f", 
-			 config.kp, config.ki, config.kd, config.target
-			 );
+void PIDController::configCallback(controls::TestConfig &config, uint32_t level) {
+	ROS_INFO("Reconfigure Request: %f %f %f %f", config.kp, config.ki, config.kd, config.target);
+	m_kp = config.kp;
+	m_ki = config.ki;
+	m_kd = config.kd;
+	m_desired = config.target;
+	
 }
 
 

@@ -46,10 +46,12 @@ class PIDController {
 	dynamic_reconfigure::Server<controls::TestConfig> server;
 	dynamic_reconfigure::Server<controls::TestConfig>::CallbackType f;
 
+    void configCallback(controls::TestConfig &config, uint32_t level);
+
 	
 };
 
-void callback(controls::TestConfig &config, uint32_t level);
+
 #endif //PID_CONTROLLER_H
 
 
