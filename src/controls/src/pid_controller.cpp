@@ -3,7 +3,15 @@
 using namespace std;
 using namespace ros;
 
+/*
 
+TODO
+pass in topic to main rather than in main (low priority)
+actually set target and gains
+put callback in the PIDController class
+add surge to hardware node
+
+*/
 
 
 PIDController::PIDController(NodeHandle n, string control_topic) {
