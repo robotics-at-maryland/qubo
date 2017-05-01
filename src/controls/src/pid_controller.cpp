@@ -3,15 +3,6 @@
 using namespace std;
 using namespace ros;
 
-/*
-
-TODO
-pass in topic to main rather than in main (low priority)
-
-add surge to hardware node
-
-*/
-
 
 PIDController::PIDController(NodeHandle n, string control_topic) {
 

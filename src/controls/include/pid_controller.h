@@ -25,7 +25,8 @@ class PIDController {
     double m_current;
 
 	ros::Publisher m_command_pub;
-    void commandhCallback(const std_msgs::Float64::ConstPtr& msg);
+    //will want this eventually
+    //void commandCallback(const std_msgs::Float64::ConstPtr& msg);
     std_msgs::Float64  m_command_msg;
 
 	double m_desired = 5;

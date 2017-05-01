@@ -42,12 +42,14 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
     string pitch_topic = cont_namespace + "pitch";
 	string yaw_topic = cont_namespace + "yaw";
 	string depth_topic = cont_namespace + "depth";
+	string surge_topic = cont_namespace + "surge";
 
 	m_roll_sub = n.subscribe(roll_topic + "_cmd", 1000, &GazeboHardwareNode::rollCallback, this);
 	m_pitch_sub = n.subscribe(pitch_topic + "_cmd", 1000, &GazeboHardwareNode::pitchCallback, this);
 	m_yaw_sub = n.subscribe(yaw_topic + "_cmd", 1000, &GazeboHardwareNode::yawCallback, this);
 	m_depth_sub = n.subscribe(depth_topic + "_cmd", 1000, &GazeboHardwareNode::depthCallback, this);
-
+	m_surge_sub = n.subscribe(surge_topic + "_cmd", 1000, &GazeboHardwareNode::surgeCallback, this);
+	
 	m_roll_pub = n.advertise<std_msgs::Float64>(roll_topic, 1000);
 	m_pitch_pub = n.advertise<std_msgs::Float64>(pitch_topic, 1000);
 	m_yaw_pub = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
@@ -68,8 +70,8 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
         cout << t_topic << endl;
 
     }
-	
-	
+
+		
     
 				  
 }
@@ -119,6 +121,10 @@ void GazeboHardwareNode::update(){
 	m_thruster_commands[7].data += m_depth_command;
 	
 
+	m_thruster_commands[0].data += m_surge_command;
+	m_thruster_commands[1].data += m_surge_command;
+	m_thruster_commands[2].data += m_surge_command;
+	m_thruster_commands[3].data += m_surge_command;
 	
 	for(int i = 0; i < NUM_THRUSTERS; i++){
 		m_thruster_pubs[i].publish(m_thruster_commands[i]);
@@ -151,6 +157,11 @@ void GazeboHardwareNode::rollCallback(const std_msgs::Float64::ConstPtr& msg){
 void GazeboHardwareNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_depth_command = msg->data; 
 }
+
+void GazeboHardwareNode::surgeCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_surge_command = msg->data; 
+}
+
 
 
 //--------------------------------------------------------------------------

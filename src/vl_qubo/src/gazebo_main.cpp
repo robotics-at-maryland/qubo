@@ -23,13 +23,13 @@ using namespace std;
 //ros makes that hard though. If you want to do it you'll need to manually get the global callback
 //queue
 int main(int argc, char* argv[]){
-
+	
 	//    thread first(nodeThread, argc, argv);
     
 	
     ros::init(argc, argv, "hardware_node");
     ros::NodeHandle nh;
-
+	
 	GazeboHardwareNode cn(nh, "hardware_node", "/qubo/pose/");
 	
     while(1){

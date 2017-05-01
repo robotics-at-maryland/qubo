@@ -49,6 +49,9 @@ class GazeboHardwareNode{
 	ros::Subscriber m_depth_sub;
 	void depthCallback(const std_msgs::Float64::ConstPtr& msg);
 
+    ros::Subscriber m_surge_sub;
+    void surgeCallback(const std_msgs::Float64::ConstPtr& msg);
+
 	//Euler angle subs
 	ros::Publisher m_roll_pub;
 	std_msgs::Float64 m_roll_msg;
@@ -64,6 +67,7 @@ class GazeboHardwareNode{
     double m_pitch_command = 0;
     double m_roll_command = 0;
     double m_depth_command = 0;
+    double m_surge_command = 0;
 
 
     //depth/pressure subs
