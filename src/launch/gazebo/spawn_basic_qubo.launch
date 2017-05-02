@@ -13,7 +13,7 @@
   <arg name="world_frame" default="world"/>
 
   <group ns="$(arg namespace)">
-    <param name="robot_description" command="$(find xacro)/xacro '$(find qubo_gazebo)/urdf/basic_qubo.xacro' debug:=$(arg debug) namespace:=$(arg namespace)" />
+    <param name="robot_description" command="$(find xacro)/xacro '$(find vl_qubo_gazebo)/urdf/basic_qubo.xacro' debug:=$(arg debug) namespace:=$(arg namespace)" />
 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"

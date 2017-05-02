@@ -17,7 +17,7 @@ find_package(Eigen3)
 
 #find_package(catkin REQUIRED dynamic_reconfigure)
 generate_dynamic_reconfigure_options(
-  cfg/depth_yaw.cfg
+  cfg/pid.cfg
 )
 
 
@@ -27,7 +27,6 @@ catkin_package(
   CATKIN_DEPENDS
   cmake_modules
   roscpp
-  ram_cpp_utils
   ram_msgs
   DEPENDS EIGEN3
 )
@@ -49,17 +48,6 @@ set(PID_CONTROLLER_FILES
   src/pid_main.cpp
   )
 
-set(DEPTH_CONTROLLER_FILES
-  src/depth_controller.cpp
-  src/depth_main.cpp
-  )
-
-
-set(YAW_CONTROLLER_FILES
-  src/yaw_controller.cpp
-  src/yaw_main.cpp
-  )
-
 
 ##############################
 # Add Executables ############
@@ -69,12 +57,6 @@ add_executable(pid_controller ${PID_CONTROLLER_FILES})
 target_link_libraries(pid_controller ${catkin_LIBRARIES})
 add_dependencies(pid_controller ${PROJECT_NAME}_gencfg)
 
-
-# add_executable(depth_controller ${DEPTH_CONTROLLER_FILES})
-# target_link_libraries(depth_controller ${catkin_LIBRARIES})
-
-add_executable(yaw_controller ${YAW_CONTROLLER_FILES})
-target_link_libraries(yaw_controller ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########

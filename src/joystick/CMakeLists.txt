@@ -10,8 +10,8 @@ find_package(catkin
     REQUIRED COMPONENTS
     roscpp
 
-    image_transport
-    ram_cpp_utils
+    image_transport 
+
 )
 
 catkin_package(

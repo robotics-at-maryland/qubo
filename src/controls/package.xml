@@ -16,7 +16,6 @@
   <depend>cmake_modules</depend>
   <depend>roscpp</depend>
   <depend>Eigen</depend>
-  <depend>ram_cpp_utils</depend>
   <depend>ram_msgs</depend>
 
 </package>

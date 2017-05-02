@@ -5,7 +5,6 @@ find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   ram_msgs
-  uuv_gazebo_ros_plugins_msgs
   )
 
 
@@ -69,11 +68,6 @@ set(HARDWARE_NODE_SRC_FILES
   drivers/ahrs/src/AHRS.cpp
   )
 
-set(G_HARDWARE_NODE_SRC_FILES
-  src/gazebo_main.cpp
-  src/gazebo_hardware_node.cpp
-  )
-
 ##############################
 # Add Executables ############
 ##############################
@@ -94,9 +88,6 @@ add_dependencies(qubo_dvl_node ram_msgs_generate_messages_cpp)
 
 add_executable(qubo_hardware_node ${HARDWARE_NODE_SRC_FILES})
 target_link_libraries(qubo_hardware_node ${catkin_LIBRARIES})
-
-add_executable(qubo_gazebo_hardware_node ${G_HARDWARE_NODE_SRC_FILES})
-target_link_libraries(qubo_gazebo_hardware_node ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########
