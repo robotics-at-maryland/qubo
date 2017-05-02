@@ -243,7 +243,9 @@ static int read_announce(IO_State *state, Message *message) {
     int rc = -1;
 
     /* Read an entire message worth of data */
-    safe_io(state->io_host, state->read_raw, buffer + 1, ANNOUNCE_SIZE - 1);
+    if(safe_io(state->io_host, state->read_raw, buffer + 1, ANNOUNCE_SIZE - 1)){
+        goto fail;
+    }
     do {
         int i;
         for (i = 1; i < ANNOUNCE_SIZE; i++) {

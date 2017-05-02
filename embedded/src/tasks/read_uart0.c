@@ -59,7 +59,7 @@ static void read_uart0_task(void* params) {
     IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
 
     // Qubobus driver code to assemble/interpret messages here
-
+fail:
     while ( wait_connect(&state, buffer) ){
         blink_rgb(RED_LED, 1);
     }
