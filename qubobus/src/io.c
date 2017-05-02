@@ -33,7 +33,9 @@ int init_connect(IO_State *state, void *buffer) {
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
 
-    write_message(state, &our_announce);
+    if (write_message(state, &our_announce)) {
+        return -1;
+    }
     /*
      * SYNCHRONIZE WITH OTHER DEVICE
      */
@@ -42,12 +44,9 @@ int init_connect(IO_State *state, void *buffer) {
      * Read in the other client's announce message.
      * This serves to synchronize the message frame alignment of both clients.
      */
-    read_announce(state, &their_announce);
-    /*
-     * In order to generate asymmetry, we compare the announce sequence numbers
-     * If ours is lower, then we are the ones in control of the handshake.
-     */
-    master = (our_announce.header.sequence_number < their_announce.header.sequence_number);
+    if (read_announce(state, &their_announce)) {
+        return -1;
+    }
 
     /* Save the other client's sequence number */
     state->remote_sequence_number = their_announce.header.sequence_number;
@@ -57,42 +56,23 @@ int init_connect(IO_State *state, void *buffer) {
      */
 
     /* The master client initiates the handshake with a protocol message. */
-    if (master) {
-        struct Protocol_Info protocol_info = {QUBOBUS_PROTOCOL_VERSION};
-        create_message(&protocol, MT_PROTOCOL, 0, &protocol_info, sizeof(struct Protocol_Info));
-        write_message(state, &protocol);
+    struct Protocol_Info protocol_info = {QUBOBUS_PROTOCOL_VERSION};
+    create_message(&protocol, MT_PROTOCOL, 0, &protocol_info, sizeof(struct Protocol_Info));
 
+    if (write_message(state, &protocol)) {
+        return -1;
     }
 
     /* Attempt to read a protocol message from the opposite client. */
-    read_message(state, &response, buffer);
-    //printf("got protocol response\n");
-
-    /* Send a reply to confirm or deny the connection. */
-    if (!master) {
-        struct Protocol_Info *protocol_info = (struct Protocol_Info*) buffer;
-
-        /* Check the protocol sent against our own version. */
-        success = (response.header.message_type == MT_PROTOCOL && protocol_info->version == QUBOBUS_PROTOCOL_VERSION);
-
-        /* If it didn't match, change the response from echo to error. */
-        if (!success) {
-            response = create_error(&eProtocol, NULL);
-        }
-
-        /* The slave client must respond to the master's protocol message. */
-        write_message(state, &response);
-
-    } else {
-
-        /* Check that we got a protocol message back from the other client. */
-        success = (response.header.message_type == MT_PROTOCOL);
-
+    if (read_message(state, &response, buffer)) {
+        return -1;
     }
+
+    /* Check that we got a protocol message back from the other client. */
+    success = (response.header.message_type == MT_PROTOCOL);
 
     return !success;
 }
-
 
 int wait_connect(IO_State *state, void *buffer) {
     Message our_announce, their_announce, protocol, response;
@@ -106,27 +86,20 @@ int wait_connect(IO_State *state, void *buffer) {
      * Read in the other client's announce message.
      * This serves to synchronize the message frame alignment of both clients.
      */
-    while( read_announce(state, &their_announce) != 0 );
-
+    if (read_announce(state, &their_announce)) {
+        return -1;
+    }
 
     /*
      * ANNOUNCE THIS DEVICE
      */
 
-
     /* Send an announce message to the other client. */
     create_message(&our_announce, MT_ANNOUNCE, 0, NULL, 0);
 
-    if (success = write_message(state, &our_announce) != 0){
-        return success;
+    if (write_message(state, &our_announce)){
+        return -1;
     }
-
-
-    /*
-     * In order to generate asymmetry, we compare the announce sequence numbers
-     * If ours is lower, then we are the ones in control of the handshake.
-     */
-    master = (our_announce.header.sequence_number < their_announce.header.sequence_number);
 
     /* Save the other client's sequence number */
     state->remote_sequence_number = their_announce.header.sequence_number;
@@ -135,44 +108,28 @@ int wait_connect(IO_State *state, void *buffer) {
      * NEGOTIATE PROTOCOL
      */
 
-    /* The master client initiates the handshake with a protocol message. */
-    if (master) {
-        struct Protocol_Info protocol_info = {QUBOBUS_PROTOCOL_VERSION};
-        create_message(&protocol, MT_PROTOCOL, 0, &protocol_info, sizeof(struct Protocol_Info));
-        if (success = write_message(state, &protocol) != 0){
-            return success;
-        }
-
-    }
-
     /* Attempt to read a protocol message from the opposite client. */
-    if (success = read_message(state, &response, buffer) != 0){
-        return success;
+    if (read_message(state, &response, buffer)) {
+        return -1;
     }
 
     /* Send a reply to confirm or deny the connection. */
-    if (!master) {
-        struct Protocol_Info *protocol_info = (struct Protocol_Info*) buffer;
+    struct Protocol_Info *protocol_info = (struct Protocol_Info*) buffer;
 
-        /* Check the protocol sent against our own version. */
-        success = (response.header.message_type == MT_PROTOCOL && protocol_info->version == QUBOBUS_PROTOCOL_VERSION);
+    /* Check the protocol sent against our own version. */
+    success = (response.header.message_type == MT_PROTOCOL
+            && protocol_info->version == QUBOBUS_PROTOCOL_VERSION);
 
-        /* If it didn't match, change the response from echo to error. */
-        if (!success) {
-            response = create_error(&eProtocol, NULL);
-        }
-
-        /* The slave client must respond to the master's protocol message. */
-        if (success = write_message(state, &response) != 0){
-            return success;
-        }
-
-    } else {
-
-        /* Check that we got a protocol message back from the other client. */
-        success = (response.header.message_type == MT_PROTOCOL);
-
+    /* If it didn't match, change the response from echo to error. */
+    if (!success) {
+        response = create_error(&eProtocol, NULL);
     }
+
+    /* The slave client must respond to the master's protocol message. */
+    if (write_message(state, &response)) {
+        return -1;
+    }
+
 
     return !success;
 }

@@ -27,7 +27,7 @@ QSCU::QSCU(std::string deviceFile, speed_t baud)
     : _deviceFile(deviceFile),
       _termBaud(baud),
       _deviceFD(-1),
-      _timeout({10,0})
+      _timeout({1,0})
 {
 
 }
@@ -81,7 +81,7 @@ void QSCU::openDevice() {
     // Needs to be set for the qscu protocol library to make the connection.
     _deviceFD = fd;
 
-    _state = initialize(&_deviceFD, QSCU::serialRead, QSCU::serialWrite, 10);
+    _state = initialize(this, QSCU::serialRead, QSCU::serialWrite, 10);
 
     uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
@@ -109,23 +109,20 @@ void QSCU::closeDevice() {
 
 
 ssize_t QSCU::serialRead(void *io_host, void *buffer, size_t size) {
-    ssize_t ret = read(*((int*)io_host), buffer, size);
+    QSCU *qscu = (QSCU*) io_host;
+    ssize_t ret = qscu->readRaw(buffer, size);
     printf("read %zd bytes\n", ret);
     return ret;
 }
 
 ssize_t QSCU::serialWrite(void *io_host, void *buffer, size_t size) {
-    ssize_t ret = write(*((int*)io_host), buffer, size);
+    QSCU *qscu = (QSCU*) io_host;
+    ssize_t ret = qscu->writeRaw(buffer, size);
     printf("wrote %zd bytes\n", ret);
     return ret;
 }
 
-
-
-
-/*
-ssize_t QSCU::readRaw(void* io_host, void* blob, size_t bytes_to_read)
-{
+ssize_t QSCU::readRaw(void* blob, size_t bytes_to_read) {
     // Keep track of the number of bytes read, and the number of fds that are ready.
     int bytes_read = 0, current_read = 0, fds_ready = 0;
     // Sets of file descriptors for use with select(2).
@@ -149,19 +146,18 @@ ssize_t QSCU::readRaw(void* io_host, void* blob, size_t bytes_to_read)
                 current_read = read(_deviceFD, (((char*)blob) + bytes_read),
                         (bytes_to_read - bytes_read));
                 // If the read was successful, record the number of bytes read.
-                if (current_read > 0) {
+                if (current_read >= 0) {
                     bytes_read += current_read;
                 }
             }
             // Keep reading until we've run out of data, or we couldnt read more data.
-        } while ((bytes_read < bytes_to_read) && (fds_ready == 1) && (current_read > 0));
+        } while ((bytes_read < bytes_to_read) && (fds_ready == 1) && (current_read >= 0));
     }
     // Return the number of bytes we actually managed to read.
-    return bytes_to_read - bytes_read;
+    return bytes_read;
 }
 
-ssize_t QSCU::writeRaw(void* io_host, void* blob, size_t bytes_to_write)
-{
+ssize_t QSCU::writeRaw(void* blob, size_t bytes_to_write) {
     // Keep track of the number of bytes written, and the number of fds that are ready.
     int bytes_written = 0, current_write = 0, fds_ready = 0;
     // Sets of file descriptors for use with select(2).
@@ -185,18 +181,16 @@ ssize_t QSCU::writeRaw(void* io_host, void* blob, size_t bytes_to_write)
                 current_write = write(_deviceFD, (((char*)blob) + bytes_written),
                         (bytes_to_write - bytes_written));
                 // If the write was successful, record the number of bytes written.
-                if (current_write > 0) {
+                if (current_write >= 0) {
                     bytes_written += current_write;
                 }
             }
             // Keep writing until we've run out of data, or we couldnt write more data.
-        } while ((bytes_written < bytes_to_write) && (fds_ready == 1) && (current_write > 0));
+        } while ((bytes_written < bytes_to_write) && (fds_ready == 1) && (current_write >= 0));
     }
     // Return the number of bytes we actually managed to write.
-    return bytes_to_write - bytes_written;
+    return bytes_written;
 }
-*/
-
 
 void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) {
     char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
@@ -236,8 +230,5 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
             //throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
         }
     }
-
-
-
 
 }

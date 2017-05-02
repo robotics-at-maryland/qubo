@@ -153,6 +153,7 @@ int main() {
   // Initialize the UART Queue for UART0.
   INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, pdMS_TO_TICKS(1000));
 
+
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));
   i2c0_write_buffer = pvPortMalloc(sizeof(uint8_t*));

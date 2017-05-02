@@ -58,7 +58,6 @@ static void read_uart0_task(void* params) {
     //test_write_uart_queue(&uart0_queue, "hello\n", 6);
     IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
 
-
     // Qubobus driver code to assemble/interpret messages here
 
     while ( wait_connect(&state, buffer) ){
@@ -70,10 +69,12 @@ static void read_uart0_task(void* params) {
 
     Message message;
     if (read_message(&state, &message, buffer)) {
+        blink_rgb(RED_LED, 1);
         goto fail;
     }
     message = create_response(&tDepthStatus, &d_s);
     if (write_message(&state, &message)) {
+        blink_rgb(RED_LED, 1);
         goto fail;
     }
 
@@ -84,8 +85,6 @@ static void read_uart0_task(void* params) {
     // write_message(state, &o_ann);
 
     error = 0;
-
-fail:
 
     for (;;) {
         if (error) {
