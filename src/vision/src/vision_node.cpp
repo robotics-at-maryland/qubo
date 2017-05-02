@@ -1,10 +1,12 @@
 //sg: this is going to be the primary vision node for qubo (or future robots, whatever)
 #include "vision_node.h"
+using namespace std;
+
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
 VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed)
     //initialize your server here, it's sort of a mess
-    :example_server(*n, "vision_example", boost::bind(&VisionNode::test_execute, _1 , &example_server), false)
+    :example_server(*n, "vision_example", boost::bind(&VisionNode::find_buoy, _1 , &example_server), false)
 {
     //take in the node handle
     this->n = n;
@@ -26,10 +28,7 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed)
 
     //start your action servers here
     //=====================================================================
-    
-    example_server.start();
-    
-    
+    // locate_buoy_act = example_server.start();
 }
 
 
@@ -49,8 +48,11 @@ void VisionNode::update(){
     ros::spinOnce();
 }
 
-//Past this point is a collection of services and actions that will be able to called from any other node
-//=================================================================================================================
+/*
+* Past this point is a collection of services and 
+* actions that will be able to called from any other node
+* =================================================================================================================
+*/
 bool VisionNode::service_test(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
     ROS_ERROR("service called successfully");
 }
@@ -85,3 +87,11 @@ void VisionNode::test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, S
     ROS_ERROR("You called the action well done!");
     as->setSucceeded();
 }
+
+//if a buoy is found on frame finds where it is and returns the center offset 
+void VisionNode::find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as){
+    float* center = processVideo(this->cap);
+    cout << center << endl;
+    as->setSucceeded();   
+}
+

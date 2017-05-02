@@ -53,6 +53,7 @@ include_directories(
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
+  src/find_buoy_action.cpp
   )
 
 set(GPU_VISION_SRC_FILES
@@ -73,6 +74,10 @@ set(BLOB_TUNER_FILES
 
 
 #Prototype algorithms
+set(GATE_FILES
+ src/prototypes/gate_detector.cpp
+ )
+
 
 set(SEGMENT_FILES
  src/prototypes/segmentation.cpp
@@ -116,6 +121,9 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 
 ##below are all basically prototypes
+add_executable(gate_detector ${GATE_FILES})
+target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+
 
 add_executable(canny_tuner ${CANNY_TUNER_FILES})
 target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
