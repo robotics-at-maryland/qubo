@@ -21,7 +21,7 @@ extern struct UART_Queue uart0_queue;
 static char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
 bool read_uart0_init(void) {
-    if ( xTaskCreate(read_uart0_task, (const portCHAR *)"Read UART0", 128, NULL,
+    if ( xTaskCreate(read_uart0_task, (const portCHAR *)"Read UART0", 1024, NULL,
                      tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
         return true;
     }
@@ -54,21 +54,20 @@ ssize_t test_write_uart_queue(void *uart_queue, void* buffer, size_t size) {
 static void read_uart0_task(void* params) {
     blink_rgb(RED_LED, 1);
     int error = 1;
-
+    //test_write_uart_queue(&uart0_queue, "hello\n", 6);
     //test_write_uart_queue(&uart0_queue, "hello\n", 6);
     IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
 
+
     // Qubobus driver code to assemble/interpret messages here
 
-    if (wait_connect(&state, buffer)) {
-        goto fail;
+    while ( wait_connect(&state, buffer) ){
+        blink_rgb(RED_LED, 1);
     }
-
-    vTaskDelay(pdMS_TO_TICKS(2000));
 
     struct Depth_Status d_s = { .depth_m = 2.71, .warning_level = 1};
 
-    /*
+
     Message message;
     if (read_message(&state, &message, buffer)) {
         goto fail;
@@ -77,7 +76,7 @@ static void read_uart0_task(void* params) {
     if (write_message(&state, &message)) {
         goto fail;
     }
-    */
+
 
     // Message t_ann, o_ann;
     // read_message(state, &t_ann);

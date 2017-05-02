@@ -146,7 +146,9 @@ int wait_connect(IO_State *state, void *buffer) {
     }
 
     /* Attempt to read a protocol message from the opposite client. */
-    while( read_message(state, &response, buffer) != 0 );
+    if (success = read_message(state, &response, buffer) != 0){
+        return success;
+    }
 
     /* Send a reply to confirm or deny the connection. */
     if (!master) {
@@ -161,7 +163,9 @@ int wait_connect(IO_State *state, void *buffer) {
         }
 
         /* The slave client must respond to the master's protocol message. */
-        write_message(state, &response);
+        if (success = write_message(state, &response) != 0){
+            return success;
+        }
 
     } else {
 
