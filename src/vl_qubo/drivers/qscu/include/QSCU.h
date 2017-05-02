@@ -92,9 +92,9 @@ class QSCU
         IO_State _state;
 
         /** Read bytes to a blob, return the bytes not read. */
-        // ssize_t readRaw(void*, void* blob, size_t bytes_to_read);
+        ssize_t readRaw(void* blob, size_t bytes_to_read);
         /** Write bytes from a blob, return the bytes not written. */
-        //ssize_t writeRaw(void*, void* blob, size_t bytes_to_write);
+        ssize_t writeRaw(void* blob, size_t bytes_to_write);
 
 
 

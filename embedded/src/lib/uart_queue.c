@@ -82,7 +82,7 @@ void fill_tx_buffer(struct UART_Queue *queue) {
     ROM_IntDisable(queue->hardware_interrupt_address);
 
     // Loop while there is data that can be put into the transmit buffer.
-    while (ROM_UARTSpaceAvail(queue->hardware_base_address) && (xQueueReceiveFromISR(queue->write_queue, &data, higher_priority_task_woken) == pdPASS)) {
+    while (ROM_UARTSpaceAvail(queue->hardware_base_address) && (xQueueReceiveFromISR(queue->write_queue, &data, &higher_priority_task_woken) == pdPASS)) {
         // Move a single char from the write queue to the hardware transmit buffer.
 
         ROM_UARTCharPutNonBlocking(queue->hardware_base_address, data);
