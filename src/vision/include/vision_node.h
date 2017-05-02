@@ -25,7 +25,7 @@ class VisionNode{
     public:
 
     //cap is a video capture object, img is a Mat object that gets updated every time step
-    static cv::VideoCapture cap;
+    cv::VideoCapture cap;
     //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
     VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed);
     ~VisionNode();
@@ -47,7 +47,7 @@ class VisionNode{
 
     static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
 
-    static void find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
+    void find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
 
     
     protected:

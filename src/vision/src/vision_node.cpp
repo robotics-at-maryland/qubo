@@ -6,7 +6,7 @@ using namespace std;
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
 VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed)
     //initialize your server here, it's sort of a mess
-    :example_server(*n, "vision_example", boost::bind(&VisionNode::find_buoy, _1 , &example_server), false)
+    :example_server(*n, "vision_example", boost::bind(&VisionNode::find_buoy, this,  _1 , &example_server), false)
 {
     //take in the node handle
     this->n = n;
@@ -23,12 +23,12 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed)
     //register all services here
     //=====================================================================
     test_srv = this->n->advertiseService("service_test", &VisionNode::service_test, this);
-    buoy_detect_srv = this->n->advertiseService("buoy_detect", &VisionNode::buoy_detector, this);
+    //buoy_detect_srv = this->n->advertiseService("buoy_detect", &VisionNode::buoy_detector, this);
 
 
     //start your action servers here
     //=====================================================================
-    // locate_buoy_act = example_server.start();
+	//	locate_buoy_act = example_server.start();
 }
 
 
