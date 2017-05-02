@@ -52,7 +52,7 @@
         </dynamics>
         <conversion>
           <type>Basic</type>
-          <rotorConstant>-1</rotorConstant>
+          <rotorConstant>-.05</rotorConstant>
         </conversion>
       </plugin>
     </gazebo>
