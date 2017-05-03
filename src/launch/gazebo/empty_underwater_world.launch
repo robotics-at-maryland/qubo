@@ -2,7 +2,7 @@
 <launch>
     <!-- Resume the logic in empty_world.launch, changing only the name of the world to be launched -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find vl_qubo_gazebo)/world/my_mesh.world"/>
+        <arg name="world_name" value="worlds/empty_underwater.world"/>
         <arg name="paused" value="false"/>
         <arg name="use_sim_time" value="true"/>
         <arg name="gui" value="true"/>

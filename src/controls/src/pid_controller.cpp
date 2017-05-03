@@ -27,7 +27,7 @@ PIDController::PIDController(NodeHandle n, string control_topic) {
     
 }
 
-PIDController::~PIDController() {}
+PIDController::~PIDController(){}
 
 void PIDController::update() {
 	//update our commanded and measured depth.
@@ -38,9 +38,9 @@ void PIDController::update() {
 	m_prev_time = ros::Time::now();
     
 	//calculate error, update integrals and derivatives of the error
-	m_error            = m_desired - m_current; //proportional term
+	m_error            = m_desired  - m_current; //proportional term
 	m_error_integral  += m_error * dt.toSec(); //integral term
-	m_error_derivative = (m_error -m_prev_error)/dt.toSec();
+	m_error_derivative = (m_error - m_prev_error)/dt.toSec();
 
 	//store the previous error
 	m_prev_error = m_error;
