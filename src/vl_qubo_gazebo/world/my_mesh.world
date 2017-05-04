@@ -97,14 +97,18 @@
 
     <!-- sgillen@20171302-14:13 this is our mesh(es) -->
     
+
     <model name="my_mesh">
       <pose>0 0 0  0 0 0</pose>
       <static>true</static>
       <link name="body">
         <visual name="visual">
-          <pose>0 0 0 1.5708 0 0</pose>
+          <pose>1 1 -1 -1.57 0 0</pose>
           <geometry>
-            <mesh><uri>model://untitled.dae</uri></mesh>
+            <mesh>
+              <uri>model://buoy.dae</uri>
+              <scale>0.05 0.05 0.05</scale>
+            </mesh>
           </geometry>
         </visual>
       </link>
