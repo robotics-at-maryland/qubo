@@ -11,8 +11,8 @@
   <xacro:property name="prop_mesh_file" value="file://$(find uuv_descriptions)/models/rexrov/mesh/prop.dae"/>
 
   <!-- Qubo's mass, volume, and center of buoyancy -->
-  <xacro:property name="mass" value="18.6287"/>
-  <xacro:property name="volume" value="0.037"/>
+  <xacro:property name="mass" value="15.87"/>
+  <xacro:property name="volume" value=".018"/>
   <xacro:property name="center_of_buoyancy" value="0.0 0.0 0.16"/>
 
   <!-- Thruster joint and link macro -->
@@ -98,7 +98,7 @@
       <flow_velocity_topic>hydrodynamics/current_velocity</flow_velocity_topic>
       <debug>${debug}</debug>
       <link name="${namespace}/base_link">
-        <neutrally_buoyant>0</neutrally_buoyant>
+        <neutrally_buoyant>1</neutrally_buoyant>
         <volume>${volume}</volume>
         <box>
           <width>.4064</width>
@@ -161,10 +161,10 @@
     <origin xyz="-0.257 0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
   </xacro:thruster_macro>
   <xacro:thruster_macro namespace="${namespace}" thruster_id="6">
-    <origin xyz="0.149 0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
+    <origin xyz="0.257 0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
   </xacro:thruster_macro>
   <xacro:thruster_macro namespace="${namespace}" thruster_id="7">
-    <origin xyz="0.149 -0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
+    <origin xyz="0.257 -0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
   </xacro:thruster_macro>
 
   <!-- Mount a 3D pose sensor -->

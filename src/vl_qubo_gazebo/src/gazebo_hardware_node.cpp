@@ -102,10 +102,10 @@ void GazeboHardwareNode::update(){
 	//yaw thruster/surge thrusters
 
 	//add yaw,pitch,roll commands to our thrusters
-	m_thruster_commands[0].data += m_yaw_command;
-	m_thruster_commands[1].data -= m_yaw_command;
-	m_thruster_commands[2].data -= m_yaw_command;
-	m_thruster_commands[3].data += m_yaw_command;
+	m_thruster_commands[0].data -= m_yaw_command;
+	m_thruster_commands[1].data += m_yaw_command;
+	m_thruster_commands[2].data += m_yaw_command;
+	m_thruster_commands[3].data -= m_yaw_command;
 	
 	//pitch/roll thrusters
 	m_thruster_commands[4].data += ( m_pitch_command + m_roll_command);
