@@ -31,6 +31,7 @@ class PIDController {
 
 	double m_desired = 5;
 
+    std::string m_control_topic;
     
     //P,I, and D terms, as it where. 
     double m_error;

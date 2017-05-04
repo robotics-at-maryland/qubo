@@ -4,7 +4,8 @@ using namespace std;
 using namespace ros;
 
 
-PIDController::PIDController(NodeHandle n, string control_topic) {
+PIDController::PIDController(NodeHandle n, string control_topic):
+	m_control_topic(control_topic){
 
 	//TODO how accurate is ros::Time going to be for control purposes?
 	m_prev_time = ros::Time::now();
@@ -18,7 +19,7 @@ PIDController::PIDController(NodeHandle n, string control_topic) {
 	string command_topic = qubo_namespace + control_topic + "_cmd";
 	m_command_pub = n.advertise<std_msgs::Float64>(command_topic, 1000);
 
-	m_command_msg.data = 5;
+	//m_command_msg.data = 5;
 
 	
 	f = boost::bind(&PIDController::configCallback, this, _1, _2);
@@ -45,6 +46,7 @@ void PIDController::update() {
 	//store the previous error
 	m_prev_error = m_error;
 
+	ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error, m_error_derivative, m_error_integral, dt.toSec());  
 	//sum everything weighted by the given gains. 
 	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative); 
 	m_command_pub.publish(m_command_msg);
