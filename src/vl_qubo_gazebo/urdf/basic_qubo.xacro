@@ -200,9 +200,9 @@
   </gazebo>
 
   <!-- DVL --> 
-  <xacro:default_dvl namespace="${namespace}" parent_link="${namespace}/base_link">
-    <origin xyz="-1.4 0 -0.312" rpy="0 ${0.5*pi} 0"/>
-  </xacro:default_dvl>
+  <!-- <xacro:default_dvl namespace="${namespace}" parent_link="${namespace}/base_link"> -->
+  <!--   <origin xyz="-1.4 0 -0.312" rpy="0 ${0.5*pi} 0"/> -->
+  <!-- </xacro:default_dvl> -->
   
   <!-- Pressure  -->
   <xacro:default_pressure namespace="${namespace}" parent_link="${namespace}/base_link">
@@ -216,7 +216,7 @@
     
   <!-- Camera -->
   <xacro:default_camera namespace="${namespace}" parent_link="${namespace}/base_link">
-    <origin xyz="1.15 0 0.4" rpy="0 0.6 0"/>
+    <origin xyz=".35 0 0.15" rpy="0 0 0"/>
   </xacro:default_camera>
   
   <!-- Joint state publisher --> 
