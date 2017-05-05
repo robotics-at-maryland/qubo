@@ -29,5 +29,5 @@ fi
 ln -s $PWD/driverlib/gcc $driverlib_link
 #ln -s $PWD/grlib/gcc $grlib_link
 #ln -s $PWD/sensorlib/gcc $sensorlib_link
-#ln -s $PWD/usblib/gcc $usblib_link
+ln -s $PWD/usblib/gcc $usblib_link
 ln -s $PWD/utils/gcc $utils_link

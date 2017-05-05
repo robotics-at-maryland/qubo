@@ -88,12 +88,19 @@ void fill_tx_buffer(struct UART_Queue *queue) {
         ROM_UARTCharPutNonBlocking(queue->hardware_base_address, data);
     }
 
-    if (xQueueIsQueueEmptyFromISR(queue->write_queue) == pdFALSE) {
+    if (xQueueIsQueueEmptyFromISR(queue->write_queue) != pdFALSE) {
 
         ROM_UARTIntDisable(queue->hardware_base_address, UART_INT_TX);
+        #ifdef DEBUG
+        //UARTprintf("bedug\n");
+        #endif
+
     } else {
 
         ROM_UARTIntEnable(queue->hardware_base_address, UART_INT_TX);
+        #ifdef DEBUG
+        //UARTprintf("debug\n");
+        #endif
     }
 
     //portYIELD_FROM_ISR(higher_priority_task_woken);

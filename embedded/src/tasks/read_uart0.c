@@ -56,12 +56,15 @@ static void read_uart0_task(void* params) {
     int error = 1;
     //test_write_uart_queue(&uart0_queue, "hello\n", 6);
     //test_write_uart_queue(&uart0_queue, "hello\n", 6);
-    IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
-
+    //IO_State state = initialize(&uart0_queue, test_read_uart_queue, test_write_uart_queue, 1);
+    IO_State state = initialize(&uart0_queue, read_uart_queue, write_uart_queue, 1);
+    #ifdef DEBUG
+    test_write_uart_queue(&uart0_queue, "hello world sixteen\n", 20);
+    #endif
     // Qubobus driver code to assemble/interpret messages here
 fail:
     while ( wait_connect(&state, buffer) ){
-        blink_rgb(RED_LED, 1);
+        //blink_rgb(RED_LED, 1);
     }
 
     struct Depth_Status d_s = { .depth_m = 2.71, .warning_level = 1};

@@ -11,6 +11,7 @@
 #include "tasks/include/example_blink.h"
 #include "tasks/include/example_uart.h"
 #include "tasks/include/i2c_test.h"
+#include "lib/include/usb_serial.h"
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -131,6 +132,7 @@ int main() {
   configureUART();
   configureGPIO();
   configureI2C();
+  USB_serial_configure();
 
   // Master enable interrupts
   ROM_IntMasterEnable();
@@ -207,6 +209,9 @@ int main() {
     while(1){}
   }
 
+  if( USB_serial_init() ){
+      while(1){}
+  }
 
   /*
   if ( bme280_task_init()){
