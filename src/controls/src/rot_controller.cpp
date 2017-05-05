@@ -36,7 +36,7 @@ void RotController::update(){
 	//store the previous error
 	m_prev_error = m_error;
 
-	ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error, m_error_derivative, m_error_integral, dt.toSec());  
+	ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error, m_error_integral, m_error_derivative,  dt.toSec());  
 	//sum everything weighted by the given gains. 
 	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative); 
 	m_command_pub.publish(m_command_msg);
