@@ -7,13 +7,24 @@ using namespace ros;
 PIDController::PIDController(NodeHandle n, string control_topic):
 	m_control_topic(control_topic){
 
-	//TODO how accurate is ros::Time going to be for control purposes?
+	// Get params if specified in launch file or as params on command-line, set defaults
+	n.param<double>("kp", m_kp, 1.0);
+	n.param<double>("ki", m_ki, 0.0);
+	n.param<double>("kd", m_kd, 0.0);
+	n.param<double>("upper_limit", m_upper_limit, 1000.0);
+	n.param<double>("lower_limit", m_lower_limit, -1000.0);
+	n.param<double>("windup_limit", m_windup_limit, 1000.0);
+	//n.param<double>("cutoff_frequency", m_cutoff_frequency, -1.0);
+	n.param<bool>("angular_variable" , m_unwind_angle, false);
+	//TODO reconfigure bounds for the angle
+
+	
 	m_prev_time = ros::Time::now();
 	
-    // Set up publishers and subscribers
+	//TODO have this be configurable?
 	string qubo_namespace = "/qubo/";
 	
-	
+	// Set up publishers and subscribers
 	string sensor_topic = qubo_namespace + control_topic;
 	m_sensor_sub = n.subscribe(sensor_topic, 1000, &PIDController::sensorCallback, this);
 	
@@ -39,16 +50,49 @@ void PIDController::update() {
 	m_prev_time = ros::Time::now();
     
 	//calculate error, update integrals and derivatives of the error
-	m_error            = m_desired  - m_current; //proportional term
+	m_error = m_desired  - m_current; //proportional term
+
+			
+	//if we are told to unwind our angle then we better do that. 
+	if(m_unwind_angle){
+		//makes sure we always take the smallest way around the circle
+		if(m_error > PI){
+			m_error = 2*PI - m_error;
+		}else if(m_error < -PI){
+			m_error = 2*PI + m_error;
+		}
+	}
+
+	
 	m_error_integral  += m_error * dt.toSec(); //integral term
+
+	//if the integral value is past our windup limit just set it there. 
+	if(m_error_integral > m_windup_limit){
+		m_error_integral = m_windup_limit;
+	}
+	else if(m_error_integral < -m_windup_limit){
+		m_error_integral = -m_windup_limit;
+	}
+	
 	m_error_derivative = (m_error - m_prev_error)/dt.toSec();
 
+	
 	//store the previous error
 	m_prev_error = m_error;
 
 	ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error,  m_error_integral, m_error_derivative, dt.toSec());  
 	//sum everything weighted by the given gains. 
-	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative); 
+	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative);
+
+	//make sure our error term is within limits
+	if(m_command_msg.data > m_upper_limit){
+		m_command_msg.data = m_upper_limit;
+	}
+	else if(m_command_msg.data < m_lower_limit){
+		m_command_msg.data = m_lower_limit;
+	}
+
+	
 	m_command_pub.publish(m_command_msg);
 	
 }

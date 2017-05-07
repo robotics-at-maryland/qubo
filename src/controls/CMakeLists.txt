@@ -48,12 +48,6 @@ set(PID_CONTROLLER_FILES
   src/pid_main.cpp
   )
 
-set(ROT_CONTROLLER_FILES
-  src/pid_controller.cpp
-  src/rot_controller.cpp
-  src/rot_main.cpp
-  )
-
 ##############################
 # Add Executables ############
 ##############################
@@ -61,10 +55,6 @@ set(ROT_CONTROLLER_FILES
 add_executable(pid_controller ${PID_CONTROLLER_FILES})
 target_link_libraries(pid_controller ${catkin_LIBRARIES})
 add_dependencies(pid_controller ${PROJECT_NAME}_gencfg)
-
-add_executable(rot_controller ${ROT_CONTROLLER_FILES})
-target_link_libraries(rot_controller ${catkin_LIBRARIES})
-add_dependencies(rot_controller ${PROJECT_NAME}_gencfg)
 
 
 ##############################

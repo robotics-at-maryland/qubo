@@ -35,16 +35,15 @@ int main(int argc, char* argv[]){
 	NodeHandle nh;
 	
 	PIDController node(nh, control_topic);
-	
-	Rate r(stoi(freq)); //rate object to sleep the right amount of time between calls to update
+
+	Rate rate(stoi(freq)); //rate object to sleep the right amount of time between calls to update
 	
 	
 	
 	
 	while(1){
 		node.update();
-		r.sleep(); //this will sleep at a rate 1/argv[2]
-	
+		rate.sleep(); //this will sleep at a rate 1/argv[2]
 	}
 	
 	return 0;

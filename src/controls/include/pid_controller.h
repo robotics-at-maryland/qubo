@@ -8,6 +8,8 @@
 #include <dynamic_reconfigure/server.h>
 #include <controls/TestConfig.h>
 
+#define PI 3.14159
+
 
 class PIDController {
     public:
@@ -25,7 +27,7 @@ class PIDController {
     double m_current;
 
 	ros::Publisher m_command_pub;
-    //will want this eventually
+
     //void commandCallback(const std_msgs::Float64::ConstPtr& msg);
     std_msgs::Float64  m_command_msg;
 
@@ -33,7 +35,7 @@ class PIDController {
 
     std::string m_control_topic;
     
-    //P,I, and D terms, as it where. 
+    //P,I, and D terms. 
     double m_error;
     double m_error_integral;
     double m_error_derivative; 
@@ -45,6 +47,15 @@ class PIDController {
     double m_ki = 0;
     double m_kd = 0;
 
+    double m_upper_limit;
+    double m_lower_limit;
+    double m_windup_limit; 
+
+    double m_cutoff_frequency;
+    double m_update_frequency;
+
+	bool m_unwind_angle; // tells us if our variable is an angle that we need to unwind. 
+	//dynamic reconfigure stuff
 	dynamic_reconfigure::Server<controls::TestConfig> server;
 	dynamic_reconfigure::Server<controls::TestConfig>::CallbackType f;
 

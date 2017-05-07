@@ -22,7 +22,7 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
 	string qubo_namespace = "/qubo/";
 	
-	//topic names, channge them here if you need to
+	//topic names, change them here if you need to
     
 	//set up all publishers and subscribers
 	string input_pose = gazebo_namespace + "pose_gt";
