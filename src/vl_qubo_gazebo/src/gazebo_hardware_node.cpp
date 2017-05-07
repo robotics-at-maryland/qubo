@@ -22,8 +22,6 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
 	string qubo_namespace = "/qubo/";
 	
-
-
 	//topic names, channge them here if you need to
     
 	//set up all publishers and subscribers
@@ -41,14 +39,16 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	string roll_topic = cont_namespace + "roll";
     string pitch_topic = cont_namespace + "pitch";
 	string yaw_topic = cont_namespace + "yaw";
-	string depth_topic = cont_namespace + "depth";
-	string surge_topic = cont_namespace + "surge";
+	string depth_topic = cont_namespace + "depth"; //sometimes called heave 
+	string surge_topic = cont_namespace + "surge"; //"forward" translational motion 
+	string sway_topic = cont_namespace + "sway";   //"sideways" translational motion
 
-	m_roll_sub = n.subscribe(roll_topic + "_cmd", 1000, &GazeboHardwareNode::rollCallback, this);
+	m_roll_sub  = n.subscribe(roll_topic  + "_cmd", 1000, &GazeboHardwareNode::rollCallback, this);
 	m_pitch_sub = n.subscribe(pitch_topic + "_cmd", 1000, &GazeboHardwareNode::pitchCallback, this);
-	m_yaw_sub = n.subscribe(yaw_topic + "_cmd", 1000, &GazeboHardwareNode::yawCallback, this);
+	m_yaw_sub   = n.subscribe(yaw_topic   + "_cmd", 1000, &GazeboHardwareNode::yawCallback, this);
 	m_depth_sub = n.subscribe(depth_topic + "_cmd", 1000, &GazeboHardwareNode::depthCallback, this);
 	m_surge_sub = n.subscribe(surge_topic + "_cmd", 1000, &GazeboHardwareNode::surgeCallback, this);
+	m_sway_sub  = n.subscribe(sway_topic  + "_cmd", 1000, &GazeboHardwareNode::swayCallback, this);
 	
 	m_roll_pub = n.advertise<std_msgs::Float64>(roll_topic, 1000);
 	m_pitch_pub = n.advertise<std_msgs::Float64>(pitch_topic, 1000);
@@ -72,8 +72,6 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
     }
 
 		
-    
-				  
 }
 
 GazeboHardwareNode::~GazeboHardwareNode(){}
@@ -96,11 +94,9 @@ void GazeboHardwareNode::update(){
 		m_thruster_commands[i].data = 0;
 		
 	}
-
 	
 	//thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
-	//yaw thruster/surge thrusters
-
+		
 	//add yaw,pitch,roll commands to our thrusters
 	m_thruster_commands[0].data -= m_yaw_command;
 	m_thruster_commands[1].data += m_yaw_command;
@@ -113,18 +109,24 @@ void GazeboHardwareNode::update(){
 	m_thruster_commands[6].data += (-m_pitch_command - m_roll_command);
 	m_thruster_commands[7].data += (-m_pitch_command + m_roll_command);
 
-	
 	//add in depth commands (may have to think about restructurng this?
 	m_thruster_commands[4].data += m_depth_command;
 	m_thruster_commands[5].data += m_depth_command;
 	m_thruster_commands[6].data += m_depth_command;
 	m_thruster_commands[7].data += m_depth_command;
-	
 
+	//surge commands
 	m_thruster_commands[0].data += m_surge_command;
 	m_thruster_commands[1].data += m_surge_command;
 	m_thruster_commands[2].data += m_surge_command;
 	m_thruster_commands[3].data += m_surge_command;
+	
+	//sway commands
+	m_thruster_commands[0].data -= m_sway_command;
+	m_thruster_commands[1].data += m_sway_command;
+	m_thruster_commands[2].data -= m_sway_command;
+	m_thruster_commands[3].data += m_sway_command;
+	
 	
 	for(int i = 0; i < NUM_THRUSTERS; i++){
 		m_thruster_pubs[i].publish(m_thruster_commands[i]);
@@ -160,6 +162,10 @@ void GazeboHardwareNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
 
 void GazeboHardwareNode::surgeCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_surge_command = msg->data; 
+}
+
+void GazeboHardwareNode::swayCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_sway_command = msg->data; 
 }
 
 

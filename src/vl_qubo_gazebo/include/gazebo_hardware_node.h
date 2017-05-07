@@ -28,7 +28,6 @@ class GazeboHardwareNode{
     ~GazeboHardwareNode();
 
     void update();
-
 	
     protected:	
     std::string m_node_name; //I'm not totally convinced we need this..
@@ -52,7 +51,12 @@ class GazeboHardwareNode{
     ros::Subscriber m_surge_sub;
     void surgeCallback(const std_msgs::Float64::ConstPtr& msg);
 
-	//Euler angle subs
+    ros::Subscriber m_sway_sub;
+    void swayCallback(const std_msgs::Float64::ConstPtr& msg);
+
+
+    
+	//Euler angle pubs
 	ros::Publisher m_roll_pub;
 	std_msgs::Float64 m_roll_msg;
 	
@@ -68,7 +72,7 @@ class GazeboHardwareNode{
     double m_roll_command = 0;
     double m_depth_command = 0;
     double m_surge_command = 0;
-
+    double m_sway_command = 0;
 
     //depth/pressure subs
 	ros::Subscriber m_pressure_sub;
@@ -87,9 +91,6 @@ class GazeboHardwareNode{
        
     ros::Subscriber m_orient_sub;
 	void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
-	
-		
-	
 	
 };
 

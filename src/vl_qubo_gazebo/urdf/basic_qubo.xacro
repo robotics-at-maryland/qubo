@@ -106,7 +106,8 @@
           <height>.3048</height>
         </box>
         <center_of_buoyancy>${center_of_buoyancy}</center_of_buoyancy>
-  <!-- Added mass: see p.28 in Berg2012 -->
+        <!-- Added mass: see p.28 in Berg2012 -->
+        <!-- sgillen@20170205-13:02 - literally just scaled all these by a factor of 100 -->
         <hydrodynamic_model>
           <type>fossen</type>
           <added_mass>
@@ -118,7 +119,7 @@
               -.078033 0.62726 0.10775 0.21019 -.011162 2.2432
           </added_mass>
            <!-- Linear damping: see p.31 in Berg2012 -->
-          <linear_damping>-0.7482 -0.6948 -7.284 -2.688 -3.0977 -105</linear_damping>
+          <linear_damping>-0.7482 -0.6948 -7.284 -2.688 -3.0977 -1.05</linear_damping>
           <!-- Non-linear damping: see p.30 in Berg2012 -->
           <quadratic_damping>-7.4822 -9.9253 -18.2101 -6.72 -7.7444 -5.2327</quadratic_damping>
         </hydrodynamic_model>
