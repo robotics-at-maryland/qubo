@@ -25,8 +25,6 @@ find_package(catkin
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 find_package(OpenCV REQUIRED)
 
-#find_package(VISP REQUIRED)
-
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
@@ -53,6 +51,7 @@ include_directories(
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
+  src/find_buoy_action.cpp
   )
 
 set(GPU_VISION_SRC_FILES
@@ -67,12 +66,16 @@ set(CANNY_TUNER_FILES
   )
 
 
-set(MOG_TUNER_FILES
-  src/tuners/mog_tuner.cpp
+set(BLOB_TUNER_FILES
+  src/tuners/blob_tuner.cpp
   )
 
 
 #Prototype algorithms
+set(GATE_FILES
+ src/prototypes/gate_detector.cpp
+ )
+
 
 set(SEGMENT_FILES
  src/prototypes/segmentation.cpp
@@ -82,8 +85,8 @@ set(EDGE_FILES
  src/prototypes/edge_detection.cpp
  )
 
-set(MOG_FILES
- src/prototypes/mog.cpp
+set(BLOB_FILES
+ src/prototypes/blob.cpp
  )
 
 set(EM_FILES
@@ -97,6 +100,13 @@ set(GFIT_FILES
 set(MBT_FILES
   src/prototypes/mbt.cpp
   )
+
+#Cascades
+
+set(CASCADE_TEST
+ src/cascades/CascadeTest.cpp
+)
+
 ##############################
 # Add Executables ############
 ##############################
@@ -116,12 +126,15 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 
 ##below are all basically prototypes
+add_executable(gate_detector ${GATE_FILES})
+target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+
 
 add_executable(canny_tuner ${CANNY_TUNER_FILES})
 target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
-add_executable(mog_tuner ${MOG_TUNER_FILES})
-target_link_libraries(mog_tuner ${OpenCV_LIBRARIES})
+add_executable(blob_tuner ${BLOB_TUNER_FILES})
+target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
 add_executable(segment_test ${SEGMENT_FILES})
 target_link_libraries(segment_test ${OpenCV_LIBRARIES})
@@ -129,8 +142,8 @@ target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 add_executable(canny_test ${EDGE_FILES})
 target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-add_executable(mog_test ${MOG_FILES})
-target_link_libraries(mog_test ${OpenCV_LIBRARIES})
+add_executable(blob_test ${BLOB_FILES})
+target_link_libraries(blob_test ${OpenCV_LIBRARIES})
 
 add_executable(em_test ${EM_FILES})
 target_link_libraries(em_test ${OpenCV_LIBRARIES})
@@ -140,6 +153,9 @@ target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
 # add_executable(mbt_test ${MBT_FILES})
 # target_link_libraries(mbt_test ${VISP_LIBRARIES})
+
+add_executable(cascade_test ${CASCADE_TEST})
+target_link_libraries(cascade_test ${OpenCV_LIBS})
 
 
 

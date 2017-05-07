@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# dlink0(David Linko)
+# David Linko
 #state server using the clients and action from vision 
 #currently have a wait state that goes to a service state or an acton state   
 

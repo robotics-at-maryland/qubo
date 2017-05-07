@@ -2,7 +2,6 @@
 
 typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
 
-
 int main(int argc, char** argv){
     if(argc != 4){
         ROS_ERROR("wrong number of arguments passed to vision node! you passed in %i, we wanted 4. node will exit now", argc);
@@ -15,7 +14,6 @@ int main(int argc, char** argv){
     //make a pointer to a node handle, I'm actually not even sure we need the node handle...
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     VisionNode node(n,argv[1]);
-
     
     ros::Rate r(.1); // 10 hz
     while(ros::ok()){
