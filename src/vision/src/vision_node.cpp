@@ -28,7 +28,8 @@ VisionNode::VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed)
 
     //start your action servers here
     //=====================================================================
-	//	locate_buoy_act = example_server.start();
+	example_server.start();
+	ROS_ERROR("server started");
 }
 
 
@@ -44,6 +45,7 @@ void VisionNode::update(){
         exit(0);
     }
 
+	//	ROS_ERROR("I am here");
     //check if anyone wanted a service or action started since the last time we looked
     ros::spinOnce();
 }
@@ -89,8 +91,9 @@ void VisionNode::test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, S
 }
 
 //if a buoy is found on frame finds where it is and returns the center offset 
-void VisionNode::find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as){
-    float* center = processVideo(this->cap);
+void VisionNode::find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server *as){
+	ROS_ERROR("here!");
+	float* center = processVideo(this->cap, as);
     cout << center << endl;
     as->setSucceeded();   
 }

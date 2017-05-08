@@ -5,4 +5,5 @@ bool test_goal
 bool test_result
 ---
 # Feedback
-uint32 test_feedback
+uint32 x_offset
+uint32 y_offset

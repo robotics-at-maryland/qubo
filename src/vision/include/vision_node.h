@@ -18,7 +18,7 @@
 
 typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
 
-float* processVideo(cv::VideoCapture capture);
+float* processVideo(cv::VideoCapture capture, Server *as);
 
 class VisionNode{
 
@@ -38,7 +38,7 @@ class VisionNode{
 
 
     bool service_test(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
-
+    
     bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
     

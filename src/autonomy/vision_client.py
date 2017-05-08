@@ -8,26 +8,28 @@ import actionlib
 
 # Brings in the messages used by the vision action, including the
 # goal message and the result message.
-import vision.msg
+import ram_msgs.msg
 
 def vision_client():
     # Creates the SimpleActionClient, passing the type of the action
     # (VisionExampleAction) to the constructor.
-    client = actionlib.SimpleActionClient('vision_example', vision.msg.VisionExampleAction)
-
+    print "0"
+    
+    client = actionlib.SimpleActionClient('vision_example', ram_msgs.msg.VisionExampleAction)
+    print "1"
     # Waits until the action server has started up and started
     # listening for goals.
-    client.wait_for_server()
-	
+    print client.wait_for_server()
+    print "2"
     # Creates a goal to send to the action server.
-    goal = vision.msg.VisionExampleGoal(test_goal = False)
-
+    goal = ram_msgs.msg.VisionExampleGoal(test_goal = False)
+    print "3"
     # Sends the goal to the action server.
     client.send_goal(goal)
-
+    print "4"
     # Waits for the server to finish performing the action.
     client.wait_for_result()
-
+    print "5"
     # Prints out the result of executing the action
     return client.get_result()  
 

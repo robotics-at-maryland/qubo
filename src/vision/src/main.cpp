@@ -15,10 +15,12 @@ int main(int argc, char** argv){
     std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
     VisionNode node(n,argv[1]);
     
-    ros::Rate r(.1); // 10 hz
+    ros::Rate r(10); //not 10 hz
     while(ros::ok()){
+		//		ROS_ERROR("about to call update");
         node.update();
-        r.sleep(); //you update this time in the second argument to the VisionNode constructor
+		//		ROS_ERROR("in main");
+		// r.sleep(); //you update this time in the second argument to the VisionNode constructor
     }
 
     return 0;
