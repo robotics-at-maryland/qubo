@@ -16,6 +16,7 @@ PIDController::PIDController(NodeHandle n, string control_topic):
 	n.param<double>("windup_limit", m_windup_limit, 1000.0);
 	//n.param<double>("cutoff_frequency", m_cutoff_frequency, -1.0);
 	n.param<bool>("angular_variable" , m_unwind_angle, false);
+	n.param<bool>("filtering", m_filter, false);
 	//TODO reconfigure bounds for the angle
 
 	
@@ -48,10 +49,16 @@ void PIDController::update() {
 	// Calculate time passed since previous loop
 	ros::Duration dt = ros::Time::now() - m_prev_time;
 	m_prev_time = ros::Time::now();
-    
+
+
 	//calculate error, update integrals and derivatives of the error
 	m_error = m_desired  - m_current; //proportional term
 
+
+	//if filtering is turned on we do the simplest possible low pass filter
+	if(m_filter){
+		m_error = m_error/2 + m_prev_error/2;
+	}
 			
 	//if we are told to unwind our angle then we better do that. 
 	if(m_unwind_angle){
@@ -76,9 +83,6 @@ void PIDController::update() {
 	
 	m_error_derivative = (m_error - m_prev_error)/dt.toSec();
 
-	
-	//store the previous error
-	m_prev_error = m_error;
 
 	ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error,  m_error_integral, m_error_derivative, dt.toSec());  
 	//sum everything weighted by the given gains. 
@@ -109,6 +113,12 @@ void PIDController::configCallback(controls::TestConfig &config, uint32_t level)
 	m_ki = config.ki;
 	m_kd = config.kd;
 	m_desired = config.target;
+
+
+	
+	m_error = 0;
+	m_error_integral = 0; //reset the integral error every time we switch things up
+	m_error_derivative = 0;
 	
 }
 

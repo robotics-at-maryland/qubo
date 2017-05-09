@@ -55,7 +55,9 @@ class PIDController {
     double m_update_frequency;
 
 	bool m_unwind_angle; // tells us if our variable is an angle that we need to unwind. 
-	//dynamic reconfigure stuff
+    bool m_filter;// tells us if we want to filter our input signal
+
+    //dynamic reconfigure stuff
 	dynamic_reconfigure::Server<controls::TestConfig> server;
 	dynamic_reconfigure::Server<controls::TestConfig>::CallbackType f;
 
