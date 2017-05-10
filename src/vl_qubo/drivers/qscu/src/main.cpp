@@ -15,9 +15,9 @@
 int main(){
     QSCU qscu("/dev/ttyACM0", B115200);
     do {
-        try { 
+        try {
             qscu.openDevice();
-        } catch (const QSCUException e) { 
+        } catch (const QSCUException e) {
             std::cout << e.what() << std::endl;
         }
     } while (!qscu.isOpen());

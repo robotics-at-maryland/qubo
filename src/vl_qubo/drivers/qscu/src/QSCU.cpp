@@ -140,7 +140,7 @@ ssize_t QSCU::readRaw(void* blob, size_t bytes_to_read) {
             FD_ZERO(&except_fds);
             FD_SET(_deviceFD, &read_fds);
             // Wait until the device is ready to read, return the number of FDs avalaible.
-            fds_ready = select(_deviceFD+1, &read_fds, &write_fds, &except_fds, &timeout);
+            fds_ready = select(FD_SETSIZE, &read_fds, NULL, NULL, &timeout);
             if (fds_ready == 1) {
                 // The filedescriptor is ready to read.
                 current_read = read(_deviceFD, (((char*)blob) + bytes_read),

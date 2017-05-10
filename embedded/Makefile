@@ -107,6 +107,7 @@ FREERTOS_MEMMANG_OBJS = heap_4.o
 DRIVERLIB_OBJS := $(wildcard $(OBJDIR)driverlib/*.o)
 DRIVERLIB_OBJS := $(DRIVERLIB_OBJS) $(wildcard $(OBJDIR)driverlib/*.a)
 UTILS_OBJS = $(wildcard $(OBJDIR)utils/*.o)
+
 USBLIB_OBJS = $(wildcard $(OBJDIR)usblib/*.o)
 
 TIVA_DRIVER_OBJS = $(DRIVERLIB_OBJS)
@@ -123,7 +124,7 @@ QUBOBUS_OBJECTS = io.o protocol.o embedded.o safety.o battery.o power.o thruster
 OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERTOS_PORT_OBJS) \
 	$(SRC_OBJS) $(QUBOBUS_OBJECTS))
 OBJS += $(USBLIB_OBJS)
-OBJS += $(DRIVERLIB_OBJS) 
+OBJS += $(DRIVERLIB_OBJS)
 
 ##########################################################################
 # INCLUDES                                                               #
@@ -161,7 +162,7 @@ setenv:
 dbgrun:
 	./start_openocd.sh
 
-dbg: $(ELF_IMAGE)
+dbg:
 	arm-none-eabi-gdb $(ELF_IMAGE)
 
 $(TARGET) : $(OBJDIR) $(ELF_IMAGE)

@@ -18,6 +18,7 @@
 #include "io.h"
 
 extern struct UART_Queue uart0_queue;
+extern struct UART_Queue uart1_queue;
 static char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
 bool read_uart0_init(void) {
@@ -64,7 +65,7 @@ static void read_uart0_task(void* params) {
     // Qubobus driver code to assemble/interpret messages here
 fail:
     while ( wait_connect(&state, buffer) ){
-        //blink_rgb(RED_LED, 1);
+        blink_rgb(RED_LED | BLUE_LED, 1);
     }
 
     struct Depth_Status d_s = { .depth_m = 2.71, .warning_level = 1};

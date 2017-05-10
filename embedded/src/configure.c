@@ -72,9 +72,7 @@ void configureUART(void)
   ROM_GPIOPinTypeUART(GPIO_PORTC_BASE, GPIO_PIN_4);
   ROM_GPIOPinConfigure(GPIO_PC4_U1RX);
 
-  //
   // Enable port PC5 for UART1 U1TX
-  //
   ROM_GPIOPinTypeUART(GPIO_PORTC_BASE, GPIO_PIN_5);
   ROM_GPIOPinConfigure(GPIO_PC5_U1TX);
 
@@ -83,11 +81,19 @@ void configureUART(void)
   //
   ROM_UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
 
-  ROM_IntEnable(INT_UART1);
-  // Disable the sending interrupt
-  ROM_UARTIntDisable(UART1_BASE,UART_INT_TX);
+  ROM_UARTConfigSetExpClk(UART1_BASE, 16000000, 38400,
+      UART_CONFIG_PAR_NONE |UART_CONFIG_STOP_ONE | UART_CONFIG_WLEN_8);
+
+  ROM_UARTFIFOEnable(UART1_BASE);
+  ROM_UARTFIFOLevelSet(UART1_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
+
+  ROM_UARTIntDisable(UART1_BASE, 0xFFFFFFFF);
   // Enable UART1 receive and receive timeout
   ROM_UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT);
+
+  ROM_IntEnable(INT_UART1);
+
+  ROM_UARTEnable(UART1_BASE);
 
   #ifdef DEBUG
   UARTprintf("UART1 configured\n");

@@ -5,3 +5,4 @@ obj/
 *~
 *.d
 *.a
+start_openocd.sh

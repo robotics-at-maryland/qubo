@@ -41,6 +41,7 @@
 #include "qubobus.h"
 #include "io.h"
 
+#include "lib/include/rgb.h"
 #ifdef DEBUG
 #include <utils/uartstdio.h>
 #endif
@@ -50,11 +51,14 @@ extern const tUSBBuffer USBRxBuffer;
 
 extern void* USB_CDC;
 
+extern const tUSBDCDCDevice CDCDevice;
+
 uint32_t RxHandler(void *CBData, uint32_t event, uint32_t msgValue, void *msgData);
 uint32_t TxHandler(void *CBData, uint32_t event, uint32_t msgValue, void *msgData);
 uint32_t ControlHandler(void *CBData, uint32_t event, uint32_t msgValue, void *msgData);
 
 uint8_t USB_serial_init();
 void USB_serial_configure();
+static void usb_task(void *params);
 
 #endif

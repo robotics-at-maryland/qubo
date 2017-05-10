@@ -95,6 +95,7 @@ volatile uint16_t *i2c3_int_state;
 volatile QueueHandle_t read_uart1_queue;
 
 volatile struct UART_Queue uart0_queue;
+volatile struct UART_Queue uart1_queue;
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -107,7 +108,7 @@ void __error__(char *pcFilename, uint32_t ui32Line)
 #endif
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName ) {
-  for (;;) {}
+  for (;;) { }
 }
 
 // Called when a tick interrupt happens
@@ -154,6 +155,7 @@ int main() {
 
   // Initialize the UART Queue for UART0.
   INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, pdMS_TO_TICKS(1000));
+  INIT_UART_QUEUE(uart1_queue, 256, 256, INT_UART1, UART1_BASE, pdMS_TO_TICKS(1000));
 
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
@@ -208,11 +210,12 @@ int main() {
   if ( read_uart0_init() ) {
     while(1){}
   }
-
+/*
   if( USB_serial_init() ){
+      blink_rgb(RED_LED, 1);
       while(1){}
   }
-
+ */
   /*
   if ( bme280_task_init()){
     while(1){}

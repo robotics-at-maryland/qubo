@@ -11,7 +11,7 @@ const uint8_t lang_descr[] = { 4, USB_DTYPE_STRING, USBShort(USB_LANG_EN_US) };
 
 const uint8_t manufac_str[] = { 2 + 3 * 2, USB_DTYPE_STRING, 'R', 0, '@', 0, 'M', 0 };
 
-const uint8_t product_str[] = { 2 + 4 * 2, USB_DTYPE_STRING, 'T', 0, 'i', 0, 'v', 'a', 0};
+const uint8_t product_str[] = { 2 + 4 * 2, USB_DTYPE_STRING, 'T', 0, 'i', 0, 'v', 0, 'a', 0};
 
 const uint8_t serial_num[] = { 2 + 4 * 2, USB_DTYPE_STRING, '2', 0, '0', 0, '1', 0, '7', 0 };
 
@@ -65,7 +65,7 @@ NUM_DESC
 
 uint8_t rxBuffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
-const tUSBBuffer USBTxBuffer = {
+const tUSBBuffer USBRxBuffer = {
 	false,                          // This is a receive buffer.
 	RxHandler,                      // pfnCallback
 	(void *)&CDCDevice,             // Callback data is our device pointer.
@@ -78,9 +78,9 @@ const tUSBBuffer USBTxBuffer = {
 
 uint8_t txBuffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 
-const tUSBBuffer USBRxBuffer = {
+const tUSBBuffer USBTxBuffer = {
     true,                           // This is a transmit buffer.
-    TxHandler,                      // pfnCallback
+    RxHandler,                      // pfnCallback
     (void *)&CDCDevice,          	// Callback data is our device pointer.
     USBDCDCPacketWrite,             // pfnTransfer
     USBDCDCTxPacketAvailable,       // pfnAvailable
@@ -91,20 +91,37 @@ const tUSBBuffer USBRxBuffer = {
 
 void * USB_CDC = NULL;
 
-uint8_t USB_serial_init(){
+uint8_t USB_serial_init(void *device){
+	if ( xTaskCreate(usb_task, (const portCHAR *)"USB task", 128, NULL,
+                     tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+        return true;
+    }
 	#ifdef DEBUG
 	UARTprintf("serial init\n");
 	#endif
-	if( NULL != ( USB_CDC = USBDCDCInit(0, &CDCDevice) ) ){
+	USBBufferInit(&USBTxBuffer);
+	USBBufferInit(&USBRxBuffer);
+
+	USBStackModeSet(0, eUSBModeForceDevice, 0);
+	USB_CDC = USBDCDCInit(0, &CDCDevice);
+	if( NULL != USB_CDC ){
 		#ifdef DEBUG
 		UARTprintf("init completed\n");
 		#endif
-		return 0;
 	} else {
 		#ifdef DEBUG
 		UARTprintf("init failed\n");
 		#endif
-		return -1;
+	}
+ 
+	return 0;
+}
+
+static void usb_task(void * params){
+	uint8_t val = '0';
+	for(;;){
+		USBBufferWrite(&USBTxBuffer, &val, sizeof(val));
+		blink_rgb(GREEN_LED | RED_LED, 1);
 	}
 }
 
@@ -112,11 +129,6 @@ void USB_serial_configure(){
 
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
 	ROM_GPIOPinTypeUSBAnalog(GPIO_PORTD_BASE, GPIO_PIN_5 | GPIO_PIN_4);
-
-	USBBufferInit(&USBTxBuffer);
-	USBBufferInit(&USBRxBuffer);
-
-	USBStackModeSet(0, eUSBModeDevice, 0);
 
 }
 
@@ -198,7 +210,16 @@ static void GetLineCoding(tLineCoding *psLineCoding) {
 uint32_t RxHandler(void *CBData, uint32_t event, uint32_t msgValue, void *msgData){
 	switch( event ) {
 		case USB_EVENT_RX_AVAILABLE: {
-			//packet has been recieved
+			//uint32_t p_length = USBDCDCRxPacketAvailable(USB_CDC);
+			#ifdef DEBUG
+			UARTprintf("packet p_length");
+			#endif
+			uint8_t data;
+			USBBufferRead(&USBRxBuffer, &data, sizeof(data));
+			#ifdef DEBUG
+			UARTprintf("data: %i\n", data);
+			#endif
+
 			break;
 		}
 		case USB_EVENT_DATA_REMAINING: {
@@ -215,6 +236,7 @@ uint32_t RxHandler(void *CBData, uint32_t event, uint32_t msgValue, void *msgDat
 			#endif
 		}
 	}
+	return 0;
 }
 
 uint32_t TxHandler(void *CBData, uint32_t event, uint32_t msgValue, void *msgData){
