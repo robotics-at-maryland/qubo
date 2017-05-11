@@ -43,21 +43,26 @@ void QSCU::openDevice() {
      */
     fd = open(_deviceFile.c_str(), O_RDWR, O_NONBLOCK);
     // Check to see if the device exists.
-    if (fd == -1)
+    if (fd == -1) {
         throw QSCUException("Device '"+_deviceFile+"' unavaliable.");
+    }
     // Read the config of the interface.
-    // if(// tcgetattr
-    //   (fd, &termcfg))
-    //    throw QSCUException("Unable to read terminal configuration.");
+    if (tcgetattr(fd, &termcfg)) {
+        throw QSCUException("Unable to read terminal configuration.");
+    }
 
     // Set the baudrate for the terminal
-    if(cfsetospeed(&termcfg, _termBaud))
+    if (cfsetospeed(&termcfg, _termBaud)) {
         throw QSCUException("Unable to set terminal output speed.");
-    if(cfsetispeed(&termcfg, _termBaud))
+    }
+    if (cfsetispeed(&termcfg, _termBaud)) {
         throw QSCUException("Unable to set terminal intput speed.");
+    }
 
     // Set raw I/O rules to read and write the data purely.
     cfmakeraw(&termcfg);
+
+    termcfg.c_cflag &= ~CSTOPB;
 
     // Configure the read timeout (deciseconds)
     termcfg.c_cc[VTIME] = 0;
@@ -65,17 +70,20 @@ void QSCU::openDevice() {
     termcfg.c_cc[VMIN] = 1;
 
     // Push the configuration to the terminal NOW.
-    if(tcsetattr(fd, TCSANOW, &termcfg))
+    if (tcsetattr(fd, TCSANOW, &termcfg)) {
         throw QSCUException("Unable to set terminal configuration.");
+    }
 
     // Pull in the modem configuration
-    if(ioctl(fd, TIOCMGET, &modemcfg))
+    if (ioctl(fd, TIOCMGET, &modemcfg)) {
         throw QSCUException("Unable to read modem configuration.");
+    }
     // Enable Request to Send
     modemcfg |= TIOCM_RTS;
     // Push the modem config back to the modem.
-    if(ioctl(fd, TIOCMSET, &modemcfg))
+    if (ioctl(fd, TIOCMSET, &modemcfg)) {
         throw QSCUException("Unable to set modem configuration.");
+    }
 
     // Successful hardware connection!
     // Needs to be set for the qscu protocol library to make the connection.
