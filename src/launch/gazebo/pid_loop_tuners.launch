@@ -12,76 +12,63 @@
     <node name="qubo_thruster_node" pkg="vl_qubo_gazebo" type="qubo_gazebo_hardware_node" />
 
     
-    <node name="depth_pid" pkg="pid" type="controller" ns ="qubo" >
-      <param name="Kp" value="5.0" />
-      <param name="Ki" value="0.0" />
-      <param name="Kd" value="0.0" />
-      <param name="upper_limit" value="10" />
-      <param name="lower_limit" value="-10" />
-      <param name="windup_limit" value="10" />
-      <param name="diagnostic_period" value="0.25" />
-      <param name="max_loop_frequency" value="100.0" />
-      <param name="min_loop_frequency" value="100.0" />
-      <param name="topic_from_controller" value="depth_cmd" />
+      <!-- spawn the depth and yaw controllers -->
+    <node name="qubo_depth_controller" pkg="controls" type="pid_controller" args="depth 100" >
+      <param name="kp" value="5.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="10.0" />
+      <param name="lower_limit" value="-10.0" />
+      <param name="windup_limit" value="10.0" />
+      <param name="filtering" value ="true" />
     </node>
-    
-      <!-- spawn the depth and yaw controllers --> 
-    <!-- <node name="qubo_depth_controller" pkg="controls" type="pid_controller" args="depth 100" > -->
-    <!--   <param name="Kp" value="5.0" /> -->
-    <!--   <param name="Ki" value="0.0" /> -->
-    <!--   <param name="Kd" value="0.0" /> -->
-    <!--   <param name="upper_limit" value="10" /> -->
-    <!--   <param name="lower_limit" value="-10" /> -->
-    <!--   <param name="windup_limit" value="10" /> -->
-    <!--   <param name="filtering" value ="true" /> -->
-    <!-- </node> -->
          
     
     <node name="qubo_surge_controller" pkg="controls" type="pid_controller" args="surge 100" >
-      <param name="Kp" value="5.0" />
-      <param name="Ki" value="0.0" />
-      <param name="Kd" value="0.0" />
-      <param name="upper_limit" value="10" />
-      <param name="lower_limit" value="-10" />
-      <param name="windup_limit" value="10" />
+      <param name="kp" value="5.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="10.0" />
+      <param name="lower_limit" value="-10.0" />
+      <param name="windup_limit" value="10.0" />
     </node>
     
     <node name="qubo_sway_controller" pkg="controls" type="pid_controller" args="sway 100" >
-      <param name="Kp" value="5.0" />
-        <param name="Ki" value="0.0" />
-        <param name="Kd" value="0.0" />
-        <param name="upper_limit" value="10" />
-        <param name="lower_limit" value="-10" />
-        <param name="windup_limit" value="10" />
+      <param name="kp" value="5.0" />
+        <param name="ki" value="0.0" />
+        <param name="kd" value="0.0" />
+        <param name="upper_limit" value="10.0" />
+        <param name="lower_limit" value="-10.0" />
+        <param name="windup_limit" value="10.0" />
     </node>
     
     
     <node name="qubo_roll_controller" pkg="controls" type="pid_controller" args="roll 100" >
-      <param name="Kp" value="5.0" />
-      <param name="Ki" value="0.0" />
-      <param name="Kd" value="0.0" />
-      <param name="upper_limit" value="10" />
-      <param name="lower_limit" value="-10" />
-      <param name="windup_limit" value="10" />
+      <param name="kp" value="5.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="10.0" />
+      <param name="lower_limit" value="-10.0" />
+      <param name="windup_limit" value="10.0" />
       <param name="unwind_angle" value="true"/>
     </node>
       
     <node name="qubo_pitch_controller" pkg="controls" type="pid_controller" args="pitch 100" >
-      <param name="Kp" value="5.0" />
-      <param name="Ki" value="0.0" />
-      <param name="Kd" value="0.0" />
-      <param name="upper_limit" value="10" />
-      <param name="lower_limit" value="-10" />
-      <param name="windup_limit" value="10" />
+      <param name="kp" value="5.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="10.0.0" />
+      <param name="lower_limit" value="-10.0.0" />
+      <param name="windup_limit" value="10.0.0" />
     </node>
       
     <node name="qubo_yaw_controller" pkg="controls" type="pid_controller" args="yaw 100" >
-      <param name="Kp" value="5.0" />
-      <param name="Ki" value="0.0" />
-      <param name="Kd" value="0.0" />
-      <param name="upper_limit" value="10" />
-      <param name="lower_limit" value="-10" />
-      <param name="windup_limit" value="10" />
+      <param name="kp" value="5.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="10.0" />
+      <param name="lower_limit" value="-10.0" />
+      <param name="windup_limit" value="10.0" />
     </node>
 
     

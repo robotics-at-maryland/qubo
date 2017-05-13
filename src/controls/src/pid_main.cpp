@@ -24,17 +24,20 @@ int main(int argc, char* argv[]){
 		exit(0);
 	}
 
+
 	//first argument is the executable, second should be our name... roslaunch has the potential
 	//to mess with this
 	ROS_ERROR("the topic your controller is going to use to publish to is %s and it will publish at %s, please make sure that is correct", argv[1], argv[2]);
 	string control_topic = argv[1];
 	string freq = argv[2]; //argv[2] needs to be the desired freq in Hz
 		
-	
+
+	//the name passed here will likely be over ridden, as long as you use a launch file
 	init(argc, argv, control_topic + "_" + "controller");
-	NodeHandle nh;
+	NodeHandle n;
+	NodeHandle np("~"); //we need a private node handle to properly get at our parameter server 
 	
-	PIDController node(nh, control_topic);
+	PIDController node(n, np,  control_topic);
 
 	Rate rate(stoi(freq)); //rate object to sleep the right amount of time between calls to update
 	

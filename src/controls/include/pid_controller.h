@@ -13,7 +13,7 @@
 
 class PIDController {
     public:
-    PIDController(ros::NodeHandle n, std::string topic_name);
+    PIDController(ros::NodeHandle n, ros::NodeHandle np, std::string topic_name);
     ~PIDController();
 
 	void update();
@@ -31,7 +31,7 @@ class PIDController {
     //void commandCallback(const std_msgs::Float64::ConstPtr& msg);
     std_msgs::Float64  m_command_msg;
 
-	double m_desired = 5;
+	double m_desired;
 
     std::string m_control_topic;
     
@@ -43,9 +43,9 @@ class PIDController {
 	double m_prev_error;
 
     //gains
-    double m_kp = 1;
-    double m_ki = 0;
-    double m_kd = 0;
+    double m_kp;
+    double m_ki;
+    double m_kd;
 
     double m_upper_limit;
     double m_lower_limit;

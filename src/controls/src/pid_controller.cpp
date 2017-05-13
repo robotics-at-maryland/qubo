@@ -4,22 +4,44 @@ using namespace std;
 using namespace ros;
 
 
-PIDController::PIDController(NodeHandle n, string control_topic):
+PIDController::PIDController(NodeHandle n,NodeHandle np,  string control_topic):
 	m_control_topic(control_topic){
 
+	
+	
+	
 	// Get params if specified in launch file or as params on command-line, set defaults
-	n.param<double>("kp", m_kp, 1.0);
-	n.param<double>("ki", m_ki, 0.0);
-	n.param<double>("kd", m_kd, 0.0);
-	n.param<double>("upper_limit", m_upper_limit, 1000.0);
-	n.param<double>("lower_limit", m_lower_limit, -1000.0);
-	n.param<double>("windup_limit", m_windup_limit, 1000.0);
-	//n.param<double>("cutoff_frequency", m_cutoff_frequency, -1.0);
-	n.param<bool>("angular_variable" , m_unwind_angle, false);
-	n.param<bool>("filtering", m_filter, false);
-	//TODO reconfigure bounds for the angle
+	np.param<double>("kp", m_kp, 1.0);
+	np.param<double>("ki", m_ki, 0.0);
+	np.param<double>("kd", m_kd, 0.0);
+
+	if (np.getParam("kp", m_kp)){
+		ROS_ERROR("the param kp exists %f" , m_kp);
+	}
+	else{
+		ROS_ERROR("the param kp does not exist");
+	}
+
+ 	
+	
+	np.param<double>("upper_limit", m_upper_limit, 1000.0);
+
+
+	if (np.getParam("upper_limit", m_upper_limit)){
+		ROS_ERROR("the param upper_limit exists %f" , m_upper_limit);
+	}
+	else{
+		ROS_ERROR("the param upper_limit does not exist");
+	}
 
 	
+	np.param<double>("lower_limit", m_lower_limit, -1000.0);
+	np.param<double>("windup_limit", m_windup_limit, 1000.0);
+	//n.param<double>("cutoff_frequency", m_cutoff_frequency, -1.0);
+	np.param<bool>("angular_variable" , m_unwind_angle, false);
+	np.param<bool>("filtering", m_filter, false);
+	//TODO reconfigure bounds for the angle
+
 	m_prev_time = ros::Time::now();
 	
 	//TODO have this be configurable?
