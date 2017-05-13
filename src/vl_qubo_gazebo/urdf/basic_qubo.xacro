@@ -181,6 +181,7 @@
     <xacro:no_collision/>
   </link>
 
+ 
   <joint name="${namespace}/pose_sensor_joint" type="revolute">
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
@@ -189,6 +190,30 @@
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
 
+
+  <!-- Mount a 3D pose sensor -->
+  <link name="${namespace}/pressure_link">
+    <xacro:box_inertial x="0" y="0" z="0" mass="0.01">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:box_inertial>
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+    <xacro:no_collision/>
+  </link>
+
+  
+  <joint name="${namespace}/pressure_joint" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <parent link="${namespace}/base_link"/>
+    <child link="${namespace}/pressure_link"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+
+  
   <gazebo>
     <plugin name="pose_3d_plugin" filename="libgazebo_ros_p3d.so">
       <robotNamespace>${namespace}</robotNamespace>
@@ -198,6 +223,24 @@
       <gaussianNoise>0.0</gaussianNoise>
       <updateRate>30</updateRate>
     </plugin>
+    
+    
+    <plugin filename="libuuv_gazebo_ros_subseapressure.so" name="libuuv_gazebo_subseapressure_plugin">
+      <robotNamespace>${namespace}</robotNamespace> <!-- (string, required): ros namespace in which the messages are published -->
+      <linkName>${namespace}/pressure_link</linkName> <!-- (string, required): name of the body which holds the IMU sensor -->
+      <sensorTopic>pressure</sensorTopic>
+      <updatePeriod>.016</updatePeriod> <!-- Update period of accelerometer and gyroscope [s] -->
+      
+      <range>3000</range> <!-- measurement range [kPa] -->
+      <stddev>1.66</stddev> <!-- measurement stddev [kPa] -->
+      
+      <estimateDepth>false</estimateDepth> <!-- infer depth? -->
+      <standardPressure>101.325</standardPressure> <!-- pressure at sea level (depth 0 m) [kPa] -->
+      <kPaPerM>9.803</kPaPerM> <!-- increase in pressure [kPa] per [m] in increased depth -->
+      
+  </plugin>
+
+    
   </gazebo>
 
 
@@ -207,9 +250,14 @@
   <!-- </xacro:default_dvl> -->
   
   <!-- Pressure  -->
-  <xacro:default_pressure namespace="${namespace}" parent_link="${namespace}/base_link">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </xacro:default_pressure>
+  <!-- <xacro:default_pressure namespace="${namespace}" parent_link="${namespace}/base_link"> -->
+  <!--   <origin xyz="0 0 0" rpy="0 0 0"/> -->
+  <!--   <stddev>.01</stddev> -->
+  <!-- </xacro:default_pressure> -->
+  
+  <!-- these should match the bar 30 on qubo, up to 300 kpa , with an absolute error absolute error of 5 kpa I assumed absolute error is about 3 * stddevs giving std dev of   -->
+
+
   
   <!-- IMU  --> 
   <xacro:default_imu namespace="${namespace}" parent_link="${namespace}/base_link">

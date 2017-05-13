@@ -1,10 +1,10 @@
 <launch>
   <arg name="debug" default="0"/>
 
-  <!-- Default initial pose -->
+    <!-- Default initial pose -->
   <arg name="x" default="0"/>
   <arg name="y" default="0"/>
-  <arg name="z" default="0"/>
+  <arg name="z" default="3"/>
   <arg name="roll" default="0.0"/>
   <arg name="pitch" default="0.0"/>
   <arg name="yaw" default="0.0"/>
@@ -27,8 +27,8 @@
     </node>
   </group>
 
-  <include file="$(find uuv_descriptions)/models/common/launch/message_to_tf.launch">
-    <arg name="namespace" value="$(arg namespace)"/>
-  </include>
+  <!-- <include file="$(find uuv_descriptions)/models/common/launch/message_to_tf.launch"> -->
+  <!--   <arg name="namespace" value="$(arg namespace)"/> -->
+  <!-- </include> -->
 
 </launch>
