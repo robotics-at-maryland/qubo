@@ -8,6 +8,8 @@
 #include <dynamic_reconfigure/server.h>
 #include <controls/TestConfig.h>
 
+#include <boost/circular_buffer.hpp>
+
 #define PI 3.14159
 
 
@@ -34,12 +36,15 @@ class PIDController {
 	double m_desired;
 
     std::string m_control_topic;
-    
-    //P,I, and D terms. 
-    double m_error;
-    double m_error_integral;
-    double m_error_derivative; 
 
+	//used to average error terms, size determined in constructor
+    boost::circular_buffer<double> m_error_buf;
+	
+	//P,I, and D terms. 
+	double m_error_integral;
+	double m_error;
+	double m_error_derivative;
+	
 	double m_prev_error;
 
     //gains
@@ -55,7 +60,7 @@ class PIDController {
     double m_update_frequency;
 
 	bool m_unwind_angle; // tells us if our variable is an angle that we need to unwind. 
-    bool m_filter;// tells us if we want to filter our input signal
+
 
     //dynamic reconfigure stuff
 	dynamic_reconfigure::Server<controls::TestConfig> server;

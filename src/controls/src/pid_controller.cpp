@@ -7,39 +7,20 @@ using namespace ros;
 PIDController::PIDController(NodeHandle n,NodeHandle np,  string control_topic):
 	m_control_topic(control_topic){
 
-	
-	
-	
+
+	int buf_size; //don't need this anywhere else
 	// Get params if specified in launch file or as params on command-line, set defaults
 	np.param<double>("kp", m_kp, 1.0);
 	np.param<double>("ki", m_ki, 0.0);
 	np.param<double>("kd", m_kd, 0.0);
-
-	if (np.getParam("kp", m_kp)){
-		ROS_ERROR("the param kp exists %f" , m_kp);
-	}
-	else{
-		ROS_ERROR("the param kp does not exist");
-	}
-
- 	
-	
 	np.param<double>("upper_limit", m_upper_limit, 1000.0);
-
-
-	if (np.getParam("upper_limit", m_upper_limit)){
-		ROS_ERROR("the param upper_limit exists %f" , m_upper_limit);
-	}
-	else{
-		ROS_ERROR("the param upper_limit does not exist");
-	}
-
-	
 	np.param<double>("lower_limit", m_lower_limit, -1000.0);
 	np.param<double>("windup_limit", m_windup_limit, 1000.0);
-	//n.param<double>("cutoff_frequency", m_cutoff_frequency, -1.0);
 	np.param<bool>("angular_variable" , m_unwind_angle, false);
-	np.param<bool>("filtering", m_filter, false);
+	np.param<int>("buffer_size", buf_size, 1);
+
+	m_error_buf.resize(buf_size);
+
 	//TODO reconfigure bounds for the angle
 
 	m_prev_time = ros::Time::now();
@@ -75,14 +56,8 @@ void PIDController::update() {
 
 	//calculate error, update integrals and derivatives of the error
 	m_error = m_desired  - m_current; //proportional term
-
-
-	//if filtering is turned on we do the simplest possible low pass filter
-	if(m_filter){
-		m_error = m_error/2 + m_prev_error/2;
-	}
-			
-	//if we are told to unwind our angle then we better do that. 
+	
+   	//if we are told to unwind our angle then we better do that. 
 	if(m_unwind_angle){
 		//makes sure we always take the smallest way around the circle
 		if(m_error > PI){
@@ -92,7 +67,21 @@ void PIDController::update() {
 		}
 	}
 
-	
+	m_error_buf.push_back(m_error);
+  
+	ROS_ERROR("m_error before the average  =  %f", m_error);
+   
+
+	double sum = 0;
+	for(int i = 0; i < m_error_buf.size(); i++){
+		ROS_ERROR("buf[%i] = %f", i, m_error_buf[i]);
+		sum += m_error_buf[i];
+	}
+
+	m_error = sum/m_error_buf.size();
+
+	ROS_ERROR("m_error after the average  = %f", m_error);
+
 	m_error_integral  += m_error * dt.toSec(); //integral term
 
 	//if the integral value is past our windup limit just set it there. 
