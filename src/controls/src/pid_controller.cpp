@@ -69,7 +69,7 @@ void PIDController::update() {
 
 	m_error_buf.push_back(m_error);
   
-	ROS_ERROR("m_error before the average  =  %f", m_error);
+	//ROS_ERROR("m_error before the average  =  %f", m_error);
    
 
 	double sum = 0;
@@ -80,7 +80,7 @@ void PIDController::update() {
 
 	m_error = sum/m_error_buf.size();
 
-	ROS_ERROR("m_error after the average  = %f", m_error);
+	//ROS_ERROR("m_error after the average  = %f", m_error);
 
 	m_error_integral  += m_error * dt.toSec(); //integral term
 
@@ -95,7 +95,7 @@ void PIDController::update() {
 	m_error_derivative = (m_error - m_prev_error)/dt.toSec();
 
 
-	ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error,  m_error_integral, m_error_derivative, dt.toSec());  
+	//ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error,  m_error_integral, m_error_derivative, dt.toSec());  
 	//sum everything weighted by the given gains. 
 	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative);
 
