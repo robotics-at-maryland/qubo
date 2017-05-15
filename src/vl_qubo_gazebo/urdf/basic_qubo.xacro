@@ -204,7 +204,9 @@
     <xacro:no_collision/>
   </link>
 
-  
+
+
+  <!-- joint for pressure sensor, you need a joint to modify the parameters, if you just use the default xacro macro it makes a joint for you -->
   <joint name="${namespace}/pressure_joint" type="revolute">
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>

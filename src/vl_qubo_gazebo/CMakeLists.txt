@@ -29,13 +29,7 @@ catkin_package(
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  drivers/ahrs/include
-  drivers/dvl/include
-
-  ahrs/include
-  dvl/include
   include
-
   )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -46,6 +40,10 @@ set(G_HARDWARE_NODE_SRC_FILES
   src/gazebo_hardware_node.cpp
   )
 
+set(G_CAMERA_NODE_SRC_FILES
+  src/gazebo_camera_node.cpp
+  src/gazebo_camera_main.cpp
+  )
 
 ##############################
 # Add Executables ############
@@ -53,6 +51,9 @@ set(G_HARDWARE_NODE_SRC_FILES
 
 add_executable(qubo_gazebo_hardware_node ${G_HARDWARE_NODE_SRC_FILES})
 target_link_libraries(qubo_gazebo_hardware_node ${catkin_LIBRARIES})
+
+add_executable(qubo_gazebo_camera_node ${G_CAMERA_NODE_SRC_FILES})
+target_link_libraries(qubo_gazebo_camera_node ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########
