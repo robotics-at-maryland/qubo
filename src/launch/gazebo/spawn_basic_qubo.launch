@@ -9,7 +9,7 @@
   <arg name="pitch" default="0.0"/>
   <arg name="yaw" default="0.0"/>
 
-  <arg name="namespace" default="basic_qubo"/>
+  <arg name="namespace" default="gazebo_qubo"/>
   <arg name="world_frame" default="world"/>
 
   <group ns="$(arg namespace)">

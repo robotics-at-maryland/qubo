@@ -18,7 +18,7 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	//abstract it away
 
 	//cont_namespace is the namespace for anything we offer up to external nodes, should probably put in header..
-    string gazebo_namespace = "/basic_qubo/";
+    string gazebo_namespace = "/qubo_gazebo/";
 	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
 	string qubo_namespace = "/qubo/";
 	

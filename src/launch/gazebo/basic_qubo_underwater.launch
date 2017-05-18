@@ -5,6 +5,6 @@
 
     <!-- Spawn basic Qubo robot into the world -->
     <include file="$(find qubo_launch)/gazebo/spawn_basic_qubo.launch">
-        <arg name="namespace" value="qubo_test"/>
+        <arg name="namespace" value="gazebo_qubo"/>
     </include>
 </launch>

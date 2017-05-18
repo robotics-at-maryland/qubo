@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 
-<robot name="qubo_test" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="gazebo_qubo" xmlns:xacro="http://www.ros.org/wiki/xacro" >
   <!-- Includes -->
   <xacro:include filename="$(find uuv_descriptions)/models/common/urdf/common.urdf.xacro"/>
   <xacro:include filename="$(find uuv_sensor_plugins_ros)/urdf/sensor_snippets.xacro"/>
 
   <!-- Parameters -->
   <xacro:property name="debug" value="0"/>
-  <xacro:property name="namespace" value="basic_qubo"/>
+  <!-- don't be fooled, if you want to change qubo's namespace, change the parameter below , and the name parameter above -->
+  <xacro:property name="namespace" value="gazebo_qubo"/>
   <xacro:property name="prop_mesh_file" value="file://$(find uuv_descriptions)/models/rexrov/mesh/prop.dae"/>
 
   <!-- Qubo's mass, volume, and center of buoyancy -->
@@ -88,7 +89,7 @@
   <!-- thrusters -->
   <!-- ============================================================================== -->
 
-    <!-- Thruster joint and link macro -->
+  <!-- Thruster joint and link macro -->
   <xacro:macro name="thruster_macro" params="namespace thruster_id *origin">
     <joint name="${namespace}/thruster_${thruster_id}_joint" type="continuous">
       <xacro:insert_block name="origin"/>
@@ -275,7 +276,8 @@
   </xacro:default_imu>
     
   <!-- Camera -->
-  <xacro:default_camera namespace="${namespace}" parent_link="${namespace}/base_link">
+  <!-- the camera used the robot name + given namespace as it's namespace, so we omit the latter since the robot name is our namespace -->
+  <xacro:default_camera namespace="" parent_link="${namespace}/base_link">
     <origin xyz=".35 0 0.15" rpy="0 0 0"/>
   </xacro:default_camera>
   

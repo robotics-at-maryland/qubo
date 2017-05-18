@@ -74,7 +74,7 @@ void PIDController::update() {
 
 	double sum = 0;
 	for(int i = 0; i < m_error_buf.size(); i++){
-		ROS_ERROR("buf[%i] = %f", i, m_error_buf[i]);
+		//ROS_ERROR("buf[%i] = %f", i, m_error_buf[i]);
 		sum += m_error_buf[i];
 	}
 
