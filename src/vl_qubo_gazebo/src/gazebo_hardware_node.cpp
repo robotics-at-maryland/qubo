@@ -1,6 +1,6 @@
 #include "gazebo_hardware_node.h"
 
-#define WATER_DENSITY 1028.0 //gazebo gets this in the basic_qubo.xacro file in qubo_gazebo
+#define WATER_DENSITY 1000.0 //gazebo gets this in the basic_qubo.xacro file in qubo_gazebo
 #define GRAVITY 9.8 //should put both of these into the parameter server probably..
 #define SURFACE_PRESSURE 100
 
@@ -18,7 +18,7 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	//abstract it away
 
 	//cont_namespace is the namespace for anything we offer up to external nodes, should probably put in header..
-    string gazebo_namespace = "/qubo_gazebo/";
+    string gazebo_namespace = "/gazebo_qubo/";
 	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
 	string qubo_namespace = "/qubo/";
 	

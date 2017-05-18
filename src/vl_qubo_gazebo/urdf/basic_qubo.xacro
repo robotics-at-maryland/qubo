@@ -13,7 +13,7 @@
 
   <!-- Qubo's mass, volume, and center of buoyancy -->
   <xacro:property name="mass" value="15.87"/>
-  <xacro:property name="volume" value=".018"/>
+  <xacro:property name="volume" value=".0165"/>
   <xacro:property name="center_of_buoyancy" value="0.0 0.0 0.16"/>
   
 
@@ -56,7 +56,7 @@
       <flow_velocity_topic>hydrodynamics/current_velocity</flow_velocity_topic>
       <debug>${debug}</debug>
       <link name="${namespace}/base_link">
-        <neutrally_buoyant>1</neutrally_buoyant>
+        <neutrally_buoyant>0</neutrally_buoyant>
         <volume>${volume}</volume>
         <box>
           <width>.4064</width>
@@ -98,7 +98,7 @@
       <child link="${namespace}/thruster_${thruster_id}"/>
     </joint>
     <link name="${namespace}/thruster_${thruster_id}">
-      <xacro:box_inertial x="0" y="0" z="0" mass="0.001">
+      <xacro:box_inertial x="0" y="0" z="0" mass="0.01">
         <origin xyz="0 0 0" rpy="0 0 0"/>
       </xacro:box_inertial>
       <visual>
@@ -231,7 +231,7 @@
       <bodyName>${namespace}/base_link</bodyName>
       <topicName>pose_gt</topicName>
       <frameName>world</frameName>
-      <gaussianNoise>0.0</gaussianNoise>
+      <gaussianNoise>0.0349</gaussianNoise> <!-- our noise from the AHRS is 2 degrees rms -->
       <updateRate>30</updateRate>
     </plugin>
     
