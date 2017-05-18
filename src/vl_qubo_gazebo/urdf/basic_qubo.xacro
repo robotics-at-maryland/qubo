@@ -14,50 +14,7 @@
   <xacro:property name="mass" value="15.87"/>
   <xacro:property name="volume" value=".018"/>
   <xacro:property name="center_of_buoyancy" value="0.0 0.0 0.16"/>
-
-  <!-- Thruster joint and link macro -->
-  <xacro:macro name="thruster_macro" params="namespace thruster_id *origin">
-    <joint name="${namespace}/thruster_${thruster_id}_joint" type="continuous">
-      <xacro:insert_block name="origin"/>
-      <axis xyz="1 0 0"/>
-      <parent link="${namespace}/base_link"/>
-      <child link="${namespace}/thruster_${thruster_id}"/>
-    </joint>
-    <link name="${namespace}/thruster_${thruster_id}">
-      <xacro:box_inertial x="0" y="0" z="0" mass="0.001">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </xacro:box_inertial>
-      <visual>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <geometry>
-          <mesh filename="${prop_mesh_file}" scale=".5 .5 .5"/>
-        </geometry>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 ${0.5*pi} 0"/>
-        <geometry>
-          <cylinder length="0.000001" radius="0.000001"/>
-        </geometry>
-      </collision>
-    </link>
-    <gazebo>
-      <plugin name="${namespace}_${thruster_id}_thruster_model" filename="libthruster_ros_plugin.so">
-        <linkName>${namespace}/thruster_${thruster_id}</linkName>
-        <jointName>${namespace}/thruster_${thruster_id}_joint</jointName>
-        <thrustTopic>${namespace}/thrusters/${thruster_id}/thrust</thrustTopic>
-        <inputTopic>${namespace}/thrusters/${thruster_id}/input</inputTopic>
-        <dynamics>
-          <type>FirstOrder</type>
-          <timeConstant>0.05</timeConstant>
-        </dynamics>
-        <conversion>
-          <type>Basic</type>
-          <rotorConstant>-.05</rotorConstant>
-        </conversion>
-      </plugin>
-    </gazebo>
-  </xacro:macro>
-
+  
 
   <!-- size of robot to meters X = .4064Z  Y = Z = .3048 --> 
     
@@ -127,6 +84,54 @@
     </plugin>
   </gazebo>
 
+  
+  <!-- thrusters -->
+  <!-- ============================================================================== -->
+
+    <!-- Thruster joint and link macro -->
+  <xacro:macro name="thruster_macro" params="namespace thruster_id *origin">
+    <joint name="${namespace}/thruster_${thruster_id}_joint" type="continuous">
+      <xacro:insert_block name="origin"/>
+      <axis xyz="1 0 0"/>
+      <parent link="${namespace}/base_link"/>
+      <child link="${namespace}/thruster_${thruster_id}"/>
+    </joint>
+    <link name="${namespace}/thruster_${thruster_id}">
+      <xacro:box_inertial x="0" y="0" z="0" mass="0.001">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:box_inertial>
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="${prop_mesh_file}" scale=".5 .5 .5"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${0.5*pi} 0"/>
+        <geometry>
+          <cylinder length="0.000001" radius="0.000001"/>
+        </geometry>
+      </collision>
+    </link>
+    <gazebo>
+      <plugin name="${namespace}_${thruster_id}_thruster_model" filename="libthruster_ros_plugin.so">
+        <linkName>${namespace}/thruster_${thruster_id}</linkName>
+        <jointName>${namespace}/thruster_${thruster_id}_joint</jointName>
+        <thrustTopic>${namespace}/thrusters/${thruster_id}/thrust</thrustTopic>
+        <inputTopic>${namespace}/thrusters/${thruster_id}/input</inputTopic>
+        <dynamics>
+          <type>FirstOrder</type>
+          <timeConstant>0.05</timeConstant>
+        </dynamics>
+        <conversion>
+          <type>Basic</type>
+          <rotorConstant>-.05</rotorConstant>
+        </conversion>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+
   <!-- yaw thrusters - Z = 5 inches from bottom, X = 9.28 inches from center, Y = 7.87 inches from center -->
   <!-- Z = .127 X = .23 Y = .1998 -->
   
@@ -168,6 +173,9 @@
     <origin xyz="0.257 -0.083 0" rpy="${0*d2r} ${-90*d2r} ${0*d2r}"/>
   </xacro:thruster_macro>
 
+  <!-- sensors -->
+  <!-- ============================================================================== -->
+  
   <!-- Mount a 3D pose sensor -->
   <link name="${namespace}/pose_sensor_link">
     <xacro:box_inertial x="0" y="0" z="0" mass="0.01">
