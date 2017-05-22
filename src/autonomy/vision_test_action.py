@@ -1,9 +1,12 @@
-
+import roslib; roslib.load_manifest('vision')
 import rospy
 import actionlib
-import VisionExampleAction.msg
 
-client = actionlib.SimpleActionClient("buoy_detect", ram_msgs.msg.ExampleVisionAction)
+from vision.msg import VisionExampleAction 
+from vision.srv import bool_bool
+
+
+client = actionlib.SimpleActionClient("find_buoy", ram_msgs.msg.ExampleVisionAction)
 goal = ram_msgs.msg.ExampleVisionAction(test_goal = true)
 client.send_goal(goal)
 client.wait_for_result()
