@@ -1,3 +1,5 @@
+<!-- you need to launch it like this roslaunch qubo_launch buoy_test.launch video:=/home/sgillen/video/nbrf_video/comp/comp_buoy/20100714084551.avi  -->
+
 <launch>
       
   <group>
