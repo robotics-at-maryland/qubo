@@ -16,16 +16,20 @@
     <param name="robot_description" command="$(find xacro)/xacro '$(find vl_qubo_gazebo)/urdf/basic_qubo.xacro' debug:=$(arg debug) namespace:=$(arg namespace)" />
 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-          args="-urdf -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) -model $(arg namespace) -param /$(arg namespace)/robot_description"/>
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) -model $(arg namespace) -param /$(arg namespace)/robot_description"/>
 
     <!-- A joint state publisher plugin already is started with the model, no need to use the default joint state publisher -->
 
     <!-- Publish robot model for ROS -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
+      
       <param name="robot_description" value="/$(arg namespace)/robot_description" />
     </node>
+
+    
   </group>
+
+  <remap from="/gazebo_qubo/camera/camera_image" to="/qubo/camera/camera_image"/>
 
   <!-- <include file="$(find uuv_descriptions)/models/common/launch/message_to_tf.launch"> -->
   <!--   <arg name="namespace" value="$(arg namespace)"/> -->

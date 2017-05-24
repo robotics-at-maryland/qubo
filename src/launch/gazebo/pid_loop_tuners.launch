@@ -19,8 +19,8 @@
       <param name="kd" value="0.0" />
       <param name="upper_limit" value="10.0" />
       <param name="lower_limit" value="-10.0" />
-      <param name="windup_limit" value="10.0" />
-      <param name="buffer_size" value ="1" />
+      <param name="windup_limit" value="5.0" />
+      <param name="buffer_size" value ="10" />
     </node>
          
     
@@ -60,6 +60,7 @@
       <param name="upper_limit" value="10.0.0" />
       <param name="lower_limit" value="-10.0.0" />
       <param name="windup_limit" value="10.0.0" />
+      <param name="unwind_angle" value="true" />
     </node>
       
     <node name="qubo_yaw_controller" pkg="controls" type="pid_controller" args="yaw 100" >
@@ -69,6 +70,7 @@
       <param name="upper_limit" value="10.0" />
       <param name="lower_limit" value="-10.0" />
       <param name="windup_limit" value="10.0" />
+      <param name="unwind_angle" value="true" />
     </node>
 
     
