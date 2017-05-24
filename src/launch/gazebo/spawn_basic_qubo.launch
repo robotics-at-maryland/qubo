@@ -29,7 +29,7 @@
     
   </group>
 
-  <remap from="/gazebo_qubo/camera/camera_image" to="/qubo/camera/camera_image"/>
+
 
   <!-- <include file="$(find uuv_descriptions)/models/common/launch/message_to_tf.launch"> -->
   <!--   <arg name="namespace" value="$(arg namespace)"/> -->

@@ -19,6 +19,10 @@ find_package(catkin
   actionlib_msgs
   actionlib
 
+  image_transport
+
+  cv_bridge
+
 
 )
 

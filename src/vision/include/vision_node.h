@@ -1,18 +1,27 @@
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
+#include "ros/ros.h"
 
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/video.hpp>
 
-#include "ros/ros.h"
 #include <iostream>
+#include <stdio.h>
 
+//ros includes
 #include <ram_msgs/VisionExampleAction.h>
 #include <actionlib/server/simple_action_server.h>
 
+//message includes
 #include "std_msgs/String.h"
 #include  "ram_msgs/bool_bool.h"
+
+//cv_bridge includes
+#include <cv_bridge/cv_bridge.h>
+
+//image transport includes
+#include <image_transport/image_transport.h>
+
 
 
 
@@ -24,10 +33,13 @@ class VisionNode{
 
     public:
 
-    //cap is a video capture object, img is a Mat object that gets updated every time step
-    cv::VideoCapture cap;
+    
+    image_transport::ImageTransport m_it;
+    image_transport::Subscriber m_image_sub;
+    void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+    
     //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
-    VisionNode(std::shared_ptr<ros::NodeHandle> n, std::string feed);
+    VisionNode(ros::NodeHandle n, std::string feed);
     ~VisionNode();
     void update(); //this will just pull the next image in
 
@@ -52,13 +64,13 @@ class VisionNode{
     
     protected:
 
-    std::shared_ptr<ros::NodeHandle> n;
+    ros::NodeHandle n;
     //cap is the object holding the video feed, either real or from an existing avi file
     //img is the object reprenting the current image we're looking at, we'll keep pumping the next fram
     //from cap into img at every update
 
     cv::Mat img;
-
+    
     //declare a service object for your service below
     //======================================================================
     ros::ServiceServer buoy_detect_srv;
