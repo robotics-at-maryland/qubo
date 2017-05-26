@@ -42,6 +42,7 @@ int init_connect(IO_State *state, void *buffer) {
 
     /*
      * Read in the other client's announce message.
+
      * This serves to synchronize the message frame alignment of both clients.
      */
     if (read_announce(state, &their_announce)) {
@@ -153,44 +154,50 @@ Message create_error(Error const *error, void *payload) {
     return message;
 }
 
+Message create_keep_alive(){
+  Message message;
+  create_message(&message, MT_KEEPALIVE, 0, NULL, 0);
+  return message;
+}
+
 int read_message(IO_State *state, Message *message, void *buffer) {
-    struct Message_Header header;
-    size_t payload_size;
-    int rc = -1;
+  struct Message_Header header;
+  size_t payload_size;
+  int rc = -1;
 
-    /* Read in just the message header. */
-    if (safe_io(state->io_host, state->read_raw, &header, sizeof(struct Message_Header))) {
-        goto fail;
-    }
+  /* Read in just the message header. */
+  if (safe_io(state->io_host, state->read_raw, &header, sizeof(struct Message_Header))) {
+	goto fail;
+  }
 
-    /* Compute the payload size by subtracting known message structure sizes. */
-    payload_size = header.num_bytes
-        - sizeof(struct Message_Header)
-        - sizeof(struct Message_Footer);
+  /* Compute the payload size by subtracting known message structure sizes. */
+  payload_size = header.num_bytes
+	- sizeof(struct Message_Header)
+	- sizeof(struct Message_Footer);
 
-    /* Allocate storage for the message */
-    create_message(message, 0, 0, buffer, payload_size);
+  /* Allocate storage for the message */
+  create_message(message, 0, 0, buffer, payload_size);
 
-    /* Copy the message header into the message storage. */
-    message->header = header;
+  /* Copy the message header into the message storage. */
+  message->header = header;
 
-    /* Read in the data payload. */
-    if (safe_io(state->io_host, state->read_raw, message->payload, message->payload_size)) {
-        goto fail;
-    }
+  /* Read in the data payload. */
+  if (safe_io(state->io_host, state->read_raw, message->payload, message->payload_size)) {
+	goto fail;
+  }
 
-    /* Read in the message footer. */
-    if (safe_io(state->io_host, state->read_raw, &(message->footer), sizeof(struct Message_Footer))) {
-        goto fail;
-    }
+  /* Read in the message footer. */
+  if (safe_io(state->io_host, state->read_raw, &(message->footer), sizeof(struct Message_Footer))) {
+	goto fail;
+  }
 
-    state->remote_sequence_number++;
+  state->remote_sequence_number++;
 
-    rc = 0;
+  rc = 0;
 
-fail:
+ fail:
 
-    return rc;
+  return rc;
 }
 
 int write_message(IO_State *state, Message *message) {

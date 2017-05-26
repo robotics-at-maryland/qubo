@@ -24,6 +24,7 @@
 #include "io.h"
 
 #include "lib/include/uart_queue.h"
+#include "lib/include/rgb.h"
 
 extern struct Depth_Status depth_status;
 

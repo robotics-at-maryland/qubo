@@ -196,36 +196,39 @@ int main() {
 
 /*
   if ( i2c_test_init() ) {
-    while(1){}
+  while(1){}
   }
 */
   /*
-  if ( example_blink_init() ) {
+	if ( example_blink_init() ) {
     while(1){}
-  }
+	}
   */
-
-
-
-  if ( read_uart0_init() ) {
-    while(1){}
+  if ( tiqu_task_init() ) {
+	  while(1){}
   }
-/*
-  if( USB_serial_init() ){
-      blink_rgb(RED_LED, 1);
-      while(1){}
-  }
- */
-  /*
-  if ( bme280_task_init()){
-    while(1){}
-  }
-  */
 
   /*
-  if ( example_uart_init() ) {
-    while(1){}
-  }
+	if ( read_uart0_init() ) {
+	while(1){}
+	}
+  */
+  /*
+	if( USB_serial_init() ){
+	blink_rgb(RED_LED, 1);
+	while(1){}
+	}
+  */
+  /*
+	if ( bme280_task_init()){
+	while(1){}
+	}
+  */
+
+  /*
+	if ( example_uart_init() ) {
+	while(1){}
+	}
   */
 
   vTaskStartScheduler();

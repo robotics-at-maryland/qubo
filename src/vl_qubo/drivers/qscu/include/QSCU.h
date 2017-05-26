@@ -78,6 +78,8 @@ class QSCU
         // TEMPORARLY MOVED TO PUBLIC
         /** Write a command with variable args and read something back */
         void sendMessage(Transaction *transaction, void *payload, void *response);
+
+        int keepAlive();
         // --------------------------
     private: // Internal functionality.
         /** Unix file name to connect to */
@@ -102,7 +104,6 @@ class QSCU
         static ssize_t serialRead(void *io_host, void *buffer, size_t size);
 
         static ssize_t serialWrite(void *io_host, void *buffer, size_t size);
-
 };
 
 

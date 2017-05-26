@@ -207,36 +207,54 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
     Message recieved_message, sent = create_request(transaction, payload);
 
     while (!completed) {
-        bool recieved = false;
+	  bool recieved = false;
 
-        write_message(&_state, &sent);
+	  write_message(&_state, &sent);
 
-        while (!recieved) {
-            read_message(&_state, &recieved_message, buffer);
+	  while (!recieved) {
+		read_message(&_state, &recieved_message, buffer);
 
-            if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
-                Message response = create_error(&eChecksum, NULL);
-                write_message(&_state, &response);
-            } else {
-                recieved = true;
-            }
-        }
+		if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
+		  Message response = create_error(&eChecksum, NULL);
+		  write_message(&_state, &response);
+		} else {
+		  recieved = true;
+		}
+	  }
 
-        if (recieved_message.header.message_type == MT_RESPONSE) {
-            if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
-                throw new QSCUException("Malformed response payload!");
-            /* Copy the read message back into the response buffer. */
-            memcpy(response, buffer, transaction->response);
-            completed = true;
-        } else if (recieved_message.header.message_type == MT_ERROR) {
-            if (recieved_message.header.message_id == eChecksum.id) {
-                //The other side got a checksum error, retry sending.
-            } else {
-                // throw new QSCUException(str(recieved_message.payload, recieved_message.payload_size));
-            }
-        } else {
-            //throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
-        }
+	  if (recieved_message.header.message_type == MT_RESPONSE) {
+		if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
+		  throw new QSCUException("Malformed response payload!");
+		/* Copy the read message back into the response buffer. */
+		memcpy(response, buffer, transaction->response);
+		completed = true;
+	  } else if (recieved_message.header.message_type == MT_ERROR) {
+		if (recieved_message.header.message_id == eChecksum.id) {
+		  //The other side got a checksum error, retry sending.
+		} else {
+		  // throw new QSCUException(str(recieved_message.payload, recieved_message.payload_size));
+		}
+	  } else {
+		//throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
+	  }
     }
 
+}
+
+int QSCU::keepAlive(){
+  Message alive;
+  unsigned char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+  alive = create_keep_alive();
+  if ( write_message( &_state, &alive ) ){
+	return -1;
+  }
+  if ( read_message( &_state, &alive, buffer ) ) {
+	return -1;
+  }
+  if ( alive.header.message_type != MT_KEEPALIVE ) {
+	return -1;
+  }
+
+  // alive succeeded, return 0
+  return 0;
 }

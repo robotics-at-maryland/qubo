@@ -62,6 +62,7 @@ int wait_connect(IO_State *state, void *payload);
 Message create_request(Transaction const *transaction, void *payload);
 Message create_response(Transaction const *transaction, void *payload);
 Message create_error(Error const *error, void *payload);
+Message create_keep_alive();
 
 /*
  * Function to write a message to the data line.
