@@ -28,12 +28,19 @@ class PIDController {
     void sensorCallback(const std_msgs::Float64::ConstPtr& msg);
     double m_current;
 
+    
+    ros::Subscriber m_target_sub;
+    void targetCallback(const std_msgs::Float64::ConstPtr& msg);
+    double m_target;
+
+
 	ros::Publisher m_command_pub;
 
     //void commandCallback(const std_msgs::Float64::ConstPtr& msg);
     std_msgs::Float64  m_command_msg;
 
-	double m_desired;
+
+
 
     std::string m_control_topic;
 
@@ -52,12 +59,10 @@ class PIDController {
     double m_ki;
     double m_kd;
 
+    //limits 
     double m_upper_limit;
     double m_lower_limit;
     double m_windup_limit; 
-
-    double m_cutoff_frequency;
-    double m_update_frequency;
 
 	bool m_unwind_angle; // tells us if our variable is an angle that we need to unwind. 
 

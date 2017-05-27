@@ -8,7 +8,7 @@ PIDController::PIDController(NodeHandle n,NodeHandle np,  string control_topic):
 	m_control_topic(control_topic){
 
 
-	int buf_size; //don't need this anywhere else
+	int buf_size; //don't need this anywhere else might as well keep it local
 	// Get params if specified in launch file or as params on command-line, set defaults
 	np.param<double>("kp", m_kp, 1.0);
 	np.param<double>("ki", m_ki, 0.0);
@@ -31,11 +31,14 @@ PIDController::PIDController(NodeHandle n,NodeHandle np,  string control_topic):
 	// Set up publishers and subscribers
 	string sensor_topic = qubo_namespace + control_topic;
 	m_sensor_sub = n.subscribe(sensor_topic, 1000, &PIDController::sensorCallback, this);
+
+	string target_topic = qubo_namespace + control_topic + "_target";
+	m_target_sub = n.subscribe(target_topic, 1000, &PIDController::targetCallback, this);
 	
 	string command_topic = qubo_namespace + control_topic + "_cmd";
 	m_command_pub = n.advertise<std_msgs::Float64>(command_topic, 1000);
 
-	
+		
 	f = boost::bind(&PIDController::configCallback, this, _1, _2);
 	server.setCallback(f);
 	
@@ -55,7 +58,8 @@ void PIDController::update() {
 
 
 	//calculate error, update integrals and derivatives of the error
-	m_error = m_desired  - m_current; //proportional term
+	m_error = m_target  - m_current; //proportional term
+
 	
    	//if we are told to unwind our angle then we better do that. 
 	if(m_unwind_angle){
@@ -123,7 +127,7 @@ void PIDController::configCallback(controls::TestConfig &config, uint32_t level)
 	m_kp = config.kp;
 	m_ki = config.ki;
 	m_kd = config.kd;
-	m_desired = config.target;
+	m_target = config.target;
 
 
 	
@@ -133,5 +137,8 @@ void PIDController::configCallback(controls::TestConfig &config, uint32_t level)
 	
 }
 
+void PIDController::targetCallback(const std_msgs::Float64::ConstPtr& msg) {
+	m_target = msg->data;
+}
 
 
