@@ -48,5 +48,5 @@ if __name__ == '__main__':
     
     while(True):
         error_x, error_y = pretend_vision_action()
-        yaw_target_pub.publish(error_x - yaw)
+        yaw_target_pub.publish(error_x + yaw)
         rate.sleep()
