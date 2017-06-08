@@ -1,5 +1,6 @@
 //sg: this is going to be the primary vision node for qubo (or future robots, whatever)
 #include "vision_node.h"
+
 using namespace std;
 
 
