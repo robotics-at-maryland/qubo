@@ -26,7 +26,7 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 fi
 
 # Installing additional packages.
-sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
@@ -43,4 +43,16 @@ fi
 # Finally, run rosdep to install all the dependencies for our packages.
 sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
 
-
+# Install QtCreator and its ROS plugin.
+# Due to a quirk of the plugin, qtcreator MUST be installed twice.
+echo "Do you want to install optional IDE QtCreator and associated ROS plugin?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) sudo apt install qtcreator; 
+sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
+sudo add-apt-repository ppa:levi-armstrong/ppa;
+sudo apt-get update && sudo apt-get install qt57creator-plugin-ros;
+sudo apt install qtcreator; break;;
+        No ) exit;;
+    esac
+done
