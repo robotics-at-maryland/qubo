@@ -1,3 +1,7 @@
+#ifndef VISION_NODE_H
+#define VISION_NODE_H
+
+
 #include "ros/ros.h"
 
 #include <opencv2/opencv.hpp>
@@ -22,12 +26,7 @@
 //image transport includes
 #include <image_transport/image_transport.h>
 
-
-
-
-typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
-
-float* processVideo(cv::VideoCapture capture, Server *as);
+#include "find_buoy_action.h"
 
 class VisionNode{
 
@@ -49,17 +48,17 @@ class VisionNode{
     //=================================================================================================================
 
 
-    bool service_test(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+    bool serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
     
-    bool buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+    bool buoyDetector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
     
     //sg: put action definitions here
     //=================================================================================================================
 
-    static void test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
+    static void testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction>*as);
 
-    void find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as);
+    void findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
 
     
     protected:
@@ -81,5 +80,8 @@ class VisionNode{
     //======================================================================
     //the VisionExampleAction name here comes from the .action file in qubo/ram_msgs/action.
     //the build system appends the word Action to whatever the file name is in the ram_msgs directory
-    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> example_server; 
+    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> buoy_server; 
 };
+
+
+#endif

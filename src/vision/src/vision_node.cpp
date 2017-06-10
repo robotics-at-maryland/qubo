@@ -8,22 +8,24 @@ using namespace std;
 VisionNode::VisionNode(ros::NodeHandle n, std::string feed_topic)
   
 	:m_it(n),
-	 example_server(n, "vision_example", boost::bind(&VisionNode::find_buoy, this,  _1 , &example_server), false)
+	 buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this,  _1 , &buoy_server), false)
 {
     //take in the node handle
     this->n = n;
 
 	//TODO resolve namespaces pass in args etc
 	m_image_sub =  m_it.subscribe("qubo/camera/image_raw", 1 , &VisionNode::imageCallback, this);
+
+
 	//register all services here
-    //=====================================================================
-    test_srv = this->n.advertiseService("service_test", &VisionNode::service_test, this);
-    buoy_detect_srv = this->n.advertiseService("buoy_detect", &VisionNode::buoy_detector, this);
+    //------------------------------------------------------------------------------
+    test_srv = this->n.advertiseService("service_test", &VisionNode::serviceTest, this);
+    buoy_detect_srv = this->n.advertiseService("buoy_detect", &VisionNode::buoyDetector, this);
 
 
     //start your action servers here
-    //=====================================================================
-	example_server.start();
+    //------------------------------------------------------------------------------
+	buoy_server.start();
 	ROS_ERROR("server started");
 }
 
@@ -60,12 +62,12 @@ void VisionNode::imageCallback(const sensor_msgs::ImageConstPtr& msg){
 * actions that will be able to called from any other node
 * =================================================================================================================
 */
-bool VisionNode::service_test(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
+bool VisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
     ROS_ERROR("service called successfully");
 }
 
 //this will detect if there are buoy's in the scene or not. 
-bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
+bool VisionNode::buoyDetector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
     
     //sg - copied this from stack overflow, you can call it but it exits with a (handled) exception somewhere
 
@@ -92,21 +94,20 @@ bool VisionNode::buoy_detector(ram_msgs::bool_bool::Request &req, ram_msgs::bool
 
 //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet. 
 //=================================================================================================================
-void VisionNode::test_execute(const ram_msgs::VisionExampleGoalConstPtr& goal, Server*as){
+void VisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
     //    goal->test_feedback = 5;
     ROS_ERROR("You called the action well done!");
     as->setSucceeded();
 }
 
 //if a buoy is found on frame finds where it is and returns the center offset 
-void VisionNode::find_buoy(const ram_msgs::VisionExampleGoalConstPtr& goal, Server *as){
+void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 	ROS_ERROR("here!");
+
+	FindBuoyAction action = FindBuoyAction(as);
+	
 	while(true){
-		//sgillen@20174224-14:42 we'll probably need something like this, I believe find_buoy runs in tandem with our update loop
-		
-		//float* center = processVideo(this->cap, as);
-		//cout << center << endl;
-		
+		action.updateAction(img); //this will also publish the feeback
 	}
 	
 	as->setSucceeded();   
