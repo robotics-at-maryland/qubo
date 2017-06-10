@@ -1,0 +1,15 @@
+<!-- Launches Gazebo with a basic Qubo robot spawned in the empty underwater world. -->
+<launch>
+
+  <!-- this argument makes it look like our stream comes straight from qubo -->
+  <remap from="/gazebo_qubo/camera/camera_image" to="/qubo/camera/camera_image"/>
+  
+  <!-- Launch Gazebo with the empty underwater world -->
+    <include file="$(find qubo_launch)/gazebo/empty_underwater_world.launch" />
+    
+    <!-- Spawn basic Qubo robot into the world -->
+    <include file="$(find qubo_launch)/gazebo/spawn_basic_qubo.launch">
+      <arg name="namespace" value="gazebo_qubo"/>
+      
+    </include>
+</launch>

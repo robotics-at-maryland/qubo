@@ -9,7 +9,9 @@ project(joystick)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-    ram_cpp_utils
+
+    image_transport 
+
 )
 
 catkin_package(

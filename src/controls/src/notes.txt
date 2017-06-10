@@ -1,0 +1,13 @@
+By Monday - 
+
+want to add integrator limiting and derivative smoothing
+fix folder setups, have different files for different things..
+
+PID loops for pitch, roll..
+
+have hard coded PID loop (low priority).
+
+Next week
+
+Get vision in the loop
+Get state machine in the loop

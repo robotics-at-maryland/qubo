@@ -1,0 +1,34 @@
+<!-- all this file does is launch a camera node that publishes a physical camera or a video to a ros image -->
+<!-- you need to launch it like this roslaunch qubo_launch buoy_test.launch video:=/home/sgillen/video/nbrf_video/comp/comp_buoy/20100714084551.avi  -->
+
+<launch>
+
+  <group>
+  <!-- best way I could find so that we actually pass this argument, still don't love it though -->
+  <arg name="video" />
+  
+  <remap from="/qubo/camera/image_raw" to="/qubo/camera/image"/>
+   <!-- launch video stream -->
+   <include file="$(find video_stream_opencv)/launch/camera.launch" ns="/qubo" >
+        <!-- node name and ros graph name -->
+        <arg name="camera_name" value="camera" />
+        <!-- means video device 0, /dev/video0 -->
+        <arg name="video_stream_provider" value="$(arg video)" />
+        <!-- throttling the querying of frames to -->
+        <arg name="fps" value="30" />
+        <!-- setting frame_id -->
+        <arg name="frame_id" value="webcam" />
+        <!-- camera info loading, take care as it needs the "file:///" at the start , e.g.:
+        "file:///$(find your_camera_package)/config/your_camera.yaml" -->
+        <!-- <arg name="camera_info_url" value="" /> -->
+        <!-- flip the image horizontally (mirror it) -->
+        <arg name="flip_horizontal" value="false" />
+        <!-- flip the image vertically -->
+        <arg name="flip_vertical" value="false" />
+        <!-- visualize on an image_view window the stream generated -->
+        <arg name="visualize" value="true" />
+   </include>
+
+   
+  </group>
+</launch>

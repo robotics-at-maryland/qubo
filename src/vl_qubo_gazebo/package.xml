@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- this entire file is one big TODO right now -->
+<package>
+  <name>vl_qubo_gazebo</name>
+  <version>0.0.0</version>
+  <description>The qubo_gazebo package</description>
+  <author email="software@ram.umd.edu">Robotics @ Maryland</author>
+  <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
+  
+  
+  <license>GPL</license>
+    
+  <url>http://ram.umd.edu</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  
+  
+</package>

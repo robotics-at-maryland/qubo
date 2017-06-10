@@ -1,0 +1,3 @@
+<launch>
+      <node name="vision_node" pkg="vision" type="vision_node" args="$(find vision)/../../../video/nbrf_video/comp/comp_buoy/20100714084551.avi"/>
+</launch>

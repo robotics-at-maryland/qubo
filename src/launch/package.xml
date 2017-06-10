@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- this entire file is one big TODO right now -->
+<package>
+  <name>qubo_launch</name>
+  <version>0.0.0</version>
+  <description>Launch files for gazebo</description>
+  <author email="software@ram.umd.edu">Robotics @ Maryland</author>
+  <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
+  
+  
+  <license>GPL</license>
+    
+  <url>http://ram.umd.edu</url>
+
+  
+</package>
