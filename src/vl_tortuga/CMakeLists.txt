@@ -8,9 +8,7 @@ project(vl_tortuga)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-
     image_transport
-
     ram_msgs
     tf2_ros
 )
@@ -89,8 +87,9 @@ set(TEST_FILES
 
 
 #these get tortuga specific names to prevent conflicts with other vehicle layers
-add_executable(tortuga_dvl_node_torguga ${DVL_SRC_FILES})
-target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
+add_executable(tortuga_dvl_node_tortuga ${DVL_SRC_FILES})
+add_dependencies(tortuga_dvl_node_tortuga ram_msgs_generate_messages_cpp)
+target_link_libraries(tortuga_dvl_node_tortuga ${catkin_LIBRARIES})
 
 add_executable(tortuga_imu_node ${IMU_SRC_FILES})
 target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
@@ -99,6 +98,7 @@ add_executable(lcdshow ${LCDSHOW_SRC_FILES})
 target_link_libraries(lcdshow ${catkin_LIBRARIES})
 
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
+add_dependencies(sensor_board_node ram_msgs_generate_messages_cpp)
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 
 
