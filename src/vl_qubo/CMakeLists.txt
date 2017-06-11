@@ -67,6 +67,27 @@ set(HARDWARE_NODE_SRC_FILES
   src/control_node.cpp
   drivers/ahrs/src/AHRS.cpp
   )
+set(QSCU_SRC_FILES
+  drivers/qscu/src/QSCU.cpp
+  drivers/qscu/src/main.cpp
+  )
+
+##sg: This does the same as set but it allows us to match everything in the
+#source directory
+file(GLOB QUBOBUS_LIB_FILES
+  drivers/qubobus/src/*.c
+  )
+
+##Qubobus Test Files
+
+set(IO_TEST_FILES
+  drivers/qubobus/test/test_io.c
+  )
+
+set(DEF_TEST_FILES
+  drivers/qubobus/test/test_defs.c
+  )
+
 
 ##############################
 # Add Executables ############
