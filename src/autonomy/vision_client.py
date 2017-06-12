@@ -10,12 +10,15 @@ import actionlib
 # goal message and the result message.
 import ram_msgs.msg
 
+def feedback_callback(feedback):
+    print feedback
+
 def vision_client():
     # Creates the SimpleActionClient, passing the type of the action
     # (VisionExampleAction) to the constructor.
     print "0"
-    
-    client = actionlib.SimpleActionClient('vision_example', ram_msgs.msg.VisionExampleAction)
+    ## !!! you'll need to change the action name here to test different actions
+    client = actionlib.SimpleActionClient('buoy_action', ram_msgs.msg.VisionExampleAction)
     print "1"
     # Waits until the action server has started up and started
     # listening for goals.
@@ -25,7 +28,7 @@ def vision_client():
     goal = ram_msgs.msg.VisionExampleGoal(test_goal = False)
     print "3"
     # Sends the goal to the action server.
-    client.send_goal(goal)
+    client.send_goal(goal, feedback_cb = feedback_callback)
     print "4"
     # Waits for the server to finish performing the action.
     client.wait_for_result()

@@ -14,7 +14,7 @@
         <!-- means video device 0, /dev/video0 -->
         <arg name="video_stream_provider" value="$(arg video)" />
         <!-- throttling the querying of frames to -->
-        <arg name="fps" value="1" />
+        <arg name="fps" value="5" />
         <!-- setting frame_id -->
         <arg name="frame_id" value="webcam" />
         <!-- camera info loading, take care as it needs the "file:///" at the start , e.g.:
@@ -28,7 +28,7 @@
         <arg name="visualize" value="true" />
    </include>
    
-   <node name="vision_node" pkg="vision" type="vision_node" args="/qubo/camera/image"/>
+   <node name="vision_node" pkg="vision" type="vision_node" args="/qubo/camera/image"/> 
       
   </group>
   

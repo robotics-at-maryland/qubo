@@ -6,8 +6,10 @@ using namespace std;
 
 FindBuoyAction::FindBuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 
+	namedWindow( "Gray image", CV_WINDOW_AUTOSIZE );
+	
 	//initialize background subtractors, keeping both in for now
-	//pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
+	//m_pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
 	m_as = as; 
 	m_pMOG = createBackgroundSubtractorMOG2(10000, 35, false);
 
@@ -21,7 +23,7 @@ FindBuoyAction::FindBuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExa
 
 	//Filter by Area
 	params.filterByArea = true;
-	params.minArea = 425;
+	params.minArea = 100;
 
 	// Set up detector with params
 	m_detector = SimpleBlobDetector::create(params);
@@ -70,12 +72,22 @@ void FindBuoyAction::updateAction(Mat cframe) {
 	Point2f center; 
 	
 	mog_output = backgroundSubtract(cframe); //updates the MOG frame
-    m_detector->detect(mog_output, keypoints); //simple blob detectors on the out
-    
-	if (updateHistory(cframe, keypoints, center)){
+    m_detector->detect(mog_output, keypoints);
+	
+	
+	for (auto& point:keypoints ){
+		ROS_ERROR("%f %f" , point.pt.x, point.pt.y); 
+	}
+	
+	imshow("Gray image" , mog_output);
+	waitKey(30);
+
+	ROS_ERROR("let's see if we see something");
+	if (updateHistory(mog_output, keypoints, center)){
 		feedback.x_offset = cframe.rows/2 - center.x; 
 		feedback.y_offset = cframe.cols/2 - center.y;
-		
+
+		ROS_ERROR("publishing feedback");
 		//I actually think it might be better to keep the action server away from this class, haven't decided yet..
 		m_as->publishFeedback(feedback);
 	}

@@ -44,8 +44,6 @@ if __name__ == '__main__':
     depth_target_pub = rospy.Publisher('/qubo/depth_target', Float64, queue_size=10)
     rate = rospy.Rate(10) # 100hz
 
-    print "hello?"
-    
     while(True):
         error_x, error_y = pretend_vision_action()
         yaw_target_pub.publish(error_x + yaw)

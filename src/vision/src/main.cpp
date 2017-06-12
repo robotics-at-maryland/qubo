@@ -23,10 +23,8 @@ int main(int argc, char** argv){
     
     ros::Rate r(10); //not 10 hz
     while(ros::ok()){
-		//		ROS_ERROR("about to call update");
         node.update();
-		//		ROS_ERROR("in main");
-		// r.sleep(); //you update this time in the second argument to the VisionNode constructor
+		r.sleep(); //you update this time in the second argument to the VisionNode constructor
     }
 
     return 0;

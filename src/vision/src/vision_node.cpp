@@ -26,7 +26,7 @@ VisionNode::VisionNode(ros::NodeHandle n, std::string feed_topic)
     //start your action servers here
     //------------------------------------------------------------------------------
 	buoy_server.start();
-	ROS_ERROR("server started");
+	ROS_INFO("servers started");
 }
 
 
