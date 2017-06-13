@@ -3,84 +3,63 @@
 using namespace cv;
 using namespace std;
 
-
+//Constructor
 FindBuoyAction::FindBuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 
 	namedWindow( "Gray image", CV_WINDOW_AUTOSIZE );
 	
 	//initialize background subtractors, keeping both in for now
-	//m_pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
-	m_as = as; 
+	
+	m_as = as;
+
+	//you can decide which version of the subtractor you want to run by commenting in one of these line
 	m_pMOG = createBackgroundSubtractorMOG2(10000, 35, false);
+	//m_pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
 
 
+	
 	// Setup SimpleBlobDetector parameters.
 	SimpleBlobDetector::Params params;
-	
 	// Change thresholds
 	params.minThreshold = 0;
 	params.maxThreshold = 256;
-
 	//Filter by Area
 	params.filterByArea = true;
 	params.minArea = 100;
-
 	// Set up detector with params
 	m_detector = SimpleBlobDetector::create(params);
 	
-
 }
 
 FindBuoyAction::~FindBuoyAction(){}
 	
 
 
-//TODO, possibly pass in the matrix we want the data copied into? seems more consistent with what OpenCV does
-Mat FindBuoyAction::backgroundSubtract(Mat cframe){
-	
-    Mat local_frame; //local meaning within the scope of the function
-
-    //update the background model
-	m_pMOG->apply(cframe, local_frame);
-	
-    //blurs the image uses the MOG background subtraction
-    GaussianBlur(local_frame, local_frame, Size(3,3), 0,0);
-
-    // Define the structuring elements to be used in eroding and dilating the image 
-    Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
-    Mat se2 = getStructuringElement(MORPH_RECT, Size(5, 5));
-
-    // Perform dialting and eroding helps to elminate background noise
-	//sgillen@20175109-15:51 when I found this on the second operation was actually being performed
-    morphologyEx(local_frame, local_frame, MORPH_CLOSE, se1);
-    morphologyEx(local_frame, local_frame, MORPH_OPEN, se2);
-
-    //inverts the colors 
-    bitwise_not(local_frame, local_frame, noArray()); 
-	
-    return local_frame;   
-}
-
-
-void FindBuoyAction::updateAction(Mat cframe) {   
+void FindBuoyAction::updateAction(const Mat cframe) {   
 	//create Background Subtractor objects
     
-    Mat mog_output; 
+    Mat mog_output; //output from our background subtractor, we need to keep track of the unmodified current frame 
 	vector<KeyPoint> keypoints; // Storage for blobs
 
+	
+	
+	
 	ram_msgs::VisionExampleFeedback feedback;
 	Point2f center; 
 	
 	mog_output = backgroundSubtract(cframe); //updates the MOG frame
     m_detector->detect(mog_output, keypoints);
 	
-	
-	for (auto& point:keypoints ){
-		ROS_ERROR("%f %f" , point.pt.x, point.pt.y); 
+	if(mog_output.empty()){
+		ROS_ERROR("image was empty");
+		return;
 	}
+
+	ROS_ERROR("image was not empty");
+
 	
 	imshow("Gray image" , mog_output);
-	waitKey(30);
+	waitKey();
 
 	ROS_ERROR("let's see if we see something");
 	if (updateHistory(mog_output, keypoints, center)){
@@ -95,9 +74,36 @@ void FindBuoyAction::updateAction(Mat cframe) {
 }
 
 
+
+//Apply's the MOG subtraction
+Mat FindBuoyAction::backgroundSubtract(const Mat cframe){
+
+	Mat out_frame; // output matrix
+	
+	//update the background model
+	m_pMOG->apply(cframe, out_frame);
+
+    //blurs the image uses the MOG background subtraction
+    GaussianBlur(out_frame, out_frame, Size(3,3), 0,0);
+
+    // Define the structuring elements to be used in eroding and dilating the image 
+    Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
+    Mat se2 = getStructuringElement(MORPH_RECT, Size(5, 5));
+
+    // Perform dialting and eroding helps to elminate background noise
+	//sgillen@20175109-15:51 when I found this on the second operation was actually being performed
+    morphologyEx(out_frame, out_frame, MORPH_CLOSE, se1);
+    morphologyEx(out_frame, out_frame, MORPH_OPEN, se2);
+
+    //inverts the colors 
+    bitwise_not(out_frame, out_frame, noArray()); 
+	
+}
+
+
+
 //Davids way of keeping track of the history of points
-//TODO, should probably pass in 
-bool  FindBuoyAction::updateHistory(Mat cframe, vector<KeyPoint> keypoints, Point2f center){
+bool  FindBuoyAction::updateHistory(const Mat cframe, vector<KeyPoint> keypoints, Point2f center){
     float pointX, pointY, x, y; 
     bool insert; 
     Vec3b color;
