@@ -40,6 +40,8 @@
       <arg name="flip_vertical" value="false" />
       <!-- visualize on an image_view window the stream generated -->
       <arg name="visualize" value="true" />
+
+      <respawn = "true" />
     </include>
    
   </group>
