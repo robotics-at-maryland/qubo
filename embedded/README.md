@@ -29,6 +29,11 @@ all the source files there into object files and then runs the `symlink_objs` sc
 files into the `obj/` so the linker can easily access it.
 
 ##Build
+
+first do make in drivers, then do another make in drivers/usblib/
+
+TODO have our root make file make drives too
+
 Building should just be as simple as running `make` in the `embedded/` directory. The Makefile will
 automatically build all `*.c` files in `src/` and `src/tasks/`. It will then try to output an
 `image.bin` file that can be flashed to the MCU.
