@@ -5,7 +5,8 @@
 
   <group>
   <!-- best way I could find so that we actually pass this argument, still don't love it though -->
-  <arg name="video" />
+  <arg name="video" default="0" />
+  <arg name="record_cameras" default="true" />
   
   <remap from="/qubo/camera/image_raw" to="/qubo/camera/image"/>
    <!-- launch video stream -->
@@ -28,6 +29,17 @@
         <!-- visualize on an image_view window the stream generated -->
         <arg name="visualize" value="true" />
    </include>
+
+   
+   <node name="vision_node" pkg="vision" type="vision_node" args="$(find vision)/../../../video/nbrf_video/comp/comp_buoy/20100714084551.avi">
+     <param name="video_log_dir" value="$(env HOME)/video/" />
+   </node>
+   
+   
+   <node pkg="rosbag" type="record" name="rosbag_record_cam"
+         args="record -o $(env HOME)/video/ /qubo/camera/image"
+         if="$(arg record_cameras)" />
+   
 
    
   </group>

@@ -41,7 +41,6 @@
       <!-- visualize on an image_view window the stream generated -->
       <arg name="visualize" value="true" />
 
-      <respawn = "true" />
     </include>
    
   </group>

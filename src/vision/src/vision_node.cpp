@@ -11,8 +11,6 @@ VisionNode::VisionNode(ros::NodeHandle n, ros::NodeHandle np, std::string feed_t
 	 
 {
 	
-	np.param<string>("video_log_dir", m_log_dir, "");
-	
 	//TODO resolve namespaces pass in args etc
 	m_image_sub =  m_it.subscribe("qubo/camera/image_raw", 1 , &VisionNode::imageCallback, this);
 	
@@ -34,9 +32,6 @@ VisionNode::~VisionNode(){
 }
 
 void VisionNode::update(){
-
-	ROS_ERROR("m_save_video = %d" , m_record_video);
-	ROS_ERROR("recording directory is = %s" , m_log_dir.c_str());
 	
 	ros::spinOnce();
    

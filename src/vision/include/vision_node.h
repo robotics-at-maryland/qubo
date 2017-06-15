@@ -65,8 +65,6 @@ class VisionNode{
 
     
     cv::Mat m_img;
-    bool m_record_video;
-	std::string m_log_dir;
 	
     //declare a service object for your service below
     //======================================================================
