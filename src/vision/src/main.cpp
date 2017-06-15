@@ -16,11 +16,12 @@ int main(int argc, char** argv){
     }
     // init the node handle
     ros::init(argc,argv, "vision_node");
-    
-    //make a pointer to a node handle, I'm actually not even sure we need the node handle...
-    ros::NodeHandle n;
-    VisionNode node(n,argv[1]);
-    
+	ros::NodeHandle n;
+	ros::NodeHandle np("~");
+	
+    VisionNode node(n,np,argv[1]); //argv[1] should be the topic the camera is published on
+
+	
     ros::Rate r(10); //not 10 hz
     while(ros::ok()){
         node.update();

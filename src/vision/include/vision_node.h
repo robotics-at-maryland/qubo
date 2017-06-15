@@ -38,7 +38,7 @@ class VisionNode{
     void imageCallback(const sensor_msgs::ImageConstPtr& msg);
     
     //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
-    VisionNode(ros::NodeHandle n, std::string feed);
+    VisionNode(ros::NodeHandle n, ros::NodeHandle np,  std::string feed);
     ~VisionNode();
     void update(); //this will just pull the next image in
 
@@ -63,24 +63,22 @@ class VisionNode{
     
     protected:
 
-    ros::NodeHandle n;
-    //cap is the object holding the video feed, either real or from an existing avi file
-    //img is the object reprenting the current image we're looking at, we'll keep pumping the next fram
-    //from cap into img at every update
-
-    cv::Mat img;
     
+    cv::Mat m_img;
+    bool m_record_video;
+	std::string m_log_dir;
+	
     //declare a service object for your service below
     //======================================================================
-    ros::ServiceServer buoy_detect_srv;
-    ros::ServiceServer test_srv;
+    ros::ServiceServer m_buoy_detect_srv;
+    ros::ServiceServer m_test_srv;
 
     
     //declare an action server object for your action here
     //======================================================================
     //the VisionExampleAction name here comes from the .action file in qubo/ram_msgs/action.
     //the build system appends the word Action to whatever the file name is in the ram_msgs directory
-    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> buoy_server; 
+    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> m_buoy_server; 
 };
 
 
