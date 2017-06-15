@@ -42,16 +42,32 @@ void FindBuoyAction::updateAction(const Mat cframe) {
 	vector<KeyPoint> keypoints; // Storage for blobs
 
 	
-	
+	ROS_ERROR("hi");
 	
 	ram_msgs::VisionExampleFeedback feedback;
 	Point2f center; 
+
+	
+	if(cframe.empty()){
+		ROS_ERROR("image was empty");
+		return;
+	}
+	
 	
 	mog_output = backgroundSubtract(cframe); //updates the MOG frame
+	ROS_ERROR("hi 2");
+
+	if(mog_output.empty()){
+		ROS_ERROR("image (mog) was empty");
+		return;
+	}
+	
+	
     m_detector->detect(mog_output, keypoints);
+	ROS_ERROR("hi 3");
 	
 	if(mog_output.empty()){
-		ROS_ERROR("image was empty");
+		ROS_ERROR("image (blob detected) was empty");
 		return;
 	}
 
@@ -79,13 +95,33 @@ void FindBuoyAction::updateAction(const Mat cframe) {
 Mat FindBuoyAction::backgroundSubtract(const Mat cframe){
 
 	Mat out_frame; // output matrix
+
+	ROS_ERROR("in BS");
+	
+	if(cframe.empty()){
+		ROS_ERROR("image was empty");
+	}
+	
 	
 	//update the background model
 	m_pMOG->apply(cframe, out_frame);
 
+	if(out_frame.empty()){
+		ROS_ERROR("image was empty");
+		
+	}
+		
+	
     //blurs the image uses the MOG background subtraction
     GaussianBlur(out_frame, out_frame, Size(3,3), 0,0);
 
+	
+	if(out_frame.empty()){
+		ROS_ERROR("image was empty");
+
+	}
+	
+	
     // Define the structuring elements to be used in eroding and dilating the image 
     Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
     Mat se2 = getStructuringElement(MORPH_RECT, Size(5, 5));
@@ -97,7 +133,9 @@ Mat FindBuoyAction::backgroundSubtract(const Mat cframe){
 
     //inverts the colors 
     bitwise_not(out_frame, out_frame, noArray()); 
-	
+
+
+	return out_frame;
 }
 
 

@@ -12,7 +12,7 @@ VisionNode::VisionNode(ros::NodeHandle n, ros::NodeHandle np, std::string feed_t
 {
 	
 	//TODO resolve namespaces pass in args etc
-	m_image_sub =  m_it.subscribe("qubo/camera/image_raw", 1 , &VisionNode::imageCallback, this);
+	m_image_sub =  m_it.subscribe(feed_topic, 1 , &VisionNode::imageCallback, this);
 	
 	//register all services here
 	//------------------------------------------------------------------------------
@@ -42,10 +42,13 @@ void VisionNode::update(){
 void VisionNode::imageCallback(const sensor_msgs::ImageConstPtr& msg){
 
 	cv_bridge::CvImagePtr cv_ptr;
+
+	
     try	{
 		//TODO can we do this without a copy?
 		cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-		m_img = cv_ptr->image; //this could be bad if img does not copy anything, even if it does 
+		m_img = cv_ptr->image; //this could be bad if img does not copy anything, even if it does
+		
 	}
     catch (cv_bridge::Exception& e){
 		ROS_ERROR("cv_bridge exception: %s", e.what());
@@ -99,8 +102,7 @@ void VisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, ac
 
 //if a buoy is found on frame finds where it is and returns the center offset 
 void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
-	ROS_ERROR("here!");
-
+	
 	FindBuoyAction action = FindBuoyAction(as);
 	
 	while(true){
