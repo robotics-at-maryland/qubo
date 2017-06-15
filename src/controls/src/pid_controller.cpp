@@ -4,7 +4,7 @@ using namespace std;
 using namespace ros;
 
 
-PIDController::PIDController(NodeHandle n,NodeHandle np,  string control_topic):
+PIDController::PIDController(NodeHandle n, NodeHandle np,  string control_topic):
 	m_control_topic(control_topic){
 
 
@@ -39,8 +39,8 @@ PIDController::PIDController(NodeHandle n,NodeHandle np,  string control_topic):
 	m_command_pub = n.advertise<std_msgs::Float64>(command_topic, 1000);
 
 		
-	f = boost::bind(&PIDController::configCallback, this, _1, _2);
-	server.setCallback(f);
+	//m_f =
+	m_server.setCallback( boost::bind(&PIDController::configCallback, this, _1, _2));
 	
     
 }

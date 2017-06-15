@@ -68,8 +68,8 @@ class PIDController {
 
 
     //dynamic reconfigure stuff
-	dynamic_reconfigure::Server<controls::TestConfig> server;
-	dynamic_reconfigure::Server<controls::TestConfig>::CallbackType f;
+	dynamic_reconfigure::Server<controls::TestConfig> m_server;
+	//dynamic_reconfigure::Server<controls::TestConfig>::CallbackType m_f;
 
     void configCallback(controls::TestConfig &config, uint32_t level);
 
