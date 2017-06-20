@@ -2,7 +2,7 @@
 #define QSCU_H
 
 /*
- * Endpoint.h
+ * QSCU.h
  * Header file for QuboBus Endpoint.
  *
  * Copyright (C) 2016 Robotics at Maryland
@@ -54,7 +54,7 @@ class QSCU
 {
     public:
         /**
-         * Constructor for a new DVL interface.
+         * Constructor for a new QSCU interface.
          * @param (std::string) unix device name
          * @param (QSCUSpeed) Baudrate to use for connection.
          */
@@ -100,7 +100,7 @@ class QSCU
 
 
 
-
+        
         static ssize_t serialRead(void *io_host, void *buffer, size_t size);
 
         static ssize_t serialWrite(void *io_host, void *buffer, size_t size);

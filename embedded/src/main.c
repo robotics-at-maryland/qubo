@@ -56,6 +56,11 @@
 #include "include/rgb_mutex.h"
 #include "include/read_uart1_queue.h"
 
+#include "include/task_handles.h"
+#include "include/task_queues.h"
+#include "tasks/include/qubobus_test.h"
+
+
 SemaphoreHandle_t i2c0_mutex;
 SemaphoreHandle_t i2c1_mutex;
 SemaphoreHandle_t i2c2_mutex;
@@ -96,6 +101,7 @@ volatile QueueHandle_t read_uart1_queue;
 
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
+
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -152,6 +158,7 @@ int main() {
   rgb_mutex = xSemaphoreCreateMutex();
 
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
+  INIT_TASK_HANDLES(); 
 
   // Initialize the UART Queue for UART0.
   INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, pdMS_TO_TICKS(1000));
@@ -186,7 +193,7 @@ int main() {
   i2c3_write_count = pvPortMalloc(sizeof(uint32_t));
   i2c3_int_state = pvPortMalloc(sizeof(uint16_t));
 
-  #ifdef DEBUG
+#ifdef DEBUG
   UARTprintf("Datastructures allocated\n");
   #endif
 
@@ -208,27 +215,30 @@ int main() {
 	  while(1){}
   }
 
+  if (qubobus_test_init() ){
+    while(1){}
+  }
   /*
-	if ( read_uart0_init() ) {
-	while(1){}
-	}
+    if ( read_uart0_init() ) {
+    while(1){}
+    }
   */
   /*
-	if( USB_serial_init() ){
-	blink_rgb(RED_LED, 1);
-	while(1){}
-	}
+    if( USB_serial_init() ){
+    blink_rgb(RED_LED, 1);
+    while(1){}
+    }
   */
   /*
-	if ( bme280_task_init()){
-	while(1){}
-	}
+    if ( bme280_task_init()){
+    while(1){}
+    }
   */
 
   /*
-	if ( example_uart_init() ) {
-	while(1){}
-	}
+    if ( example_uart_init() ) {
+    while(1){}
+    }
   */
 
   vTaskStartScheduler();

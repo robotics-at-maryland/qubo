@@ -14,7 +14,7 @@
 
 int main(){
   QSCU qscu("/dev/ttyACM0", B115200);
- reconnect:
+  reconnect:
   do {
     try {
       qscu.openDevice();
@@ -35,8 +35,13 @@ int main(){
 	} else {
 	  std::cout << "keepAlive success" << std::endl;
 	  // sleep for half a second, then repeat
-	  usleep(500000);
+	  usleep(250000);
 	}
+	std::cout << "checking status" << std::endl;
+	Transaction t_e = tEmbeddedStatus;
+	struct Embedded_Status e_s;
+	qscu.sendMessage(&t_e, NULL, &e_s);
+	std::cout << "Response: mem - " << e_s.mem_capacity << " uptime - " << e_s.uptime << std::endl;
   }
   struct Depth_Status d_s;
     Transaction t_s = tDepthStatus;
