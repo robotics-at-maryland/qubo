@@ -125,6 +125,10 @@ void vApplicationTickHook(void) {
 	#endif
 }
 
+
+volatile QueueHandle_t embedded_queue;
+TaskHandle_t* qubobus_test_handle;
+
 int main() {
 
   // Enable floating point operations
@@ -158,7 +162,9 @@ int main() {
   rgb_mutex = xSemaphoreCreateMutex();
 
   read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
-  INIT_TASK_HANDLES(); 
+  INIT_TASK_HANDLES();
+  INIT_TASK_QUEUES();
+  
 
   // Initialize the UART Queue for UART0.
   INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, pdMS_TO_TICKS(1000));
