@@ -16,7 +16,7 @@
         <!-- means video device 0, /dev/video0 -->
         <arg name="video_stream_provider" value="$(arg video)" />
         <!-- throttling the querying of frames to -->
-        <arg name="fps" value="30" />
+        <arg name="fps" value="5" />
         <!-- setting frame_id -->
         <arg name="frame_id" value="webcam" />
         <!-- camera info loading, take care as it needs the "file:///" at the start , e.g.:
@@ -36,9 +36,9 @@
    </node>
    
    
-   <node pkg="rosbag" type="record" name="rosbag_record_cam"
+<!--   <node pkg="rosbag" type="record" name="rosbag_record_cam"
          args="record -o $(env HOME)/video/ /qubo/camera/image"
-         if="$(arg record_cameras)" />
+         if="$(arg record_cameras)" /> -->
    
 
    
