@@ -56,6 +56,7 @@ set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
   src/find_buoy_action.cpp
+  src/gate_action.cpp
   )
 
 set(GPU_VISION_SRC_FILES

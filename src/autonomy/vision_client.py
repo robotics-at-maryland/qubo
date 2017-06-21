@@ -18,7 +18,7 @@ def vision_client():
     # (VisionExampleAction) to the constructor.
     print "0"
     ## !!! you'll need to change the action name here to test different actions
-    client = actionlib.SimpleActionClient('buoy_action', ram_msgs.msg.VisionExampleAction)
+    client = actionlib.SimpleActionClient('gate_action', ram_msgs.msg.VisionExampleAction)
     print "1"
     # Waits until the action server has started up and started
     # listening for goals.
