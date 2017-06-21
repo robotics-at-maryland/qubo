@@ -111,4 +111,3 @@ void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  acti
 	
 	as->setSucceeded();   
 }
-

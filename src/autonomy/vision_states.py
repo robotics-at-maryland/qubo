@@ -42,14 +42,14 @@ def main():
                                            'action':'ACTION'})
 
         smach.StateMachine.add('SERVICE',
-                           ServiceState('buoy_detect',
+                           ServiceState('service_test',
                                         bool_bool),
                            transitions={'succeeded':'WAIT',
                                         'aborted':'WAIT',
                                         'preempted':'WAIT'})
 
         smach.StateMachine.add('ACTION',
-                           SimpleActionState('vision_example',
+                           SimpleActionState('find_buoy',
                                              VisionExampleAction),
                            transitions={'succeeded':'WAIT',
                                         'aborted':'WAIT',
