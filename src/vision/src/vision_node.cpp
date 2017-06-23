@@ -8,7 +8,7 @@ using namespace ros;
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed_topic)
 	:m_it(n), //image transport
 	 m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
-	 m_gate_server(n, "gate_Action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
+	 m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
 {
 	
 	//TODO resolve namespaces pass in args etc
@@ -91,6 +91,7 @@ void VisionNode::findGate(const ram_msgs::VisionExampleGoalConstPtr& goal,  acti
 	GateAction action = GateAction();
 
 	while(true){
+		ROS_INFO("updating action");
 		action.updateAction(m_img);
 	}
 

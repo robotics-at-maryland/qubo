@@ -1,5 +1,5 @@
 <!-- all this file does is launch a camera node that publishes a physical camera or a video to a ros image -->
-<!-- you need to launch it like this roslaunch qubo_launch buoy_test.launch video:=/home/sgillen/video/nbrf_video/comp/comp_buoy/20100714084551.avi  -->
+<!-- you need to launch it like this roslaunch qubo_launch vision_node.launch video:=/home/sgillen/video/nbrf_video/comp/comp_buoy/20100714084551.avi  -->
 
 <launch>
 
@@ -8,7 +8,7 @@
   <arg name="video" default="0" />
   <arg name="record_cameras" default="true" />
   
-  <remap from="/qubo/camera/image_raw" to="/qubo/camera/image"/>
+  <!-- <remap from="/qubo/camera/image_raw" to="/qubo/camera/image"/> -->
    <!-- launch video stream -->
    <include file="$(find video_stream_opencv)/launch/camera.launch" ns="/qubo" >
         <!-- node name and ros graph name -->
@@ -31,7 +31,7 @@
    </include>
 
    
-   <node name="vision_node" pkg="vision" type="vision_node" args="$(find vision)/../../../video/nbrf_video/comp/comp_buoy/20100714084551.avi">
+   <node name="vision_node" pkg="vision" type="vision_node" args="/qubo/camera/image_raw">
      <param name="video_log_dir" value="$(env HOME)/video/" />
    </node>
    
