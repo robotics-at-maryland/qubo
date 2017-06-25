@@ -98,9 +98,9 @@ class QSCU
         /** Write bytes from a blob, return the bytes not written. */
         ssize_t writeRaw(void* blob, size_t bytes_to_write);
 
+        /* Maximum number of retries when we get a checksum error */
+        const int _max_retries = 2;
 
-
-        
         static ssize_t serialRead(void *io_host, void *buffer, size_t size);
 
         static ssize_t serialWrite(void *io_host, void *buffer, size_t size);

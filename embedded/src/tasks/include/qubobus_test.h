@@ -26,6 +26,8 @@
 #include "include/task_queues.h"
 #include "include/task_handles.h"
 
+#include "lib/include/rgb.h"
+
 bool qubobus_test_init(void);
 
 ssize_t qubobus_test_task(void* params);

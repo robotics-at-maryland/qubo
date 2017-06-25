@@ -97,11 +97,12 @@ volatile uint32_t *i2c3_read_count;
 volatile uint32_t *i2c3_write_count;
 volatile uint16_t *i2c3_int_state;
 
-volatile QueueHandle_t read_uart1_queue;
 
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
 
+DECLARE_TASK_HANDLES;
+DECLARE_TASK_QUEUES;
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -157,13 +158,11 @@ int main() {
   uart1_mutex = xSemaphoreCreateMutex();
   rgb_mutex = xSemaphoreCreateMutex();
 
-  read_uart1_queue = xQueueCreate(READ_UART1_Q_SIZE, sizeof(uint8_t));
-  INIT_TASK_HANDLES(); 
-
   // Initialize the UART Queue for UART0.
   INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, pdMS_TO_TICKS(1000));
   INIT_UART_QUEUE(uart1_queue, 256, 256, INT_UART1, UART1_BASE, pdMS_TO_TICKS(1000));
 
+  INIT_TASK_QUEUES();
 
   i2c0_address = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));

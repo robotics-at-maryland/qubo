@@ -27,7 +27,7 @@ QSCU::QSCU(std::string deviceFile, speed_t baud)
     : _deviceFile(deviceFile),
       _termBaud(baud),
       _deviceFD(-1),
-      _timeout({1,0})
+      _timeout({1,500})
 {
 
 }
@@ -203,40 +203,50 @@ ssize_t QSCU::writeRaw(void* blob, size_t bytes_to_write) {
 void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) {
     char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     bool completed = false;
+    int retries = 0;
 
     Message recieved_message, sent = create_request(transaction, payload);
 
     while (!completed) {
-	  bool recieved = false;
+        bool recieved = false;
 
-	  write_message(&_state, &sent);
+        write_message(&_state, &sent);
 
-	  while (!recieved) {
-		read_message(&_state, &recieved_message, buffer);
+        while (!recieved) {
+            if (read_message(&_state, &recieved_message, buffer)){
+                throw QSCUException("No message received");
+            }
 
-		if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
-		  Message response = create_error(&eChecksum, NULL);
-		  write_message(&_state, &response);
-		} else {
-		  recieved = true;
-		}
-	  }
+            if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
+                printf("checksum we calculated: %i checksum we received: %i\n",
+                       checksum_message(&recieved_message), recieved_message.footer.checksum );
+                if ( retries > _max_retries ){
+                    throw QSCUException("Maximum number of retries reached!");
+                }
+                retries++;
+                Message response = create_error(&eChecksum, NULL);
+                write_message(&_state, &response);
 
-	  if (recieved_message.header.message_type == MT_RESPONSE) {
-		if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
-		  throw new QSCUException("Malformed response payload!");
-		/* Copy the read message back into the response buffer. */
-		memcpy(response, buffer, transaction->response);
-		completed = true;
-	  } else if (recieved_message.header.message_type == MT_ERROR) {
-		if (recieved_message.header.message_id == eChecksum.id) {
-		  //The other side got a checksum error, retry sending.
-		} else {
-		  // throw new QSCUException(str(recieved_message.payload, recieved_message.payload_size));
-		}
-	  } else {
-		//throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
-	  }
+            } else {
+                recieved = true;
+            }
+        }
+
+        if (recieved_message.header.message_type == MT_RESPONSE) {
+            if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
+                throw QSCUException("Malformed response payload!");
+            /* Copy the read message back into the response buffer. */
+            memcpy(response, buffer, transaction->response);
+            completed = true;
+        } else if (recieved_message.header.message_type == MT_ERROR) {
+            if (recieved_message.header.message_id == eChecksum.id) {
+                //The other side got a checksum error, retry sending.
+            } else {
+                // throw QSCUException(str(recieved_message.payload, recieved_message.payload_size));
+            }
+        } else {
+            //throw QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
+        }
     }
 
 }
@@ -257,4 +267,4 @@ int QSCU::keepAlive(){
 
   // alive succeeded, return 0
   return 0;
-}
+  }
