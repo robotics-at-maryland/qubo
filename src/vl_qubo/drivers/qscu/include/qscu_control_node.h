@@ -7,6 +7,9 @@
 #include "nav_msgs/Odometry.h"
 #include "std_msgs/Float64.h"
 
+// Custom messages
+#include "ram_msgs/Status.h"
+
 // c++ stuff
 #include <iostream>
 #include <sstream>
@@ -15,6 +18,8 @@
 
 // No idea what this is
 #include "tf/tf.h"
+
+#include "QSCU.h"
 
 class QSCUControlNode {
 
@@ -27,7 +32,12 @@ class QSCUControlNode {
 	protected:
 	std::string m_node_name;
 
-	
+	QSCU qscu;
+	ros::Publisher m_status_pub;
+	ram_msgs::Status m_status_msg;
+
+	ros::Timer qubobus_loop;
+	void QubobusCallback(const ros::TimerEvent&);
 };
 
 #endif

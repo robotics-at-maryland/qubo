@@ -61,6 +61,29 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 	return 0;
 }
 
+static uint8_t handle_error(IO_State *state, Message *message, const uint8_t* buffer){
+	switch ( message->header.message_id ) {
+	case E_ID_CHECKSUM: {
+		// When we get a checksum error, we re-transmit the message
+		Message response;
+		if( q_msg.transaction != NULL ){
+			response = create_response(q_msg.transaction, q_msg.payload);
+		} else if ( q_msg.error != NULL ){
+			response = create_error( q_msg.error, q_msg.payload);
+		} else {
+			return -1;
+		}
+		if ( write_message( state, &response ) ){
+			return -1;
+		}
+		return 0;
+	}
+	default: {
+		return -1;
+	}
+	}
+}
+
 static void tiqu_task(void *params){
 	int error = 1;
 	Message message;
@@ -113,6 +136,10 @@ static void tiqu_task(void *params){
 			}
 			case MT_ERROR: {
 
+				if ( handle_error ( &state, &message, buffer )){
+					goto reconnect;
+				}
+				break;
 			}
 			default:
 				// something is wrong, break comms and reconnect

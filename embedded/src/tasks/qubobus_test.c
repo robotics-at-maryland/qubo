@@ -20,7 +20,7 @@ ssize_t qubobus_test_task(void* params){
 	QMsg msg;
 	for (;;) {
 		xTaskNotifyWait(0x0, UINT32_MAX, &notif_val, portMAX_DELAY);
-		blink_rgb(GREEN_LED | RED_LED | BLUE_LED, 1);
+		/* blink_rgb(GREEN_LED | RED_LED | BLUE_LED, 1); */
 		msg.transaction = &tEmbeddedStatus;
 		msg.error = NULL;
 		msg.payload = pvPortMalloc(msg.transaction->response);

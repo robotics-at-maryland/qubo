@@ -71,6 +71,11 @@ set(QSCU_SRC_FILES
   drivers/qscu/src/QSCU.cpp
   drivers/qscu/src/main.cpp
   )
+set(QSCU_CONTROL_NODE_SRC_FILES
+  drivers/qscu/src/qscu_control_node.cpp
+  drivers/qscu/src/qscu_control_main.cpp
+  drivers/qscu/src/QSCU.cpp
+  )
 
 ##sg: This does the same as set but it allows us to match everything in the
 #source directory
@@ -123,6 +128,9 @@ target_link_libraries(test_defs qubobus)
 add_executable(qscu ${QSCU_SRC_FILES})
 target_link_libraries(qscu qubobus)
 
+add_executable(qscu_node ${QSCU_CONTROL_NODE_SRC_FILES})
+target_link_libraries(qscu_node qubobus ${catkin_LIBRARIES})
+add_dependencies(qscu_node ram_msgs_generate_messages_cpp)
 
 ##############################
 # Installable Targets ########
