@@ -5,14 +5,32 @@ using namespace std;
 using namespace ros;
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
-VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed_topic)
-	:m_it(n), //image transport
-	 m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
-	 m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
+VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
+	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
+		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
+		m_buoy_tuner (n, "buoy_tuner" , boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false) 
 {
+
+
+	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
+	//this could give us problems if we pass something like "0followed_by_string" but just don't do that.
+
+	//sgillen@20170429-07:04 we really don't even need this... we can just pass in /dev/video0 if we want the web camera... I'll leave it for now though
+	if(isdigit(feed.c_str()[0])){
+		m_cap = cv::VideoCapture(atoi(feed.c_str()));
+	}
+	else{
+		m_cap = cv::VideoCapture(feed);
+	}
 	
-	//TODO resolve namespaces pass in args etc
-	m_image_sub =  m_it.subscribe(feed_topic, 1 , &VisionNode::imageCallback, this);
+
+	//make sure we have something valid
+    if(!m_cap.isOpened()){           
+        ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
+        exit(0);
+    }
+    
+	
 	
 	//register all services here
 	//------------------------------------------------------------------------------
@@ -31,28 +49,17 @@ VisionNode::~VisionNode(){
 }
 
 void VisionNode::update(){
+
+	m_cap >> m_img;
+	//if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
+	if(m_img.empty()){           
+		ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
+		exit(0);
+	}
 	
 	spinOnce();
 }
 
-
-//TODO, we can get even more performance gains if we set a marker telling us if an image is stale or not, if it is we can just save the last response to a service or whatever and return that value
-void VisionNode::imageCallback(const sensor_msgs::ImageConstPtr& msg){
-
-	cv_bridge::CvImagePtr cv_ptr;
-
-	
-    try	{
-		//TODO can we do this without a copy?
-		cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-		m_img = cv_ptr->image; //this could be bad if img does not copy anything, even if it does
-	}
-    catch (cv_bridge::Exception& e){
-		ROS_ERROR("cv_bridge exception: %s", e.what());
-		return;
-	}
-	
-}
 
 /*
 * Past this point is a collection of services and 
@@ -77,7 +84,7 @@ void VisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, ac
 //if a buoy is found on frame finds where it is and returns the center offset 
 void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 	
-	FindBuoyAction action = FindBuoyAction(as);
+	BuoyAction action = BuoyAction(as);
 	
 	while(true){
 		action.updateAction(m_img); //this will also publish the feedback
@@ -86,12 +93,26 @@ void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  acti
 	as->setSucceeded();   
 }
 
+
+//if a buoy is found on frame finds where it is and returns the center offset 
+void VisionNode::findBuoyTuner(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+	
+	BuoyActionTuner action = BuoyActionTuner(as,m_cap);
+	
+	while(true){
+		action.updateAction(); //this will also publish the feedback
+	}
+	
+	as->setSucceeded();   
+}
+
+
 void VisionNode::findGate(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 	
 	GateAction action = GateAction();
 
 	while(true){
-		ROS_INFO("updating action");
+		ROS_ERROR("updating action");
 		action.updateAction(m_img);
 	}
 

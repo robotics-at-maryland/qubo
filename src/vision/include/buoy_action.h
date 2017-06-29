@@ -1,5 +1,5 @@
-#ifndef FIND_BUOY_ACTION_H
-#define FIND_BUOY_ACTION_H
+#ifndef BUOY_ACTION_H
+#define BUOY_ACTION_H
 
 
 #include "opencv2/imgcodecs.hpp"
@@ -22,10 +22,10 @@
 #include "vision_node.h"
 
 
-class FindBuoyAction{
+class BuoyAction{
     public:
-    FindBuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
-    ~FindBuoyAction();
+    BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
+    ~BuoyAction();
 
     cv::Mat backgroundSubtract(cv::Mat cframe);
     std::vector<cv::KeyPoint> detectBuoy(cv::Mat cframe);

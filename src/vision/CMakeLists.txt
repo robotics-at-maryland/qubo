@@ -50,14 +50,27 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${VISP_INCLUDE_DIRS}
   include/
-)
+  )
 
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
-  src/find_buoy_action.cpp
-  src/gate_action.cpp
+  
+  src/actions/buoy_action.cpp
+  src/actions/gate_action.cpp
+  
+  src/tuners/buoy_tuner.cpp
   )
+
+
+set(SIM_VISION_SRC_FILES
+  src/sim_main.cpp
+  src/sim_vision_node.cpp
+  
+  src/actions/buoy_action.cpp
+  src/actions/gate_action.cpp
+  )
+
 
 set(GPU_VISION_SRC_FILES
   src/gpu_main.cpp
@@ -78,28 +91,28 @@ set(BLOB_TUNER_FILES
 
 #Prototype algorithms
 set(GATE_FILES
- src/prototypes/gate_detector.cpp
- )
+  src/prototypes/gate_detector.cpp
+  )
 
 
 set(SEGMENT_FILES
- src/prototypes/segmentation.cpp
- )
+  src/prototypes/segmentation.cpp
+  )
 
 set(EDGE_FILES
- src/prototypes/edge_detection.cpp
- )
+  src/prototypes/edge_detection.cpp
+  )
 
 set(BLOB_FILES
- src/prototypes/blob.cpp
- )
+  src/prototypes/blob.cpp
+  )
 
 set(EM_FILES
  src/prototypes/em.cpp
  )
 
 set(GFIT_FILES
- src/prototypes/g_fit.cpp
+  src/prototypes/g_fit.cpp
  )
 
 set(MBT_FILES
@@ -109,12 +122,19 @@ set(MBT_FILES
 #Cascades
 
 set(CASCADE_TEST
- src/cascades/CascadeTest.cpp
-)
+  src/cascades/CascadeTest.cpp
+  )
 
 ##############################
 # Add Executables ############
 ##############################
+
+
+
+add_executable(vision_node ${VISION_SRC_FILES})
+target_link_libraries(vision_node ${catkin_LIBRARIES})
+target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 #still needs to be updated to 3.0
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
@@ -124,10 +144,11 @@ add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we
 
 
 
-add_executable(vision_node ${VISION_SRC_FILES})
-target_link_libraries(vision_node ${catkin_LIBRARIES})
-target_link_libraries(vision_node ${OpenCV_LIBRARIES})
-add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
+target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
+target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
+add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+
 
 
 ##below are all basically prototypes
