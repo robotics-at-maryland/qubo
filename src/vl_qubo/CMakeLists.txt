@@ -7,6 +7,8 @@ find_package(catkin
   ram_msgs
   )
 
+find_package(Boost REQUIRED)
+
 
 catkin_package(
   LIBRARIES ${PROJECT_NAME}
@@ -131,6 +133,7 @@ target_link_libraries(qscu qubobus)
 add_executable(qscu_node ${QSCU_CONTROL_NODE_SRC_FILES})
 target_link_libraries(qscu_node qubobus ${catkin_LIBRARIES})
 add_dependencies(qscu_node ram_msgs_generate_messages_cpp)
+
 
 ##############################
 # Installable Targets ########

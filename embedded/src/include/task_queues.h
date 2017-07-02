@@ -25,10 +25,11 @@
 
 #define TASK_QUEUE_LENGTH 3
 
-#define DECLARE_TASK_QUEUES QueueHandle_t embedded_queue	/*, other_queue... */
+#define DECLARE_TASK_QUEUES QueueHandle_t embedded_queue, thruster_queue	/*, other_queue... */
 
 #define INIT_TASK_QUEUES() do {											\
-		embedded_queue =  xQueueCreate(TASK_QUEUE_LENGTH, sizeof(QMsg)); \
+		embedded_queue = xQueueCreate(TASK_QUEUE_LENGTH, sizeof(QMsg)); \
+		thruster_queue = xQueueCreate(TASK_QUEUE_LENGTH, sizeof(QMsg));	\
 	} while (0)
 
 
@@ -39,4 +40,5 @@ typedef struct _QMsg{
 } QMsg;
 
 extern QueueHandle_t embedded_queue;
+extern QueueHandle_t thruster_queue;
 #endif

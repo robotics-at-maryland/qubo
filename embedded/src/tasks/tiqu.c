@@ -24,22 +24,85 @@ bool tiqu_task_init(void){
 static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* buffer){
 
 	// Get the data from the task
-	switch (message->header.message_id){
+	if (message->header.message_id >= M_ID_OFFSET_MAX) {
 
-	case M_ID_EMBEDDED_STATUS: {
+		return -1;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_DEBUG) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_DEPTH) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_PNEUMATICS) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_THRUSTER) {
+
+		switch (message->header.message_id) {
+
+		case M_ID_THRUSTER_SET: {
+			/* create the message */
+			q_msg = (QMsg){.transaction = &tThrusterSet,
+						   .error = NULL,
+						   .payload = pvPortMalloc(tThrusterSet.request)};
+
+			*((struct Thruster_Set*)q_msg.payload) = *((struct Thruster_Set*)message->payload);
+
+			/* Send it to the task */
+			if ( xQueueSend(thruster_queue, (void*)&q_msg,
+							((struct UART_Queue*)state->io_host)->transfer_timeout) != pdPASS) {
+				return -1;
+			}
+			/* Notify the task */
+			xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
+				/* create response */
+				q_msg.payload = NULL;
+		}
+		}
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_POWER) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
 
 		// Notify using the ID of the request, so tasks know what to do
-		xTaskNotify(qubobus_test_handle, M_ID_EMBEDDED_STATUS, eSetValueWithOverwrite);
+		xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
 		if(xQueueReceive(embedded_queue, (void*)&q_msg,
 						 ((struct UART_Queue*)state->io_host)->transfer_timeout ) != pdPASS) {
 			return -1;
 
 		}
-		break;
 	}
 
-	default:
-		return -1;
+	else if (message->header.message_id >= M_ID_OFFSET_CORE) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_MIN) {
+
+		return 0;
 	}
 
 	// Now write it

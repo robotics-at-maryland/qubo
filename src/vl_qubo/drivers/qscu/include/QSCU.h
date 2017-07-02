@@ -79,6 +79,9 @@ class QSCU
         /** Write a command with variable args and read something back */
         void sendMessage(Transaction *transaction, void *payload, void *response);
 
+        /* Connect to the device */
+        void connect();
+        /* Writes a keepAlive instead of a message */
         int keepAlive();
         // --------------------------
     private: // Internal functionality.

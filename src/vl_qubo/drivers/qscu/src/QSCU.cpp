@@ -91,13 +91,7 @@ void QSCU::openDevice() {
 
     _state = initialize(this, QSCU::serialRead, QSCU::serialWrite, 10);
 
-    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
-
-    // Prepare to begin communication with the device.
-    if (init_connect(&_state, buffer)) {
-        closeDevice();
-        throw QSCUException("Unable to sychronize the remote connection!");
-    }
+    connect();
 }
 
 bool QSCU::isOpen() {return _deviceFD >= 0;}
@@ -115,18 +109,26 @@ void QSCU::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
+void QSCU::connect() {
+
+    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+    assertOpen();
+    // Prepare to begin communication with the device.
+    if (init_connect(&_state, buffer)) {
+        closeDevice();
+        throw QSCUException("Unable to sychronize the remote connection!");
+    }
+}
 
 ssize_t QSCU::serialRead(void *io_host, void *buffer, size_t size) {
     QSCU *qscu = (QSCU*) io_host;
     ssize_t ret = qscu->readRaw(buffer, size);
-    printf("read %zd bytes\n", ret);
     return ret;
 }
 
 ssize_t QSCU::serialWrite(void *io_host, void *buffer, size_t size) {
     QSCU *qscu = (QSCU*) io_host;
     ssize_t ret = qscu->writeRaw(buffer, size);
-    printf("wrote %zd bytes\n", ret);
     return ret;
 }
 
@@ -218,13 +220,12 @@ void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) 
             }
 
             if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
-                printf("checksum we calculated: %i checksum we received: %i\n",
-                       checksum_message(&recieved_message), recieved_message.footer.checksum );
+
                 if ( retries > _max_retries ){
                     throw QSCUException("Maximum number of retries reached!");
                 }
                 retries++;
-                Message response = create_error(&eChecksum, NULL);
+            Message response = create_error(&eChecksum, NULL);
                 write_message(&_state, &response);
 
             } else {
@@ -256,15 +257,14 @@ int QSCU::keepAlive(){
   unsigned char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
   alive = create_keep_alive();
   if ( write_message( &_state, &alive ) ){
-	return -1;
+      throw QSCUException("Unable to write message -> keepAlive");
   }
   if ( read_message( &_state, &alive, buffer ) ) {
-	return -1;
+      throw QSCUException("No message received -> keepAlive");
   }
   if ( alive.header.message_type != MT_KEEPALIVE ) {
-	return -1;
+      throw QSCUException("Incorrect response received -> keepAlive");
   }
-
   // alive succeeded, return 0
   return 0;
   }
