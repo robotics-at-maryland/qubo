@@ -40,6 +40,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	//------------------------------------------------------------------------------
 	m_buoy_server.start();
 	m_gate_server.start();
+	m_buoy_tuner.start();
 	ROS_INFO("servers started");
 }
 
@@ -100,7 +101,7 @@ void VisionNode::findBuoyTuner(const ram_msgs::VisionExampleGoalConstPtr& goal, 
 	BuoyActionTuner action = BuoyActionTuner(as,m_cap);
 	
 	while(true){
-		action.updateAction(); //this will also publish the feedback
+		action.updateAction(m_img); //this will also publish the feedback
 	}
 	
 	as->setSucceeded();   

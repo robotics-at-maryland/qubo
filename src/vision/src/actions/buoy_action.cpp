@@ -4,6 +4,20 @@ using namespace cv;
 using namespace std;
 
 //Constructor
+
+//static definitions, these all need to be static so that the trackbar callbacks can use them. 
+SimpleBlobDetector::Params BuoyActionTuner::m_params = SimpleBlobDetector::Params();
+Ptr<SimpleBlobDetector> BuoyActionTuner::m_detector = Ptr<SimpleBlobDetector>();
+Ptr<BackgroundSubtractor> BuoyActionTuner::m_pMOG = Ptr<BackgroundSubtractor>();
+
+
+int BuoyActionTuner::m_slider_area = 0;
+int BuoyActionTuner::m_slider_circularity = 0;
+int BuoyActionTuner::m_slider_convexity = 0;
+int BuoyActionTuner::m_slider_ratio = 0;
+
+
+
 BuoyAction::BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 
 	namedWindow( "Gray image", CV_WINDOW_AUTOSIZE );
@@ -48,30 +62,10 @@ void BuoyAction::updateAction(const Mat cframe) {
 	Point2f center; 
 
 	
-	if(cframe.empty()){
-		ROS_ERROR("image was empty");
-		return;
-	}
-	
-	
 	mog_output = backgroundSubtract(cframe); //updates the MOG frame
-	ROS_ERROR("hi 2");
-
-	if(mog_output.empty()){
-		ROS_ERROR("image (mog) was empty");
-		return;
-	}
 	
 	
     m_detector->detect(mog_output, keypoints);
-	ROS_ERROR("hi 3");
-	
-	if(mog_output.empty()){
-		ROS_ERROR("image (blob detected) was empty");
-		return;
-	}
-
-	ROS_ERROR("image was not empty");
 
 	
 	imshow("Gray image" , mog_output);

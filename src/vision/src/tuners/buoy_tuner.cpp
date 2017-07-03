@@ -6,81 +6,77 @@
 #include <opencv2/video.hpp>
 
 
+#define MAX_AREA 9000
+#define MAX_CIRCULARITY 1000
+#define MAX_RATIO 1000
+#define MAX_CONVEXITY 1000
+
+
 using namespace cv;
 using namespace std;
 
 //Constructor
-BuoyActionTuner::BuoyActionTuner(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as, VideoCapture cap){
-
+BuoyActionTuner::BuoyActionTuner(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as, VideoCapture cap):
+	m_cap(cap),  //video capture, this only shows up in the tuner version of this action so that we can rewind the video etc. 
+	m_as(as)    //action server handle ,may decide later to keep this outside, pass back a vector or something
+ 
+{
 	
-	m_cap = cap;
-	
-	//initialize background subtractors, keeping both in for now
-	
-	m_as = as;
-
+   	//initialize background subtractors, keeping both in for now
 	//you can decide which version of the subtractor you want to run by commenting in one of these line
 	m_pMOG = createBackgroundSubtractorMOG2(10000, 35, false);
 	//m_pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
 
+
+    m_slider_area = 0;
+    m_slider_circularity = 0;
+    m_slider_convexity = 0;
+    m_slider_ratio = 0;
+
+    //create GUI window for the keypoints
+    namedWindow("keypoints");
+
+    //create all the trackbars
+    createTrackbar( "area", "keypoints", &m_slider_area, MAX_AREA, areaCallback); 
+    createTrackbar( "circularity", "keypoints", &m_slider_circularity, MAX_CIRCULARITY, circCallback);
+    createTrackbar( "convexity", "keypoints", &m_slider_convexity, MAX_CONVEXITY, convCallback);
+    createTrackbar( "inertia ratio", "keypoints", &m_slider_ratio, MAX_RATIO, inertiaCallback);
+
 	
-	// Setup SimpleBlobDetector parameters.
-	SimpleBlobDetector::Params params;
+
 	// Change thresholds
-	params.minThreshold = 0;
-	params.maxThreshold = 256;
+	m_params.minThreshold = 0;
+	m_params.maxThreshold = 256;
 	//Filter by Area
-	params.filterByArea = true;
-	params.minArea = 100;
+	m_params.filterByArea = true;
+	m_params.minArea = 100;
 	// Set up detector with params
-	m_detector = SimpleBlobDetector::create(params);
-	
+	m_detector = SimpleBlobDetector::create(m_params);
+
+
 }
+
+
 
 BuoyActionTuner::~BuoyActionTuner(){}
 	
 
-
-void BuoyActionTuner::updateAction() {   
+//TODO may want to bot pass the updateAction a Mat, let it edit the cap object
+void BuoyActionTuner::updateAction(const Mat cframe) {   
 	//create Background Subtractor objects
     
     Mat mog_output; //output from our background subtractor, we need to keep track of the unmodified current frame 
 	vector<KeyPoint> keypoints; // Storage for blobs
 
 	
-	ROS_ERROR("hi");
-	
 	ram_msgs::VisionExampleFeedback feedback;
 	Point2f center; 
 
-	
-	if(cframe.empty()){
-		ROS_ERROR("image was empty");
-		return;
-	}
-	
-	
 	mog_output = backgroundSubtract(cframe); //updates the MOG frame
-	ROS_ERROR("hi 2");
-
-	if(mog_output.empty()){
-		ROS_ERROR("image (mog) was empty");
-		return;
-	}
-	
 	
     m_detector->detect(mog_output, keypoints);
-	ROS_ERROR("hi 3");
-	
-	if(mog_output.empty()){
-		ROS_ERROR("image (blob detected) was empty");
-		return;
-	}
-
-	ROS_ERROR("image was not empty");
-
-	
 	imshow("Gray image" , mog_output);
+
 	waitKey();
 
 	ROS_ERROR("let's see if we see something");
@@ -102,31 +98,12 @@ Mat BuoyActionTuner::backgroundSubtract(const Mat cframe){
 
 	Mat out_frame; // output matrix
 
-	ROS_ERROR("in BS");
-	
-	if(cframe.empty()){
-		ROS_ERROR("image was empty");
-	}
-	
-	
 	//update the background model
 	m_pMOG->apply(cframe, out_frame);
-
-	if(out_frame.empty()){
-		ROS_ERROR("image was empty");
-		
-	}
-		
 	
     //blurs the image uses the MOG background subtraction
     GaussianBlur(out_frame, out_frame, Size(3,3), 0,0);
 
-	
-	if(out_frame.empty()){
-		ROS_ERROR("image was empty");
-
-	}
-	
 	
     // Define the structuring elements to be used in eroding and dilating the image 
     Mat se1 = getStructuringElement(MORPH_RECT, Size(5, 5));
@@ -189,3 +166,41 @@ bool  BuoyActionTuner::updateHistory(const Mat cframe, vector<KeyPoint> keypoint
 
     return false;
 }
+
+
+
+//------------------------------------------------------------------------------
+//track bar functions
+
+void BuoyActionTuner::areaCallback( int, void* )
+{
+    //Filter by Area.
+    m_params.filterByArea = true;
+    m_params.minArea = m_slider_area;
+    m_params.maxArea = MAX_AREA;
+}
+
+void  BuoyActionTuner::circCallback( int, void* )
+{
+    //Filter by Circularity.
+    m_params.filterByCircularity = true; 
+    m_params.minCircularity = (float) m_slider_circularity / (float) MAX_CIRCULARITY;
+}
+
+void  BuoyActionTuner::convCallback( int, void* )
+{
+    //Filter by Convexity.
+    m_params.filterByConvexity = true; 
+    m_params.minConvexity = (float) m_slider_convexity / (float) MAX_CONVEXITY;
+}
+
+void  BuoyActionTuner::inertiaCallback( int, void* )
+{
+    //Filter by ratio of the inertia.
+    m_params.filterByInertia = true; 
+    m_params.minInertiaRatio = (float) m_slider_ratio / (float) MAX_RATIO;
+}
+
+
+
+
