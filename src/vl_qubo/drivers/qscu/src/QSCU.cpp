@@ -27,7 +27,7 @@ QSCU::QSCU(std::string deviceFile, speed_t baud)
     : _deviceFile(deviceFile),
       _termBaud(baud),
       _deviceFD(-1),
-      _timeout({1,0})
+      _timeout({1,500})
 {
 
 }
@@ -91,13 +91,7 @@ void QSCU::openDevice() {
 
     _state = initialize(this, QSCU::serialRead, QSCU::serialWrite, 10);
 
-    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
-
-    // Prepare to begin communication with the device.
-    if (init_connect(&_state, buffer)) {
-        closeDevice();
-        throw QSCUException("Unable to sychronize the remote connection!");
-    }
+    connect();
 }
 
 bool QSCU::isOpen() {return _deviceFD >= 0;}
@@ -115,18 +109,26 @@ void QSCU::closeDevice() {
  * All of the following functions are meant for internal-use only
  ******************************************************************************/
 
+void QSCU::connect() {
+
+    uint8_t buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+    assertOpen();
+    // Prepare to begin communication with the device.
+    if (init_connect(&_state, buffer)) {
+        closeDevice();
+        throw QSCUException("Unable to sychronize the remote connection!");
+    }
+}
 
 ssize_t QSCU::serialRead(void *io_host, void *buffer, size_t size) {
     QSCU *qscu = (QSCU*) io_host;
     ssize_t ret = qscu->readRaw(buffer, size);
-    printf("read %zd bytes\n", ret);
     return ret;
 }
 
 ssize_t QSCU::serialWrite(void *io_host, void *buffer, size_t size) {
     QSCU *qscu = (QSCU*) io_host;
     ssize_t ret = qscu->writeRaw(buffer, size);
-    printf("wrote %zd bytes\n", ret);
     return ret;
 }
 
@@ -203,40 +205,49 @@ ssize_t QSCU::writeRaw(void* blob, size_t bytes_to_write) {
 void QSCU::sendMessage(Transaction *transaction, void *payload, void *response) {
     char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
     bool completed = false;
+    int retries = 0;
 
     Message recieved_message, sent = create_request(transaction, payload);
 
     while (!completed) {
-	  bool recieved = false;
+        bool recieved = false;
 
-	  write_message(&_state, &sent);
+        write_message(&_state, &sent);
 
-	  while (!recieved) {
-		read_message(&_state, &recieved_message, buffer);
+        while (!recieved) {
+            if (read_message(&_state, &recieved_message, buffer)){
+                throw QSCUException("No message received");
+            }
 
-		if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
-		  Message response = create_error(&eChecksum, NULL);
-		  write_message(&_state, &response);
-		} else {
-		  recieved = true;
-		}
-	  }
+            if (checksum_message(&recieved_message) != recieved_message.footer.checksum) {
 
-	  if (recieved_message.header.message_type == MT_RESPONSE) {
-		if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
-		  throw new QSCUException("Malformed response payload!");
-		/* Copy the read message back into the response buffer. */
-		memcpy(response, buffer, transaction->response);
-		completed = true;
-	  } else if (recieved_message.header.message_type == MT_ERROR) {
-		if (recieved_message.header.message_id == eChecksum.id) {
-		  //The other side got a checksum error, retry sending.
-		} else {
-		  // throw new QSCUException(str(recieved_message.payload, recieved_message.payload_size));
-		}
-	  } else {
-		//throw new QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
-	  }
+                if ( retries > _max_retries ){
+                    throw QSCUException("Maximum number of retries reached!");
+                }
+                retries++;
+            Message response = create_error(&eChecksum, NULL);
+                write_message(&_state, &response);
+
+            } else {
+                recieved = true;
+            }
+        }
+
+        if (recieved_message.header.message_type == MT_RESPONSE) {
+            if (recieved_message.header.message_id != transaction->id || recieved_message.payload_size != transaction->response)
+                throw QSCUException("Malformed response payload!");
+            /* Copy the read message back into the response buffer. */
+            memcpy(response, buffer, transaction->response);
+            completed = true;
+        } else if (recieved_message.header.message_type == MT_ERROR) {
+            if (recieved_message.header.message_id == eChecksum.id) {
+                //The other side got a checksum error, retry sending.
+            } else {
+                // throw QSCUException(str(recieved_message.payload, recieved_message.payload_size));
+            }
+        } else {
+            //throw QSCUException("Unexpected response: " + recieved_message.header.message_type + ":" + recieved.header.message_id);
+        }
     }
 
 }
@@ -246,15 +257,14 @@ int QSCU::keepAlive(){
   unsigned char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
   alive = create_keep_alive();
   if ( write_message( &_state, &alive ) ){
-	return -1;
+      throw QSCUException("Unable to write message -> keepAlive");
   }
   if ( read_message( &_state, &alive, buffer ) ) {
-	return -1;
+      throw QSCUException("No message received -> keepAlive");
   }
   if ( alive.header.message_type != MT_KEEPALIVE ) {
-	return -1;
+      throw QSCUException("Incorrect response received -> keepAlive");
   }
-
   // alive succeeded, return 0
   return 0;
-}
+  }

@@ -8,10 +8,12 @@
 
 extern struct UART_Queue uart0_queue;
 static char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
+// This is where a message received from a queue will be put.
+static QMsg q_msg = {.transaction = NULL, .error =  NULL, .payload = NULL};
 
 bool tiqu_task_init(void){
 	if ( xTaskCreate(tiqu_task, (const portCHAR *) "Tiva Qubobus", 1024, NULL,
-					tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+					 tskIDLE_PRIORITY + 2, NULL) != pdTRUE) {
 		return true;
 	}
 	return false;
@@ -21,23 +23,86 @@ bool tiqu_task_init(void){
 // Handles requests received from the bus
 static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* buffer){
 
-	QMsg q_msg;
-
 	// Get the data from the task
-	switch (message->header.message_type){
+	if (message->header.message_id >= M_ID_OFFSET_MAX) {
 
-	case M_ID_EMBEDDED_STATUS: {
+		return -1;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_DEBUG) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_DEPTH) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_PNEUMATICS) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_THRUSTER) {
+
+		switch (message->header.message_id) {
+
+		case M_ID_THRUSTER_SET: {
+			/* create the message */
+			q_msg = (QMsg){.transaction = &tThrusterSet,
+						   .error = NULL,
+						   .payload = pvPortMalloc(tThrusterSet.request)};
+
+			*((struct Thruster_Set*)q_msg.payload) = *((struct Thruster_Set*)message->payload);
+
+			/* Send it to the task */
+			if ( xQueueSend(thruster_queue, (void*)&q_msg,
+							((struct UART_Queue*)state->io_host)->transfer_timeout) != pdPASS) {
+				return -1;
+			}
+			/* Notify the task */
+			xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
+				/* create response */
+				q_msg.payload = NULL;
+		}
+		}
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_POWER) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
+
 		// Notify using the ID of the request, so tasks know what to do
-		xTaskNotify(qubobus_test_handle, M_ID_EMBEDDED_STATUS, eSetValueWithOverwrite);
-		if(xQueueReceive(embedded_queue, (void*)&q_msg, ((struct UART_Queue*) state->io_host)->transfer_timeout ) != pdTRUE) {
+		xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
+		if(xQueueReceive(embedded_queue, (void*)&q_msg,
+						 ((struct UART_Queue*)state->io_host)->transfer_timeout ) != pdPASS) {
 			return -1;
 
 		}
-		break;
 	}
 
-	default:
-		return -1;
+	else if (message->header.message_id >= M_ID_OFFSET_CORE) {
+
+		return 0;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_MIN) {
+
+		return 0;
 	}
 
 	// Now write it
@@ -46,15 +111,40 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		response = create_response(q_msg.transaction, q_msg.payload);
 	} else if ( q_msg.error != NULL) {
 		response = create_error(q_msg.error, q_msg.payload);
+	} else {
+		// Something went wrong, just give up
+		return -1;
 	}
 
 	if ( write_message( state, &response)){
+		blink_rgb(RED_LED, 1);
 		return -1;
 	}
 	// Everything worked
-	pvPortFree(q_msg.payload);
-	q_msg.payload = NULL;
 	return 0;
+}
+
+static uint8_t handle_error(IO_State *state, Message *message, const uint8_t* buffer){
+	switch ( message->header.message_id ) {
+	case E_ID_CHECKSUM: {
+		// When we get a checksum error, we re-transmit the message
+		Message response;
+		if( q_msg.transaction != NULL ){
+			response = create_response(q_msg.transaction, q_msg.payload);
+		} else if ( q_msg.error != NULL ){
+			response = create_error( q_msg.error, q_msg.payload);
+		} else {
+			return -1;
+		}
+		if ( write_message( state, &response ) ){
+			return -1;
+		}
+		return 0;
+	}
+	default: {
+		return -1;
+	}
+	}
 }
 
 static void tiqu_task(void *params){
@@ -66,9 +156,8 @@ static void tiqu_task(void *params){
 	for(;;){
 		// This is where we jump to if something goes wrong on the bus
 		reconnect:
-		blink_rgb(RED_LED, 1);
 		// wait for the bus to connect
-		while( wait_connect( &state, buffer ));
+		while( wait_connect( &state, buffer )); /* {blink_rgb(RED_LED | GREEN_LED, 1);} */
 		blink_rgb(GREEN_LED, 1);
 
 		for(;;){
@@ -78,6 +167,7 @@ static void tiqu_task(void *params){
 			switch ( message.header.message_type ){
 
 			case MT_ANNOUNCE: {
+
 				//looks like QSCU is trying to announce, we should reconnect
 				goto reconnect;
 			}
@@ -85,25 +175,34 @@ static void tiqu_task(void *params){
 
 			}
 			case MT_KEEPALIVE: {
+
 				// respond to the keepalive message
 				message = create_keep_alive();
-				if ( write_message( &state, &message )){
+				if ( write_message( &state, &message ) != 0){
 					goto reconnect;
 				}
-				blink_rgb(GREEN_LED | BLUE_LED, 1);
 				break;
 			}
 			case MT_REQUEST: {
+
+				// we free here so that the previous message can hang around so we
+				// can re-transmit it in case of a checksum error
+				vPortFree(q_msg.payload);
+				q_msg.payload = NULL;
 				if (handle_request(&state, &message, buffer)){
 					goto reconnect;
 				}
-  				break;
+				break;
 			}
 			case MT_RESPONSE: {
 
 			}
 			case MT_ERROR: {
 
+				if ( handle_error ( &state, &message, buffer )){
+					goto reconnect;
+				}
+				break;
 			}
 			default:
 				// something is wrong, break comms and reconnect

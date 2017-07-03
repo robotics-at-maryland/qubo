@@ -15,10 +15,8 @@
  * this and gain access to the handles of the other tasks on the system
  */
 
-extern TaskHandle_t* qubobus_test_handle;
+extern TaskHandle_t qubobus_test_handle;
 
-#define INIT_TASK_HANDLES() do {				\
-		TaskHandle_t* qubobus_test_handle;		\
-	} while (0)
+#define DECLARE_TASK_HANDLES TaskHandle_t qubobus_test_handle /*, other_handle,...*/
 
 #endif
