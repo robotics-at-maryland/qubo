@@ -24,6 +24,7 @@
 
 class BuoyActionTuner{
     public:
+
     BuoyActionTuner(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as, cv::VideoCapture cap);
     ~BuoyActionTuner();
 
@@ -34,7 +35,8 @@ class BuoyActionTuner{
     
     protected:
 
-
+    cv::VideoCapture m_cap;
+    
 	actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *m_as;
 	cv::Ptr<cv::SimpleBlobDetector> m_detector;
 	cv::Ptr<cv::BackgroundSubtractor> m_pMOG;//MOG Background subtractor

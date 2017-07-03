@@ -1,12 +1,19 @@
 #include "buoy_tuner.h"
 
+//TODO put these in the header. 
+#include "opencv2/videoio.hpp"
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
+
+
 using namespace cv;
 using namespace std;
 
 //Constructor
 BuoyActionTuner::BuoyActionTuner(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as, VideoCapture cap){
 
-	namedWindow( "Gray image", CV_WINDOW_AUTOSIZE );
+	
+	m_cap = cap;
 	
 	//initialize background subtractors, keeping both in for now
 	
@@ -15,7 +22,6 @@ BuoyActionTuner::BuoyActionTuner(actionlib::SimpleActionServer<ram_msgs::VisionE
 	//you can decide which version of the subtractor you want to run by commenting in one of these line
 	m_pMOG = createBackgroundSubtractorMOG2(10000, 35, false);
 	//m_pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
-
 
 	
 	// Setup SimpleBlobDetector parameters.
@@ -36,56 +42,56 @@ BuoyActionTuner::~BuoyActionTuner(){}
 
 
 void BuoyActionTuner::updateAction() {   
-	// //create Background Subtractor objects
+	//create Background Subtractor objects
     
-    // Mat mog_output; //output from our background subtractor, we need to keep track of the unmodified current frame 
-	// vector<KeyPoint> keypoints; // Storage for blobs
+    Mat mog_output; //output from our background subtractor, we need to keep track of the unmodified current frame 
+	vector<KeyPoint> keypoints; // Storage for blobs
 
 	
-	// ROS_ERROR("hi");
+	ROS_ERROR("hi");
 	
-	// ram_msgs::VisionExampleFeedback feedback;
-	// Point2f center; 
+	ram_msgs::VisionExampleFeedback feedback;
+	Point2f center; 
 
 	
-	// if(cframe.empty()){
-	// 	ROS_ERROR("image was empty");
-	// 	return;
-	// }
+	if(cframe.empty()){
+		ROS_ERROR("image was empty");
+		return;
+	}
 	
 	
-	// mog_output = backgroundSubtract(cframe); //updates the MOG frame
-	// ROS_ERROR("hi 2");
+	mog_output = backgroundSubtract(cframe); //updates the MOG frame
+	ROS_ERROR("hi 2");
 
-	// if(mog_output.empty()){
-	// 	ROS_ERROR("image (mog) was empty");
-	// 	return;
-	// }
+	if(mog_output.empty()){
+		ROS_ERROR("image (mog) was empty");
+		return;
+	}
 	
 	
-    // m_detector->detect(mog_output, keypoints);
-	// ROS_ERROR("hi 3");
+    m_detector->detect(mog_output, keypoints);
+	ROS_ERROR("hi 3");
 	
-	// if(mog_output.empty()){
-	// 	ROS_ERROR("image (blob detected) was empty");
-	// 	return;
-	// }
+	if(mog_output.empty()){
+		ROS_ERROR("image (blob detected) was empty");
+		return;
+	}
 
-	// ROS_ERROR("image was not empty");
+	ROS_ERROR("image was not empty");
 
 	
-	// imshow("Gray image" , mog_output);
-	// waitKey();
+	imshow("Gray image" , mog_output);
+	waitKey();
 
-	// ROS_ERROR("let's see if we see something");
-	// if (updateHistory(mog_output, keypoints, center)){
-	// 	feedback.x_offset = cframe.rows/2 - center.x; 
-	// 	feedback.y_offset = cframe.cols/2 - center.y;
+	ROS_ERROR("let's see if we see something");
+	if (updateHistory(mog_output, keypoints, center)){
+		feedback.x_offset = cframe.rows/2 - center.x; 
+		feedback.y_offset = cframe.cols/2 - center.y;
 
-	// 	ROS_ERROR("publishing feedback");
-	// 	//I actually think it might be better to keep the action server away from this class, haven't decided yet..
-	// 	m_as->publishFeedback(feedback);
-	// }
+		ROS_ERROR("publishing feedback");
+		//I actually think it might be better to keep the action server away from this class, haven't decided yet..
+		m_as->publishFeedback(feedback);
+	}
 
 }
 
