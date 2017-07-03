@@ -108,7 +108,7 @@ void QSCUControlNode::QubobusStatusCallback(const ros::TimerEvent& event){
 void QSCUControlNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
 
 	// Store the last command
-	m_yaw_command = msg->data;
+	m_yaw_command = (float) msg->data;
 
 	// Calculate the values for the thrusters we need to change
 	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
@@ -117,7 +117,7 @@ void QSCUControlNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_thruster_speeds[3] = -m_yaw_command + m_surge_command + m_sway_command;
 
 	// Create the message and add it to the queue
-	for (int i = 0; i < 4; i++) {
+	for (uint8_t i = 0; i < 4; i++) {
 		QMsg q_msg;
 		q_msg.type = tThrusterSet;
 		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
@@ -130,16 +130,103 @@ void QSCUControlNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
 }
 
 void QSCUControlNode::pitchCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_pitch_command = (float) msg->data;
+
+	m_thruster_speeds[4] = ( m_pitch_command + m_roll_command) + m_depth_command;
+	m_thruster_speeds[5] = ( m_pitch_command - m_roll_command) + m_depth_command;
+	m_thruster_speeds[6] = (-m_pitch_command - m_roll_command) + m_depth_command;
+	m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
+
+	for (uint8_t i = 4; i < 8; i++) {
+		QMsg q_msg;
+		q_msg.type = tThrusterSet;
+		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+				.throttle = m_thruster_speeds[i],
+					.thruster_id = i,
+					});
+		q_msg.reply = nullptr;
+		m_outgoing.push(q_msg);
+	}
 }
 
 void QSCUControlNode::rollCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_roll_command = (float) msg->data;
+
+	m_thruster_speeds[4] = ( m_pitch_command + m_roll_command) + m_depth_command;
+	m_thruster_speeds[5] = ( m_pitch_command - m_roll_command) + m_depth_command;
+	m_thruster_speeds[6] = (-m_pitch_command - m_roll_command) + m_depth_command;
+	m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
+
+	for (uint8_t i = 4; i < 8; i++) {
+		QMsg q_msg;
+		q_msg.type = tThrusterSet;
+		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+				.throttle = m_thruster_speeds[i],
+					.thruster_id = i,
+					});
+		q_msg.reply = nullptr;
+		m_outgoing.push(q_msg);
+	}
 }
 
 void QSCUControlNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_pitch_command = (float) msg->data;
+
+	m_thruster_speeds[4] = ( m_pitch_command + m_roll_command) + m_depth_command;
+	m_thruster_speeds[5] = ( m_pitch_command - m_roll_command) + m_depth_command;
+	m_thruster_speeds[6] = (-m_pitch_command - m_roll_command) + m_depth_command;
+	m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
+
+	for (uint8_t i = 4; i < 8; i++) {
+		QMsg q_msg;
+		q_msg.type = tThrusterSet;
+		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+				.throttle = m_thruster_speeds[i],
+					.thruster_id = i,
+					});
+		q_msg.reply = nullptr;
+		m_outgoing.push(q_msg);
+	}
 }
 
 void QSCUControlNode::surgeCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_surge_command = (float) msg->data;
+
+	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
+	m_thruster_speeds[1] = +m_yaw_command + m_surge_command + m_sway_command;
+	m_thruster_speeds[2] = +m_yaw_command + m_surge_command - m_sway_command;
+	m_thruster_speeds[3] = -m_yaw_command + m_surge_command + m_sway_command;
+
+	// Create the message and add it to the queue
+	for (uint8_t i = 0; i < 4; i++) {
+		QMsg q_msg;
+		q_msg.type = tThrusterSet;
+		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+				.throttle = m_thruster_speeds[i],
+					.thruster_id = i,
+					});
+		q_msg.reply = nullptr;
+		m_outgoing.push(q_msg);
+	}
 }
 
 void QSCUControlNode::swayCallback(const std_msgs::Float64::ConstPtr& msg){
+	m_sway_command = (float) msg->data;
+
+	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
+	m_thruster_speeds[1] = +m_yaw_command + m_surge_command + m_sway_command;
+	m_thruster_speeds[2] = +m_yaw_command + m_surge_command - m_sway_command;
+	m_thruster_speeds[3] = -m_yaw_command + m_surge_command + m_sway_command;
+
+	// Create the message and add it to the queue
+	for (uint8_t i = 0; i < 4; i++) {
+		QMsg q_msg;
+		q_msg.type = tThrusterSet;
+		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+				.throttle = m_thruster_speeds[i],
+					.thruster_id = i,
+					});
+		q_msg.reply = nullptr;
+		m_outgoing.push(q_msg);
+	}
 }

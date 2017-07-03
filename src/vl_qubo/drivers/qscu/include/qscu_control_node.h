@@ -67,7 +67,7 @@ class QSCUControlNode {
 	/**************************************************************
 	 * Subscribers, their callbacks, and the messages they use    *
 	 **************************************************************/
-	std::vector<double> m_thruster_speeds;
+	std::vector<float> m_thruster_speeds;
 
 	ros::Subscriber m_yaw_sub;
 	void yawCallback(const std_msgs::Float64::ConstPtr& msg);
@@ -89,12 +89,12 @@ class QSCUControlNode {
 
 	// We need these so we can store the last message that was sent on the bus
 	// to calculate the value we need to give the thrusters
-	double m_yaw_command = 0;
-	double m_pitch_command = 0;
-	double m_roll_command = 0;
-	double m_depth_command = 0;
-	double m_surge_command = 0;
-	double m_sway_command = 0;
+	float m_yaw_command = 0;
+	float m_pitch_command = 0;
+	float m_roll_command = 0;
+	float m_depth_command = 0;
+	float m_surge_command = 0;
+	float m_sway_command = 0;
 
 	ros::Timer qubobus_status_loop;
 	void QubobusStatusCallback(const ros::TimerEvent&);
