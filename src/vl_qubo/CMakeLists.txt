@@ -74,8 +74,8 @@ set(QSCU_SRC_FILES
   drivers/qscu/src/main.cpp
   )
 set(QSCU_CONTROL_NODE_SRC_FILES
-  drivers/qscu/src/qscu_control_node.cpp
-  drivers/qscu/src/qscu_control_main.cpp
+  drivers/qscu/src/qscu_node.cpp
+  drivers/qscu/src/qscu_node_main.cpp
   drivers/qscu/src/QSCU.cpp
   )
 

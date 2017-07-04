@@ -1,5 +1,5 @@
-#ifndef QSCU_CONTROL_NODE
-#define QSCU_CONTROL_NODE
+#ifndef QSCU_NODE
+#define QSCU_NODE
 
 // ros
 #include "ros/ros.h"
@@ -26,11 +26,11 @@
 #include "qubobus.h"
 #include "io.h"
 
-class QSCUControlNode {
+class QSCUNode {
 
 	public:
-	QSCUControlNode(ros::NodeHandle n, std::string node_name, std::string pose);
-	~QSCUControlNode();
+	QSCUNode(ros::NodeHandle n, std::string node_name, std::string pose);
+	~QSCUNode();
 
 	void update();
 
@@ -95,6 +95,9 @@ class QSCUControlNode {
 	float m_depth_command = 0;
 	float m_surge_command = 0;
 	float m_sway_command = 0;
+
+	ros::Timer qubobus_thruster_loop;
+	void QubobusThrusterCallback(const ros::TimerEvent&);
 
 	ros::Timer qubobus_status_loop;
 	void QubobusStatusCallback(const ros::TimerEvent&);
