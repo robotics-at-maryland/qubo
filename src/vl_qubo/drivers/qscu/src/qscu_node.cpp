@@ -34,7 +34,7 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	 * Creates a Timer object, which will trigger every `Duration` amount of time
 	 * to allow us to have a bit more accuracy in the time between updates on Qubobus
 	 */
-	qubobus_loop = n.createTimer(ros::Duration(0.5), &QSCUNode::QubobusCallback, this);
+	qubobus_loop = n.createTimer(ros::Duration(0.05), &QSCUNode::QubobusCallback, this);
 	qubobus_incoming_loop = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
 	qubobus_thruster_loop = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
@@ -113,7 +113,7 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 }
 
 void QSCUNode::QubobusIncomingCallback(const ros::TimerEvent& event){
-	if (!m_incoming.empty()) {
+	while (!m_incoming.empty()) {
 		QMsg msg = m_incoming.front();
 		if (msg.type.id == tEmbeddedStatus.id){
 			std::shared_ptr<struct Embedded_Status> e_s =

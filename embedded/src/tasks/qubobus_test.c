@@ -40,9 +40,9 @@ ssize_t qubobus_test_task(void* params){
 			} else {
 				struct Thruster_Set t_s = *((struct Thruster_Set*)msg.payload);
 				if (t_s.throttle > 128 && t_s.thruster_id < 5) {
-					blink_rgb(GREEN_LED, 1);
+					/* blink_rgb(GREEN_LED, 1); */
 				} else {
-					blink_rgb(BLUE_LED, 1);
+					/* blink_rgb(BLUE_LED, 1); */
 				}
 				vPortFree(msg.payload);
 			}
