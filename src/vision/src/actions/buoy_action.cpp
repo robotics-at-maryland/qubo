@@ -3,20 +3,6 @@
 using namespace cv;
 using namespace std;
 
-//Constructor
-
-//static definitions, these all need to be static so that the trackbar callbacks can use them. 
-SimpleBlobDetector::Params BuoyActionTuner::m_params = SimpleBlobDetector::Params();
-Ptr<SimpleBlobDetector> BuoyActionTuner::m_detector = Ptr<SimpleBlobDetector>();
-Ptr<BackgroundSubtractor> BuoyActionTuner::m_pMOG = Ptr<BackgroundSubtractor>();
-
-
-int BuoyActionTuner::m_slider_area = 0;
-int BuoyActionTuner::m_slider_circularity = 0;
-int BuoyActionTuner::m_slider_convexity = 0;
-int BuoyActionTuner::m_slider_ratio = 0;
-
-
 
 BuoyAction::BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 

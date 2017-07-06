@@ -21,7 +21,6 @@
 
 //our actions/tuner actions 
 #include "buoy_action.h"
-#include "buoy_tuner.h"
 #include "gate_action.h"
 
 class VisionNode{
@@ -49,8 +48,6 @@ class VisionNode{
     static void testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction>*as);
 
     void findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
-    void findBuoyTuner(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
-
     void findGate(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
 
     protected:
@@ -68,7 +65,6 @@ class VisionNode{
     //the VisionExampleAction name here comes from the .action file in qubo/ram_msgs/action.
     //the build system appends the word Action to whatever the file name is in the ram_msgs directory
     actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> m_buoy_server;
-    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> m_buoy_tuner;
     actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> m_gate_server;
     
 };

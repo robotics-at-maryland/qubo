@@ -59,7 +59,7 @@ set(VISION_SRC_FILES
   src/actions/buoy_action.cpp
   src/actions/gate_action.cpp
   
-  src/tuners/buoy_tuner.cpp
+
   )
 
 

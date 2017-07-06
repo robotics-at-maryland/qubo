@@ -7,8 +7,7 @@ using namespace ros;
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
-		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
-		m_buoy_tuner (n, "buoy_tuner" , boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false) 
+		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
 {
 
 
@@ -40,7 +39,6 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	//------------------------------------------------------------------------------
 	m_buoy_server.start();
 	m_gate_server.start();
-	m_buoy_tuner.start();
 	ROS_INFO("servers started");
 }
 
@@ -93,20 +91,6 @@ void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  acti
 	
 	as->setSucceeded();   
 }
-
-
-//if a buoy is found on frame finds where it is and returns the center offset 
-void VisionNode::findBuoyTuner(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
-	
-	BuoyActionTuner action = BuoyActionTuner(as,m_cap);
-	
-	while(true){
-		action.updateAction(m_img); //this will also publish the feedback
-	}
-	
-	as->setSucceeded();   
-}
-
 
 void VisionNode::findGate(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
 	
