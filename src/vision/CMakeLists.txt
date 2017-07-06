@@ -89,6 +89,12 @@ set(BLOB_TUNER_FILES
   )
 
 
+set(GATE_TUNER_FILES
+  src/tuners/gate_tuner.cpp
+  )
+
+
+
 #Prototype algorithms
 set(GATE_FILES
   src/prototypes/gate_detector.cpp
@@ -161,6 +167,9 @@ target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
 add_executable(blob_tuner ${BLOB_TUNER_FILES})
 target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
+
+add_executable(gate_tuner ${GATE_TUNER_FILES})
+target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
 
 add_executable(segment_test ${SEGMENT_FILES})
 target_link_libraries(segment_test ${OpenCV_LIBRARIES})

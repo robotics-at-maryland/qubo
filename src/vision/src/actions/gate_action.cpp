@@ -26,6 +26,7 @@ void GateAction::updateAction(const Mat cframe){
 	cvtColor(dst, cdst, CV_GRAY2BGR);
 	vector<Vec4i> lines;
 	HoughLinesP(dst, lines, 1, CV_PI/180, 50, 50, 10 );
+
 	for( size_t i = 0; i < lines.size(); i++ )
 		{
 			Vec4i l = lines[i];
