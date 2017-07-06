@@ -5,15 +5,19 @@
 
   <group>
   <!-- best way I could find so that we actually pass this argument, still don't love it though -->
-  <arg name="video" default="0" />
+  <arg name="bag"/>
   <arg name="record_cameras" default="true" />
-
-   
-   <node name="vision_node" pkg="vision" type="vision_node" args="$(arg video)" >
+  
+     
+   <node name="vision_node" pkg="vision" type="vision_node" args="/qubo/camera/image_raw">
      <param name="video_log_dir" value="$(env HOME)/video/" />
    </node>
    
-      
+   
+   <node pkg="rosbag" type="play" name="rosbag_camera_node"
+         args="$(arg bag)"
+         if="$(arg record_cameras)" />
+   
 
    
   </group>

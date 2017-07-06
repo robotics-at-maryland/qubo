@@ -21,10 +21,8 @@ VideoCapture cap;
 void thresh_callback(int, void* )
 {
 
-	
-	
 	cap.set(CV_CAP_PROP_POS_FRAMES, frame_num);
-	cout << "callback " << endl;
+
 }
 
 
@@ -84,17 +82,38 @@ int main(int argc, char* argv[]){
 		
 		cvtColor(dst, cdst, CV_GRAY2BGR);
 		vector<Vec4i> lines;
+		vector<Vec2f> also_lines;
 		HoughLinesP(dst, lines, 1, CV_PI/180, hough_thresh, 50, 10 );
+
 		
-		for( size_t i = 0; i < lines.size(); i++ )
+		HoughLines(dst, also_lines, 1, CV_PI/180, hough_thresh, 50, 10 );
+		
+		for( size_t i = 0; i < also_lines.size(); i++ )
 			{
-				Vec4i l = lines[i];
-				line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
+				float rho = also_lines[i][0], theta = also_lines[i][1];
+				printf("line[%i] = %f, %lu \n", i, also_lines[i][0], also_lines[i][1]);
+				Point pt1, pt2;
+				double a = cos(theta), b = sin(theta);
+				double x0 = a*rho, y0 = b*rho;
+				pt1.x = cvRound(x0 + 1000*(-b));
+				pt1.y = cvRound(y0 + 1000*(a));
+				pt2.x = cvRound(x0 - 1000*(-b));
+				pt2.y = cvRound(y0 - 1000*(a));
+				line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
 			}
 		
 		
+		// for( size_t i = 0; i < lines.size(); i++ )
+		// 	{
+		// 		Vec4i l = lines[i];
+		// 		line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
+		// 		printf("line[%i] = %f, %lu \n", i, also_lines[i][0], also_lines[i][1]);
+				
+		// 	}
+		
+		
 		//imshow("source", cframe);
-		imshow("Canny output", dst);
+
 		imshow("parameters", cdst);
 		
 		
