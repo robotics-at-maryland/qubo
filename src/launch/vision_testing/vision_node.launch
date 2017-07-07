@@ -10,7 +10,7 @@
 
    
    <node name="vision_node" pkg="vision" type="vision_node" args="$(arg video)" >
-     <param name="video_log_dir" value="$(env HOME)/video/" />
+     <param name="output_dir" value="$(env HOME)/video/" />
    </node>
    
       

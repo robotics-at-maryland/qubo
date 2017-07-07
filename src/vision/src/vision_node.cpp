@@ -10,7 +10,6 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
 {
 
-
 	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
 	//this could give us problems if we pass something like "0followed_by_string" but just don't do that.
 
@@ -21,15 +20,53 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	else{
 		m_cap = cv::VideoCapture(feed);
 	}
-	
 
-	//make sure we have something valid
+
+		//make sure we have something valid
     if(!m_cap.isOpened()){           
         ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
         exit(0);
     }
-    
 	
+
+	//TODO give option to user to specify the name of the video
+	//TODO make sure this doesn't fail when specifying a directory that does not yet exist
+	
+	string output_dir;
+	np.param<string>("output_dir", output_dir, ""); //this line will populate the output_dir variable if it's specified in the launch file
+
+	//TODO change variable names
+	if(!output_dir.empty()){
+		
+		stringstream output_ss;
+		auto t = time(nullptr);
+		auto tm = *localtime(&t);
+
+		output_ss << output_dir;
+		output_ss << put_time(&tm, "%Y%m%d_%H-%M-%S");
+		output_ss << ".avi";
+		
+		string output_str = output_ss.str();
+		
+		int ex = static_cast<int>(m_cap.get(CV_CAP_PROP_FOURCC));
+
+		cv::Size S = cv::Size((int) m_cap.get(CV_CAP_PROP_FRAME_WIDTH),    // Acquire input size
+					  (int) m_cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+		
+
+		//sgillen@20172107-06:21 I found more problems trying to keep the extension (by passing ex as the second argument) than I did by forcing the output to be CV_FOURCC('M','J','P','G')  
+		//m_output_video.open(output_str, ex, m_cap.get(CV_CAP_PROP_FPS), S, true);
+		m_output_video.open(output_str, CV_FOURCC('M','J','P','G'), m_cap.get(CV_CAP_PROP_FPS), S, true);
+
+
+		if(!m_output_video.isOpened()){
+			ROS_ERROR("problem opening output video! we tried saving it as %s, now exiting" ,output_str);
+			exit(0);
+		}
+
+		ROS_INFO("output video being saved as %s" , output_str.c_str());
+	}
+
 	
 	//register all services here
 	//------------------------------------------------------------------------------
@@ -54,6 +91,12 @@ void VisionNode::update(){
 	if(m_img.empty()){           
 		ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
 		exit(0);
+	}
+	
+	//if the user didn't specify a directory this will not be open
+	if(m_output_video.isOpened()){
+		ROS_ERROR("writing image!");
+		m_output_video << m_img;
 	}
 	
 	spinOnce();

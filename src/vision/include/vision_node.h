@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <chrono>
 
 //ros includes
 #include "ros/ros.h"
@@ -52,8 +53,12 @@ class VisionNode{
 
     protected:
 
+    
+    
     cv::VideoCapture m_cap;
     cv::Mat m_img;
+
+	cv::VideoWriter m_output_video;
 	
     //declare a service object for your service below
     //======================================================================
