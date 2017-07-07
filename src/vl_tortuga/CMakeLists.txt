@@ -8,11 +8,11 @@ project(vl_tortuga)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-
     image_transport
 
+    ram_cpp_utils
     ram_msgs
-    tf2_ros
+
 )
 
 catkin_package(
@@ -94,6 +94,7 @@ target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
 
 add_executable(tortuga_imu_node ${IMU_SRC_FILES})
 target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
+
 
 add_executable(lcdshow ${LCDSHOW_SRC_FILES})
 target_link_libraries(lcdshow ${catkin_LIBRARIES})

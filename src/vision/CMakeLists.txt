@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
 
-#Find stuff we need
-
 find_package(catkin
   REQUIRED COMPONENTS
   roscpp
@@ -22,7 +20,6 @@ find_package(catkin
   image_transport
 
   cv_bridge
-
 
 )
 
