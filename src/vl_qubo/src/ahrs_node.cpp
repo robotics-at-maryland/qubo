@@ -1,10 +1,10 @@
-#include "control_node.h"
+#include "ahrs_node.h"
 
 
 using namespace std;
 using namespace ros;
 
-ControlNode::ControlNode(ros::NodeHandle n, string node_name, string ahrs_device, string imu_device)
+AHRSQuboNode::AHRSQuboNode(ros::NodeHandle n, string node_name, string ahrs_device)
     :_node_name{node_name}, _ahrs_device{ahrs_device}, _ahrs(ahrs_device,AHRS::k115200) {
         
         //initialize publisher
@@ -38,17 +38,16 @@ ControlNode::ControlNode(ros::NodeHandle n, string node_name, string ahrs_device
         
 }
 
-ControlNode::~ControlNode(){
+AHRSQuboNode::~AHRSQuboNode(){
     _ahrs.closeDevice();
-    //need to close IMU and Tiva connections too
 
     
 }
 
 
-void ControlNode::update(){}
+void AHRSQuboNode::update(){}
 
-void ControlNode::updateAHRS(){
+void AHRSQuboNode::updateAHRS(){
     static int id = 0;
     static int attempts = 0;
 

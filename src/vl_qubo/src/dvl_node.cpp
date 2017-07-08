@@ -5,16 +5,13 @@
 /**
  * See the header file for actual function/object descriptions
  */
-DvlQuboNode::DvlQuboNode(std::shared_ptr<ros::NodeHandle> n,
-    int rate, std::string name, std::string device) : QuboNode(n){
+DvlQuboNode::DvlQuboNode(ros::NodeHandle n, int rate, std::string name, std::string device){
 
 	this->name = name;
 
 	//inits a publisher on this node
-	dvlPub = n->advertise<ram_msgs::DVL_qubo>("qubo/" + name, 1000);
+	dvlPub = n.advertise<ram_msgs::DVL_qubo>("qubo/" + name, 1000);
 
-    //creates a refresh rate
-    loop_rate.reset(new ros::Rate(rate));
 
 	//creates/opens the DVL
 	//Baud rate is currently a complete guess

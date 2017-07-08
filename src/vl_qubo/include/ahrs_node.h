@@ -1,5 +1,5 @@
-#ifndef CONTROL_NODE_H
-#define CONTROL_NODE_H
+#ifndef QUBO_AHRS_NODE_H
+#define QUBO_AHRS_NODE_H
 
 //ros includes
 #include "ros/ros.h"
@@ -15,10 +15,10 @@
 #include "sensor_msgs/Imu.h"
 
 
-class ControlNode{
+class AHRSQuboNode{
     public:
-    ControlNode(ros::NodeHandle n, std::string node_name, std::string ahrs_device,  std::string imu_device);
-    ~ControlNode();
+    AHRSQuboNode(ros::NodeHandle n, std::string node_name, std::string ahrs_device);
+    ~AHRSQuboNode();
 
 
     void update();

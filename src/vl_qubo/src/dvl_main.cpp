@@ -1,4 +1,5 @@
 #include "dvl_qubo.h"
+
 //written by Jeremy Weed
 
 /**
@@ -22,18 +23,15 @@ int main(int argc, char** argv){
 	ros::init(argc, argv, "dvl_node");
 
 	//create a shared_ptr to the NodeHandle
-	std::shared_ptr<ros::NodeHandle> n(new ros::NodeHandle);
+	ros::NodeHandle nh;
 
 	//pointer to the node
-	std::unique_ptr<QuboNode> node0;
+	DvlQuboNode node0(nh, 10, "DVL", argv[1]);
 
-	//DVL is the node name
-	//argv[1] is the file location of the device
-	node0.reset(new DvlQuboNode(n, 10, "DVL", argv[1]));
-
+	
 	//read and sleep
 	while(ros::ok()){
-		node0->update();
-		node0->sleep();
+		node0.update();
+		
 	}
 }

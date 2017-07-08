@@ -6,7 +6,7 @@
 #include "ram_msgs/DVL_qubo.h"
 #include "DVL.h"
 
-class DvlQuboNode : public QuboNode {
+class DvlQuboNode {
 
 public:
 
@@ -17,8 +17,7 @@ public:
 	 * @param name   device description, used when publishing data
 	 * @param device file location of the DVL device
 	 */
-	DvlQuboNode(std::shared_ptr<ros::NodeHandle> n, int rate, std::string name,
-	std::string device);
+	DvlQuboNode(ros::NodeHandle n, int rate, std::string name, std::string device);
 
 	/**
 	 * Desctructor for the DVL ROS node

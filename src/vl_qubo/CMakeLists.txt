@@ -26,8 +26,6 @@ include_directories(
   drivers/qscu/include
   drivers/qubobus/include
   
-  ahrs/include
-  dvl/include
   include
 
   )
@@ -39,8 +37,8 @@ SET(CMAKE_C++_CREATE_SHARED_LIBRARY 1)
 #SG: currently unused, eventually we'll add a wrapper with a main and build them together.
 set(AHRS_SRC_FILES
 
-  ahrs/src/main.cpp
-  ahrs/src/ahrs_qubo.cpp
+  src/ahrs_main.cpp
+  src/ahrs_node.cpp
 
   drivers/ahrs/src/AHRS.cpp
   )
@@ -48,8 +46,8 @@ set(AHRS_SRC_FILES
 #SG: ditto above
 set(DVL_SRC_FILES
 
-  dvl/src/main.cpp
-  dvl/src/dvl_qubo.cpp
+  src/dvl_main.cpp
+  src/dvl_node.cpp
 
   drivers/dvl/src/DVL.cpp
   )
@@ -65,14 +63,6 @@ set(AHRS_BAUDRATE_SRC_FILES
   drivers/ahrs/src/baudrate.cpp
   drivers/ahrs/src/util.cpp
 
-
-  drivers/ahrs/src/AHRS.cpp #SG: ditto above
-  )
-
-set(HARDWARE_NODE_SRC_FILES
-  src/main.cpp
-  src/control_node.cpp
-  drivers/ahrs/src/AHRS.cpp
 
   drivers/ahrs/src/AHRS.cpp #SG: ditto above
   )
@@ -116,9 +106,6 @@ target_link_libraries(qubo_ahrs_node ${catkin_LIBRARIES})
 add_executable(qubo_dvl_node ${DVL_SRC_FILES})
 target_link_libraries(qubo_dvl_node ${catkin_LIBRARIES})
 add_dependencies(qubo_dvl_node ram_msgs_generate_messages_cpp)
-
-add_executable(qubo_hardware_node ${HARDWARE_NODE_SRC_FILES})
-target_link_libraries(qubo_hardware_node ${catkin_LIBRARIES})
 
 add_library(qubobus ${QUBOBUS_LIB_FILES})
 set_target_properties(qubobus PROPERTIES LINKER_LANGUAGE C)
