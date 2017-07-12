@@ -6,18 +6,29 @@ project(controls)
 ##############################
 
 find_package(catkin
-    REQUIRED COMPONENTS
-    roscpp
-    #cv_bridge #these two are used in the camera node
-    image_transport
-    ram_cpp_utils
-    ram_msgs
-    tf2_ros
+  REQUIRED COMPONENTS
+  ram_msgs
+  roscpp
+  tf2_ros
+  dynamic_reconfigure
 )
 
+find_package(Eigen3)
+
+#find_package(catkin REQUIRED dynamic_reconfigure)
+generate_dynamic_reconfigure_options(
+  cfg/pid.cfg
+)
+
+
 catkin_package(
-  LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS roscpp
+  LIBRARIES
+  ${PROJECT_NAME}
+  CATKIN_DEPENDS
+  cmake_modules
+  roscpp
+  ram_msgs
+  DEPENDS EIGEN3
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -28,55 +39,23 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  controller/include
-  localization/include
-  angular_controller/include
-  translational_controller/include
-
+  include/
 )
 
-set(TRANSLATION_SRC_FILES
-  translational_controller/src/linear_controller.cpp
-  translational_controller/src/main.cpp
+
+set(PID_CONTROLLER_FILES
+  src/pid_controller.cpp
+  src/pid_main.cpp
   )
-
-set(ANGULAR_SRC_FILES
-  angular_controller/src/rotational_controller.cpp
-  angular_controller/src/main.cpp
-)
-
-set(CONTROLLER_NODE_SRC_FILES
-  controller/src/controller_node.cpp
-  controller/src/main.cpp
-)
-
-#### OLD TEAMS CODE ####
-
-set(LCDSHOW_SRC_FILES
-		tortuga/src/lcdshow.c
-)
-
-
-### END OF OLD TEAMS CODE ###
-
-#SG: maybe one day..
-set(TEST_FILES
-
-    )
 
 ##############################
 # Add Executables ############
 ##############################
 
+add_executable(pid_controller ${PID_CONTROLLER_FILES})
+target_link_libraries(pid_controller ${catkin_LIBRARIES})
+add_dependencies(pid_controller ${PROJECT_NAME}_gencfg)
 
-add_executable(angular_control_node ${ANGULAR_SRC_FILES})
-target_link_libraries(angular_control_node ${catkin_LIBRARIES})
-
-add_executable(translational_control_node ${TRANSLATION_SRC_FILES})
-target_link_libraries(translational_control_node ${catkin_LIBRARIES})
-
-add_executable(controller_node ${CONTROLLER_NODE_SRC_FILES})
-target_link_libraries(controller_node ${catkin_LIBRARIES})
 
 ##############################
 # Installable Targets ########

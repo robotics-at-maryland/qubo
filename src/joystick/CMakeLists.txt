@@ -9,9 +9,9 @@ project(joystick)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-    #cv_bridge #these two are used in the camera node
-    image_transport
-    ram_cpp_utils
+
+    image_transport 
+
 )
 
 catkin_package(

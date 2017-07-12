@@ -26,12 +26,20 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 fi
 
 # Installing additional packages.
-sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+sudo apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
 sudo apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev 
 
+sudo apt-get install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
+
+
 # Setup environment variables for ROS.
-echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+read -p "Do you want to add \"source /opt/ros/kinetic/setup.bash\" to your .bashrc?i [Y/n]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+fi
+
 source ~/.bashrc
 
 # Initialize rosdep if it is not already initialized.
@@ -45,14 +53,16 @@ sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdis
 
 # Install QtCreator and its ROS plugin.
 # Due to a quirk of the plugin, qtcreator MUST be installed twice.
-echo "Do you want to install optional IDE QtCreator and associated ROS plugin?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) sudo apt install qtcreator; 
-sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
-sudo add-apt-repository ppa:levi-armstrong/ppa;
-sudo apt-get update && sudo apt-get install qt57creator-plugin-ros;
-sudo apt install qtcreator; break;;
-        No ) exit;;
-    esac
-done
+read -p "Do you want to install optional IDE QtCreator and associated ROS plugin? [Y/n]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+   sudo apt install qtcreator; 
+   # This command broke the install on ubuntu 16.04.2
+   # sudo add-apt-repository ppa:beineri/opt-qt57-xenial;
+   # https://github.com/ros-industrial/ros_qtc_plugin/wiki/1.-How-to-Install-(Users)
+   # sudo add-apt-repository --remove ppa:beineri/opt-qt57-xenial
+   sudo add-apt-repository ppa:levi-armstrong/qt-libraries-xenial 
+   sudo add-apt-repository ppa:levi-armstrong/ppa
+   sudo apt-get update && sudo apt-get install qt57creator-plugin-ros
+   sudo apt install qtcreator
+fi

@@ -15,12 +15,10 @@
 
   <build_depend>ram_msgs</build_depend>
   <build_depend>roscpp</build_depend>
-   <build_depend>ram_cpp_utils</build_depend>
 
 
   <run_depend>ram_msgs</run_depend>
   <run_depend>roscpp</run_depend>
-   <run_depend>ram_cpp_utils</run_depend>
  
 
 </package>

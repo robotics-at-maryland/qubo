@@ -8,9 +8,9 @@ project(vl_tortuga)
 find_package(catkin
     REQUIRED COMPONENTS
     roscpp
-    #cv_bridge #these two are used in the camera node
+
     image_transport
-    ram_cpp_utils
+
     ram_msgs
     tf2_ros
 )
@@ -70,7 +70,9 @@ set(SENSOR_BOARD_SRC_FILES
 
 #### OLD TEAMS CODE ####
 set(LCDSHOW_SRC_FILES
-		tortuga/src/lcdshow.c
+		drivers/src/lcdshow.c
+		drivers/src/sensorapi.c
+
 )
 ### END OF OLD TEAMS CODE ###
 
@@ -93,6 +95,8 @@ target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
 add_executable(tortuga_imu_node ${IMU_SRC_FILES})
 target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
 
+add_executable(lcdshow ${LCDSHOW_SRC_FILES})
+target_link_libraries(lcdshow ${catkin_LIBRARIES})
 
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
