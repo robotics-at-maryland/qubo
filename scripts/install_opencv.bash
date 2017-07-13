@@ -7,6 +7,7 @@ if [[ $EUID -ne 0 ]] ; then
 fi
 
 SOURCE_DIR=$HOME/src
+INSTALL_DIR=/usr/local
 
 # clone OpenCV to /opt/opencv
 git clone -b '3.2.0' --single-branch --depth 1 https://github.com/opencv/opencv.git $SOURCE_DIR/opencv
@@ -23,8 +24,8 @@ apt install libhdf5-dev
 apt install --assume-yes libgtk-3-dev libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils
 
 # create build dir
-mkdir /opt/opencv/build
-cd /opt/opencv/build
+mkdir $SOURCE_DIR/opencv/build
+cd $SOURCE_DIR/opencv/build
 
 # Detect if there's a card mounted, then build
 # Most of these flags were pulled from OpenCV's install guide
@@ -32,7 +33,7 @@ if [ -f /etc/nv_tegra_release ]; then
 	# This means we're the Jetson
 	cmake \
 		-D CMAKE_BUILD_TYPE=Release \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_PNG=OFF \
 		-D BUILD_TIFF=OFF \
 		-D BUILD_TBB=OFF \
@@ -60,15 +61,15 @@ if [ -f /etc/nv_tegra_release ]; then
 		-D CUDA_ARCH_PTX="" \
 		-D INSTALL_C_EXAMPLES=ON \
 		-D INSTALL_TESTS=OFF \
-		../opencv
+		../
 
 	make -j4
 
-elif [ -d /dev/nvidia/ ]; then
+elif [ -f /etc/nvidia0 ]; then
 	# We're not the Jetson, but there's a nvidia card
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_FFMPEG=ON \
@@ -83,23 +84,23 @@ elif [ -d /dev/nvidia/ ]; then
 		-D BUILD_TESTS=OFF \
 		-D INSTALL_C_EXAMPLES=ON \
 		-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
-		../opencv
+		../
 
-	make -j $(($(nproc) + 1))
+	make -j $(($(nproc)))
 
 else
 	# Not the Jetson, and no GPUs
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_GTK=ON \
 		-D WITH_FFMPEG=ON \
 		-D INSTALL_C_EXAMPLES=ON \
-		exit 1
+		../
 fi
 
-# Install it
-sudo make install
+	# Install it
+	sudo make install
 
