@@ -13,6 +13,12 @@ class GateAction{
 	~GateAction();
 	void updateAction(const cv::Mat cframe);
 
+    protected:
+
+    int m_kernel_size;
+    int m_canny_thresh;
+    int m_hough_thresh;
+    
 };
 
 #endif
