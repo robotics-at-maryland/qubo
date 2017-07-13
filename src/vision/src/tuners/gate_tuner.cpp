@@ -21,14 +21,14 @@ int kernel_max = 256;
 
 VideoCapture cap;   
 
-void thresh_callback(int, void* )
+void threshCallback(int, void* )
 {
 
 	cap.set(CV_CAP_PROP_POS_FRAMES, frame_num);
 
 }
 
-void blur_callback(int, void* )
+void blurCallback(int, void* )
 {
 
 	//the kernel for a guassian filter needs to be odd
@@ -82,12 +82,12 @@ int main(int argc, char* argv[]){
 	namedWindow("parameters");
 	moveWindow("parameters", 420, 20);
 		
-	createTrackbar( "Canny thresh:", "parameters", &canny_thresh, max_thresh, thresh_callback );
-	createTrackbar( "Hough thresh:", "parameters", &hough_thresh, max_thresh, thresh_callback );
-	createTrackbar( "Kernel size", "parameters", &kernel_size, kernel_max, blur_callback);
-	createTrackbar( "Frame", "parameters", &frame_num, max_frame, thresh_callback);
+	createTrackbar( "Canny thresh:", "parameters", &canny_thresh, max_thresh, threshCallback );
+	createTrackbar( "Hough thresh:", "parameters", &hough_thresh, max_thresh, threshCallback );
+	createTrackbar( "Kernel size", "parameters", &kernel_size, kernel_max, blurCallback);
+	createTrackbar( "Frame", "parameters", &frame_num, max_frame, threshCallback);
 	
-	thresh_callback( 0, 0 );
+	threshCallback( 0, 0 );
 
 	
 	Mat cframe; 
