@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
 		for( size_t i = 0; i < also_lines.size(); i++ )
 			{
 				float rho = also_lines[i][0], theta = also_lines[i][1];
-				printf("line[%i] = %f, %lu \n", i, also_lines[i][0], also_lines[i][1]);
+				printf("line[%lu] = %f, %f \n", i, also_lines[i][0], also_lines[i][1]);
 				Point pt1, pt2;
 				double a = cos(theta), b = sin(theta);
 				double x0 = a*rho, y0 = b*rho;

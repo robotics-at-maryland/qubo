@@ -4,7 +4,7 @@ using namespace cv;
 using namespace std;
 
 
-BuoyAction::BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+BuoyAction::BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 
 	namedWindow( "Gray image", CV_WINDOW_AUTOSIZE );
 	
@@ -42,9 +42,7 @@ void BuoyAction::updateAction(const Mat cframe) {
 	vector<KeyPoint> keypoints; // Storage for blobs
 
 	
-	ROS_ERROR("hi");
-	
-	ram_msgs::VisionExampleFeedback feedback;
+	ram_msgs::VisionNavFeedback feedback;
 	Point2f center; 
 
 	

@@ -1,7 +1,5 @@
 #include "vision_node.h"
 
-typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
-
 int main(int argc, char** argv){
 
 	//TODO finalize how we handle this
