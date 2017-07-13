@@ -2,7 +2,7 @@
 #define DVL_QUBO_HEADER
 //written by Jeremy Weed
 
-#include "qubo_node.h"
+#include "ros/ros.h"
 #include "ram_msgs/DVL_qubo.h"
 #include "DVL.h"
 
