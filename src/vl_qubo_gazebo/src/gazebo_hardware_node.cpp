@@ -50,9 +50,9 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	m_surge_sub = n.subscribe(surge_topic + "_cmd", 1000, &GazeboHardwareNode::surgeCallback, this);
 	m_sway_sub  = n.subscribe(sway_topic  + "_cmd", 1000, &GazeboHardwareNode::swayCallback, this);
 	
-	m_roll_pub = n.advertise<std_msgs::Float64>(roll_topic, 1000);
+	m_roll_pub  = n.advertise<std_msgs::Float64>(roll_topic, 1000);
 	m_pitch_pub = n.advertise<std_msgs::Float64>(pitch_topic, 1000);
-	m_yaw_pub = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
+	m_yaw_pub   = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
 	m_depth_pub = n.advertise<std_msgs::Float64>(depth_topic, 1000);
 
 		
