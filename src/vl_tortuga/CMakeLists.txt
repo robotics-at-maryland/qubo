@@ -89,8 +89,9 @@ set(TEST_FILES
 
 
 #these get tortuga specific names to prevent conflicts with other vehicle layers
-add_executable(tortuga_dvl_node_torguga ${DVL_SRC_FILES})
-target_link_libraries(tortuga_dvl_node_torguga ${catkin_LIBRARIES})
+add_executable(tortuga_dvl_node_tortuga ${DVL_SRC_FILES})
+target_link_libraries(tortuga_dvl_node_tortuga ${catkin_LIBRARIES})
+add_dependencies(tortuga_dvl_node_tortuga ram_msgs_generate_messages_cpp)
 
 add_executable(tortuga_imu_node ${IMU_SRC_FILES})
 target_link_libraries(tortuga_imu_node ${catkin_LIBRARIES})
