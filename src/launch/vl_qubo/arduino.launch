@@ -1,0 +1,9 @@
+<!-- Launches Gazebo with a basic Qubo robot spawned in the empty underwater world also spawns a thruster translator node. -->
+<launch>
+
+    <!-- spawn the thruster translator -->
+    <node name="qubo_arduino_node" pkg="vl_qubo" type="arduino_node.py" />
+
+    
+
+</launch>
