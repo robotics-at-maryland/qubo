@@ -7,6 +7,7 @@ if [[ $EUID -ne 0 ]] ; then
 fi
 
 SOURCE_DIR=$HOME/src
+INSTALL_DIR=/usr/local
 
 # clone OpenCV to /opt/opencv
 git clone -b '3.2.0' --single-branch --depth 1 https://github.com/opencv/opencv.git $SOURCE_DIR/opencv
@@ -32,7 +33,7 @@ if [ -f /etc/nv_tegra_release ]; then
 	# This means we're the Jetson
 	cmake \
 		-D CMAKE_BUILD_TYPE=Release \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_PNG=OFF \
 		-D BUILD_TIFF=OFF \
 		-D BUILD_TBB=OFF \
@@ -68,7 +69,7 @@ elif [ -f /etc/nvidia0 ]; then
 	# We're not the Jetson, but there's a nvidia card
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_FFMPEG=ON \
@@ -91,7 +92,7 @@ else
 	# Not the Jetson, and no GPUs
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_GTK=ON \
@@ -100,6 +101,6 @@ else
 		../
 fi
 
-# Install it
-sudo make install
+	# Install it
+	sudo make install
 

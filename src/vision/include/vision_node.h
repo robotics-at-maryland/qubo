@@ -13,7 +13,7 @@
 
 //ros includes
 #include "ros/ros.h"
-#include <ram_msgs/VisionExampleAction.h>
+#include <ram_msgs/VisionNavAction.h>
 #include <actionlib/server/simple_action_server.h>
 
 //message includes
@@ -46,10 +46,10 @@ class VisionNode{
     //sg: put action definitions here
     //=================================================================================================================
 
-    static void testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction>*as);
+    static void testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction>*as);
 
-    void findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
-    void findGate(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
+    void findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+    void findGate(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
 
     protected:
 
@@ -67,10 +67,10 @@ class VisionNode{
     
     //declare an action server object for your action here
     //======================================================================
-    //the VisionExampleAction name here comes from the .action file in qubo/ram_msgs/action.
+    //the VisionNavAction name here comes from the .action file in qubo/ram_msgs/action.
     //the build system appends the word Action to whatever the file name is in the ram_msgs directory
-    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> m_buoy_server;
-    actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> m_gate_server;
+    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
+    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
     
 };
 

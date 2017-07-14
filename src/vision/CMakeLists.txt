@@ -58,7 +58,6 @@ set(VISION_SRC_FILES
   
   src/actions/buoy_action.cpp
   src/actions/gate_action.cpp
-  
 
   )
 
@@ -83,7 +82,6 @@ set(CANNY_TUNER_FILES
   src/tuners/canny_tuner.cpp
   )
 
-
 set(BLOB_TUNER_FILES
   src/tuners/blob_tuner.cpp
   )
@@ -93,13 +91,15 @@ set(GATE_TUNER_FILES
   src/tuners/gate_tuner.cpp
   )
 
+set(BUOY_TUNER_FILES
+  src/tuners/buoy_tuner.cpp
+  )
 
 
 #Prototype algorithms
 set(GATE_FILES
   src/prototypes/gate_detector.cpp
   )
-
 
 set(SEGMENT_FILES
   src/prototypes/segmentation.cpp
@@ -142,13 +142,10 @@ target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
-#still needs to be updated to 3.0
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
 target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
 add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
-
-
 
 add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
 target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
@@ -156,12 +153,7 @@ target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
 add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
-
-##below are all basically prototypes
-add_executable(gate_detector ${GATE_FILES})
-target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
-
-
+#tuners
 add_executable(canny_tuner ${CANNY_TUNER_FILES})
 target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
@@ -170,6 +162,15 @@ target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
 add_executable(gate_tuner ${GATE_TUNER_FILES})
 target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
+
+add_executable(buoy_tuner ${BUOY_TUNER_FILES})
+target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
+
+
+##below are all basically prototypes
+add_executable(gate_detector ${GATE_FILES})
+target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+
 
 add_executable(segment_test ${SEGMENT_FILES})
 target_link_libraries(segment_test ${OpenCV_LIBRARIES})

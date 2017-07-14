@@ -66,7 +66,7 @@ bool SimVisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::boo
 
 //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet. 
 //=================================================================================================================
-void SimVisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void SimVisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
     //    goal->test_feedback = 5;
     ROS_ERROR("You called the action well done!");
     as->setSucceeded();
@@ -74,7 +74,7 @@ void SimVisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal,
 
 
 //if a buoy is found on frame finds where it is and returns the center offset 
-void SimVisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void SimVisionNode::findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
 	BuoyAction action = BuoyAction(as);
 	
@@ -85,7 +85,7 @@ void SimVisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  a
 	as->setSucceeded();   
 }
 
-void SimVisionNode::findGate(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void SimVisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
 	GateAction action = GateAction();
 

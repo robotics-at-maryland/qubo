@@ -1,6 +1,6 @@
 #include "sim_vision_node.h"
 
-typedef actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> Server;
+typedef actionlib::SimpleActionServer<ram_msgs::VisionNavAction> Server;
 
 int main(int argc, char** argv){
 

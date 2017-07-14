@@ -60,7 +60,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 
 		if(!m_output_video.isOpened()){
-			ROS_ERROR("problem opening output video! we tried saving it as %s, now exiting" ,output_str);
+			ROS_ERROR("problem opening output video! we tried saving it as %s, now exiting" ,output_str.c_str());
 			exit(0);
 		}
 
@@ -116,7 +116,7 @@ bool VisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_b
 
 //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet. 
 //=================================================================================================================
-void VisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void VisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
     //    goal->test_feedback = 5;
     ROS_ERROR("You called the action well done!");
     as->setSucceeded();
@@ -124,7 +124,7 @@ void VisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, ac
 
 
 //if a buoy is found on frame finds where it is and returns the center offset 
-void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void VisionNode::findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
 	BuoyAction action = BuoyAction(as);
 	
@@ -135,7 +135,7 @@ void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  acti
 	as->setSucceeded();   
 }
 
-void VisionNode::findGate(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void VisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
 	GateAction action = GateAction();
 
