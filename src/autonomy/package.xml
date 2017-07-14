@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>autonomy</name>
+  <version>0.1.0</version>
+  <description>Autonomy system for Qubo.</description>
+  <author email="software@ram.umd.edu">Robotics@Maryland</author>
+  <maintainer email="software@ram.umd.edu">Robotics@Maryland</maintainer>
+
+  <license>GPL</license>
+
+  <url type="website">http://ram.umd.edu</url>
+  <url type="repository">https://github.com/robotics-at-maryland/qubo</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>cmake_modules</depend>
+  <depend>rospy</depend>
+  <depend>Eigen</depend>
+  <depend>ram_msgs</depend>
+
+</package>

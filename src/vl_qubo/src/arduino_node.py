@@ -91,7 +91,7 @@ if __name__ == '__main__':
     
     rospy.init_node('arduino_node', anonymous=False)
 
-    depth_pub = rospy.Publisher(qubo_namespace + 'depth', Int, queue_size = 10)
+    depth_pub = rospy.Publisher(qubo_namespace + 'depth', Int64, queue_size = 10)
 
     #rospy spins all these up in their own thread, no need to call spin()
     rospy.Subscriber(qubo_namespace + "roll_cmd"  , Int, roll_callback)
@@ -107,7 +107,8 @@ if __name__ == '__main__':
     
     while not rospy.is_shutdown():
 
-        depth = get_depth()
+        
+        depth = get_depth() #TODO
         depth_pub.publish(depth)
         
     
