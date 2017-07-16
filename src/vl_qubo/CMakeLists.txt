@@ -121,6 +121,10 @@ add_executable(qscu ${QSCU_SRC_FILES})
 target_link_libraries(qscu qubobus)
 
 
+# catkin_install_python(PROGRAMS src/arduino_node.py
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+
 ##############################
 # Installable Targets ########
 ##############################

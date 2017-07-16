@@ -50,9 +50,9 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	m_surge_sub = n.subscribe(surge_topic + "_cmd", 1000, &GazeboHardwareNode::surgeCallback, this);
 	m_sway_sub  = n.subscribe(sway_topic  + "_cmd", 1000, &GazeboHardwareNode::swayCallback, this);
 	
-	m_roll_pub = n.advertise<std_msgs::Float64>(roll_topic, 1000);
+	m_roll_pub  = n.advertise<std_msgs::Float64>(roll_topic, 1000);
 	m_pitch_pub = n.advertise<std_msgs::Float64>(pitch_topic, 1000);
-	m_yaw_pub = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
+	m_yaw_pub   = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
 	m_depth_pub = n.advertise<std_msgs::Float64>(depth_topic, 1000);
 
 		
@@ -96,36 +96,18 @@ void GazeboHardwareNode::update(){
 	}
 	
 	//thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
-		
-	//add yaw,pitch,roll commands to our thrusters
-	m_thruster_commands[0].data -= m_yaw_command;
-	m_thruster_commands[1].data += m_yaw_command;
-	m_thruster_commands[2].data += m_yaw_command;
-	m_thruster_commands[3].data -= m_yaw_command;
-	
-	//pitch/roll thrusters
-	m_thruster_commands[4].data += ( m_pitch_command + m_roll_command);
-	m_thruster_commands[5].data += ( m_pitch_command - m_roll_command);
-	m_thruster_commands[6].data += (-m_pitch_command - m_roll_command);
-	m_thruster_commands[7].data += (-m_pitch_command + m_roll_command);
 
-	//add in depth commands (may have to think about restructurng this?
-	m_thruster_commands[4].data += m_depth_command;
-	m_thruster_commands[5].data += m_depth_command;
-	m_thruster_commands[6].data += m_depth_command;
-	m_thruster_commands[7].data += m_depth_command;
-
-	//surge commands
-	m_thruster_commands[0].data += m_surge_command;
-	m_thruster_commands[1].data += m_surge_command;
-	m_thruster_commands[2].data += m_surge_command;
-	m_thruster_commands[3].data += m_surge_command;
+	//surge, sway, yaw thrusters
+	m_thruster_commands[0].data += (m_surge_command - m_yaw_command - m_sway_command);
+	m_thruster_commands[1].data += (m_surge_command + m_yaw_command + m_sway_command);
+	m_thruster_commands[2].data += (m_surge_command + m_yaw_command - m_sway_command);
+	m_thruster_commands[3].data += (m_surge_command - m_yaw_command + m_sway_command);
 	
-	//sway commands
-	m_thruster_commands[0].data -= m_sway_command;
-	m_thruster_commands[1].data += m_sway_command;
-	m_thruster_commands[2].data -= m_sway_command;
-	m_thruster_commands[3].data += m_sway_command;
+	//depth, pitch, roll thrusters
+    m_thruster_commands[4].data += (m_depth_command + m_pitch_command + m_roll_command);
+    m_thruster_commands[5].data += (m_depth_command + m_pitch_command - m_roll_command);
+    m_thruster_commands[6].data += (m_depth_command - m_pitch_command - m_roll_command);
+    m_thruster_commands[7].data += (m_depth_command - m_pitch_command + m_roll_command);
 	
 	
 	for(int i = 0; i < NUM_THRUSTERS; i++){

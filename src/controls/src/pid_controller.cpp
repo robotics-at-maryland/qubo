@@ -1,3 +1,10 @@
+//sgillen@20172214-15:22 really just a simple PID controller, subscribes to a given sensor topic,
+//a given goal topic (IE what we want the sensor to read) and publishes a given command effort topic
+//ros already has one of these built in but I wanted more control over what was going on to filter
+//with a simple average and to give the option of subscribing to an error term directly
+//(though that is not implemented yet)  
+
+
 #include "pid_controller.h"
 
 using namespace std;
@@ -37,7 +44,6 @@ PIDController::PIDController(NodeHandle n, NodeHandle np,  string control_topic)
 	
 	string command_topic = qubo_namespace + control_topic + "_cmd";
 	m_command_pub = n.advertise<std_msgs::Float64>(command_topic, 1000);
-
 		
 	//m_f =
 	m_server.setCallback( boost::bind(&PIDController::configCallback, this, _1, _2));
@@ -57,10 +63,11 @@ void PIDController::update() {
 	m_prev_time = ros::Time::now();
 
 
+	//proportional term
+	//------------------------------------------------------------------------------
 	//calculate error, update integrals and derivatives of the error
 	m_error = m_target  - m_current; //proportional term
 
-	
    	//if we are told to unwind our angle then we better do that. 
 	if(m_unwind_angle){
 		//makes sure we always take the smallest way around the circle
@@ -71,23 +78,23 @@ void PIDController::update() {
 		}
 	}
 
+	//add the newest error term to our buffer of terms so we can take the average
 	m_error_buf.push_back(m_error);
-  
-	//ROS_ERROR("m_error before the average  =  %f", m_error);
-   
-
-	double sum = 0;
+	
+	double sum = 0; //add the buffer up and divide to get the current smoothed error term
 	for(int i = 0; i < m_error_buf.size(); i++){
 		//ROS_ERROR("buf[%i] = %f", i, m_error_buf[i]);
 		sum += m_error_buf[i];
 	}
 
 	m_error = sum/m_error_buf.size();
+	
 
-	//ROS_ERROR("m_error after the average  = %f", m_error);
-
+	
+	//------------------------------------------------------------------------------
+	//compute the integral and limit it if it's too big 
 	m_error_integral  += m_error * dt.toSec(); //integral term
-
+	
 	//if the integral value is past our windup limit just set it there. 
 	if(m_error_integral > m_windup_limit){
 		m_error_integral = m_windup_limit;
@@ -95,12 +102,17 @@ void PIDController::update() {
 	else if(m_error_integral < -m_windup_limit){
 		m_error_integral = -m_windup_limit;
 	}
+
+
+	//derivative term
+	//------------------------------------------------------------------------------
+	m_error_derivative = (m_error - m_prev_error)/dt.toSec();//smoothing is done by averaging the error, which we've already done 
+
+
 	
-	m_error_derivative = (m_error - m_prev_error)/dt.toSec();
-
-
+	//sum everything weighted by the given gains.
+	//------------------------------------------------------------------------------
 	//ROS_INFO("%s: ep = %f ei = %f ed = %f, dt = %f", m_control_topic.c_str(), m_error,  m_error_integral, m_error_derivative, dt.toSec());  
-	//sum everything weighted by the given gains. 
 	m_command_msg.data = (m_kp*m_error) + (m_ki*m_error_integral) + (m_kd*m_error_derivative);
 
 	//make sure our error term is within limits
@@ -111,7 +123,7 @@ void PIDController::update() {
 		m_command_msg.data = m_lower_limit;
 	}
 
-	
+	//publish the final result
 	m_command_pub.publish(m_command_msg);
 	
 }
