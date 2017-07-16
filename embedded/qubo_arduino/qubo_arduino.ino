@@ -74,8 +74,11 @@ void setup() {
   Wire.begin(); // Initiate the Wire library
 
 
-  Serial.print("Attempting to set freq ");
+  Serial.print("Attempting to set freq! ");
+  
   Serial.println(freq);
+
+  Serial.print("asdasdas ");
   freq *= 0.9;  // Correct for overshoot in the frequency setting (see issue #11).
   float prescaleval = 25000000;
   prescaleval /= 4096;
