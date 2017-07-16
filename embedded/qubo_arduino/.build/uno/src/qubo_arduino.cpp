@@ -1,7 +1,16 @@
+#include <Arduino.h>
+#include <Wire.h>
+uint8_t read8(uint8_t addr);
+void write8(uint8_t addr, uint8_t d);
+void thrustersOff();
+void setup();
+void thrusterCmd();
+void loop();
+#line 1 "src/qubo_arduino.ino"
 /* sgillen - this will be all the arduino code for qubo */
 
 
-#include <Wire.h>
+//#include <Wire.h>
 
 
 #define PCA9685_MODE1 0x0
@@ -19,11 +28,7 @@
 #define BUFFER_SIZE 32 //may need to change
 #define NUM_THRUSTERS 8
 
-// Time(ms) arduino waits without hearing from jetson before turning off thrusters
-#define ALIVE_TIMEOUT 5000
-
-// Character sent to the jetson on connect and reconnect
-#define CONNECTED "C"
+#define ALIVE_TIMEOUT 5000 // the timeout
 
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint16_t serialBufferPos;
@@ -31,8 +36,6 @@ uint16_t serialBufferPos;
 int freq = 1600; //pretty arbitrary, max is 1600
 
 unsigned long alive; // keeps the current time
-
-boolean timedout = false; // if the arduino has timed out
 
 //used by the PCA
 uint8_t read8(uint8_t addr) {
@@ -109,9 +112,6 @@ void setup() {
   Serial.println("PCA initialized");
 
   thrustersOff();
-
-  // Done setup, so send connected command
-  Serial.print(CONNECTED);
   alive = millis();
 
 }
@@ -148,12 +148,6 @@ void loop() {
   //this is all the stuff we do while the jetson is talking to us
   if (Serial.available() > 0) {
 
-    // If just reconnected from a timeout, tell jetson its connected again
-    if ( timedout ) {
-      Serial.print(CONNECTED);
-      timedout = false;
-    }
-
     // Read next byte from serial into buffer
     buffer[serialBufferPos] = Serial.read();
 
@@ -174,6 +168,9 @@ void loop() {
       else if (prot[0] == 't') {   //t,v1,v2,v3,v4,v5,v6,v7,v8! is what we send to set all the thruster values, we make no attempt to make sure this is correct just don't send the wrong thing down the wire
         thrusterCmd();
       }
+
+
+
 
       //We also need to check if the command sent isn't valid
       else {
@@ -198,20 +195,17 @@ void loop() {
   // Timeout checking
   else {
     unsigned long current_time = millis();
-    // If the time wrapped around, can't just subtract them, need to take the difference from max and then the current_time
+    // If the time wrapped around, handle this a little differently
     if ( current_time <= alive ){
       unsigned long max_long = (unsigned long) -1;
       if ( ((max_long - alive) + current_time ) >= ALIVE_TIMEOUT ){
         Serial.println("Timed out, thrusters off");
         thrustersOff();
-        timedout = true;
       }
     }
-    // If time hasn't wrapped around, just take their difference
     else if (( current_time - alive) >= ALIVE_TIMEOUT ) {
       Serial.println("Timed out, thrusters off");
       thrustersOff();
-      timedout = true;
     }
   }
 

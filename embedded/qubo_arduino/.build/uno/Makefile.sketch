@@ -1,0 +1,14 @@
+
+
+
+
+
+.build/uno/src/qubo_arduino.cpp : src/qubo_arduino.ino
+	@mkdir -p .build/uno/src
+	@echo [93msrc/qubo_arduino.ino[0m
+	@/home/rb/.local/bin/ino preproc  -o $@ $^
+
+
+all : .build/uno/src/qubo_arduino.cpp
+	@true
+
