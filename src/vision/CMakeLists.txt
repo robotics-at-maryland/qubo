@@ -1,8 +1,20 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
-
+# set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
+
+find_package(OpenCV 3.2 REQUIRED
+  NO_MODULE
+  PATHS /usr/local/
+  NO_DEFAULT_PATH
+  # COMPONENTS core imgproc highgui opencv_gpu video
+  )
+
+message(STATUS ${OpenCV_INCLUDE_DIRS})
+message(STATUS ${OpenCV_LIBRARIES})
+message(STATUS ${OpenCV_LIBS})
+message(STATUS ${OpenCV_DIR})
 
 find_package(catkin
   REQUIRED COMPONENTS
@@ -19,18 +31,21 @@ find_package(catkin
   actionlib_msgs
   actionlib
 
-  image_transport
+  # image_transport
 
-  cv_bridge
+  # cv_bridge
 
 
-)
+  )
 
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
-find_package(OpenCV REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
+message(STATUS ${OpenCV_INCLUDE_DIRS})
+message(STATUS ${OpenCV_LIBRARIES})
+message(STATUS ${OpenCV_LIBS})
+message(STATUS ${OpenCV_DIR})
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
 
 #Stuff other packages that depend on us need
@@ -46,8 +61,8 @@ catkin_package(
 ##############################
 
 include_directories(
-  ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
   ${VISP_INCLUDE_DIRS}
   include/
   )
@@ -143,55 +158,56 @@ target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
-target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
+target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
 add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
-add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
-target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
-target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
-add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+message(STATUS ${OpenCV_LIBRARIES})
+# add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
+# target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
+# target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
+# add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
 #tuners
-add_executable(canny_tuner ${CANNY_TUNER_FILES})
-target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+# add_executable(canny_tuner ${CANNY_TUNER_FILES})
+# target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
-add_executable(blob_tuner ${BLOB_TUNER_FILES})
-target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
+# add_executable(blob_tuner ${BLOB_TUNER_FILES})
+# target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
-add_executable(gate_tuner ${GATE_TUNER_FILES})
-target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
+# add_executable(gate_tuner ${GATE_TUNER_FILES})
+# target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
 
-add_executable(buoy_tuner ${BUOY_TUNER_FILES})
-target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
-
-
-##below are all basically prototypes
-add_executable(gate_detector ${GATE_FILES})
-target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+# add_executable(buoy_tuner ${BUOY_TUNER_FILES})
+# target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
 
 
-add_executable(segment_test ${SEGMENT_FILES})
-target_link_libraries(segment_test ${OpenCV_LIBRARIES})
+# ##below are all basically prototypes
+# add_executable(gate_detector ${GATE_FILES})
+# target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
 
-add_executable(canny_test ${EDGE_FILES})
-target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-add_executable(blob_test ${BLOB_FILES})
-target_link_libraries(blob_test ${OpenCV_LIBRARIES})
+# add_executable(segment_test ${SEGMENT_FILES})
+# target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 
-add_executable(em_test ${EM_FILES})
-target_link_libraries(em_test ${OpenCV_LIBRARIES})
+# add_executable(canny_test ${EDGE_FILES})
+# target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-add_executable(gfit_test ${GFIT_FILES})
-target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+# add_executable(blob_test ${BLOB_FILES})
+# target_link_libraries(blob_test ${OpenCV_LIBRARIES})
 
-# add_executable(mbt_test ${MBT_FILES})
-# target_link_libraries(mbt_test ${VISP_LIBRARIES})
+# add_executable(em_test ${EM_FILES})
+# target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
-add_executable(cascade_test ${CASCADE_TEST})
-target_link_libraries(cascade_test ${OpenCV_LIBS})
+# add_executable(gfit_test ${GFIT_FILES})
+# target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+
+# # add_executable(mbt_test ${MBT_FILES})
+# # target_link_libraries(mbt_test ${VISP_LIBRARIES})
+
+# add_executable(cascade_test ${CASCADE_TEST})
+# target_link_libraries(cascade_test ${OpenCV_LIBRARIES})
 
 
 
