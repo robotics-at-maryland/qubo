@@ -111,7 +111,7 @@ void setup() {
   thrustersOff();
 
   // Done setup, so send connected command
-  Serial.print(CONNECTED);
+  Serial.println(CONNECTED);
   alive = millis();
 
 }
@@ -143,6 +143,12 @@ void thrusterCmd() {
 
 }
 
+// Placeholder, needs to get depth from I2C, then println it to serial
+void getDepth() {
+  int depth = 0;
+  Serial.println(depth);
+}
+
 void loop() {
 
   //this is all the stuff we do while the jetson is talking to us
@@ -150,7 +156,7 @@ void loop() {
 
     // If just reconnected from a timeout, tell jetson its connected again
     if ( timedout ) {
-      Serial.print(CONNECTED);
+      Serial.println(CONNECTED);
       timedout = false;
     }
 
@@ -167,18 +173,25 @@ void loop() {
       char* prot = strtok(buffer, ",");
 
       //check if something about the packet is malformed enough that strok fails
-      if (!prot[0]) {
+      if ( !prot[0] ) {
         Serial.println("B1");
       }
 
-      else if (prot[0] == 't') {   //t,v1,v2,v3,v4,v5,v6,v7,v8! is what we send to set all the thruster values, we make no attempt to make sure this is correct just don't send the wrong thing down the wire
-        thrusterCmd();
-      }
-
-      //We also need to check if the command sent isn't valid
+      // Handle specific commands
       else {
-        Serial.println("B2");
-        Serial.println(prot[0]);
+        switch(prot[0]) {
+
+        case 't': {
+          thrusterCmd;
+        }
+        case 'd': {
+          getDepth();
+        }
+        default:
+          Serial.println("B2");
+          Serial.println(prot[0]);
+        }
+
       }
 
       // Reset buffer position
@@ -186,6 +199,7 @@ void loop() {
       buffer[0] = 0;
 
     }
+
     else {
       serialBufferPos++;
     }
@@ -198,7 +212,7 @@ void loop() {
   // Timeout checking
   else {
     unsigned long current_time = millis();
-    // If the time wrapped around, can't just subtract them, need to take the difference from max and then the current_time
+    // If the time wrapped around, can't just subtract them, take the difference from max and then the current_time
     if ( current_time <= alive ){
       unsigned long max_long = (unsigned long) -1;
       if ( ((max_long - alive) + current_time ) >= ALIVE_TIMEOUT ){

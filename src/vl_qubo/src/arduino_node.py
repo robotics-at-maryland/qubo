@@ -24,8 +24,6 @@ depth_cmd = 0
 surge_cmd = 0
 sway_cmd  = 0
 
-
-
 #reads a command from stdin
 def read_cmd_stdin():
     if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
@@ -33,7 +31,7 @@ def read_cmd_stdin():
       line = line.rstrip()
       if line:
         num_bytes = ser.write(line)
-        print  "bytes sent =", num_bytes  
+        print  "bytes sent =", num_bytes
 
 
 #sends an array of ints to the thrusters using the agreed upon protocol
@@ -48,47 +46,52 @@ def send_thruster_cmds(thruster_cmds):
     ser.write(cmd_str)
     ##TODO parse return value
 
+# requests depth from arduino, and waits until it receives it
+def get_depth():
+    ser.write('d!')
+    # blocks forever until receives a newline
+    depth = ser.readline()
+    return int(depth)
+
 
 ##------------------------------------------------------------------------------
 # callbacks
 def roll_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     roll_cmd = data
-    
+
 def pitch_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     pitch_cmd = data
-    
+
 def yaw_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     yaw_cmd = data
-    
+
 def depth_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     depth_cmd = data
-    
+
 def surge_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
-    surge_cmd = data 
-    
+    surge_cmd = data
+
 def sway_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     sway_cmd = data
-    
+
 
 ##------------------------------------------------------------------------------
 # main
 if __name__ == '__main__':
-
-
     #!!! this also restarts the arduino! (apparently)
     ser = serial.Serial('/dev/cu.usbmodem1421',115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
     time.sleep(3)
-    
+
 
     #I can't think of a situation where we want to change the namespace but I guess you never know
     qubo_namespace = "/qubo/"
-    
+
     rospy.init_node('arduino_node', anonymous=False)
 
     depth_pub = rospy.Publisher(qubo_namespace + 'depth', Int64, queue_size = 10)
@@ -104,29 +107,33 @@ if __name__ == '__main__':
     thruster_commands = [0]*num_thrusters
 
     rate = rospy.Rate(100) #100Hz
-    
+
     while not rospy.is_shutdown():
 
-        
         depth = get_depth() #TODO
         depth_pub.publish(depth)
-        
-    
+
+
         #thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
-    
+
         #surge, yaw, sway thrusters
         thruster_commands[0] += (surge_command - yaw_command - sway_command)
         thruster_commands[1] += (surge_command + yaw_command + sway_command)
         thruster_commands[2] += (surge_command + yaw_command - sway_command)
         thruster_commands[3] += (surge_command - yaw_command + sway_command)
-	
+
         #depth, pitch, roll thrusters
         thruster_commands[4] += (depth_command + pitch_command + roll_command)
         thruster_commands[5] += (depth_command + pitch_command - roll_command)
         thruster_commands[6] += (depth_command - pitch_command - roll_command)
         thruster_commands[7] += (depth_command - pitch_command + roll_command)
 
-        
-    
+        # Build the thruster message to send
+        t_msg = 't'
+        for i in thruster_commands:
+            t_msg += ',' + str(i)
+        t_msg += '!'
+
+        ser.write(t_msg)
+
         rate.sleep()
-    
