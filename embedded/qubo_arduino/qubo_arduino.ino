@@ -20,7 +20,7 @@
 #define NUM_THRUSTERS 8
 
 // Time(ms) arduino waits without hearing from jetson before turning off thrusters
-#define ALIVE_TIMEOUT 5000
+#define ALIVE_TIMEOUT 10000
 
 // Character sent to the jetson on connect and reconnect
 #define CONNECTED "C"
@@ -176,22 +176,18 @@ void loop() {
       if ( !prot[0] ) {
         Serial.println("B1");
       }
-
       // Handle specific commands
-      else {
-        switch(prot[0]) {
-
-        case 't': {
+      else if ( prot[0] == 't' ) {
+          Serial.println("Thrusters on");
           thrusterCmd;
         }
-        case 'd': {
+      else if ( prot[0] == 'd' ) {
+          Serial.println("Get depth");
           getDepth();
-        }
-        default:
+      }
+      else {
           Serial.println("B2");
           Serial.println(prot[0]);
-        }
-
       }
 
       // Reset buffer position
@@ -201,6 +197,8 @@ void loop() {
     }
 
     else {
+      Serial.print("Buffer pos ");
+      Serial.println(serialBufferPos);
       serialBufferPos++;
     }
 
@@ -211,12 +209,13 @@ void loop() {
 
   // Timeout checking
   else {
+
     unsigned long current_time = millis();
     // If the time wrapped around, can't just subtract them, take the difference from max and then the current_time
     if ( current_time <= alive ){
       unsigned long max_long = (unsigned long) -1;
       if ( ((max_long - alive) + current_time ) >= ALIVE_TIMEOUT ){
-        Serial.println("Timed out, thrusters off");
+        Serial.println("Overflow Timed out, thrusters off");
         thrustersOff();
         timedout = true;
       }
@@ -230,6 +229,5 @@ void loop() {
   }
 
   //here we put code that we need to run with or without the jetsons attached
-
 }
 
