@@ -1,21 +1,23 @@
+set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
 # set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
-
-find_package(OpenCV 3.2 REQUIRED
+find_package(OpenCV 2.4 REQUIRED
   NO_MODULE
   PATHS /usr/local/
   NO_DEFAULT_PATH
   # COMPONENTS core imgproc highgui opencv_gpu video
   )
+set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 
-message(STATUS ${OpenCV_INCLUDE_DIRS})
-message(STATUS ${OpenCV_LIBRARIES})
-message(STATUS ${OpenCV_LIBS})
-message(STATUS ${OpenCV_DIR})
+message(${OpenCV_INCLUDE_DIRS})
+message(${OpenCV_LIBRARIES})
+message(${OpenCV_LIBS})
+message(${OpenCV_DIR})
 
+message("hello")
 find_package(catkin
   REQUIRED COMPONENTS
   roscpp
@@ -31,9 +33,9 @@ find_package(catkin
   actionlib_msgs
   actionlib
 
-  # image_transport
+  image_transport
 
-  # cv_bridge
+ # cv_bridge
 
 
   )
@@ -42,10 +44,6 @@ find_package(catkin
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-message(STATUS ${OpenCV_INCLUDE_DIRS})
-message(STATUS ${OpenCV_LIBRARIES})
-message(STATUS ${OpenCV_LIBS})
-message(STATUS ${OpenCV_DIR})
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
 
 #Stuff other packages that depend on us need
@@ -70,7 +68,7 @@ include_directories(
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
-  
+
   src/actions/buoy_action.cpp
   src/actions/gate_action.cpp
 
@@ -80,7 +78,7 @@ set(VISION_SRC_FILES
 set(SIM_VISION_SRC_FILES
   src/sim_main.cpp
   src/sim_vision_node.cpp
-  
+
   src/actions/buoy_action.cpp
   src/actions/gate_action.cpp
   )
@@ -151,22 +149,21 @@ set(CASCADE_TEST
 ##############################
 
 
-
+set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
-add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
-target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
-target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
-add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+# add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
+# target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
+# target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
+# add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
-message(STATUS ${OpenCV_LIBRARIES})
-# add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
-# target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
-# target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
-# add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+#add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
+#target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
+#target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
+#add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
 #tuners
