@@ -31,6 +31,18 @@ find_package(OpenCV REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
+set(VIMBA_INCLUDE_DIRS "/home/sgillen/Vimba_2_1/VimbaCPP/Include/")
+set(VIMBA_LIBRARY      "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/libVimbaCPP.so")
+
+#include_directories("${MYANALYSE_INCLUDE_DIRS}")
+#target_link_libraries(myapplication "${MYANALYSE_LIBRARY}")
+
+
+#find_library(VimbaCPP NAMES libVimbaCPP.so PATHS "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/")
+#add_library( VimbaCPP SHARED IMPORTED GLOBAL )
+
+#set_target_properties(VimbaCPP PROPERTIES IMPORTED_LOCATION "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit")
+
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
 
 #Stuff other packages that depend on us need
@@ -39,6 +51,7 @@ catkin_package(
    LIBRARIES ${PROJECT_NAME}
    CATKIN_DEPENDS roscpp roslib actionlib_msgs
 )
+
 
 
 ##############################
@@ -50,6 +63,10 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${VISP_INCLUDE_DIRS}
   include/
+
+  ${VIMBA_INCLUDE_DIRS}
+  #${HOME}/Vimba_2_1/VimbaCPP/Include/
+
   )
 
 set(VISION_SRC_FILES
@@ -135,12 +152,14 @@ set(CASCADE_TEST
 # Add Executables ############
 ##############################
 
-
+#LINK_DIRECTORIES(${HOME}/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/)
 
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+target_link_libraries(vision_node ${VIMBA_LIBRARY})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+
 
 add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
 target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})

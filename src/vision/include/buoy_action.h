@@ -19,7 +19,20 @@
 #include <tuple>        // std::tuple, std::get, std::tie, std::ignore
 #include <vector>
 
-#include "vision_node.h"
+
+//ros includes
+#include "ros/ros.h"
+#include <ram_msgs/VisionNavAction.h>
+#include <actionlib/server/simple_action_server.h>
+
+
+
+//message includes
+#include "std_msgs/String.h"
+#include  "ram_msgs/bool_bool.h"
+
+
+//#include "vision_node.h"
 
 
 class BuoyAction{
