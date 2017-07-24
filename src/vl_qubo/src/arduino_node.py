@@ -151,7 +151,6 @@ if __name__ == '__main__':
     thruster5_pub = rospy.Subscriber(name.format(5), Int, thruser5_callback)
     thruster6_pub = rospy.Subscriber(name.format(6), Int, thruser6_callback)
     thruster7_pub = rospy.Subscriber(name.format(7), Int, thruser7_callback)
-    del thruster_name
 
     #rospy spins all these up in their own thread, no need to call spin()
     rospy.Subscriber(qubo_namespace + "roll_cmd"  , Int, roll_callback)
