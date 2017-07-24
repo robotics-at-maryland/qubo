@@ -7,6 +7,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/video.hpp>
 
+//Vimba includes
+#include <VimbaCPP/Include/VimbaCPP.h>
+
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
@@ -20,7 +23,7 @@
 #include "std_msgs/String.h"
 #include  "ram_msgs/bool_bool.h"
 
-//our actions/tuner actions 
+//our actions/tuner actions
 #include "buoy_action.h"
 #include "gate_action.h"
 
@@ -28,7 +31,7 @@ class VisionNode{
 
     public:
 
-    
+
     //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
     VisionNode(ros::NodeHandle n, ros::NodeHandle np,  std::string feed);
     ~VisionNode();
@@ -41,8 +44,8 @@ class VisionNode{
 
 
     bool serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
-    
-    
+
+
     //sg: put action definitions here
     //=================================================================================================================
 
@@ -53,25 +56,27 @@ class VisionNode{
 
     protected:
 
-    
-    
+    //camera stuff
+    //======================================================================
+    //nothing here yet
+
     cv::VideoCapture m_cap;
     cv::Mat m_img;
 
-	cv::VideoWriter m_output_video;
-	
+    cv::VideoWriter m_output_video;
+
     //declare a service object for your service below
     //======================================================================
     ros::ServiceServer m_test_srv;
 
-    
+
     //declare an action server object for your action here
     //======================================================================
     //the VisionNavAction name here comes from the .action file in qubo/ram_msgs/action.
     //the build system appends the word Action to whatever the file name is in the ram_msgs directory
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
-    
+
 };
 
 
