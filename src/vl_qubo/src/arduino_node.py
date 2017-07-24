@@ -14,6 +14,8 @@
 import serial, time, sys, select
 import rospy
 
+control_domain = (-128.0, 128.0)
+arduino_domain = (1050.0, 1850.0)
 num_thrusters = 8
 
 ##command variables (should we make this module a class??)
@@ -23,6 +25,11 @@ yaw_cmd   = 0
 depth_cmd = 0
 surge_cmd = 0
 sway_cmd  = 0
+
+# Maps values from control_domain to arduino_domain
+def thruster_map(control_in):
+    ratio = (arduino_domain[1] - arduino_domain[0]) / (control_domain[1] - control_domain[0])
+    return (control_in - control_domain[0]) * ratio + arduino_domain[0]
 
 #reads a command from stdin
 def read_cmd_stdin():
@@ -80,6 +87,45 @@ def sway_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     sway_cmd = data
 
+def thruster0_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[0] = int(round(signal))
+
+def thruster1_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[1] = int(round(signal))
+
+def thruster2_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[2] = int(round(signal))
+
+def thruster3_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[3] = int(round(signal))
+
+def thruster4_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[4] = int(round(signal))
+
+def thruster5_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[5] = int(round(signal))
+
+def thruster6_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[6] = int(round(signal))
+
+def thruster7_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[7] = int(round(signal))
 
 ##------------------------------------------------------------------------------
 # main
@@ -95,6 +141,17 @@ if __name__ == '__main__':
     rospy.init_node('arduino_node', anonymous=False)
 
     depth_pub = rospy.Publisher(qubo_namespace + 'depth', Int64, queue_size = 10)
+
+    thruster_name = qubo_namespace + 'thruster{0}_command'
+    thruster0_pub = rospy.Subscriber(name.format(0), Int, thruser0_callback)
+    thruster1_pub = rospy.Subscriber(name.format(1), Int, thruser1_callback)
+    thruster2_pub = rospy.Subscriber(name.format(2), Int, thruser2_callback)
+    thruster3_pub = rospy.Subscriber(name.format(3), Int, thruser3_callback)
+    thruster4_pub = rospy.Subscriber(name.format(4), Int, thruser4_callback)
+    thruster5_pub = rospy.Subscriber(name.format(5), Int, thruser5_callback)
+    thruster6_pub = rospy.Subscriber(name.format(6), Int, thruser6_callback)
+    thruster7_pub = rospy.Subscriber(name.format(7), Int, thruser7_callback)
+    del thruster_name
 
     #rospy spins all these up in their own thread, no need to call spin()
     rospy.Subscriber(qubo_namespace + "roll_cmd"  , Int, roll_callback)
@@ -117,6 +174,7 @@ if __name__ == '__main__':
         #thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
 
         #surge, yaw, sway thrusters
+        '''
         thruster_commands[0] += (surge_command - yaw_command - sway_command)
         thruster_commands[1] += (surge_command + yaw_command + sway_command)
         thruster_commands[2] += (surge_command + yaw_command - sway_command)
@@ -127,6 +185,7 @@ if __name__ == '__main__':
         thruster_commands[5] += (depth_command + pitch_command - roll_command)
         thruster_commands[6] += (depth_command - pitch_command - roll_command)
         thruster_commands[7] += (depth_command - pitch_command + roll_command)
+        '''
 
         # Build the thruster message to send
         t_msg = 't'
