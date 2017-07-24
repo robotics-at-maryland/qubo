@@ -2,7 +2,8 @@
 
 
 #include <Wire.h>
-
+#include "MS5837.h"
+//#include "Adafruit_PWMServoDriver.h"
 
 #define PCA9685_MODE1 0x0
 #define PCA9685_PRESCALE 0xFE
@@ -15,24 +16,27 @@
 #define LED0_OFF_L 0x8
 #define LED0_OFF_H 0x9
 
-
-#define BUFFER_SIZE 32 //may need to change
+#define BUFFER_SIZE 512 //may need to change
 #define NUM_THRUSTERS 8
 
 // Time(ms) arduino waits without hearing from jetson before turning off thrusters
-#define ALIVE_TIMEOUT 10000
+#define ALIVE_TIMEOUT 9999999
 
 // Character sent to the jetson on connect and reconnect
 #define CONNECTED "C"
 
+// __________________________________________________________________________________________
+
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint16_t serialBufferPos;
-
 int freq = 1600; //pretty arbitrary, max is 1600
-
 unsigned long alive; // keeps the current time
-
 boolean timedout = false; // if the arduino has timed out
+MS5837 sensor;
+//Adafruit_PWMServoDriver pwm;
+
+// __________________________________________________________________________________________
+
 
 //used by the PCA
 uint8_t read8(uint8_t addr) {
@@ -52,6 +56,7 @@ void write8(uint8_t addr, uint8_t d) {
   Wire.endTransmission();
 }
 
+
 void thrustersOff() {
   // turn off thrusters
   for (int i = 0; i < NUM_THRUSTERS; i++) {
@@ -69,6 +74,12 @@ void setup() {
   Serial.begin(115200);
   serialBufferPos = 0;
 
+  /*
+  pwm = Adafruit_PWMServoDriver();
+
+  pwm.begin();
+  pwm.setPWMFreq(freq);
+  */
 
   //configure the PCA
   Wire.begin(); // Initiate the Wire library
@@ -98,7 +109,6 @@ void setup() {
   //delay(5);
   //write8(PCA9685_MODE1, oldmode | 0xa1);
 
-
   oldmode = read8(PCA9685_MODE1);
   oldmode2 = read8(PCA9685_MODE1 + 1);
 
@@ -110,27 +120,39 @@ void setup() {
 
   thrustersOff();
 
+  // Depth sensor
+  sensor.init();
+
+  sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
+
   // Done setup, so send connected command
   Serial.println(CONNECTED);
   alive = millis();
-
+  delay(1);
 }
 
 //processes and sends thrusters commands to the PCA
 void thrusterCmd() {
+  Serial.println("in thrustercmd");
 
   char* thrusterCommands[NUM_THRUSTERS];
 
   for (int i = 0; i < NUM_THRUSTERS - 1; i++) {
+    Serial.println(i);
     thrusterCommands[i] = strtok(NULL, ","); //remember buffer is global, strok still remembers that we are reading from it
-    // Serial.println(thrusterCommands[i]);
+    //    Serial.println(thrusterCommands[i]);
+    Serial.println("a");
   }
   thrusterCommands[NUM_THRUSTERS] = strtok(NULL, "!"); //last token is the ! not the ,
 
+  uint16_t check = atoi(thrusterCommands[0]);
 
   for (int i = 0; i < NUM_THRUSTERS; i++) {
 
     uint16_t off = atoi(thrusterCommands[i]);
+    Serial.println(off);
+
+    //pwm.setPWM(i, 0, off);
 
     Wire.beginTransmission(PCA9Address);
     Wire.write(LED0_ON_L + 4 * i);
@@ -139,13 +161,18 @@ void thrusterCmd() {
     Wire.write(off);
     Wire.write(off >> 8);
     Wire.endTransmission();
+
   }
+
+  // Send back the first command
+  Serial.println(check);
 
 }
 
 // Placeholder, needs to get depth from I2C, then println it to serial
 void getDepth() {
-  int depth = 0;
+  sensor.read();
+  float depth = sensor.depth();
   Serial.println(depth);
 }
 
@@ -179,7 +206,7 @@ void loop() {
       // Handle specific commands
       else if ( prot[0] == 't' ) {
           Serial.println("Thrusters on");
-          thrusterCmd;
+          thrusterCmd();
         }
       else if ( prot[0] == 'd' ) {
           Serial.println("Get depth");
@@ -197,8 +224,11 @@ void loop() {
     }
 
     else {
+      /*
       Serial.print("Buffer pos ");
       Serial.println(serialBufferPos);
+      Serial.println(buffer[serialBufferPos]);
+      */
       serialBufferPos++;
     }
 
@@ -215,19 +245,25 @@ void loop() {
     if ( current_time <= alive ){
       unsigned long max_long = (unsigned long) -1;
       if ( ((max_long - alive) + current_time ) >= ALIVE_TIMEOUT ){
-        Serial.println("Overflow Timed out, thrusters off");
-        thrustersOff();
-        timedout = true;
+        Serial.println(max_long - alive + current_time);
+        Serial.println(ALIVE_TIMEOUT);
+        if (!timedout) {
+          Serial.println("Overflow Timed out, thrusters off");
+          thrustersOff();
+          timedout = true;
+        }
       }
     }
     // If time hasn't wrapped around, just take their difference
     else if (( current_time - alive) >= ALIVE_TIMEOUT ) {
-      Serial.println("Timed out, thrusters off");
-      thrustersOff();
-      timedout = true;
+      if (!timedout) {
+        Serial.println("Timed out, thrusters off");
+        thrustersOff();
+        timedout = true;
+      }
     }
   }
-
+  delay(1);
   //here we put code that we need to run with or without the jetsons attached
 }
 

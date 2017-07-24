@@ -135,5 +135,6 @@ if __name__ == '__main__':
         t_msg += '!'
 
         ser.write(t_msg)
+        check = ser.readline()
 
         rate.sleep()
