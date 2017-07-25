@@ -13,7 +13,12 @@
 
 import serial, time, sys, select
 import rospy
+from std_msgs.msg import Int64, Float64
 
+device = '/dev/ttyACM0'
+
+control_domain = (-128.0, 128.0)
+arduino_domain = (1050.0, 1850.0)
 num_thrusters = 8
 
 ##command variables (should we make this module a class??)
@@ -23,6 +28,11 @@ yaw_cmd   = 0
 depth_cmd = 0
 surge_cmd = 0
 sway_cmd  = 0
+
+# Maps values from control_domain to arduino_domain
+def thruster_map(control_in):
+    ratio = (arduino_domain[1] - arduino_domain[0]) / (control_domain[1] - control_domain[0])
+    return (control_in - control_domain[0]) * ratio + arduino_domain[0]
 
 #reads a command from stdin
 def read_cmd_stdin():
@@ -80,12 +90,51 @@ def sway_callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
     sway_cmd = data
 
+def thruster0_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[0] = int(round(signal))
+
+def thruster1_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[1] = int(round(signal))
+
+def thruster2_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[2] = int(round(signal))
+
+def thruster3_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[3] = int(round(signal))
+
+def thruster4_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[4] = int(round(signal))
+
+def thruster5_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[5] = int(round(signal))
+
+def thruster6_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[6] = int(round(signal))
+
+def thruster7_callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    signal = thruster_map(data)
+    thruster_commands[7] = int(round(signal))
 
 ##------------------------------------------------------------------------------
 # main
 if __name__ == '__main__':
     #!!! this also restarts the arduino! (apparently)
-    ser = serial.Serial('/dev/cu.usbmodem1421',115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
+    ser = serial.Serial(device,115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
     time.sleep(3)
 
 
@@ -96,27 +145,38 @@ if __name__ == '__main__':
 
     depth_pub = rospy.Publisher(qubo_namespace + 'depth', Int64, queue_size = 10)
 
+    thruster_name = qubo_namespace + 'thruster{0}_command'
+    thruster0_pub = rospy.Subscriber(thruster_name.format(0), Float64, thruster0_callback)
+    thruster1_pub = rospy.Subscriber(thruster_name.format(1), Float64, thruster1_callback)
+    thruster2_pub = rospy.Subscriber(thruster_name.format(2), Float64, thruster2_callback)
+    thruster3_pub = rospy.Subscriber(thruster_name.format(3), Float64, thruster3_callback)
+    thruster4_pub = rospy.Subscriber(thruster_name.format(4), Float64, thruster4_callback)
+    thruster5_pub = rospy.Subscriber(thruster_name.format(5), Float64, thruster5_callback)
+    thruster6_pub = rospy.Subscriber(thruster_name.format(6), Float64, thruster6_callback)
+    thruster7_pub = rospy.Subscriber(thruster_name.format(7), Float64, thruster7_callback)
+
     #rospy spins all these up in their own thread, no need to call spin()
-    rospy.Subscriber(qubo_namespace + "roll_cmd"  , Int, roll_callback)
-    rospy.Subscriber(qubo_namespace + "pitch_cmd" , Int, pitch_callback)
-    rospy.Subscriber(qubo_namespace + "yaw_cmd"   , Int, yaw_callback)
-    rospy.Subscriber(qubo_namespace + "depth_cmd" , Int, depth_callback)
-    rospy.Subscriber(qubo_namespace + "surge_cmd" , Int, surge_callback)
-    rospy.Subscriber(qubo_namespace + "sway_cmd"  , Int, sway_callback)
+    rospy.Subscriber(qubo_namespace + "roll_cmd"  , Int64, roll_callback)
+    rospy.Subscriber(qubo_namespace + "pitch_cmd" , Int64, pitch_callback)
+    rospy.Subscriber(qubo_namespace + "yaw_cmd"   , Int64, yaw_callback)
+    rospy.Subscriber(qubo_namespace + "depth_cmd" , Int64, depth_callback)
+    rospy.Subscriber(qubo_namespace + "surge_cmd" , Int64, surge_callback)
+    rospy.Subscriber(qubo_namespace + "sway_cmd"  , Int64, sway_callback)
 
-    thruster_commands = [0]*num_thrusters
+    thruster_commands = [thruster_map(0)]*num_thrusters
 
-    rate = rospy.Rate(100) #100Hz
+    rate = rospy.Rate(10) #100Hz
 
     while not rospy.is_shutdown():
 
-        depth = get_depth() #TODO
-        depth_pub.publish(depth)
+        #depth = get_depth() #TODO
+        #depth_pub.publish(depth)
 
 
         #thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
 
         #surge, yaw, sway thrusters
+        '''
         thruster_commands[0] += (surge_command - yaw_command - sway_command)
         thruster_commands[1] += (surge_command + yaw_command + sway_command)
         thruster_commands[2] += (surge_command + yaw_command - sway_command)
@@ -127,6 +187,7 @@ if __name__ == '__main__':
         thruster_commands[5] += (depth_command + pitch_command - roll_command)
         thruster_commands[6] += (depth_command - pitch_command - roll_command)
         thruster_commands[7] += (depth_command - pitch_command + roll_command)
+        '''
 
         # Build the thruster message to send
         t_msg = 't'
@@ -135,5 +196,7 @@ if __name__ == '__main__':
         t_msg += '!'
 
         ser.write(t_msg)
+        check = ser.readline()
+        print(check)
 
         rate.sleep()

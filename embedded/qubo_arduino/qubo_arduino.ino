@@ -1,8 +1,9 @@
 /* sgillen - this will be all the arduino code for qubo */
 
+#define DEBUG
 
 #include <Wire.h>
-
+#include "MS5837.h"
 
 #define PCA9685_MODE1 0x0
 #define PCA9685_PRESCALE 0xFE
@@ -15,24 +16,27 @@
 #define LED0_OFF_L 0x8
 #define LED0_OFF_H 0x9
 
-
-#define BUFFER_SIZE 32 //may need to change
+#define BUFFER_SIZE 512 //may need to change
 #define NUM_THRUSTERS 8
 
 // Time(ms) arduino waits without hearing from jetson before turning off thrusters
-#define ALIVE_TIMEOUT 10000
+#define ALIVE_TIMEOUT 9999999
 
 // Character sent to the jetson on connect and reconnect
 #define CONNECTED "C"
 
+// __________________________________________________________________________________________
+
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint16_t serialBufferPos;
-
 int freq = 1600; //pretty arbitrary, max is 1600
-
 unsigned long alive; // keeps the current time
-
 boolean timedout = false; // if the arduino has timed out
+MS5837 sensor;
+//Adafruit_PWMServoDriver pwm;
+
+// __________________________________________________________________________________________
+
 
 //used by the PCA
 uint8_t read8(uint8_t addr) {
@@ -52,6 +56,7 @@ void write8(uint8_t addr, uint8_t d) {
   Wire.endTransmission();
 }
 
+
 void thrustersOff() {
   // turn off thrusters
   for (int i = 0; i < NUM_THRUSTERS; i++) {
@@ -69,13 +74,14 @@ void setup() {
   Serial.begin(115200);
   serialBufferPos = 0;
 
-
   //configure the PCA
   Wire.begin(); // Initiate the Wire library
 
 
+  #ifdef DEBUG
   Serial.print("Attempting to set freq ");
   Serial.println(freq);
+  #endif
   freq *= 0.9;  // Correct for overshoot in the frequency setting (see issue #11).
   float prescaleval = 25000000;
   prescaleval /= 4096;
@@ -87,9 +93,11 @@ void setup() {
   uint8_t oldmode = read8(PCA9685_MODE1);
   uint8_t oldmode2 = read8(PCA9685_MODE1 + 1);
 
+  #ifdef DEBUG
   Serial.println("old mode was");
   Serial.println(oldmode);
   Serial.println(oldmode2);
+  #endif
 
   uint8_t newmode = 0x21;
   write8(PCA9685_MODE1, newmode); // go to sleep
@@ -98,22 +106,27 @@ void setup() {
   //delay(5);
   //write8(PCA9685_MODE1, oldmode | 0xa1);
 
-
   oldmode = read8(PCA9685_MODE1);
   oldmode2 = read8(PCA9685_MODE1 + 1);
 
+  #ifdef DEBUG
   Serial.println("new mode is");
   Serial.println(oldmode);
   Serial.println(oldmode2);
-
   Serial.println("PCA initialized");
+  #endif
 
   thrustersOff();
 
-  // Done setup, so send connected command
-  Serial.println(CONNECTED);
-  alive = millis();
+  // Depth sensor
+  sensor.init();
 
+  sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
+
+  // Done setup, so send connected command
+  //Serial.println(CONNECTED);
+  alive = millis();
+  delay(1);
 }
 
 //processes and sends thrusters commands to the PCA
@@ -122,11 +135,16 @@ void thrusterCmd() {
   char* thrusterCommands[NUM_THRUSTERS];
 
   for (int i = 0; i < NUM_THRUSTERS - 1; i++) {
+
     thrusterCommands[i] = strtok(NULL, ","); //remember buffer is global, strok still remembers that we are reading from it
-    // Serial.println(thrusterCommands[i]);
+    #ifdef DEBUG
+    Serial.println(thrusterCommands[i]);
+    #endif
+
   }
   thrusterCommands[NUM_THRUSTERS] = strtok(NULL, "!"); //last token is the ! not the ,
 
+  uint16_t check = atoi(thrusterCommands[0]);
 
   for (int i = 0; i < NUM_THRUSTERS; i++) {
 
@@ -139,13 +157,18 @@ void thrusterCmd() {
     Wire.write(off);
     Wire.write(off >> 8);
     Wire.endTransmission();
+
   }
+
+  // Send back the first command
+  Serial.println(check);
 
 }
 
 // Placeholder, needs to get depth from I2C, then println it to serial
 void getDepth() {
-  int depth = 0;
+  sensor.read();
+  float depth = sensor.depth();
   Serial.println(depth);
 }
 
@@ -156,15 +179,17 @@ void loop() {
 
     // If just reconnected from a timeout, tell jetson its connected again
     if ( timedout ) {
-      Serial.println(CONNECTED);
+      //Serial.println(CONNECTED);
       timedout = false;
     }
 
     // Read next byte from serial into buffer
     buffer[serialBufferPos] = Serial.read();
 
-    // Serial.print("buffer is: ");
-    // Serial.println(buffer);
+    #ifdef DEBUG
+     Serial.print("buffer is: ");
+     Serial.println(buffer);
+    #endif
 
     // Check if we've reached exclamation
     if (buffer[serialBufferPos] == '!') {
@@ -178,11 +203,15 @@ void loop() {
       }
       // Handle specific commands
       else if ( prot[0] == 't' ) {
-          Serial.println("Thrusters on");
-          thrusterCmd;
+        #ifdef DEBUG
+        //Serial.println("Thrusters on");
+        #endif
+          thrusterCmd();
         }
       else if ( prot[0] == 'd' ) {
-          Serial.println("Get depth");
+        #ifdef DEBUG
+        //Serial.println("Get depth");
+        #endif
           getDepth();
       }
       else {
@@ -197,8 +226,13 @@ void loop() {
     }
 
     else {
+      #ifdef DEBUG
+
       Serial.print("Buffer pos ");
       Serial.println(serialBufferPos);
+      Serial.println(buffer[serialBufferPos]);
+
+      #endif
       serialBufferPos++;
     }
 
@@ -215,19 +249,31 @@ void loop() {
     if ( current_time <= alive ){
       unsigned long max_long = (unsigned long) -1;
       if ( ((max_long - alive) + current_time ) >= ALIVE_TIMEOUT ){
-        Serial.println("Overflow Timed out, thrusters off");
-        thrustersOff();
-        timedout = true;
+        #ifdef DEBUG
+        Serial.println(max_long - alive + current_time);
+        Serial.println(ALIVE_TIMEOUT);
+        #endif
+        if (!timedout) {
+          #ifdef DEBUG
+          Serial.println("Overflow Timed out, thrusters off");
+          #endif
+          thrustersOff();
+          timedout = true;
+        }
       }
     }
     // If time hasn't wrapped around, just take their difference
     else if (( current_time - alive) >= ALIVE_TIMEOUT ) {
-      Serial.println("Timed out, thrusters off");
-      thrustersOff();
-      timedout = true;
+      if (!timedout) {
+        #ifdef DEBUG
+        Serial.println("Timed out, thrusters off");
+        #endif
+        thrustersOff();
+        timedout = true;
+      }
     }
   }
-
+  delay(1);
   //here we put code that we need to run with or without the jetsons attached
 }
 
