@@ -31,16 +31,13 @@ class PIDController {
     
     ros::Subscriber m_target_sub;
     void targetCallback(const std_msgs::Float64::ConstPtr& msg);
-    double m_target;
+    double m_target = 0; //default to zero
 
 
 	ros::Publisher m_command_pub;
 
     //void commandCallback(const std_msgs::Float64::ConstPtr& msg);
     std_msgs::Float64  m_command_msg;
-
-
-
 
     std::string m_control_topic;
 

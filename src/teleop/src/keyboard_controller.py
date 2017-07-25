@@ -3,6 +3,7 @@ import rospy
 import time
 
 from std_msgs.msg import Float64
+from std_msgs.msg import Float64MultiArray
 
 #pygame setup
 pygame.init()
@@ -14,7 +15,7 @@ pygame.key.set_repeat(delay, interval)
 
 #really this should be passed in or something but for now if you want to change the name just do it here
 robot_namespace = "qubo/"
-effort = 20
+effort = 128
 
 num_thrusters = 8
 
@@ -29,15 +30,10 @@ depth_pub =  rospy.Publisher(robot_namespace + "depth_cmd" , Float64, queue_size
 surge_pub =  rospy.Publisher(robot_namespace + "surge_cmd" , Float64, queue_size = 10 )
 sway_pub  =  rospy.Publisher(robot_namespace + "sway_cmd"  , Float64, queue_size = 10 )
 
-thruster_pubs = {}
 
-for i in range(0,num_thrusters):
-    thruster_pubs[i] = rospy.Publisher(robot_namespace + "thruster_cmd" +  str(i) + "_cmd", Float64, Float64, queue_size = 10)
+thruster_pub = rospy.Publisher(robot_namespace + "thruster_cmds"  , Float64MultiArray, queue_size = 10)
 
-
-print pygame.K_0
-
-print pygame.K_8
+thruster_msg = Float64MultiArray()
 
 pygame.key.set_repeat(10,10)
 
@@ -48,9 +44,9 @@ while(True):
             print event.key
 
     keys_pressed = pygame.key.get_pressed()
+
     sway = surge = yaw = depth = 0
-    
-    # we really can just do = rather than += but who cares
+    thruster_msg.data = [0]*num_thrusters
     
     if keys_pressed[pygame.K_a]:
         sway_pub.publish(effort)
@@ -80,17 +76,19 @@ while(True):
         depth_pub.publish(-effort)
 
 
-    #this only works because pygame.k_X is a number and k_0 - k_8 are contiguous
 
     if keys_pressed[pygame.K_MINUS]:
         sign = -1
     else:
         sign = 1
         
-    for key in range(pygame.K_0, pygame.K_7):
-        
-        if keys_pressed[key]:
-            thruster_pubs[i].publish[effort*sign]
+    #this only works because pygame.k_X is a number and k_0 - k_8 are contiguous
+    for i in range(0, 8):
+        if keys_pressed[pygame.K_0 + i]:
+            thruster_msg.data[i] = (effort*sign)
+
+    thruster_pub.publish(thruster_msg)
+            
         
 
     time.sleep(.05)
