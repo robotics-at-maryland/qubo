@@ -121,12 +121,14 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	//------------------------------------------------------------------------------
 	m_test_srv = n.advertiseService("service_test", &VisionNode::serviceTest, this);
 
-				//start your action servers here
-				//------------------------------------------------------------------------------
-				m_buoy_server.start();
-				m_gate_server.start();
-				ROS_INFO("servers started");
-			}
+
+	//start your action servers here
+	//------------------------------------------------------------------------------
+	m_buoy_server.start();
+	m_gate_server.start();
+	ROS_INFO("servers started");
+
+}
 
 
 VisionNode::~VisionNode(){
@@ -140,14 +142,16 @@ void VisionNode::update(){
 
 	// Use the mako if its present
 	if (m_gige_camera == nullptr){
+		ROS_ERROR("Get vimba frame");
 		getVmbFrame(m_img);
 	} else {
 		m_cap >> m_img;
 	}
 	//if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
 	if(m_img.empty()){
-		ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
-		exit(0);
+		// ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
+		// exit(0);
+		ROS_ERROR("Empty Frame");
 	}
 
 	//if the user didn't specify a directory this will not be open
@@ -199,7 +203,7 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	img_src.Data = img_buf;
 	img_src.Data = cv_frame.data;
 
-	VmbImageTransform(&img_src, &img_dest, NULL, 0);
+	vmb_err( VmbImageTransform(&img_src, &img_dest, NULL, 0), "Error transforming image" );
 }
 
 /*
