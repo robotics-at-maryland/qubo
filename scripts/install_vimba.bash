@@ -18,7 +18,7 @@ INSTALL_DIR="$HOME/src/vimba"
 mkdir -p "$INSTALL_DIR"
 
 # test for jetson-ness
-if [[ $(uname -n) =~ .*tegra.* ]]; then
+if [[ $(uname -m) =~ .*aarch64.* ]]; then
 	echo "Jetson detected, using Vimba for ARMv8"
 	SDK_VER=$SDK_ARM
 fi
