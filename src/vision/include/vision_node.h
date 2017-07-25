@@ -61,7 +61,7 @@ class VisionNode{
     //======================================================================
     AVT::VmbAPI::CameraPtr m_gige_camera;
     void getVmbFrame(cv::Mat& cv_frame);
-    long m_vmb_width, m_vmb_height;
+    long m_width, m_height;
     VmbInt64_t m_pixel_format;
 
     cv::VideoCapture m_cap;
