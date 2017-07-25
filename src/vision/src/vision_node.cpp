@@ -182,7 +182,7 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 		return func_call;
 	};
 	FramePtr vmb_frame;
-	if( vmb_err( m_gige_camera->AcquireSingleImage(vmb_frame, 2), "Error getting single frame" ) ) { return; }
+	if( vmb_err( m_gige_camera->AcquireSingleImage(vmb_frame, 200), "Error getting single frame" ) ) { return; }
 	VmbFrameStatusType status;
 	vmb_frame->GetReceiveStatus(status);
 	if(status != VmbFrameStatusComplete) {
