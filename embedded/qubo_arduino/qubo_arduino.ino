@@ -3,7 +3,6 @@
 
 #include <Wire.h>
 #include "MS5837.h"
-//#include "Adafruit_PWMServoDriver.h"
 
 #define PCA9685_MODE1 0x0
 #define PCA9685_PRESCALE 0xFE
@@ -74,19 +73,14 @@ void setup() {
   Serial.begin(115200);
   serialBufferPos = 0;
 
-  /*
-  pwm = Adafruit_PWMServoDriver();
-
-  pwm.begin();
-  pwm.setPWMFreq(freq);
-  */
-
   //configure the PCA
   Wire.begin(); // Initiate the Wire library
 
 
-  Serial.print("Attempting to set freq ");
-  Serial.println(freq);
+  #ifdef DEBUG
+  //Serial.print("Attempting to set freq ");
+  //Serial.println(freq);
+  #endif
   freq *= 0.9;  // Correct for overshoot in the frequency setting (see issue #11).
   float prescaleval = 25000000;
   prescaleval /= 4096;
@@ -98,9 +92,11 @@ void setup() {
   uint8_t oldmode = read8(PCA9685_MODE1);
   uint8_t oldmode2 = read8(PCA9685_MODE1 + 1);
 
-  Serial.println("old mode was");
-  Serial.println(oldmode);
-  Serial.println(oldmode2);
+  #ifdef DEBUG
+  //Serial.println("old mode was");
+  //Serial.println(oldmode);
+  //Serial.println(oldmode2);
+  #endif
 
   uint8_t newmode = 0x21;
   write8(PCA9685_MODE1, newmode); // go to sleep
@@ -112,11 +108,12 @@ void setup() {
   oldmode = read8(PCA9685_MODE1);
   oldmode2 = read8(PCA9685_MODE1 + 1);
 
-  Serial.println("new mode is");
-  Serial.println(oldmode);
-  Serial.println(oldmode2);
-
-  Serial.println("PCA initialized");
+  #ifdef DEBUG
+  //Serial.println("new mode is");
+  //Serial.println(oldmode);
+  //Serial.println(oldmode2);
+  //Serial.println("PCA initialized");
+  #endif
 
   thrustersOff();
 
@@ -126,22 +123,23 @@ void setup() {
   sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
 
   // Done setup, so send connected command
-  Serial.println(CONNECTED);
+  //Serial.println(CONNECTED);
   alive = millis();
   delay(1);
 }
 
 //processes and sends thrusters commands to the PCA
 void thrusterCmd() {
-  Serial.println("in thrustercmd");
 
   char* thrusterCommands[NUM_THRUSTERS];
 
   for (int i = 0; i < NUM_THRUSTERS - 1; i++) {
-    Serial.println(i);
+
     thrusterCommands[i] = strtok(NULL, ","); //remember buffer is global, strok still remembers that we are reading from it
+    #ifdef DEBUG
     //    Serial.println(thrusterCommands[i]);
-    Serial.println("a");
+    #endif
+
   }
   thrusterCommands[NUM_THRUSTERS] = strtok(NULL, "!"); //last token is the ! not the ,
 
@@ -150,9 +148,6 @@ void thrusterCmd() {
   for (int i = 0; i < NUM_THRUSTERS; i++) {
 
     uint16_t off = atoi(thrusterCommands[i]);
-    Serial.println(off);
-
-    //pwm.setPWM(i, 0, off);
 
     Wire.beginTransmission(PCA9Address);
     Wire.write(LED0_ON_L + 4 * i);
@@ -183,15 +178,17 @@ void loop() {
 
     // If just reconnected from a timeout, tell jetson its connected again
     if ( timedout ) {
-      Serial.println(CONNECTED);
+      //Serial.println(CONNECTED);
       timedout = false;
     }
 
     // Read next byte from serial into buffer
     buffer[serialBufferPos] = Serial.read();
 
+    #ifdef DEBUG
     // Serial.print("buffer is: ");
     // Serial.println(buffer);
+    #endif
 
     // Check if we've reached exclamation
     if (buffer[serialBufferPos] == '!') {
@@ -205,11 +202,15 @@ void loop() {
       }
       // Handle specific commands
       else if ( prot[0] == 't' ) {
-          Serial.println("Thrusters on");
+        #ifdef DEBUG
+        //Serial.println("Thrusters on");
+        #endif
           thrusterCmd();
         }
       else if ( prot[0] == 'd' ) {
-          Serial.println("Get depth");
+        #ifdef DEBUG
+        //Serial.println("Get depth");
+        #endif
           getDepth();
       }
       else {
@@ -224,11 +225,13 @@ void loop() {
     }
 
     else {
+      #ifdef DEBUG
       /*
       Serial.print("Buffer pos ");
       Serial.println(serialBufferPos);
       Serial.println(buffer[serialBufferPos]);
       */
+      #endif
       serialBufferPos++;
     }
 
@@ -245,10 +248,14 @@ void loop() {
     if ( current_time <= alive ){
       unsigned long max_long = (unsigned long) -1;
       if ( ((max_long - alive) + current_time ) >= ALIVE_TIMEOUT ){
+        #ifdef DEBUG
         Serial.println(max_long - alive + current_time);
         Serial.println(ALIVE_TIMEOUT);
+        #endif
         if (!timedout) {
-          Serial.println("Overflow Timed out, thrusters off");
+          #ifdef DEBUG
+          //Serial.println("Overflow Timed out, thrusters off");
+          #endif
           thrustersOff();
           timedout = true;
         }
@@ -257,7 +264,9 @@ void loop() {
     // If time hasn't wrapped around, just take their difference
     else if (( current_time - alive) >= ALIVE_TIMEOUT ) {
       if (!timedout) {
-        Serial.println("Timed out, thrusters off");
+        #ifdef DEBUG
+        //Serial.println("Timed out, thrusters off");
+        #endif
         thrustersOff();
         timedout = true;
       }
