@@ -45,14 +45,14 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 			VmbInt64_t width;
 			if (!vmb_err(feat->GetValue(width), "Error getting width")) {
 				ROS_ERROR("Width: %lld", width);
-				m_vmb_width = width;
+				m_width = width;
 			}
 		}
 		if(!vmb_err(m_gige_camera->GetFeatureByName( "Height", feat), ("Error getting the camera height" ))){
 			VmbInt64_t height;
 			if (!vmb_err(feat->GetValue(height), "Error getting height")) {
 				ROS_ERROR("Height: %lld", height);
-				m_vmb_height = height;
+				m_height = height;
 			}
 		}
 		if(!vmb_err(m_gige_camera->GetFeatureByName("PixelFormat", feat), "Error getting pixel format")){
@@ -73,7 +73,8 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 			ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
 			exit(0);
 		}
-
+		m_width = m_cap.get(CV_CAP_PROP_FRAME_WIDTH);
+		m_height = m_cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 	}
 
 
@@ -98,8 +99,8 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 		int ex = static_cast<int>(m_cap.get(CV_CAP_PROP_FOURCC));
 
-		cv::Size S = cv::Size((int) m_cap.get(CV_CAP_PROP_FRAME_WIDTH),    // Acquire input size
-							  (int) m_cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+		cv::Size S = cv::Size((int) m_width,    // Acquire input size
+							  (int) m_height);
 
 
 		//sgillen@20172107-06:21 I found more problems trying to keep the extension (by passing ex as the second argument) than I did by forcing the output to be CV_FOURCC('M','J','P','G')
@@ -192,8 +193,8 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	img_src.Size = sizeof( img_src );
 	img_dest.Size = sizeof( img_dest );
 
-	VmbSetImageInfoFromPixelFormat( m_pixel_format, m_vmb_width, m_vmb_height, &img_src);
-	VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_vmb_width, m_vmb_height, &img_dest);
+	VmbSetImageInfoFromPixelFormat( m_pixel_format, m_width, m_height, &img_src);
+	VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_width, m_height, &img_dest);
 
 	img_src.Data = img_buf;
 	img_src.Data = cv_frame.data;
