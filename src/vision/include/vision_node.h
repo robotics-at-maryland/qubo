@@ -58,7 +58,7 @@ class VisionNode{
 
     //camera stuff
     //======================================================================
-    //nothing here yet
+    AVT::VmbAPI::CameraPtr m_gige_camera;
 
     cv::VideoCapture m_cap;
     cv::Mat m_img;

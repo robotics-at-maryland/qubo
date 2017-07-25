@@ -68,9 +68,33 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		ROS_INFO("output video being saved as %s" , output_str.c_str());
 	}
 
+	ROS_ERROR("Doing Vimba");
 	//start the camera
 	auto& m_vimba_sys = VimbaSystem::GetInstance();
-	m_vimba_sys.Startup();
+	auto err = VmbErrorSuccess;
+	if( m_vimba_sys.Startup() == VmbErrorSuccess ){
+		CameraPtrVector c_vec;
+		m_vimba_sys.GetCameras( c_vec );
+		m_gige_camera = c_vec[0];
+		string camera_id;
+		err = m_gige_camera->GetID(camera_id);
+		ROS_ERROR("Camera ID: %s", camera_id.c_str());
+		if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
+		ROS_ERROR("got camera");
+		do {
+			err = m_gige_camera->Open(VmbAccessModeFull);
+			if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
+		} while(err != VmbErrorSuccess);
+		ROS_ERROR("Camera opened");
+		FeaturePtr feat;
+		err = m_gige_camera->GetFeatureByName( "Width", feat );
+		if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
+		ROS_ERROR("Feature got");
+		VmbInt64_t width;
+		err = feat->GetValue( width );
+		if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
+		ROS_ERROR("Width: %lld", width);
+	}
 
 	//register all services here
 	//------------------------------------------------------------------------------
@@ -87,6 +111,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 VisionNode::~VisionNode(){
 	//sg: may need to close the cameras here not sure..
 	auto& m_vimba_sys = VimbaSystem::GetInstance();
+	m_gige_camera->Close();
 	m_vimba_sys.Shutdown();
 }
 
