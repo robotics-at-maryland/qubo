@@ -15,6 +15,10 @@
 #include "sensor_msgs/Imu.h"
 
 
+//tf includes
+#include "tf/tf.h"
+#include "std_msgs/Float64.h"
+
 class AHRSQuboNode{
     public:
     AHRSQuboNode(ros::NodeHandle n, std::string node_name, std::string ahrs_device);
@@ -27,19 +31,22 @@ class AHRSQuboNode{
                          
     protected:
     
-    std::string _node_name;
+    std::string m_node_name;
 
     //--------------------------------------------------------------------------
     //AHRS variables
-    std::string _ahrs_device;
+    std::string m_ahrs_device;
 
-    AHRS _ahrs;
+    AHRS m_ahrs;
     
     //defined in AHRS driver
-    AHRS::AHRSData _ahrs_data;
+    AHRS::AHRSData m_ahrs_data;
     
     //not sure this will actually work for what we want to publish
-    sensor_msgs::Imu _msg;
+    //    sensor_msgs::Imu m_msg;
+    std_msgs::Float64 m_roll_msg;
+    std_msgs::Float64 m_pitch_msg;
+    std_msgs::Float64 m_yaw_msg;
     
 	//describes how many times we should try to reconnect to the device before
     //just killing the node
@@ -49,8 +56,10 @@ class AHRSQuboNode{
     //--------------------------------------------------------------------------
     //Orientation parameters (possibly fused from AHRS/IMU)
     
-    ros::Publisher _orientPub;
-    
+    //    ros::Publisher m_orientPub;
+    ros::Publisher m_roll_pub;
+    ros::Publisher m_pitch_pub;
+    ros::Publisher m_yaw_pub;
     
 };
 
