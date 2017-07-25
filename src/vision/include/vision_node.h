@@ -9,6 +9,7 @@
 
 //Vimba includes
 #include <VimbaCPP/Include/VimbaCPP.h>
+#include <VimbaImageTransform/Include/VmbTransform.h>
 
 #include <iostream>
 #include <stdio.h>
@@ -59,6 +60,9 @@ class VisionNode{
     //camera stuff
     //======================================================================
     AVT::VmbAPI::CameraPtr m_gige_camera;
+    void getVmbFrame(cv::Mat& cv_frame);
+    long m_vmb_width, m_vmb_height;
+    VmbInt64_t m_pixel_format;
 
     cv::VideoCapture m_cap;
     cv::Mat m_img;

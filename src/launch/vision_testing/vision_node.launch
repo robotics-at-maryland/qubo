@@ -5,7 +5,7 @@
 
   <group>
   <!-- best way I could find so that we actually pass this argument, still don't love it though -->
-  <arg name="video" default="0" />
+  <arg name="video" default="IP" />
   <arg name="record_cameras" default="true" />
 
    
