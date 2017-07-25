@@ -104,7 +104,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 		//sgillen@20172107-06:21 I found more problems trying to keep the extension (by passing ex as the second argument) than I did by forcing the output to be CV_FOURCC('M','J','P','G')
 		//m_output_video.open(output_str, ex, m_cap.get(CV_CAP_PROP_FPS), S, true);
-		m_output_video.open(output_str, CV_FOURCC('M','J','P','G'), m_cap.get(CV_CAP_PROP_FPS), S, true);
+		m_output_video.open(output_str, CV_FOURCC('M','J','P','G'), 20/* m_cap.get(CV_CAP_PROP_FPS) */, S, true);
 
 
 		if(!m_output_video.isOpened()){
