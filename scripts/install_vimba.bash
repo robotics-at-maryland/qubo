@@ -18,7 +18,7 @@ INSTALL_DIR="$HOME/src/vimba"
 mkdir -p "$INSTALL_DIR"
 
 # test for jetson-ness
-if [[ $(uname -n) =~ .*tegra.* ]]; then
+if [[ $(uname -m) =~ .*aarch64.* ]]; then
 	echo "Jetson detected, using Vimba for ARMv8"
 	SDK_VER=$SDK_ARM
 fi
@@ -31,6 +31,7 @@ cd "$INSTALL_DIR" || exit 1
 
 tar -xf vimba.tgz
 
+# This should be a function... :/
 cd "$INSTALL_DIR/Vimba_2_1/VimbaCPP/DynamicLib" || exit 1
 
 ARCH=$(uname -m)
@@ -48,9 +49,30 @@ case $ARCH in
 		echo "System Architecture not detected, exiting"
 		exit 1;;
 esac
-echo "Libraries installed"
 
 mv * $LIB_DIR
+
+cd "$INSTALL_DIR/Vimba_2_1/VimbaImageTransform/DynamicLib" || exit 1
+
+ARCH=$(uname -m)
+case $ARCH in
+	*x86_64*)
+		echo "Installing 64 bit libraries"
+		cd "x86_64bit" || exit 1;;
+	*i686*)
+		echo "Installing 32 bit libraries"
+		cd "x86_32bit" || exit 1;;
+	*aarch64*)
+		echo "Installing ARM libraries"
+		cd "arm_64bit" || exit 1;;
+	*)
+		echo "System Architecture not detected, exiting"
+		exit 1;;
+esac
+
+mv * $LIB_DIR
+echo "Libraries installed"
+
 
 cd "../../" || exit 1
 
@@ -62,6 +84,10 @@ mv "Include" "$INC_DIR/VimbaCPP"
 cd "../VimbaC" || exit 1
 mkdir -p "$INC_DIR/VimbaC/Include"
 mv "Include" "$INC_DIR/VimbaC"
+
+cd "../VimbaImageTransform" || exit 1
+mkdir -p "$INC_DIR/VimbaImageTransform/Include"
+mv "Include" "$INC_DIR/VimbaImageTransform"
 
 echo "Headers installed"
 

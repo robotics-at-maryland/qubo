@@ -15,18 +15,65 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	//this could give us problems if we pass something like "0followed_by_string" but just don't do that.
 
 	//sgillen@20170429-07:04 we really don't even need this... we can just pass in /dev/video0 if we want the web camera... I'll leave it for now though
-	if(isdigit(feed.c_str()[0])){
-		m_cap = cv::VideoCapture(atoi(feed.c_str()));
-	}
-	else{
-		m_cap = cv::VideoCapture(feed);
-	}
+	if(feed == "IP") {
+		// use the mako if feed isn't given
+		//start the camera
+		auto vmb_err = [](const int func_call, const string err_msg) {
+			if (func_call != VmbErrorSuccess){
+				ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
+				return func_call;
+			}
+			return func_call;
+		};
+
+		ROS_ERROR("getting Vimba");
+		auto& m_vimba_sys = VimbaSystem::GetInstance();
+		if( vmb_err(m_vimba_sys.Startup(), "Unable to start the Vimba System") ) { exit(1); }
+
+		ROS_ERROR("finding cameras");
+		CameraPtrVector c_vec;
+		if( vmb_err(m_vimba_sys.GetCameras( c_vec ), "Unable to find cameras") ) {exit(1); }
+		// Since we only have one camera currently, we can just use the first thing returned when getting all the cameras
+		m_gige_camera = c_vec[0];
+		string camera_id;
+		if (vmb_err(m_gige_camera->GetID(camera_id), "Unable to get a camera ID from Vimba") ){ exit(1); }
+		while( !vmb_err(m_gige_camera->Open(VmbAccessModeFull), "Error opening a camera with Vimba") ) {}
+
+		// We need to height, width and pixel format of the camera to convert the images to something OpenCV likes
+		FeaturePtr feat;
+		if(!vmb_err(m_gige_camera->GetFeatureByName( "Width", feat), ("Error getting the camera width" ))){
+			VmbInt64_t width;
+			if (!vmb_err(feat->GetValue(width), "Error getting width")) {
+				ROS_ERROR("Width: %lld", width);
+				m_vmb_width = width;
+			}
+		}
+		if(!vmb_err(m_gige_camera->GetFeatureByName( "Height", feat), ("Error getting the camera height" ))){
+			VmbInt64_t height;
+			if (!vmb_err(feat->GetValue(height), "Error getting height")) {
+				ROS_ERROR("Height: %lld", height);
+				m_vmb_height = height;
+			}
+		}
+		if(!vmb_err(m_gige_camera->GetFeatureByName("PixelFormat", feat), "Error getting pixel format")){
+			vmb_err(feat->GetValue(m_pixel_format), "Error getting format");
+		}
+	} else {
+
+		if(isdigit(feed.c_str()[0])){
+			m_cap = cv::VideoCapture(atoi(feed.c_str()));
+		}
+		else{
+			m_cap = cv::VideoCapture(feed);
+		}
 
 
 		//make sure we have something valid
-	if(!m_cap.isOpened()){
-		ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
-		exit(0);
+		if(!m_cap.isOpened()){
+			ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
+			exit(0);
+		}
+
 	}
 
 
@@ -52,7 +99,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		int ex = static_cast<int>(m_cap.get(CV_CAP_PROP_FOURCC));
 
 		cv::Size S = cv::Size((int) m_cap.get(CV_CAP_PROP_FRAME_WIDTH),    // Acquire input size
-					  (int) m_cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+							  (int) m_cap.get(CV_CAP_PROP_FRAME_HEIGHT));
 
 
 		//sgillen@20172107-06:21 I found more problems trying to keep the extension (by passing ex as the second argument) than I did by forcing the output to be CV_FOURCC('M','J','P','G')
@@ -68,44 +115,17 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		ROS_INFO("output video being saved as %s" , output_str.c_str());
 	}
 
-	ROS_ERROR("Doing Vimba");
-	//start the camera
-	auto& m_vimba_sys = VimbaSystem::GetInstance();
-	auto err = VmbErrorSuccess;
-	if( m_vimba_sys.Startup() == VmbErrorSuccess ){
-		CameraPtrVector c_vec;
-		m_vimba_sys.GetCameras( c_vec );
-		m_gige_camera = c_vec[0];
-		string camera_id;
-		err = m_gige_camera->GetID(camera_id);
-		ROS_ERROR("Camera ID: %s", camera_id.c_str());
-		if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
-		ROS_ERROR("got camera");
-		do {
-			err = m_gige_camera->Open(VmbAccessModeFull);
-			if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
-		} while(err != VmbErrorSuccess);
-		ROS_ERROR("Camera opened");
-		FeaturePtr feat;
-		err = m_gige_camera->GetFeatureByName( "Width", feat );
-		if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
-		ROS_ERROR("Feature got");
-		VmbInt64_t width;
-		err = feat->GetValue( width );
-		if (err != VmbErrorSuccess) ROS_ERROR("error %i", err);
-		ROS_ERROR("Width: %lld", width);
-	}
 
 	//register all services here
 	//------------------------------------------------------------------------------
 	m_test_srv = n.advertiseService("service_test", &VisionNode::serviceTest, this);
 
-	//start your action servers here
-	//------------------------------------------------------------------------------
-	m_buoy_server.start();
-	m_gate_server.start();
-	ROS_INFO("servers started");
-}
+				//start your action servers here
+				//------------------------------------------------------------------------------
+				m_buoy_server.start();
+				m_gate_server.start();
+				ROS_INFO("servers started");
+			}
 
 
 VisionNode::~VisionNode(){
@@ -117,7 +137,12 @@ VisionNode::~VisionNode(){
 
 void VisionNode::update(){
 
-	m_cap >> m_img;
+	// Use the mako if its present
+	if (m_gige_camera == nullptr){
+		getVmbFrame(m_img);
+	} else {
+		m_cap >> m_img;
+	}
 	//if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
 	if(m_img.empty()){
 		ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
@@ -133,6 +158,48 @@ void VisionNode::update(){
 	spinOnce();
 }
 
+void VisionNode::getVmbFrame(cv::Mat& cv_frame){
+	if(m_gige_camera == nullptr) {
+		ROS_ERROR("Attempted to get a frame from a null Vimba camera pointer");
+		return;
+	}
+
+	// This is a wrapper for the Vimba error functions
+	// call a function in it and give it an error message to print
+	// if the function fails
+	// it also returns the error code, so you can still fail if you need to
+	auto vmb_err = [](const int func_call, const string err_msg) {
+		if (func_call != VmbErrorSuccess){
+			ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
+			return func_call;
+		}
+		return func_call;
+	};
+	FramePtr vmb_frame;
+	if( vmb_err( m_gige_camera->AcquireSingleImage(vmb_frame, 2), "Error getting single frame" ) ) { return; }
+	VmbFrameStatusType status;
+	vmb_frame->GetReceiveStatus(status);
+	if(status != VmbFrameStatusComplete) {
+		ROS_ERROR("Malformed frame received");
+		return;
+	}
+	VmbUint32_t size;
+	vmb_frame->GetImageSize(size);
+	unsigned char* img_buf;
+	if( vmb_err( vmb_frame->GetImage(img_buf), "Error getting image buffer")) { return; }
+
+	VmbImage img_src, img_dest;
+	img_src.Size = sizeof( img_src );
+	img_dest.Size = sizeof( img_dest );
+
+	VmbSetImageInfoFromPixelFormat( m_pixel_format, m_vmb_width, m_vmb_height, &img_src);
+	VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_vmb_width, m_vmb_height, &img_dest);
+
+	img_src.Data = img_buf;
+	img_src.Data = cv_frame.data;
+
+	VmbImageTransform(&img_src, &img_dest, NULL, 0);
+}
 
 /*
 * Past this point is a collection of services and

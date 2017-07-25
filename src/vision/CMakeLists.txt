@@ -56,7 +56,7 @@ catkin_package(
    CATKIN_DEPENDS roscpp roslib actionlib_msgs
 )
 
-set(Vimba_LIBRARIES VimbaCPP VimbaC)
+set(Vimba_LIBRARIES VimbaCPP VimbaC VimbaImageTransform)
 
 ##############################
 # File List ##################
