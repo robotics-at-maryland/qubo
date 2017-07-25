@@ -9,7 +9,7 @@ project(vision)
 #Find stuff we need
 find_package(OpenCV 2.4 REQUIRED
   NO_MODULE
-  PATHS /usr/local/
+  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
   NO_DEFAULT_PATH
   # COMPONENTS core imgproc highgui opencv_gpu video
   )
