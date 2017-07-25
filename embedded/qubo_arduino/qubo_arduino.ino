@@ -1,5 +1,6 @@
 /* sgillen - this will be all the arduino code for qubo */
 
+#define DEBUG
 
 #include <Wire.h>
 #include "MS5837.h"
@@ -78,8 +79,8 @@ void setup() {
 
 
   #ifdef DEBUG
-  //Serial.print("Attempting to set freq ");
-  //Serial.println(freq);
+  Serial.print("Attempting to set freq ");
+  Serial.println(freq);
   #endif
   freq *= 0.9;  // Correct for overshoot in the frequency setting (see issue #11).
   float prescaleval = 25000000;
@@ -93,9 +94,9 @@ void setup() {
   uint8_t oldmode2 = read8(PCA9685_MODE1 + 1);
 
   #ifdef DEBUG
-  //Serial.println("old mode was");
-  //Serial.println(oldmode);
-  //Serial.println(oldmode2);
+  Serial.println("old mode was");
+  Serial.println(oldmode);
+  Serial.println(oldmode2);
   #endif
 
   uint8_t newmode = 0x21;
@@ -109,10 +110,10 @@ void setup() {
   oldmode2 = read8(PCA9685_MODE1 + 1);
 
   #ifdef DEBUG
-  //Serial.println("new mode is");
-  //Serial.println(oldmode);
-  //Serial.println(oldmode2);
-  //Serial.println("PCA initialized");
+  Serial.println("new mode is");
+  Serial.println(oldmode);
+  Serial.println(oldmode2);
+  Serial.println("PCA initialized");
   #endif
 
   thrustersOff();
@@ -137,7 +138,7 @@ void thrusterCmd() {
 
     thrusterCommands[i] = strtok(NULL, ","); //remember buffer is global, strok still remembers that we are reading from it
     #ifdef DEBUG
-    //    Serial.println(thrusterCommands[i]);
+    Serial.println(thrusterCommands[i]);
     #endif
 
   }
@@ -186,8 +187,8 @@ void loop() {
     buffer[serialBufferPos] = Serial.read();
 
     #ifdef DEBUG
-    // Serial.print("buffer is: ");
-    // Serial.println(buffer);
+     Serial.print("buffer is: ");
+     Serial.println(buffer);
     #endif
 
     // Check if we've reached exclamation
@@ -226,11 +227,11 @@ void loop() {
 
     else {
       #ifdef DEBUG
-      /*
+
       Serial.print("Buffer pos ");
       Serial.println(serialBufferPos);
       Serial.println(buffer[serialBufferPos]);
-      */
+
       #endif
       serialBufferPos++;
     }
@@ -254,7 +255,7 @@ void loop() {
         #endif
         if (!timedout) {
           #ifdef DEBUG
-          //Serial.println("Overflow Timed out, thrusters off");
+          Serial.println("Overflow Timed out, thrusters off");
           #endif
           thrustersOff();
           timedout = true;
@@ -265,7 +266,7 @@ void loop() {
     else if (( current_time - alive) >= ALIVE_TIMEOUT ) {
       if (!timedout) {
         #ifdef DEBUG
-        //Serial.println("Timed out, thrusters off");
+        Serial.println("Timed out, thrusters off");
         #endif
         thrustersOff();
         timedout = true;
