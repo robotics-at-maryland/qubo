@@ -37,6 +37,8 @@ THE SOFTWARE.
 #ifndef MS5837_H_BLUEROBOTICS
 #define MS5837_H_BLUEROBOTICS
 
+#include "debug.h"
+
 #include "Arduino.h"
 
 class MS5837 {

@@ -1,6 +1,8 @@
 #ifndef _PCA9685_H_
 #define _PCA9685_H_
 
+#include "debug.h"
+
 #include "Arduino.h"
 
 #define BUFFER_SIZE 128
