@@ -1,5 +1,6 @@
 # There's an issue with the most recent opencv2 (2.4.13) where it tries to link against opencv_dep_cudart
 # This fixes that
+# It doesn't work on the jetson...
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 
 cmake_minimum_required(VERSION 2.8.3)
@@ -8,9 +9,9 @@ project(vision)
 # set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
 find_package(OpenCV 2.4 REQUIRED
-  NO_MODULE
-  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
-  NO_DEFAULT_PATH
+#  NO_MODULE
+#  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
+# NO_DEFAULT_PATH
   # COMPONENTS core imgproc highgui opencv_gpu video
   )
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
