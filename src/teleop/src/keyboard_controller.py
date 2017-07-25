@@ -87,6 +87,7 @@ while(True):
         if keys_pressed[pygame.K_0 + i]:
             thruster_msg.data[i] = (effort*sign)
 
+    print thruster_msg.data
     thruster_pub.publish(thruster_msg)
             
         

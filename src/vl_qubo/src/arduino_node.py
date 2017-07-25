@@ -55,7 +55,7 @@ def send_thruster_cmds(thruster_cmds):
 
     cmd_str += ("!")
     ser.write(cmd_str)
-    print "arduino return", ser.readline()
+    #print "arduino return", ser.readline()
     ##TODO parse return value
 
 # requests depth from arduino, and waits until it receives it
@@ -96,7 +96,7 @@ def thruster_callback(msg):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
     for i in range(0,num_thrusters):
         thruster_cmds[i] = thruster_map(msg.data[i])
-        print "after map -" , thruster_cmds[i]
+        #print "after map -" , thruster_cmds[i]
 
 ##------------------------------------------------------------------------------
 # main
@@ -151,5 +151,5 @@ if __name__ == '__main__':
 
         # Build the thruster message to send
         send_thruster_cmds(thruster_cmds)                         
-        
+        # print "hello"
         rate.sleep()
