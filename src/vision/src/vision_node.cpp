@@ -141,9 +141,10 @@ VisionNode::~VisionNode(){
 void VisionNode::update(){
 
 	// Use the mako if its present
-	if (m_gige_camera == nullptr){
+	if (m_gige_camera != nullptr){
 		ROS_ERROR("Get vimba frame");
 		getVmbFrame(m_img);
+		ROS_ERROR("%s", m_img.data);
 	} else {
 		m_cap >> m_img;
 	}
