@@ -5,6 +5,14 @@ using namespace std;
 using namespace ros;
 using namespace AVT::VmbAPI;
 
+int VisionNode::vmb_err(const int func_call, const string err_msg) {
+	if (func_call != VmbErrorSuccess){
+		ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
+		return func_call;
+	}
+	return func_call;
+}
+
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
@@ -18,13 +26,6 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	if(feed == "IP") {
 		// use the mako if feed isn't given
 		//start the camera
-		auto vmb_err = [](const int func_call, const string err_msg) {
-			if (func_call != VmbErrorSuccess){
-				ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
-				return func_call;
-			}
-			return func_call;
-		};
 
 		ROS_ERROR("getting Vimba");
 		auto& m_vimba_sys = VimbaSystem::GetInstance();
@@ -37,10 +38,18 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		m_gige_camera = c_vec[0];
 		string camera_id;
 		if (vmb_err(m_gige_camera->GetID(camera_id), "Unable to get a camera ID from Vimba") ){ exit(1); }
-		while( !vmb_err(m_gige_camera->Open(VmbAccessModeFull), "Error opening a camera with Vimba") ) {}
+		while( VmbErrorSuccess != vmb_err(m_gige_camera->Open(VmbAccessModeFull), "Error opening a camera with Vimba") ) {}
 
 		// We need to height, width and pixel format of the camera to convert the images to something OpenCV likes
 		FeaturePtr feat;
+		if(!vmb_err(m_gige_camera->GetFeatureByName("GVSPAdjustPacketSize", feat), "Error getting packet feature")){
+			if(!vmb_err(feat->RunCommand(), "Error running packet command")){
+				bool done = false;
+				while (!done) {
+					if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
+				}
+			}
+		}
 		if(!vmb_err(m_gige_camera->GetFeatureByName( "Width", feat), ("Error getting the camera width" ))){
 			VmbInt64_t width;
 			if (!vmb_err(feat->GetValue(width), "Error getting width")) {
@@ -56,8 +65,15 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 			}
 		}
 		if(!vmb_err(m_gige_camera->GetFeatureByName("PixelFormat", feat), "Error getting pixel format")){
+			if( vmb_err(feat->SetValue(VmbPixelFormatBayerBG8), "Error setting pixel format to bgr8") ){
+				vmb_err(feat->SetValue(VmbPixelFormatMono8), "Error setting pixel format to mono8");
+			}
 			vmb_err(feat->GetValue(m_pixel_format), "Error getting format");
 		}
+		m_observer = IFrameObserverPtr(new FrameObserver(m_gige_camera));
+		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 3, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
+
+		m_img = cv::Mat (m_height, m_width, CV_8UC3);
 	} else {
 
 		if(isdigit(feed.c_str()[0])){
@@ -134,6 +150,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 VisionNode::~VisionNode(){
 	//sg: may need to close the cameras here not sure..
 	auto& m_vimba_sys = VimbaSystem::GetInstance();
+	m_gige_camera->StopContinuousImageAcquisition();
 	m_gige_camera->Close();
 	m_vimba_sys.Shutdown();
 }
@@ -142,9 +159,9 @@ void VisionNode::update(){
 
 	// Use the mako if its present
 	if (m_gige_camera != nullptr){
-		ROS_ERROR("Get vimba frame");
+		ROS_ERROR("Get vimba frame: %i", m_img.data);
 		getVmbFrame(m_img);
-		ROS_ERROR("%s", m_img.data);
+		// ROS_ERROR("%s", m_img.data);
 	} else {
 		m_cap >> m_img;
 	}
@@ -153,6 +170,7 @@ void VisionNode::update(){
 		// ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
 		// exit(0);
 		ROS_ERROR("Empty Frame");
+		return;
 	}
 
 	//if the user didn't specify a directory this will not be open
@@ -164,33 +182,50 @@ void VisionNode::update(){
 	spinOnce();
 }
 
+VisionNode::FrameObserver::FrameObserver(CameraPtr& camera) : IFrameObserver(camera) {
+	ROS_ERROR("observer create");
+}
+
+void VisionNode::FrameObserver::FrameReceived( const FramePtr frame) {
+	VmbFrameStatusType status;
+	ROS_ERROR("Frame rec");
+	vmb_err(frame->GetReceiveStatus(status), "Error getting frame status");
+	if(status != VmbFrameStatusComplete){
+		ROS_ERROR("Bad frame received, code: %i", status);
+	}
+	m_q_frame.push(frame);
+}
+
+FramePtr VisionNode::FrameObserver::GetFrame() {
+	FramePtr f;
+	if(m_q_frame.empty()) {
+		return f;
+	}
+	f = m_q_frame.front();
+	m_q_frame.pop();
+	return f;
+}
+
 void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	if(m_gige_camera == nullptr) {
 		ROS_ERROR("Attempted to get a frame from a null Vimba camera pointer");
 		return;
 	}
 
-	// This is a wrapper for the Vimba error functions
-	// call a function in it and give it an error message to print
-	// if the function fails
-	// it also returns the error code, so you can still fail if you need to
-	auto vmb_err = [](const int func_call, const string err_msg) {
-		if (func_call != VmbErrorSuccess){
-			ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
-			return func_call;
-		}
-		return func_call;
-	};
-	FramePtr vmb_frame;
-	if( vmb_err( m_gige_camera->AcquireSingleImage(vmb_frame, 200), "Error getting single frame" ) ) { return; }
-	VmbFrameStatusType status;
-	vmb_frame->GetReceiveStatus(status);
-	if(status != VmbFrameStatusComplete) {
-		ROS_ERROR("Malformed frame received");
+	FramePtr vmb_frame = SP_DYN_CAST(m_observer, FrameObserver)->GetFrame();
+	if(vmb_frame == nullptr) {
+		ROS_ERROR("Null frame");
 		return;
 	}
+	// if( vmb_err( m_gige_camera->AcquireMultipleImages(vmb_frame, 5000), "Error getting single frame" ) ) { return; }
+	// VmbFrameStatusType status;
+	// vmb_frame->GetReceiveStatus(status);
+	// if(status != VmbFrameStatusComplete) {
+	// 	ROS_ERROR("Malformed frame received, code %i", status);
+	// }
 	VmbUint32_t size;
 	vmb_frame->GetImageSize(size);
+	ROS_ERROR("size");
 	unsigned char* img_buf;
 	if( vmb_err( vmb_frame->GetImage(img_buf), "Error getting image buffer")) { return; }
 
@@ -198,20 +233,22 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	img_src.Size = sizeof( img_src );
 	img_dest.Size = sizeof( img_dest );
 
-	VmbSetImageInfoFromPixelFormat( m_pixel_format, m_width, m_height, &img_src);
-	VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_width, m_height, &img_dest);
+	ROS_ERROR("VmbImage");
+	vmb_err( VmbSetImageInfoFromPixelFormat( m_pixel_format, m_width, m_height, &img_src) , "error px format 1");
+	vmb_err( VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_width, m_height, &img_dest) , "error px format 2");
 
 	img_src.Data = img_buf;
 	img_src.Data = cv_frame.data;
 
+	ROS_ERROR("%i, %i", img_buf, cv_frame.data);
+	ROS_ERROR("Transform");
 	vmb_err( VmbImageTransform(&img_src, &img_dest, NULL, 0), "Error transforming image" );
 }
-
 /*
-* Past this point is a collection of services and
-* actions that will be able to called from any other node
-* =================================================================================================================
-*/
+ * Past this point is a collection of services and
+ * actions that will be able to called from any other node
+ * =================================================================================================================
+ */
 bool VisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
 	ROS_ERROR("service called successfully");
 }

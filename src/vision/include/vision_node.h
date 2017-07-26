@@ -14,6 +14,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
+#include <queue>
 
 //ros includes
 #include "ros/ros.h"
@@ -60,9 +61,26 @@ class VisionNode{
     //camera stuff
     //======================================================================
     AVT::VmbAPI::CameraPtr m_gige_camera;
-    void getVmbFrame(cv::Mat& cv_frame);
+	AVT::VmbAPI::FramePtr m_frame_p;
+	void getVmbFrame(cv::Mat& cv_frame);
     long m_width, m_height;
     VmbInt64_t m_pixel_format;
+
+    class FrameObserver : virtual public AVT::VmbAPI::IFrameObserver {
+        public:
+        FrameObserver(AVT::VmbAPI::CameraPtr& camera);
+        virtual void FrameReceived(const AVT::VmbAPI::FramePtr frame);
+		virtual AVT::VmbAPI::FramePtr GetFrame();
+		protected:
+		std::queue<AVT::VmbAPI::FramePtr> m_q_frame;
+	};
+    AVT::VmbAPI::IFrameObserverPtr m_observer;
+
+	// This is a wrapper for the Vimba error functions
+	// call a function in it and give it an error message to print
+	// if the function fails
+	// it also returns the error code, so you can still fail if you need to
+    static int vmb_err(const int func_call, const std::string err_msg);
 
     cv::VideoCapture m_cap;
     cv::Mat m_img;
