@@ -31,8 +31,8 @@ find_package(OpenCV REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-set(VIMBA_INCLUDE_DIRS "/home/sgillen/Vimba_2_1/VimbaCPP/Include/")
-set(VIMBA_LIBRARY      "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/libVimbaCPP.so")
+#set(VIMBA_INCLUDE_DIRS "/home/sgillen/Vimba_2_1/VimbaCPP/Include/")
+#set(VIMBA_LIBRARY      "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/libVimbaCPP.so")
 
 #include_directories("${MYANALYSE_INCLUDE_DIRS}")
 #target_link_libraries(myapplication "${MYANALYSE_LIBRARY}")
@@ -64,7 +64,7 @@ include_directories(
   ${VISP_INCLUDE_DIRS}
   include/
 
-  ${VIMBA_INCLUDE_DIRS}
+#  ${VIMBA_INCLUDE_DIRS}
   #${HOME}/Vimba_2_1/VimbaCPP/Include/
 
   )
@@ -157,7 +157,6 @@ set(CASCADE_TEST
 add_executable(vision_node ${VISION_SRC_FILES})
 target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
-target_link_libraries(vision_node ${VIMBA_LIBRARY})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
@@ -200,8 +199,8 @@ target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 add_executable(blob_test ${BLOB_FILES})
 target_link_libraries(blob_test ${OpenCV_LIBRARIES})
 
-add_executable(em_test ${EM_FILES})
-target_link_libraries(em_test ${OpenCV_LIBRARIES})
+# add_executable(em_test ${EM_FILES})
+# target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
 add_executable(gfit_test ${GFIT_FILES})
 target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
