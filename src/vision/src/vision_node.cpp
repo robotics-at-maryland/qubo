@@ -238,7 +238,7 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	vmb_err( VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_width, m_height, &img_dest) , "error px format 2");
 
 	img_src.Data = img_buf;
-	img_src.Data = cv_frame.data;
+	img_dest.Data = cv_frame.data;
 
 	ROS_ERROR("%i, %i", img_buf, cv_frame.data);
 	ROS_ERROR("Transform");
