@@ -1,10 +1,11 @@
 /* sgillen - this will be all the arduino code for qubo */
 
-#define DEBUG
+#include "debug.h"
 
 #include <Wire.h>
 #include "MS5837.h"
 #include "PCA9685.h"
+#include "ADC121.h"
 
 #define BUFFER_SIZE 512 //may need to change
 #define NUM_THRUSTERS 8
@@ -17,12 +18,15 @@
 
 // __________________________________________________________________________________________
 
+#define LM35_PIN 0
+
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint16_t serialBufferPos;
 unsigned long alive; // keeps the current time
 boolean timedout = false; // if the arduino has timed out
 PCA9685 pca;
 MS5837 sensor;
+ADC121 adc121;
 
 void setup() {
   Serial.begin(115200);
@@ -82,6 +86,17 @@ void getDepth() {
   Serial.println(depth);
 }
 
+void getCurrent() {
+  int data = adc121.getData();
+  Serial.println(data);
+}
+
+void getTemp() {
+  int val = analogRead(LM35_PIN);
+  float temp = val / 9.31;
+  Serial.println(temp);
+}
+
 void loop() {
 
   //this is all the stuff we do while the jetson is talking to us
@@ -122,7 +137,13 @@ void loop() {
         #ifdef DEBUG
         //Serial.println("Get depth");
         #endif
-          getDepth();
+        getDepth();
+      }
+      else if ( prot[0] == 'c' ) {
+        #ifdef DEBUG
+        Serial.println("Get temp");
+        #endif
+        getTemp();
       }
       else {
           Serial.println("B2");

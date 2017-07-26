@@ -3,6 +3,6 @@
 
 // Comment or uncomment here to have debug output in all the files
 
-#define DEBUG
+//#define DEBUG
 
 #endif

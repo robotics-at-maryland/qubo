@@ -3,6 +3,8 @@
 
 #define ADC121_ADDR 0x50
 
+ADC121::ADC121() {}
+
 int ADC121::getData() {
   unsigned int data[2];
   // Start I2C Transmission
