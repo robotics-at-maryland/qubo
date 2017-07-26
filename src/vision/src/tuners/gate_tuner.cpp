@@ -22,7 +22,8 @@ int max_frame = 0; //total frames in the video. this may fail for cameras?
 int kernel_size = 1; //kernel for the guassian blur
 int kernel_max = 256;
 
-
+int num_bins = 30; // needs to divide image width cleanly 
+int max_bins = 100;
 
 
 VideoCapture cap;   
@@ -92,9 +93,10 @@ int main(int argc, char* argv[]){
 	namedWindow("parameters");
 	moveWindow("parameters", 420, 20);
 		
-	createTrackbar( "Canny thresh:", "parameters", &canny_thresh, max_thresh, threshCallback );
-	createTrackbar( "Hough thresh:", "parameters", &hough_thresh, max_thresh, threshCallback );
+	createTrackbar( "Canny thresh", "parameters", &canny_thresh, max_thresh, threshCallback );
+	createTrackbar( "Hough thresh", "parameters", &hough_thresh, max_thresh, threshCallback );
 	createTrackbar( "Angle thresh", "parameters", &angle_tracker, max_thresh, threshCallback );
+	createTrackbar( "Num bins", "parameters", &num_bins, max_bins, threshCallback );
 	createTrackbar( "Kernel size", "parameters", &kernel_size, kernel_max, blurCallback);
 	createTrackbar( "Frame", "parameters", &frame_num, max_frame, threshCallback);
 	
@@ -125,41 +127,57 @@ int main(int argc, char* argv[]){
 
 		
 		HoughLines(dst, also_lines, 1, CV_PI/180, hough_thresh, 50, 10 );
-		
-		// for( size_t i = 0; i < also_lines.size(); i++ )
-		// 	{
-		// 		float rho = also_lines[i][0], theta = also_lines[i][1];
 
-		// 		if (theta > 3 && theta < 3.28){
-		// 			//printf("line[%lu] = %f, %f \n", i, also_lines[i][0], also_lines[i][1]);
-		// 			Point pt1, pt2;
-		// 			double a = cos(theta), b = sin(theta);
-		// 			double x0 = a*rho, y0 = b*rho;
-		// 			pt1.x = cvRound(x0 + 1000*(-b));
-		// 			pt1.y = cvRound(y0 + 1000*(a));
-		// 			pt2.x = cvRound(x0 - 1000*(-b));
-		// 			pt2.y = cvRound(y0 - 1000*(a));
-		// 			line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
-		// 		}
-		// 	}
+
+		vector<int> xbin_count; //TODO better name
+		for(int i = 0; i < num_bins; i++){
+			xbin_count.push_back(0);
+		}
+
+		int bin_size = CAP_PROP_FRAME_WIDTH/num_bins;
 		
-		
-		for( size_t i = 0; i < lines.size(); i++ )
+		for( size_t i = 0; i < also_lines.size(); i++ )
 			{
-				Vec4i l = lines[i];
-
-				printf("(%i, %i) (%i, %i) \n", l[0], l[1], l[2], l[3]);
-				double theta = atan2((l[0] - l[2]), (l[1] - l[3]));
-
-				cout << "theta" << theta  << endl;
-
-
-				// range is +- pi
-				if ( (abs(theta) < angle_thresh && abs(theta) > -angle_thresh) || (abs(theta) < (3.14 + angle_thresh)  && abs(theta)) > 3.14 - angle_thresh){
-					line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
-				 }
+				float rho = also_lines[i][0], theta = also_lines[i][1];
 				
+				if (theta > 3.14 - angle_thresh && theta < 3.14 + angle_thresh){
+					//printf("line[%lu] = %f, %f \n", i, also_lines[i][0], also_lines[i][1]);
+					Point pt1, pt2;
+					double a = cos(theta), b = sin(theta);
+					double x0 = a*rho, y0 = b*rho;
+					
+					xbin_count[x0/num_bins]++;
+					
+					pt1.x = cvRound(x0 + 1000*(-b));
+					pt1.y = cvRound(y0 + 1000*(a));
+					pt2.x = cvRound(x0 - 1000*(-b));
+					pt2.y = cvRound(y0 - 1000*(a));
+
+					line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
+				}
 			}
+
+		for(int i = 0; i < xbin_count.size(); i++){
+			cout << "bin" << i << "=" << " " << xbin_count[i] << endl;
+		}
+		
+		
+		// for( size_t i = 0; i < lines.size(); i++ )
+		// 	{
+		// 		Vec4i l = lines[i];
+
+		// 		printf("(%i, %i) (%i, %i) \n", l[0], l[1], l[2], l[3]);
+		// 		double theta = atan2((l[0] - l[2]), (l[1] - l[3]));
+
+		// 		cout << "theta" << theta  << endl;
+
+
+		// 		// range is +- pi
+		// 		if ( (abs(theta) < angle_thresh && abs(theta) > -angle_thresh) || (abs(theta) < (3.14 + angle_thresh)  && abs(theta)) > 3.14 - angle_thresh){
+		// 			line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
+		// 		 }
+				
+		// 	}
 		
 		
 		//imshow("source", cframe);
