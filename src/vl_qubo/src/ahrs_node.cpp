@@ -8,14 +8,16 @@ AHRSQuboNode::AHRSQuboNode(ros::NodeHandle n, string node_name, string ahrs_devi
     :m_node_name{node_name}, m_ahrs_device{ahrs_device}, m_ahrs(ahrs_device,AHRS::k115200) {
 
 
+
+		//initialize publisher
 		m_roll_pub  = n.advertise<std_msgs::Float64>("/qubo/roll", 1000);
 		m_pitch_pub = n.advertise<std_msgs::Float64>("/qubo/pitch", 1000);
 		m_yaw_pub   = n.advertise<std_msgs::Float64>("qubo/yaw", 1000);
-	
-
-        //initialize publisher
+		
 		//        m_orientPub = n.advertise<sensor_msgs::Imu>("/qubo/orientation",1000);
+
 		ROS_ERROR("opening device %s", ahrs_device.c_str());
+
         //creates + opens the device
         //k115200 is the current baud rate of the device, if you want to change it just change it right here it shouldn't show up anywhere else
         //        ahrs = AHRS(ahrs_device, AHRS::k115200);
