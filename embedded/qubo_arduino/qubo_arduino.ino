@@ -44,6 +44,9 @@ void setup() {
 
   sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
 
+  // for lm35 https://playground.arduino.cc/Main/LM35HigherResolution
+  analogReference(INTERNAL);
+
   // Done setup, so send connected command
   //Serial.println(CONNECTED);
   alive = millis();
