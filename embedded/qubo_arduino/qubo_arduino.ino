@@ -7,8 +7,14 @@
 #include "PCA9685.h"
 #include "ADC121.h"
 
-#define BUFFER_SIZE 512 //may need to change
+#define BUFFER_SIZE 64 //may need to change
 #define NUM_THRUSTERS 8
+
+#define THRUSTER_NEUTRAL 1285
+/// THRUSTER_NEUTRAL - 256
+#define THRUSTER_MIN 1029U
+// THRUSTER_NETURAL + 256
+#define THRUSTER_MAX 1541U
 
 // Time(ms) arduino waits without hearing from jetson before turning off thrusters
 #define ALIVE_TIMEOUT 9999999
@@ -16,11 +22,22 @@
 // Character sent to the jetson on connect and reconnect
 #define CONNECTED "C"
 
+#define STATUS_OK 0
+#define STATUS_TIMEOUT 1
+#define STATUS_OVERHEAT 2
+
+// how high temp has to be to change the status
+#define TEMP_THRES 27.0
+// how many loops to skip before checking temp again
+#define TEMP_UPDATE_RATE 10
+
 // __________________________________________________________________________________________
 
 #define LM35_PIN 0
 
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
+uint8_t counter;
+uint8_t status;
 uint16_t serialBufferPos;
 unsigned long alive; // keeps the current time
 boolean timedout = false; // if the arduino has timed out
@@ -31,6 +48,9 @@ ADC121 adc121;
 void setup() {
   Serial.begin(115200);
   serialBufferPos = 0;
+
+  counter = 0;
+  status = STATUS_OK;
 
   //configure the PCA
   Wire.begin(); // Initiate the Wire library
@@ -58,28 +78,42 @@ void thrusterCmd() {
 
   char* thrusterCommands[NUM_THRUSTERS];
 
-  for (int i = 0; i < NUM_THRUSTERS - 1; i++) {
+  for (int i = 0; i < NUM_THRUSTERS; i++) {
 
-    thrusterCommands[i] = strtok(NULL, ","); //remember buffer is global, strok still remembers that we are reading from it
+    thrusterCommands[i] = strtok(NULL, ",!"); //remember buffer is global, strok still remembers that we are reading from it
     #ifdef DEBUG
     Serial.println(thrusterCommands[i]);
     #endif
 
   }
-  thrusterCommands[NUM_THRUSTERS] = strtok(NULL, "!"); //last token is the ! not the ,
+  //thrusterCommands[NUM_THRUSTERS] = strtok(NULL, "!"); //last token is the ! not the ,
 
-  uint16_t check = atoi(thrusterCommands[0]);
+  uint16_t off;
 
   for (int i = 0; i < NUM_THRUSTERS; i++) {
 
-    uint16_t off = atoi(thrusterCommands[i]);
 
-    pca.thrusterSet(i, off);
+    off = atoi(thrusterCommands[i]);
+
+    // If the msg isn't above or below acceptable, set it. otherwise send -1 back
+    if ( off > THRUSTER_MIN && off < THRUSTER_MAX ) {
+      pca.thrusterSet(i, off);
+    }
+    else {
+      off = -1;
+    }
   }
 
+  //Serial.println(THRUSTER_MIN);
   // Send back the first command
-  Serial.println(check);
+  Serial.println(off);
 
+}
+
+void thrusterNeutral() {
+  for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
+    pca.thrusterSet(i, THRUSTER_NEUTRAL);
+  }
 }
 
 // Placeholder, needs to get depth from I2C, then println it to serial
@@ -97,8 +131,26 @@ void getCurrent() {
 void getTemp() {
   int val = analogRead(LM35_PIN);
   float temp = val / 9.31;
+  if ( temp >= TEMP_THRES ) {
+    status = STATUS_OVERHEAT;
+  }
+  else {
+    status = STATUS_OK;
+  }
   Serial.println(temp);
 }
+
+void checkTemp() {
+  int val = analogRead(LM35_PIN);
+  float temp = val / 9.31;
+  if ( temp >= TEMP_THRES ) {
+    status = STATUS_OVERHEAT;
+  }
+  else {
+    status = STATUS_OK;
+  }
+}
+
 
 void loop() {
 
@@ -109,6 +161,7 @@ void loop() {
     if ( timedout ) {
       //Serial.println(CONNECTED);
       timedout = false;
+      status = STATUS_OK;
     }
 
     // Read next byte from serial into buffer
@@ -134,8 +187,10 @@ void loop() {
         #ifdef DEBUG
         //Serial.println("Thrusters on");
         #endif
-          thrusterCmd();
-        }
+        thrusterCmd();
+        // print status after every loop
+        Serial.println(status);
+      }
       else if ( prot[0] == 'd' ) {
         #ifdef DEBUG
         //Serial.println("Get depth");
@@ -193,6 +248,7 @@ void loop() {
           #endif
           pca.thrustersOff();
           timedout = true;
+          status = STATUS_TIMEOUT;
         }
       }
     }
@@ -204,9 +260,19 @@ void loop() {
         #endif
         pca.thrustersOff();
         timedout = true;
+        status = STATUS_TIMEOUT;
       }
     }
   }
+
+
+  if ( counter % TEMP_UPDATE_RATE == 0 ) {
+    checkTemp();
+    counter = 0;
+  }
+
+
+  counter += 1;
   delay(1);
   //here we put code that we need to run with or without the jetsons attached
 }

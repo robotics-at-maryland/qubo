@@ -16,10 +16,15 @@ import rospy
 from std_msgs.msg import Int64, Float64
 from std_msgs.msg import Float64MultiArray
 
-device = '/dev/ttyACM0'
+THRUSTER_INVALID = '65535'
+STATUS_OK = '0'
+STATUS_TIMEOUT = '1'
+STATUS_OVERHEAT = '2'
+
+device = '/dev/ttyACM7'
 
 control_domain = (-128.0, 128.0)
-arduino_domain = (1050.0, 1850.0)
+arduino_domain = (1029.0, 1541.0)
 num_thrusters = 8
 
 ##command variables (should we make this module a class??)
@@ -114,7 +119,7 @@ if __name__ == '__main__':
     depth_pub = rospy.Publisher(qubo_namespace + "depth", Float64, queue_size = 10)
 
     thruster_sub = rospy.Subscriber(qubo_namespace + "thruster_cmds", Float64MultiArray, thruster_callback)
-    
+
     #rospy spins all these up in their own thread, no need to call spin()
     rospy.Subscriber(qubo_namespace + "roll_cmd"  , Float64, roll_callback)
     rospy.Subscriber(qubo_namespace + "pitch_cmd" , Float64, pitch_callback)
@@ -136,7 +141,7 @@ if __name__ == '__main__':
         #thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
 
         #surge, yaw, sway thrusters
-        
+
         # thruster_cmds[0] += (surge_cmd - yaw_cmd - sway_cmd)
         # thruster_cmds[1] += (surge_cmd + yaw_cmd + sway_cmd)
         # thruster_cmds[2] += (surge_cmd + yaw_cmd - sway_cmd)
@@ -147,9 +152,31 @@ if __name__ == '__main__':
         # thruster_cmds[5] += (depth_cmd + pitch_cmd - roll_cmd)
         # thruster_cmds[6] += (depth_cmd - pitch_cmd - roll_cmd)
         # thruster_cmds[7] += (depth_cmd - pitch_cmd + roll_cmd)
-        
+
 
         # Build the thruster message to send
-        send_thruster_cmds(thruster_cmds)                         
+        send_thruster_cmds(thruster_cmds)
         # print "hello"
+
+        #ser.write('c!')
+        #temp = ser.readline()
+        #print(temp)
+
+        # Get the status
+        thrust = ser.readline().strip()
+        status = ser.readline().strip()
+
+        print(thruster_cmds)
+        print(thrust, status)
+
+        if thrust == THRUSTER_INVALID:
+            print('Invalid thruster input')
+
+        if status == STATUS_OK:
+            print('STATUS OK')
+        elif status == STATUS_TIMEOUT:
+            print('STATUS TIMEOUT')
+        elif status == STATUS_OVERHEAT:
+            print('STATUS OVERHEAT')
+
         rate.sleep()
