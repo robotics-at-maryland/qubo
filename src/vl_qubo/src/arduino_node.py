@@ -15,7 +15,7 @@ import serial, time, sys, select
 import rospy
 from std_msgs.msg import Int64, Float64
 from std_msgs.msg import Float64MultiArray
-from std_srvs.srv import Empty
+from std_srvs.srv import Empty, EmptyResponse
 
 THRUSTER_INVALID = '65535'
 STATUS_OK = '0'
@@ -77,9 +77,10 @@ def get_depth():
 
 ##------------------------------------------------------------------------------
 # callbacks
-def shutdown_thrusters():
+def shutdown_thrusters(srv):
+    global shutdown_flag
     shutdown_flag = True
-    #return Empty
+    return EmptyResponse()
 
 def roll_callback(msg):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
