@@ -1,0 +1,20 @@
+<!-- all this file does is launch a camera node that publishes a physical camera or a video to a ros image -->
+<!-- you need to launch it like this roslaunch qubo_launch vision_node.launch video:=/home/sgillen/video/nbrf_video/comp/comp_buoy/20100714084551.avi  -->
+
+<launch>
+
+  <group>
+  <!-- best way I could find so that we actually pass this argument, still don't love it though -->
+  <arg name="video" default="0" />
+  <arg name="record_cameras" default="true" />
+
+   
+   <node name="vision_node" pkg="vision" type="vision_node" args="$(arg video)" >
+     <param name="output_dir" value="$(env HOME)/video/" />
+   </node>
+   
+      
+
+   
+  </group>
+</launch>

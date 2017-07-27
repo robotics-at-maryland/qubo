@@ -1,4 +1,6 @@
-#include "vision_node.h"
+#include "sim_vision_node.h"
+
+typedef actionlib::SimpleActionServer<ram_msgs::VisionNavAction> Server;
 
 int main(int argc, char** argv){
 
@@ -17,7 +19,7 @@ int main(int argc, char** argv){
 	ros::NodeHandle n;
 	ros::NodeHandle np("~");
 	
-    VisionNode node(n,np,argv[1]); //argv[1] should be the topic the camera is published on
+    SimVisionNode node(n,np,argv[1]); //argv[1] should be the topic the camera is published on
 
 	ros::Rate r(10); //not 10 hz
     while(ros::ok()){

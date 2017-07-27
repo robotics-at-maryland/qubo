@@ -1,15 +1,15 @@
-#ifndef FIND_BUOY_ACTION_H
-#define FIND_BUOY_ACTION_H
+#ifndef BUOY_ACTION_H
+#define BUOY_ACTION_H
 
 
-//#include "opencv2/imgcodecs.hpp"
-    #//include "opencv2/imgproc.hpp"
-    //#include "opencv2/videoio.hpp"
-//#include <opencv2/highgui.hpp>
-//#include <opencv2/video.hpp>
-//#include <opencv2/opencv.hpp>
-//#include "opencv2/bgsegm.hpp"
-
+/* #include "opencv2/imgcodecs.hpp" */
+#include "opencv2/imgproc.hpp"
+/* #include "opencv2/videoio.hpp" */
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
+#include <opencv2/opencv.hpp>
+/* #include "opencv2/bgsegm.hpp" */
+#include <opencv2/features2d.hpp>
 //C
 #include <stdio.h>
 
@@ -22,10 +22,10 @@
 #include "vision_node.h"
 
 
-class FindBuoyAction{
+class BuoyAction{
     public:
-    FindBuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as);
-    ~FindBuoyAction();
+    BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+    ~BuoyAction();
 
     cv::Mat backgroundSubtract(cv::Mat cframe);
     std::vector<cv::KeyPoint> detectBuoy(cv::Mat cframe);
@@ -35,11 +35,11 @@ class FindBuoyAction{
     protected:
 
 
-	actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *m_as;
+	actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *m_as;
 	cv::Ptr<cv::SimpleBlobDetector> m_detector;
 	cv::Ptr<cv::BackgroundSubtractor> m_pMOG;//MOG Background subtractor
     std::vector<std::tuple<cv::Point2f, cv::Vec3b, int>> m_history;
-	ram_msgs::VisionExampleFeedback m_feedback;
+	ram_msgs::VisionNavFeedback m_feedback;
 
 	
 };

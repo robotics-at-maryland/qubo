@@ -2,27 +2,91 @@
 #include "vision_node.h"
 
 using namespace std;
+using namespace ros;
+using namespace AVT::VmbAPI;
+
+
+int VisionNode::vmb_err(const int func_call, const string err_msg) {
+	if (func_call != VmbErrorSuccess){
+		ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
+		return func_call;
+	}
+	return func_call;
+}
 
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
-VisionNode::VisionNode(ros::NodeHandle n, ros::NodeHandle np, std::string feed_topic)
-	:m_it(n), //image transport
-	 m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this,  _1 , &m_buoy_server), false)
-	 
+VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
+	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
+		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
 {
+
+	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
+	//this could give us problems if we pass something like "0followed_by_string" but just don't do that.
+
+	//sgillen@20170429-07:04 we really don't even need this... we can just pass in /dev/video0 if we want the web camera... I'll leave it for now though
+	if(isdigit(feed.c_str()[0])){
+		m_cap = cv::VideoCapture(atoi(feed.c_str()));
+	}
+	else{
+		m_cap = cv::VideoCapture(feed);
+	}
+
+
+		//make sure we have something valid
+    if(!m_cap.isOpened()){           
+        ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
+        exit(0);
+    }
 	
-	//TODO resolve namespaces pass in args etc
-	m_image_sub =  m_it.subscribe(feed_topic, 1 , &VisionNode::imageCallback, this);
+
+	//TODO give option to user to specify the name of the video
+	//TODO make sure this doesn't fail when specifying a directory that does not yet exist
+	
+	string output_dir;
+	np.param<string>("output_dir", output_dir, ""); //this line will populate the output_dir variable if it's specified in the launch file
+
+	//TODO change variable names
+	if(!output_dir.empty()){
+		
+		stringstream output_ss;
+		auto t = time(nullptr);
+		auto tm = *localtime(&t);
+
+		output_ss << output_dir;
+		output_ss << put_time(&tm, "%Y%m%d_%H-%M-%S");
+		output_ss << ".avi";
+		
+		string output_str = output_ss.str();
+		
+		int ex = static_cast<int>(m_cap.get(CV_CAP_PROP_FOURCC));
+
+		cv::Size S = cv::Size((int) m_cap.get(CV_CAP_PROP_FRAME_WIDTH),    // Acquire input size
+					  (int) m_cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+		
+
+		//sgillen@20172107-06:21 I found more problems trying to keep the extension (by passing ex as the second argument) than I did by forcing the output to be CV_FOURCC('M','J','P','G')  
+		//m_output_video.open(output_str, ex, m_cap.get(CV_CAP_PROP_FPS), S, true);
+		m_output_video.open(output_str, CV_FOURCC('M','J','P','G'), m_cap.get(CV_CAP_PROP_FPS), S, true);
+
+
+		if(!m_output_video.isOpened()){
+			ROS_ERROR("problem opening output video! we tried saving it as %s, now exiting" ,output_str.c_str());
+			exit(0);
+		}
+
+		ROS_INFO("output video being saved as %s" , output_str.c_str());
+	}
+
 	
 	//register all services here
 	//------------------------------------------------------------------------------
 	m_test_srv = n.advertiseService("service_test", &VisionNode::serviceTest, this);
-	m_buoy_detect_srv = n.advertiseService("buoy_detect", &VisionNode::buoyDetector, this);
-
-
+	
 	//start your action servers here
 	//------------------------------------------------------------------------------
 	m_buoy_server.start();
+	m_gate_server.start();
 	ROS_INFO("servers started");
 }
 
@@ -32,30 +96,23 @@ VisionNode::~VisionNode(){
 }
 
 void VisionNode::update(){
-	
-	ros::spinOnce();
-   
-}
 
-
-//TODO, we can get even more performance gains if we set a marker telling us if an image is stale or not, if it is we can just save the last response to a service or whatever and return that value
-void VisionNode::imageCallback(const sensor_msgs::ImageConstPtr& msg){
-
-	cv_bridge::CvImagePtr cv_ptr;
-
-	
-    try	{
-		//TODO can we do this without a copy?
-		cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-		m_img = cv_ptr->image; //this could be bad if img does not copy anything, even if it does
-		
-	}
-    catch (cv_bridge::Exception& e){
-		ROS_ERROR("cv_bridge exception: %s", e.what());
-		return;
+	m_cap >> m_img;
+	//if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
+	if(m_img.empty()){           
+		ROS_ERROR("ran out of video (one of the frames was empty) exiting node now");
+		exit(0);
 	}
 	
+	//if the user didn't specify a directory this will not be open
+	if(m_output_video.isOpened()){
+		ROS_ERROR("writing image!");
+		m_output_video << m_img;
+	}
+	
+	spinOnce();
 }
+
 
 /*
 * Past this point is a collection of services and 
@@ -66,48 +123,37 @@ bool VisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_b
     ROS_ERROR("service called successfully");
 }
 
-//this will detect if there are buoy's in the scene or not. 
-bool VisionNode::buoyDetector(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res){
-	
-    //sg - copied this from stack overflow, you can call it but it exits with a (handled) exception somewhere
-	
-    // // Set up the detector with default parameters.
-    // cv::SimpleBlobDetector detector;
-	
-    // // Detect blobs.
-    std::vector<cv::KeyPoint> keypoints;
-    // detector.detect(img, keypoints);
-	
-	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create(); 
-	detector->detect( m_img, keypoints );
-	
-    // Draw detected blobs as red circles.
-    // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the circle corresponds to the size of blob
-    cv::Mat im_with_keypoints;
-    cv::drawKeypoints(m_img, keypoints, im_with_keypoints, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
-	
-    // Show blobs
-    cv::imshow("keypoints", im_with_keypoints );
-    cv::waitKey(0);
 
-}
 
 //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet. 
 //=================================================================================================================
-void VisionNode::testExecute(const ram_msgs::VisionExampleGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void VisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
     //    goal->test_feedback = 5;
     ROS_ERROR("You called the action well done!");
     as->setSucceeded();
 }
 
+
 //if a buoy is found on frame finds where it is and returns the center offset 
-void VisionNode::findBuoy(const ram_msgs::VisionExampleGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionExampleAction> *as){
+void VisionNode::findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
-	FindBuoyAction action = FindBuoyAction(as);
+	BuoyAction action = BuoyAction(as);
 	
 	while(true){
-		action.updateAction(m_img); //this will also publish the feeback
+		action.updateAction(m_img); //this will also publish the feedback
 	}
 	
 	as->setSucceeded();   
+}
+
+void VisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
+	
+	GateAction action = GateAction();
+
+	while(true){
+		ROS_ERROR("updating action");
+		action.updateAction(m_img);
+	}
+
+	as->setSucceeded();
 }
