@@ -25,9 +25,11 @@
 #define STATUS_OK 0
 #define STATUS_TIMEOUT 1
 #define STATUS_OVERHEAT 2
+#define STATUS_OVERHEAT_WARNING 3
 
 // how high temp has to be to change the status
-#define TEMP_THRES 27.0
+#define TEMP_THRES 60.0
+#define TEMP_WARNING 50.0
 // how many loops to skip before checking temp again
 #define TEMP_UPDATE_RATE 10
 
@@ -110,11 +112,12 @@ void thrusterCmd() {
 
 }
 
-void thrusterNeutral() {
+void thrustersNeutral() {
   for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
     pca.thrusterSet(i, THRUSTER_NEUTRAL);
   }
 }
+
 
 // Placeholder, needs to get depth from I2C, then println it to serial
 void getDepth() {
@@ -134,6 +137,9 @@ void getTemp() {
   if ( temp >= TEMP_THRES ) {
     status = STATUS_OVERHEAT;
   }
+  else if ( temp >= TEMP_WARNING ) {
+    status = STATUS_OVERHEAT_WARNING;
+  }
   else {
     status = STATUS_OK;
   }
@@ -145,6 +151,9 @@ void checkTemp() {
   float temp = val / 9.31;
   if ( temp >= TEMP_THRES ) {
     status = STATUS_OVERHEAT;
+  }
+  else if ( temp >= TEMP_WARNING ) {
+    status = STATUS_OVERHEAT_WARNING;
   }
   else {
     status = STATUS_OK;
@@ -246,7 +255,7 @@ void loop() {
           #ifdef DEBUG
           Serial.println("Overflow Timed out, thrusters off");
           #endif
-          pca.thrustersOff();
+          thrustersNeutral();
           timedout = true;
           status = STATUS_TIMEOUT;
         }
@@ -258,7 +267,7 @@ void loop() {
         #ifdef DEBUG
         Serial.println("Timed out, thrusters off");
         #endif
-        pca.thrustersOff();
+        thrustersNeutral();
         timedout = true;
         status = STATUS_TIMEOUT;
       }

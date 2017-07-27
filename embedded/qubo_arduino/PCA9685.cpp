@@ -1,6 +1,12 @@
 #include "PCA9685.h"
 #include <Wire.h>
 
+#define THRUSTER_NEUTRAL 1285
+/// THRUSTER_NEUTRAL - 256
+#define THRUSTER_MIN 1029U
+// THRUSTER_NETURAL + 256
+#define THRUSTER_MAX 1541U
+
 #define PCA9685_MODE1 0x0
 #define PCA9685_PRESCALE 0xFE
 

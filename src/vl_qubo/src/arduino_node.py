@@ -21,6 +21,7 @@ THRUSTER_INVALID = '65535'
 STATUS_OK = '0'
 STATUS_TIMEOUT = '1'
 STATUS_OVERHEAT = '2'
+STATUS_OVERHEAT_WARNING = '3'
 
 device = '/dev/ttyACM7'
 
@@ -116,7 +117,15 @@ def thruster_callback(msg):
 # main
 if __name__ == '__main__':
     #!!! this also restarts the arduino! (apparently)
-    ser = serial.Serial(device,115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
+
+    # Keep trying to open serial
+    while True:
+        try:
+            ser = serial.Serial(device,115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
+            break
+        except:
+            continue
+
     time.sleep(3)
 
 
@@ -145,8 +154,8 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
 
-        #depth = get_depth() #TODO
-        #depth_pub.publish(depth)
+        depth = get_depth() #TODO
+        depth_pub.publish(depth)
 
 
         #thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
@@ -192,5 +201,7 @@ if __name__ == '__main__':
             print('STATUS TIMEOUT')
         elif status == STATUS_OVERHEAT:
             print('STATUS OVERHEAT')
+        elif status == STATUS_OVERHEAT_WARNING:
+            print('STATUS OVERHEAT WARNING')
 
         rate.sleep()

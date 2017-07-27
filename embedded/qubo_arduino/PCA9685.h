@@ -17,6 +17,7 @@ class PCA9685 {
   void thrustersOff();
   void thrusterSet(uint8_t thruster, uint16_t command);
 
+
  private:
   int freq;
   uint8_t read8(uint8_t addr);
