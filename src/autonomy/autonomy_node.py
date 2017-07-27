@@ -39,14 +39,14 @@ def sway_callback(msg):
 #we need to pass this along, may need to scale it here but probably better done on the controls side
 def feedback_callback(feedback):
     print feedback
-    yaw_pub.pub(yaw + feedback) 
-    
+    yaw_pub.pub(yaw + feedback)
+
 
 
 def follow_blob():
     # Creates the SimpleActionClient, passing the type of the action
     # (VisionExampleAction) to the constructor.
-    
+
     print "0"
     ## !!! you'll need to change the action name here to test different actions
     client = actionlib.SimpleActionClient('blob_action', ram_msgs.msg.VisionExampleAction)
@@ -65,9 +65,9 @@ def follow_blob():
     client.wait_for_result()
     print "5"
     # Prints out the result of executing the action
-    return client.get_result()  
+    return client.get_result()
 
-    
+
 def buoy_client():
     # Creates the SimpleActionClient, passing the type of the action
     # (VisionExampleAction) to the constructor.
@@ -89,10 +89,10 @@ def buoy_client():
     client.wait_for_result()
     print "5"
     # Prints out the result of executing the action
-    return client.get_result()  
+    return client.get_result()
 
 if __name__ == '__main__':
-    
+
     rospy.init_node('autonomy_node')
 
     #we publish commands
@@ -112,6 +112,5 @@ if __name__ == '__main__':
     rospy.Subscriber(qubo_namespace + "sway"  , Float64, swaycallback  )
 
 
-    
+
 #    result = vision_client()
-    

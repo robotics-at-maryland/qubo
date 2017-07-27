@@ -1,2 +1,4 @@
 * TODO 
 Look into the firmware provided by Auvidea for the Jetson/j120 board
+Multiple electrical boards
+More modular
