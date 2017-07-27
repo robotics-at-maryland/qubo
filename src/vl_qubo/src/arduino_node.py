@@ -15,6 +15,7 @@ import serial, time, sys, select
 import rospy
 from std_msgs.msg import Int64, Float64
 from std_msgs.msg import Float64MultiArray
+from std_srvs.srv import Empty
 
 THRUSTER_INVALID = '65535'
 STATUS_OK = '0'
@@ -22,6 +23,9 @@ STATUS_TIMEOUT = '1'
 STATUS_OVERHEAT = '2'
 
 device = '/dev/ttyACM7'
+
+# When this gets flipped, send shutdown signal
+shutdown_flag = False
 
 control_domain = (-128.0, 128.0)
 arduino_domain = (1029.0, 1541.0)
@@ -68,11 +72,15 @@ def get_depth():
     ser.write('d!')
     # blocks forever until receives a newline
     depth = ser.readline()
-    return depth 
+    return depth
 
 
 ##------------------------------------------------------------------------------
 # callbacks
+def shutdown_thrusters():
+    shutdown_flag = True
+    #return Empty
+
 def roll_callback(msg):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
     roll_cmd = thruster_map(msg.data)
@@ -128,6 +136,8 @@ if __name__ == '__main__':
     rospy.Subscriber(qubo_namespace + "surge_cmd" , Float64, surge_callback)
     rospy.Subscriber(qubo_namespace + "sway_cmd"  , Float64, sway_callback)
 
+    rospy.Service(qubo_namespace + "shutdown_thrusters", Empty, shutdown_thrusters)
+
     thruster_cmds = [thruster_map(0)]*num_thrusters
 
     rate = rospy.Rate(10) #100Hz
@@ -155,7 +165,10 @@ if __name__ == '__main__':
 
 
         # Build the thruster message to send
-        send_thruster_cmds(thruster_cmds)
+        if shutdown_flag:
+            send_thruster_cmds([0] * num_thrusters)
+        else:
+            send_thruster_cmds(thruster_cmds)
         # print "hello"
 
         #ser.write('c!')
