@@ -28,6 +28,7 @@
 //our actions/tuner actions
 #include "buoy_action.h"
 #include "gate_action.h"
+#include "blob_action.h"
 
 class VisionNode{
 
@@ -55,6 +56,7 @@ class VisionNode{
 
     void findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
     void findGate(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+    void findBlob(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
 
     protected:
 
@@ -99,6 +101,7 @@ class VisionNode{
     //the build system appends the word Action to whatever the file name is in the ram_msgs directory
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
+    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_blob_server;
 
 };
 

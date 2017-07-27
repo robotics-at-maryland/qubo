@@ -18,7 +18,9 @@ int VisionNode::vmb_err(const int func_call, const string err_msg) {
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video  
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
-		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false)
+		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
+		m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
+
 {
 
 	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
@@ -149,6 +151,19 @@ void VisionNode::findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal,  actionli
 void VisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
 	GateAction action = GateAction();
+
+	while(true){
+		ROS_ERROR("updating action");
+		action.updateAction(m_img);
+	}
+
+	as->setSucceeded();
+}
+
+
+void VisionNode::findBlob(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
+	
+	BlobAction action = BlobAction(as);
 
 	while(true){
 		ROS_ERROR("updating action");
