@@ -113,4 +113,8 @@ if __name__ == '__main__':
 
 
 
+    # go straight..
+
+    surge_pub.publish(50)
+
 #    result = vision_client()
