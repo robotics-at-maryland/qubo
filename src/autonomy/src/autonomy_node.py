@@ -2,6 +2,7 @@
 
 import roslib; roslib.load_manifest('vision')
 import rospy
+from std_msgs.msg import Float64
 
 # Brings in the SimpleActionClient
 import actionlib
@@ -95,6 +96,8 @@ if __name__ == '__main__':
 
     rospy.init_node('autonomy_node')
 
+    qubo_namespace = '/qubo/'
+    
     #we publish commands
     roll_pub  = rospy.Publisher(qubo_namespace + "roll_cmd"  , Float64, queue_size = 10)
     pitch_pub = rospy.Publisher(qubo_namespace + "pitch_cmd" , Float64, queue_size = 10)
@@ -109,12 +112,14 @@ if __name__ == '__main__':
     rospy.Subscriber(qubo_namespace + "yaw"   , Float64, yaw_callback  )
     rospy.Subscriber(qubo_namespace + "depth" , Float64, depth_callback)
     rospy.Subscriber(qubo_namespace + "surge" , Float64, surge_callback)
-    rospy.Subscriber(qubo_namespace + "sway"  , Float64, swaycallback  )
+    rospy.Subscriber(qubo_namespace + "sway"  , Float64, sway_callback  )
 
 
 
     # go straight..
 
     surge_pub.publish(50)
+
+    rospy.spin()
 
 #    result = vision_client()
