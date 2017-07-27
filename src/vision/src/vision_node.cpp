@@ -89,6 +89,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	//------------------------------------------------------------------------------
 	m_buoy_server.start();
 	m_gate_server.start();
+	m_blob_server.start();
 	ROS_INFO("servers started");
 }
 
