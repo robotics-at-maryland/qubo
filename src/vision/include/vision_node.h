@@ -21,10 +21,10 @@
 #include  "ram_msgs/bool_bool.h"
 
 //cv_bridge includes
-#include <cv_bridge/cv_bridge.h>
+//#include <cv_bridge/cv_bridge.h>
 
 //image transport includes
-#include <image_transport/image_transport.h>
+//#include <image_transport/image_transport.h>
 
 #include "find_buoy_action.h"
 

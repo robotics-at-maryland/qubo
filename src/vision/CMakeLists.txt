@@ -19,7 +19,7 @@ find_package(catkin
 
   image_transport
 
-  cv_bridge
+#  cv_bridge
 
 )
 
@@ -112,11 +112,11 @@ set(CASCADE_TEST
 # Add Executables ############
 ##############################
 
-#still needs to be updated to 3.0
-add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
-target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
-target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
-add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+# #still needs to be updated to 3.0
+# add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
+# target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
+# target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
+# add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
 
@@ -126,37 +126,37 @@ target_link_libraries(vision_node ${OpenCV_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
-##below are all basically prototypes
-add_executable(gate_detector ${GATE_FILES})
-target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+# ##below are all basically prototypes
+# add_executable(gate_detector ${GATE_FILES})
+# target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
 
 
-add_executable(canny_tuner ${CANNY_TUNER_FILES})
-target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+# add_executable(canny_tuner ${CANNY_TUNER_FILES})
+# target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
-add_executable(blob_tuner ${BLOB_TUNER_FILES})
-target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
+# add_executable(blob_tuner ${BLOB_TUNER_FILES})
+# target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
-add_executable(segment_test ${SEGMENT_FILES})
-target_link_libraries(segment_test ${OpenCV_LIBRARIES})
+# add_executable(segment_test ${SEGMENT_FILES})
+# target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 
-add_executable(canny_test ${EDGE_FILES})
-target_link_libraries(canny_test ${OpenCV_LIBRARIES})
+# add_executable(canny_test ${EDGE_FILES})
+# target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-add_executable(blob_test ${BLOB_FILES})
-target_link_libraries(blob_test ${OpenCV_LIBRARIES})
+# add_executable(blob_test ${BLOB_FILES})
+# target_link_libraries(blob_test ${OpenCV_LIBRARIES})
 
-add_executable(em_test ${EM_FILES})
-target_link_libraries(em_test ${OpenCV_LIBRARIES})
+# add_executable(em_test ${EM_FILES})
+# target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
-add_executable(gfit_test ${GFIT_FILES})
-target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+# add_executable(gfit_test ${GFIT_FILES})
+# target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
-# add_executable(mbt_test ${MBT_FILES})
-# target_link_libraries(mbt_test ${VISP_LIBRARIES})
+# # add_executable(mbt_test ${MBT_FILES})
+# # target_link_libraries(mbt_test ${VISP_LIBRARIES})
 
-add_executable(cascade_test ${CASCADE_TEST})
-target_link_libraries(cascade_test ${OpenCV_LIBS})
+# add_executable(cascade_test ${CASCADE_TEST})
+# target_link_libraries(cascade_test ${OpenCV_LIBS})
 
 
 

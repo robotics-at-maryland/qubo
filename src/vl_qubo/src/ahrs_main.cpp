@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 	ros::init(argc, argv, "ahrs_node");
     ros::NodeHandle nh;
 	
-	AHRSQuboNode cn(nh, "hardware_node", "//TODO");
+	AHRSQuboNode cn(nh, "hardware_node", "/dev/ttyUSB0");
 	
     while(1){
         cn.update();

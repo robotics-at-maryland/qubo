@@ -17,9 +17,9 @@ find_package(catkin
 find_package(Eigen3)
 
 #find_package(catkin REQUIRED dynamic_reconfigure)
-generate_dynamic_reconfigure_options(
-  cfg/pid.cfg
-)
+# generate_dynamic_reconfigure_options(
+#   cfg/pid.cfg
+# )
 
 
 catkin_package(
