@@ -10,19 +10,19 @@ using namespace std;
 
 int ratio = 3; //per canny's suggestion
 int canny_thresh = 12; //starts at 12, this is what we will be changing though 
-int hough_thresh = 12;
-int angle_tracker = 1;
+int hough_thresh = 27;
+int angle_tracker = 20;
 int max_thresh = 255;//max for both thresh variable
 
-double angle_thresh = .1;
+double angle_thresh = .14;
 
 int frame_num = 0; //keeps track of the current frame
 int max_frame = 0; //total frames in the video. this may fail for cameras?
 
-int kernel_size = 1; //kernel for the guassian blur
+int kernel_size = 5; //kernel for the guassian blur
 int kernel_max = 256;
 
-int num_bins = 30; // needs to divide image width cleanly 
+int num_bins = 30; // needs to divide image width cleanly (not really though)
 int max_bins = 100;
 
 
@@ -134,10 +134,11 @@ int main(int argc, char* argv[]){
 			xbin_count.push_back(0);
 		}
 
-		int bin_size = CAP_PROP_FRAME_WIDTH/num_bins;
+		int bin_size = cap.get(CAP_PROP_FRAME_WIDTH)/num_bins;
 		
-		for( size_t i = 0; i < also_lines.size(); i++ )
-			{
+		cout << "bin size = " << bin_size << endl; 
+		
+		for( size_t i = 0; i < also_lines.size();i++) {
 				float rho = also_lines[i][0], theta = also_lines[i][1];
 				
 				if (theta > 3.14 - angle_thresh && theta < 3.14 + angle_thresh){
@@ -145,21 +146,83 @@ int main(int argc, char* argv[]){
 					Point pt1, pt2;
 					double a = cos(theta), b = sin(theta);
 					double x0 = a*rho, y0 = b*rho;
-					
-					xbin_count[x0/num_bins]++;
-					
-					pt1.x = cvRound(x0 + 1000*(-b));
-					pt1.y = cvRound(y0 + 1000*(a));
-					pt2.x = cvRound(x0 - 1000*(-b));
-					pt2.y = cvRound(y0 - 1000*(a));
 
-					line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
+					
+					cout << "x0 =  " << x0 << "  num bins = " << num_bins <<  " bin = " << (int) (x0/bin_size)+1 << endl;
+					int bin = (int) x0/bin_size;
+					if(bin > 0){
+
+						xbin_count[(int) ((x0/bin_size))]++;
+						
+						pt1.x = cvRound(x0 + 1000*(-b));
+						pt1.y = cvRound(y0 + 1000*(a));
+						pt2.x = cvRound(x0 - 1000*(-b));
+						pt2.y = cvRound(y0 - 1000*(a));
+						
+						line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
+						
+					}
+
+					else {
+
+							
+						pt1.x = cvRound(x0 + 1000*(-b));
+						pt1.y = cvRound(y0 + 1000*(a));
+						pt2.x = cvRound(x0 - 1000*(-b));
+						pt2.y = cvRound(y0 - 1000*(a));
+						
+						line( cdst, pt1, pt2, Scalar(0,255,0), 3, CV_AA);
+					}
+
 				}
 			}
 
 		for(int i = 0; i < xbin_count.size(); i++){
 			cout << "bin" << i << "=" << " " << xbin_count[i] << endl;
 		}
+		
+		//ok now xbin_count is populated, let's find which bin has the most lines
+
+
+		int max = 0;
+		int max_i = 0;
+		
+		for( int i = 0; i < xbin_count.size(); i++){
+			if (xbin_count[i] > max ){
+				max = xbin_count[i];
+				max_i = i;
+			}
+		}
+
+		int max2 = 0;
+		int max2_i = 0;
+
+
+		//the two is arbitrary and there are probably better ways to go about this
+		for( int i = 0; i < xbin_count.size(); i++){
+			if (xbin_count[i] > max2 && ( i > (max_i + 2)  || i < (max_i - 2 ))){
+				max2 = xbin_count[i];
+				max2_i = i;
+			}
+		}
+
+		cout << "max1 - " << max_i << endl;
+		cout << "max2 - " << max2_i << endl;
+		
+		//great lets find the average of our two location
+
+		int average = ((bin_size*max_i + bin_size/2) + (bin_size*max2_i + bin_size/2))/2;
+
+		Point pt1, pt2;
+		pt1.x = (average);
+		pt1.y = (1000);
+		pt2.x = (average);
+		pt2.y = (-1000);
+
+		line( cdst, pt1, pt2, Scalar(255,0,0), 3, CV_AA);
+		
+		
+
 		
 		
 		// for( size_t i = 0; i < lines.size(); i++ )
