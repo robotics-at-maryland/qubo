@@ -65,8 +65,9 @@ class VisionNode{
 	void getVmbFrame(cv::Mat& cv_frame);
     long m_width, m_height;
     VmbInt64_t m_pixel_format;
+	double m_fps;
 
-    class FrameObserver : virtual public AVT::VmbAPI::IFrameObserver {
+	class FrameObserver : virtual public AVT::VmbAPI::IFrameObserver {
         public:
         FrameObserver(AVT::VmbAPI::CameraPtr& camera);
         virtual void FrameReceived(const AVT::VmbAPI::FramePtr frame);

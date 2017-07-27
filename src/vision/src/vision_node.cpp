@@ -70,6 +70,13 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 			}
 			vmb_err(feat->GetValue(m_pixel_format), "Error getting format");
 		}
+		if(!vmb_err(m_gige_camera->GetFeatureByName("AcquisitionFrameRateAbs", feat), "Error getting framerate")){
+			if(!vmb_err(feat->GetValue(m_fps), "Error getting framerate value")){
+				// nothing here
+			} else {
+				m_fps = 30;
+			}
+		}
 		m_observer = IFrameObserverPtr(new FrameObserver(m_gige_camera));
 		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 5, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
@@ -91,6 +98,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		}
 		m_width = m_cap.get(CV_CAP_PROP_FRAME_WIDTH);
 		m_height = m_cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+		m_fps = m_cap.get(CV_CAP_PROP_FPS);
 	}
 
 
@@ -121,7 +129,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 		//sgillen@20172107-06:21 I found more problems trying to keep the extension (by passing ex as the second argument) than I did by forcing the output to be CV_FOURCC('M','J','P','G')
 		//m_output_video.open(output_str, ex, m_cap.get(CV_CAP_PROP_FPS), S, true);
-		m_output_video.open(output_str, CV_FOURCC('M','J','P','G'), 20/* m_cap.get(CV_CAP_PROP_FPS) */, S, true);
+		m_output_video.open(output_str, CV_FOURCC('M','J','P','G'), m_fps, S, true);
 
 
 		if(!m_output_video.isOpened()){
@@ -185,7 +193,6 @@ VisionNode::FrameObserver::FrameObserver(CameraPtr& camera) : IFrameObserver(cam
 
 void VisionNode::FrameObserver::FrameReceived( const FramePtr frame) {
 	VmbFrameStatusType status;
-	ROS_ERROR("Frame rec");
 	vmb_err(frame->GetReceiveStatus(status), "Error getting frame status");
 	if(status != VmbFrameStatusComplete){
 		ROS_ERROR("Bad frame received, code: %i", status);
