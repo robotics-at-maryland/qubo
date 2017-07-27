@@ -71,9 +71,9 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 			vmb_err(feat->GetValue(m_pixel_format), "Error getting format");
 		}
 		m_observer = IFrameObserverPtr(new FrameObserver(m_gige_camera));
-		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 3, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
-
+		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 5, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
+
 	} else {
 
 		if(isdigit(feed.c_str()[0])){
@@ -159,9 +159,7 @@ void VisionNode::update(){
 
 	// Use the mako if its present
 	if (m_gige_camera != nullptr){
-		ROS_ERROR("Get vimba frame: %i", m_img.data);
 		getVmbFrame(m_img);
-		// ROS_ERROR("%s", m_img.data);
 	} else {
 		m_cap >> m_img;
 	}
@@ -175,7 +173,6 @@ void VisionNode::update(){
 
 	//if the user didn't specify a directory this will not be open
 	if(m_output_video.isOpened()){
-		ROS_ERROR("writing image!");
 		m_output_video << m_img;
 	}
 
@@ -211,7 +208,6 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 		ROS_ERROR("Attempted to get a frame from a null Vimba camera pointer");
 		return;
 	}
-
 	FramePtr vmb_frame = SP_DYN_CAST(m_observer, FrameObserver)->GetFrame();
 	if(vmb_frame == nullptr) {
 		ROS_ERROR("Null frame");
@@ -225,7 +221,6 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	// }
 	VmbUint32_t size;
 	vmb_frame->GetImageSize(size);
-	ROS_ERROR("size");
 	unsigned char* img_buf;
 	if( vmb_err( vmb_frame->GetImage(img_buf), "Error getting image buffer")) { return; }
 
@@ -233,16 +228,14 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	img_src.Size = sizeof( img_src );
 	img_dest.Size = sizeof( img_dest );
 
-	ROS_ERROR("VmbImage");
 	vmb_err( VmbSetImageInfoFromPixelFormat( m_pixel_format, m_width, m_height, &img_src) , "error px format 1");
 	vmb_err( VmbSetImageInfoFromPixelFormat(VmbPixelFormatBgr8, m_width, m_height, &img_dest) , "error px format 2");
 
 	img_src.Data = img_buf;
 	img_dest.Data = cv_frame.data;
 
-	ROS_ERROR("%i, %i", img_buf, cv_frame.data);
-	ROS_ERROR("Transform");
 	vmb_err( VmbImageTransform(&img_src, &img_dest, NULL, 0), "Error transforming image" );
+	m_gige_camera->QueueFrame(vmb_frame);
 }
 /*
  * Past this point is a collection of services and
