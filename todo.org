@@ -1,0 +1,2 @@
+* TODO 
+Look into the firmware provided by Auvidea for the Jetson/j120 board
