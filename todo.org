@@ -1,2 +1,36 @@
-* TODO 
-Look into the firmware provided by Auvidea for the Jetson/j120 board
+* RA@M 2017-2018 TODO
+
+** Software
+*** High Priority Fixes (try and do before fall meetings)
+**** TODO Document how to do important things (compile the kernel, boot from different drives etc) (Sean Does this)
+**** TODO convert all the vision code to the same version of openCV (2 to make it compatible with libopenCV4tegra)
+**** TODO Make a unified install script
+**** TODO Have tasks/tutorials/something to do for new members
+
+*** Lower Priority Fixes
+**** TODO Look into the firmware provided by Auvidea for the Jetson/j120 board
+**** TODO Create a camera node that always outputs a ros message  (using image transport stack) so we can have one vision node for every type pf camera 
+
+*** Additions/Upgrades
+
+**** TODO work towards other tasks (obviously), easy pickings will be following the lines with a downward facing camera. 
+**** TODO Linear Quadratic Regulator for controls
+**** TODO Fuse IMU/AHRS/Second IMU for orientation
+**** TODO Make measurements to see how messed up AHRS gets from
+**** TODO CNN for vision
+**** TODO switch back to TIVA?
+**** TODO Output status to LEDS
+**** TODO Create obstacle course in simulation
+
+*** Mostly for fun
+
+**** TODO Get Teleop working for a more fun controller
+**** TODO Remote Viewing of camera images (possibly VR)
+
+** Electronics
+
+??
+
+** Mechanical
+
+??
