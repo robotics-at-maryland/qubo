@@ -13,8 +13,7 @@
 
 import serial, time, sys, select
 import rospy
-from std_msgs.msg import Int64, Float64
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Int64, Float64, String, Float64MultiArray
 from std_srvs.srv import Empty, EmptyResponse
 
 THRUSTER_INVALID = '65535'
@@ -23,7 +22,7 @@ STATUS_TIMEOUT = '1'
 STATUS_OVERHEAT = '2'
 STATUS_OVERHEAT_WARNING = '3'
 
-device = '/dev/ttyACM0'
+device = '/dev/arduino'
 
 # When this gets flipped, send shutdown signal
 shutdown_flag = False
@@ -124,17 +123,18 @@ if __name__ == '__main__':
             ser = serial.Serial(device,115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
             break
         except:
-            time.sleep(.25)
+            time.sleep(0.25)
             continue
 
     time.sleep(3)
-    rospy.loginfo("Arduino found!")
+
 
     #I can't think of a situation where we want to change the namespace but I guess you never know
     qubo_namespace = "/qubo/"
 
     rospy.init_node('arduino_node', anonymous=False)
 
+    status_pub = rospy.Publisher(qubo_namespace + 'status', String, queue_size = 10)
     depth_pub = rospy.Publisher(qubo_namespace + "depth", Float64, queue_size = 10)
 
     thruster_sub = rospy.Subscriber(qubo_namespace + "thruster_cmds", Float64MultiArray, thruster_callback)
@@ -198,11 +198,15 @@ if __name__ == '__main__':
 
         if status == STATUS_OK:
             print('STATUS OK')
+            status_pub.publish(data='OK')
         elif status == STATUS_TIMEOUT:
             print('STATUS TIMEOUT')
+            status_pub.publish(data='TIMEOUT')
         elif status == STATUS_OVERHEAT:
             print('STATUS OVERHEAT')
+            status_pub.publish(data='OVERHEAT')
         elif status == STATUS_OVERHEAT_WARNING:
             print('STATUS OVERHEAT WARNING')
+            status_pub.publish(data='OVERHEAT WARNING')
 
         rate.sleep()
