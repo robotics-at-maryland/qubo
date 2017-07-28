@@ -123,4 +123,20 @@ if __name__ == '__main__':
 
     surge_pub.publish(50)
 
+    # get the starting values
+    roll_hold = hold
+    pitch_hold = pitch
+    yaw_hold = yaw
+    depth_hold = depth
+    sway_hold = sway
+
+    # hold the staring values
+    roll_pub.publish(roll_hold)
+    pitch_pub.publish(pitch_hold)
+    yaw_pub.publish(yaw_hold)
+    depth_pub.publish(depth_hold)
+    sway_pub.publish(sway_hold)
+
+
+
 #    result = vision_client()
