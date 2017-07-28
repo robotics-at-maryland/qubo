@@ -24,7 +24,7 @@ STATUS_OVERHEAT_WARNING = '3'
 
 V_START = 2.0
 
-device = '/dev/arduino'
+device = '/dev/ttyACM4'
 
 # When this gets flipped, send shutdown signal
 shutdown_flag = False
@@ -117,6 +117,10 @@ def thruster_callback(msg):
 ##------------------------------------------------------------------------------
 # main
 if __name__ == '__main__':
+
+    # map for messages
+    msg = {'t': '', 'd': '', 's': ''}
+
     #!!! this also restarts the arduino! (apparently)
 
     # Keep trying to open serial
@@ -160,18 +164,24 @@ if __name__ == '__main__':
 
     # zero the thrusters
     send_thruster_cmds([0] * num_thrusters)
+    '''
     zero = ser.readline().strip()
 
     while startup_voltage <= V_START:
         ser.write('s!')
         startup_voltage = float(ser.readline())
         time.sleep(0.1)
+    '''
 
 
     while not rospy.is_shutdown():
 
         depth = get_depth() #TODO
-        depth_pub.publish(depth)
+        if depth == '':
+            pass
+        else:
+            msg[depth[0]] = depth[1:]
+            depth_pub.publish(float(msg[depth[0]]))
 
 
         #thruster layout found here https://docs.google.com/presentation/d/1mApi5nQUcGGsAsevM-5AlKPS6-FG0kfG9tn8nH2BauY/edit#slide=id.g1d529f9e65_0_3
@@ -201,26 +211,32 @@ if __name__ == '__main__':
         #temp = ser.readline()
         #print(temp)
 
-        # Get the status
-        thrust = ser.readline().strip()
-        status = ser.readline().strip()
+        # get thruster cmd
+        x = ser.readline().strip()
+        if x != '':
+            msg[x[0]] = x[1:]
+        # get status
+        x = ser.readline().strip()
+        if x != '':
+            msg[x[0]] = x[1:]
+        #status = ser.readline().strip()
 
         print(thruster_cmds)
-        print(thrust, status)
+        print('Thruster: {0}, status: {1}, depth: {2}'.format(msg['t'], msg['s'], msg['d']))
 
-        if thrust == THRUSTER_INVALID:
+        if msg['t'] == THRUSTER_INVALID:
             print('Invalid thruster input')
 
-        if status == STATUS_OK:
+        if msg['s'] == STATUS_OK:
             print('STATUS OK')
             status_pub.publish(data='OK')
-        elif status == STATUS_TIMEOUT:
+        elif msg['s'] == STATUS_TIMEOUT:
             print('STATUS TIMEOUT')
             status_pub.publish(data='TIMEOUT')
-        elif status == STATUS_OVERHEAT:
+        elif msg['s'] == STATUS_OVERHEAT:
             print('STATUS OVERHEAT')
             status_pub.publish(data='OVERHEAT')
-        elif status == STATUS_OVERHEAT_WARNING:
+        elif msg['s'] == STATUS_OVERHEAT_WARNING:
             print('STATUS OVERHEAT WARNING')
             status_pub.publish(data='OVERHEAT WARNING')
 
