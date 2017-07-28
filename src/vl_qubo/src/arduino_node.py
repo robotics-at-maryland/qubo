@@ -22,6 +22,8 @@ STATUS_TIMEOUT = '1'
 STATUS_OVERHEAT = '2'
 STATUS_OVERHEAT_WARNING = '3'
 
+V_START = 2.0
+
 device = '/dev/arduino'
 
 # When this gets flipped, send shutdown signal
@@ -152,6 +154,15 @@ if __name__ == '__main__':
     thruster_cmds = [thruster_map(0)]*num_thrusters
 
     rate = rospy.Rate(10) #100Hz
+
+    # Poll the ina for voltage, start up regular
+    startup_voltage = 0.0
+
+    while startup_voltage <= V_START:
+        ser.write('s!')
+        startup_voltage = float(ser.readline())
+        time.sleep(0.1)
+
 
     while not rospy.is_shutdown():
 
