@@ -1,9 +1,11 @@
 #ifndef GATE_ACTION_H
 #define GATE_ACTION_H
 
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
+//#include "opencv2/highgui/highgui.hpp"
+//#include "opencv2/imgproc/imgproc.hpp"
 
+
+#include <opencv2/opencv.hpp>
 #include <iostream>
 
 class GateAction{
