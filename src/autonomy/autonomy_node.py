@@ -130,12 +130,11 @@ if __name__ == '__main__':
     depth_hold = depth
     sway_hold = sway
 
-    # hold the staring values
-    roll_pub.publish(roll_hold)
-    pitch_pub.publish(pitch_hold)
-    yaw_pub.publish(yaw_hold)
-    depth_pub.publish(depth_hold)
-    sway_pub.publish(sway_hold)
+    roll_target.publish(roll_hold)
+    pitch_target.publish(pitch_hold)
+    yaw_target.publish(yaw_hold)
+    depth_target.publish(depth_hold)
+    # sway_pub.publish(sway_hold)
 
 
 
