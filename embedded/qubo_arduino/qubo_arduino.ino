@@ -6,6 +6,7 @@
 #include "MS5837.h"
 #include "PCA9685.h"
 #include "ADC121.h"
+#include "Adafruit_INA219.h"
 
 #define BUFFER_SIZE 64 //may need to change
 #define NUM_THRUSTERS 8
@@ -17,7 +18,7 @@
 #define THRUSTER_MAX 1541U
 
 // Time(ms) arduino waits without hearing from jetson before turning off thrusters
-#define ALIVE_TIMEOUT 9999999
+#define ALIVE_TIMEOUT 5000
 
 // Character sent to the jetson on connect and reconnect
 #define CONNECTED "C"
@@ -46,6 +47,7 @@ boolean timedout = false; // if the arduino has timed out
 PCA9685 pca;
 MS5837 sensor;
 ADC121 adc121;
+Adafruit_INA219 ina;
 
 void setup() {
   Serial.begin(115200);
@@ -56,6 +58,8 @@ void setup() {
 
   //configure the PCA
   Wire.begin(); // Initiate the Wire library
+
+  ina.begin();
 
   pca.init();
 
@@ -112,6 +116,12 @@ void thrusterCmd() {
 
 }
 
+void getStartupVoltage() {
+  float v = ina.getBusVoltage_V();
+  Serial.println(v);
+}
+
+
 void thrustersNeutral() {
   for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
     pca.thrusterSet(i, THRUSTER_NEUTRAL);
@@ -158,6 +168,9 @@ void checkTemp() {
   else {
     status = STATUS_OK;
   }
+  #ifdef DEBUG
+  Serial.println(temp);
+  #endif
 }
 
 
@@ -211,6 +224,10 @@ void loop() {
         Serial.println("Get temp");
         #endif
         getTemp();
+      }
+      // Start up voltage on INA
+      else if ( prot[0] == 's') {
+        getStartupVoltage();
       }
       else {
           Serial.println("B2");
@@ -275,10 +292,12 @@ void loop() {
   }
 
 
+
   if ( counter % TEMP_UPDATE_RATE == 0 ) {
     checkTemp();
     counter = 0;
   }
+
 
 
   counter += 1;
