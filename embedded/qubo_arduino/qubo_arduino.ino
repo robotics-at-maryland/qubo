@@ -36,7 +36,8 @@
 
 // __________________________________________________________________________________________
 
-#define LM35_PIN 0
+#define STARTUP_PIN 0
+#define LM35_PIN 1
 
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint8_t counter;
@@ -71,7 +72,7 @@ void setup() {
   sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
 
   // for lm35 https://playground.arduino.cc/Main/LM35HigherResolution
-  analogReference(INTERNAL);
+  //analogReference(INTERNAL);
 
   // Done setup, so send connected command
   //Serial.println(CONNECTED);
@@ -118,11 +119,10 @@ void thrusterCmd() {
 }
 
 void getStartupVoltage() {
-  float v = ina.getBusVoltage_V();
+  int val = analogRead(STARTUP_PIN);
   Serial.print("s");
-  Serial.println(v);
+  Serial.println(val);
 }
-
 
 void thrustersNeutral() {
   for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
@@ -295,7 +295,6 @@ void loop() {
       }
     }
   }
-
 
 
   /*
