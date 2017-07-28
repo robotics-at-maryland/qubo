@@ -64,6 +64,7 @@ if [ -f /etc/nv_tegra_release ]; then
 		-D CUDA_ARCH_BIN=5.3 \
 		-D CUDA_ARCH_PTX="" \
 		-D INSTALL_C_EXAMPLES=ON \
+		-D CUDA_USE_STATIC_RUNTIME=OFF \
 		-D INSTALL_TESTS=OFF \
 		../
 
@@ -72,8 +73,8 @@ if [ -f /etc/nv_tegra_release ]; then
 elif [ -f /etc/nvidia0 ]; then
 	# We're not the Jetson, but there's a nvidia card
 	cmake \
-		-D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR  `# -D OPENCV_EXTRA_MODULES_PATH=$SOURCE_DIR/opencv_contrib/modules` \
+		-D CMAKE_BUILD_TYPE=RELEASE 
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_FFMPEG=ON \
@@ -87,6 +88,7 @@ elif [ -f /etc/nvidia0 ]; then
 		-D BUILD_PERF_TESTS=OFF \
 		-D BUILD_TESTS=OFF \
 		-D INSTALL_C_EXAMPLES=ON \
+		-D CUDA_USE_STATIC_RUNTIME=OFF \
 		-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
 		../
 
@@ -97,12 +99,12 @@ else
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
 		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
-		# -D OPENCV_EXTRA_MODULES_PATH=$SOURCE_DIR/opencv_contrib/modules \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_GTK=ON \
 		-D WITH_FFMPEG=ON \
 		-D INSTALL_C_EXAMPLES=ON \
+		-D CUDA_USE_STATIC_RUNTIME=OFF \
 		../
 
 	make -j $(($(nproc) + 1))
