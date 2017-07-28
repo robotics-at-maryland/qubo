@@ -158,6 +158,10 @@ if __name__ == '__main__':
     # Poll the ina for voltage, start up regular
     startup_voltage = 0.0
 
+    # zero the thrusters
+    send_thruster_cmds([0] * num_thrusters)
+    zero = ser.readline().strip()
+
     while startup_voltage <= V_START:
         ser.write('s!')
         startup_voltage = float(ser.readline())
