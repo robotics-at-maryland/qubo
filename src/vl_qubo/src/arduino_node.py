@@ -23,7 +23,7 @@ STATUS_TIMEOUT = '1'
 STATUS_OVERHEAT = '2'
 STATUS_OVERHEAT_WARNING = '3'
 
-device = '/dev/ttyACM7'
+device = '/dev/ttyACM0'
 
 # When this gets flipped, send shutdown signal
 shutdown_flag = False
@@ -124,10 +124,11 @@ if __name__ == '__main__':
             ser = serial.Serial(device,115200, timeout=0,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS)
             break
         except:
+            time.sleep(.25)
             continue
 
     time.sleep(3)
-
+    rospy.loginfo("Arduino found!")
 
     #I can't think of a situation where we want to change the namespace but I guess you never know
     qubo_namespace = "/qubo/"

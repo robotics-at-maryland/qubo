@@ -35,7 +35,7 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	}
 
 
-		//make sure we have something valid
+	//make sure we have something valid
     if(!m_cap.isOpened()){           
         ROS_ERROR("couldn't open file/camera  %s\n now exiting" ,feed.c_str());
         exit(0);

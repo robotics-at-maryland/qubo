@@ -6,18 +6,13 @@ using namespace cv;
 using namespace std;
 
 GateAction::GateAction(){
-
+	
 	m_kernel_size = 5; //must be odd and positive
 	m_canny_thresh = 12; //we may have to make this adaptive
 	m_hough_thresh = 20;
 	m_angle_thresh = .14;
 	m_num_bins = 12; // needs to divide image width cleanly (not really though)
 	
-
-
-
-
-
 	
 };
 
@@ -25,14 +20,15 @@ GateAction::GateAction(){
 GateAction::~GateAction(){};
 
 
-void GateAction::updateAction(const Mat cframe){
+// we just return an int here, the vision node can handle all the action server nonsense, if anyone see's this they should convert the other stuff to this same model
+int GateAction::updateAction(const Mat cframe){
 
 
-	//sgillen@20171021-11:10 will need to move this to it's own function I think
-	Mat dst, cdst;
-	
-	GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
-		
+//sgillen@20171021-11:10 will need to move this to it's own function I think
+Mat dst, cdst;
+
+GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
+
 	Canny(dst, dst, m_canny_thresh, m_canny_thresh*3, 3);
 
 	cvtColor(dst, cdst, CV_GRAY2BGR);
@@ -99,8 +95,9 @@ void GateAction::updateAction(const Mat cframe){
 	cout << "max2 - " << max2_i << endl;
 
 
-	int offset = FRAME_WIDTH/m_num_bins - ((bin_size*max_i + bin_size/2) + (bin_size*max2_i + bin_size/2))/2;
-		
+int offset = FRAME_WIDTH/m_num_bins - ((bin_size*max_i + bin_size/2) + (bin_size*max2_i + bin_size/2))/2;
+
+return offset;
 	
 	
 }

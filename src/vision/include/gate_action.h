@@ -11,7 +11,7 @@ class GateAction{
 	
     GateAction();
 	~GateAction();
-	void updateAction(const cv::Mat cframe);
+	int updateAction(const cv::Mat cframe);
 
     protected:
 
