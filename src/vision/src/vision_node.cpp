@@ -44,14 +44,14 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 		// We need to height, width and pixel format of the camera to convert the images to something OpenCV likes
 		FeaturePtr feat;
-		if(!vmb_err(m_gige_camera->GetFeatureByName("GVSPAdjustPacketSize", feat), "Error getting packet feature")){
-			if(!vmb_err(feat->RunCommand(), "Error running packet command")){
-				bool done = false;
-				while (!done) {
-					if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
-				}
-			}
-		}
+		// if(!vmb_err(m_gige_camera->GetFeatureByName("GVSPAdjustPacketSize", feat), "Error getting packet feature")){
+		// 	if(!vmb_err(feat->RunCommand(), "Error running packet command")){
+		// 		bool done = false;
+		// 		while (!done) {
+		// 			if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
+		// 		}
+		// 	}
+		// }
 		if(!vmb_err(m_gige_camera->GetFeatureByName( "Width", feat), ("Error getting the camera width" ))){
 			VmbInt64_t width;
 			if (!vmb_err(feat->GetValue(width), "Error getting width")) {
@@ -159,9 +159,10 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 VisionNode::~VisionNode(){
 	//sg: may need to close the cameras here not sure..
+	if(m_gige_camera != nullptr) {
+		m_gige_camera->StopContinuousImageAcquisition();
+	}
 	auto& m_vimba_sys = VimbaSystem::GetInstance();
-	m_gige_camera->StopContinuousImageAcquisition();
-	m_gige_camera->Close();
 	m_vimba_sys.Shutdown();
 }
 
