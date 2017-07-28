@@ -6,6 +6,7 @@
 **** TODO convert all the vision code to the same version of openCV (2 to make it compatible with libopenCV4tegra)
 **** TODO Make a unified install script
 **** TODO Have tasks/tutorials/something to do for new members
+**** TODO Develop requirements before design
 
 *** Lower Priority Fixes
 **** TODO Look into the firmware provided by Auvidea for the Jetson/j120 board
@@ -20,6 +21,7 @@
 **** TODO Make measurements to see how messed up AHRS gets from
 **** TODO CNN for vision
 **** TODO switch back to TIVA?
+**** TODO Add voltage/current logging to every rail
 **** TODO Output status to LEDS
 **** TODO Create obstacle course in simulation
 
