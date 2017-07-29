@@ -294,11 +294,15 @@ void VisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionli
 
 void VisionNode::findBlob(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	
-	BlobAction action = BlobAction(as);
-
+	BlobAction action = BlobAction();
+	ram_msgs::VisionNavFeedback feedback;
+	feedback.y_offset = 0;
+	
 	while(true){
 		ROS_ERROR("updating action");
-		action.updateAction(m_img);
+		feedback.x_offset = action.updateAction(m_img);
+		as->publishFeedback(feedback);
+		
 	}
 
 	as->setSucceeded();

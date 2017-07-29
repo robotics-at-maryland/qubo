@@ -13,10 +13,10 @@
 
 class BlobAction{
     public:
-    BlobAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+    BlobAction();
     ~BlobAction();
 
-    void updateAction(const cv::Mat cframe);
+    int updateAction(const cv::Mat cframe);
     std::vector<cv::KeyPoint> detectBuoy(cv::Mat cframe);
     protected:
 
