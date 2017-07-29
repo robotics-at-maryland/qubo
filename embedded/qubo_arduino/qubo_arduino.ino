@@ -36,7 +36,8 @@
 
 // __________________________________________________________________________________________
 
-#define LM35_PIN 0
+#define STARTUP_PIN 0
+#define LM35_PIN 1
 
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint8_t counter;
@@ -71,7 +72,7 @@ void setup() {
   sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
 
   // for lm35 https://playground.arduino.cc/Main/LM35HigherResolution
-  analogReference(INTERNAL);
+  //analogReference(INTERNAL);
 
   // Done setup, so send connected command
   //Serial.println(CONNECTED);
@@ -112,15 +113,16 @@ void thrusterCmd() {
 
   //Serial.println(THRUSTER_MIN);
   // Send back the first command
+  Serial.print("t");
   Serial.println(off);
 
 }
 
 void getStartupVoltage() {
-  float v = ina.getBusVoltage_V();
-  Serial.println(v);
+  int val = analogRead(STARTUP_PIN);
+  Serial.print("s");
+  Serial.println(val);
 }
-
 
 void thrustersNeutral() {
   for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
@@ -133,6 +135,7 @@ void thrustersNeutral() {
 void getDepth() {
   sensor.read();
   float depth = sensor.depth();
+  Serial.print("d");
   Serial.println(depth);
 }
 
@@ -153,6 +156,7 @@ void getTemp() {
   else {
     status = STATUS_OK;
   }
+  Serial.print("c");
   Serial.println(temp);
 }
 
@@ -169,7 +173,7 @@ void checkTemp() {
     status = STATUS_OK;
   }
   #ifdef DEBUG
-  Serial.println(temp);
+  //Serial.println(temp);
   #endif
 }
 
@@ -211,6 +215,7 @@ void loop() {
         #endif
         thrusterCmd();
         // print status after every loop
+        Serial.print("s");
         Serial.println(status);
       }
       else if ( prot[0] == 'd' ) {
@@ -292,11 +297,12 @@ void loop() {
   }
 
 
-
+  /*
   if ( counter % TEMP_UPDATE_RATE == 0 ) {
     checkTemp();
     counter = 0;
   }
+  */
 
 
 
