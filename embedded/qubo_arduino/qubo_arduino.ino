@@ -4,18 +4,19 @@
 
 #include <Wire.h>
 #include "MS5837.h"
-#include "PCA9685.h"
+/* #include "PCA9685.h" */
 #include "ADC121.h"
 #include "Adafruit_INA219.h"
+#include <Servo.h>
 
 #define BUFFER_SIZE 64 //may need to change
 #define NUM_THRUSTERS 8
 
-#define THRUSTER_NEUTRAL 1285
+#define THRUSTER_NEUTRAL 1520
 /// THRUSTER_NEUTRAL - 256
-#define THRUSTER_MIN 1029U
+#define THRUSTER_MIN 1000U
 // THRUSTER_NETURAL + 256
-#define THRUSTER_MAX 1541U
+#define THRUSTER_MAX 2000U
 
 // Time(ms) arduino waits without hearing from jetson before turning off thrusters
 #define ALIVE_TIMEOUT 5000
@@ -38,6 +39,8 @@
 
 #define STARTUP_PIN 0
 #define LM35_PIN 1
+#define LED_PIN 13
+#define LED_BLINK_LEN 500
 
 char buffer[BUFFER_SIZE]; //this is the buffer where we store incoming text from the computer
 uint8_t counter;
@@ -45,39 +48,49 @@ uint8_t status;
 uint16_t serialBufferPos;
 unsigned long alive; // keeps the current time
 boolean timedout = false; // if the arduino has timed out
-PCA9685 pca;
+/* PCA9685 pca; */
 MS5837 sensor;
 ADC121 adc121;
 Adafruit_INA219 ina;
+Servo esc[NUM_THRUSTERS];
+uint8_t esc_pins[] = {3,4,5,6,23,22,21,20};
+int led_state = LOW;
+unsigned long led_time;
 
 void setup() {
-  Serial.begin(115200);
-  serialBufferPos = 0;
+    Serial.begin(115200);
+    serialBufferPos = 0;
 
-  counter = 0;
-  status = STATUS_OK;
+    counter = 0;
+    status = STATUS_OK;
 
-  //configure the PCA
-  Wire.begin(); // Initiate the Wire library
+    //configure the PCA
+    Wire.begin(); // Initiate the Wire library
 
-  ina.begin();
+    ina.begin();
 
-  pca.init();
+    for(int i = 0; i < NUM_THRUSTERS; i++) {
+        esc[i].attach(esc_pins[i]);
+    }
+    /* pca.init(); */
 
-  pca.thrustersOff();
+    /* pca.thrustersOff(); */
 
-  // Depth sensor
-  sensor.init();
+    // Depth sensor
+    sensor.init();
 
-  sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
+    sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
 
-  // for lm35 https://playground.arduino.cc/Main/LM35HigherResolution
-  //analogReference(INTERNAL);
+    // for lm35 https://playground.arduino.cc/Main/LM35HigherResolution
+    //analogReference(INTERNAL);
 
-  // Done setup, so send connected command
-  //Serial.println(CONNECTED);
-  alive = millis();
-  delay(1);
+    led_time = millis() + LED_BLINK_LEN;
+    pinMode(LED_PIN, OUTPUT); 
+    /* digitalWrite(LED_PIN, HIGH); */
+    // Done setup, so send connected command
+    //Serial.println(CONNECTED);
+    alive = millis();
+    delay(1);
 }
 
 //processes and sends thrusters commands to the PCA
@@ -104,10 +117,10 @@ void thrusterCmd() {
 
     // If the msg isn't above or below acceptable, set it. otherwise send -1 back
     if ( off > THRUSTER_MIN && off < THRUSTER_MAX ) {
-      pca.thrusterSet(i, off);
+        esc[i].writeMicroseconds(off);
     }
     else {
-      off = -1;
+        off = -1;
     }
   }
 
@@ -126,10 +139,17 @@ void getStartupVoltage() {
 
 void thrustersNeutral() {
   for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
-    pca.thrusterSet(i, THRUSTER_NEUTRAL);
+      /* pca.thrusterSet(i, THRUSTER_NEUTRAL); */
+      esc[i].writeMicroseconds(THRUSTER_NEUTRAL);
   }
 }
 
+void thrustersOff() {
+    for ( int i = 0; i < NUM_THRUSTERS; i++ ) {
+        /* pca.thrusterSet(i, THRUSTER_NEUTRAL); */
+        esc[i].writeMicroseconds(0);
+    }
+}
 
 // Placeholder, needs to get depth from I2C, then println it to serial
 void getDepth() {
@@ -161,20 +181,20 @@ void getTemp() {
 }
 
 void checkTemp() {
-  int val = analogRead(LM35_PIN);
-  float temp = val / 9.31;
-  if ( temp >= TEMP_THRES ) {
-    status = STATUS_OVERHEAT;
-  }
-  else if ( temp >= TEMP_WARNING ) {
-    status = STATUS_OVERHEAT_WARNING;
-  }
-  else {
-    status = STATUS_OK;
-  }
-  #ifdef DEBUG
-  //Serial.println(temp);
-  #endif
+    int val = analogRead(LM35_PIN);
+    float temp = val / 9.31;
+    if ( temp >= TEMP_THRES ) {
+        status = STATUS_OVERHEAT;
+    }
+    else if ( temp >= TEMP_WARNING ) {
+        status = STATUS_OVERHEAT_WARNING;
+    }
+    else {
+        status = STATUS_OK;
+    }
+#ifdef DEBUG
+    //Serial.println(temp);
+#endif
 }
 
 
@@ -305,6 +325,11 @@ void loop() {
   */
 
 
+  if(millis() > led_time){
+      led_state = (led_state == HIGH) ? LOW : HIGH;
+      digitalWrite(LED_PIN, led_state);
+      led_time = millis() + LED_BLINK_LEN;
+  }
 
   counter += 1;
   delay(1);
