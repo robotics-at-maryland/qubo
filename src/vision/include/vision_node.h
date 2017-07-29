@@ -20,10 +20,12 @@
 #include "ros/ros.h"
 #include <ram_msgs/VisionNavAction.h>
 #include <actionlib/server/simple_action_server.h>
+#include <image_transport/image_transport.h>
 
 //message includes
 #include "std_msgs/String.h"
 #include  "ram_msgs/bool_bool.h"
+#include "sensor_msgs/Image.h"
 
 //our actions/tuner actions
 #include "buoy_action.h"
@@ -87,6 +89,7 @@ class VisionNode{
 
     cv::VideoCapture m_cap;
     cv::Mat m_img;
+
 
     cv::VideoWriter m_output_video;
 
