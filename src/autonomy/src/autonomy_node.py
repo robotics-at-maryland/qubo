@@ -73,7 +73,7 @@ if __name__ == '__main__':
     rospy.init_node('autonomy_node')
 
     qubo_namespace = '/qubo/'
-    
+
     #we publish commands
     roll_pub  = rospy.Publisher(qubo_namespace + "roll_cmd"  , Float64, queue_size = 10)
     pitch_pub = rospy.Publisher(qubo_namespace + "pitch_cmd" , Float64, queue_size = 10)
@@ -90,12 +90,31 @@ if __name__ == '__main__':
     rospy.Subscriber(qubo_namespace + "surge" , Float64, surge_callback)
     rospy.Subscriber(qubo_namespace + "sway"  , Float64, sway_callback  )
 
+    roll_target = rospy.Publisher(qubo_namespace + "roll_target"  , Float64, queue_size = 10)
+    pitch_target = rospy.Publisher(qubo_namespace + "pitch_target" , Float64, queue_size = 10)
+    yaw_target = rospy.Publisher(qubo_namespace + "yaw_target"   , Float64, queue_size = 10)
+    depth_target = rospy.Publisher(qubo_namespace + "depth_target" , Float64, queue_size = 10)
+    surge_target = rospy.Publisher(qubo_namespace + "surge_target" , Float64, queue_size = 10)
+    sway_target = rospy.Publisher(qubo_namespace + "sway_target"  , Float64, queue_size = 10)
+
     # go straight..
 
+    roll_hold = roll
+    pitch_hold = pitch
+    yaw_hold = yaw
+    sway_hold = sway
+
+
+    roll_target.publish(roll_hold)
+    pitch_target.publish(pitch_hold)
+    yaw_target.publish(yaw_hold)
+
+    depth_pub.publish(50)
     surge_pub.publish(50)
 
     call_action('gate_action')
-    
+
     rospy.spin()
+
 
 #    result = vision_client()
