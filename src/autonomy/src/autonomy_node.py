@@ -44,44 +44,20 @@ def feedback_callback(feedback):
 
 
 
-def follow_blob():
+def call_action(action_name):
     # Creates the SimpleActionClient, passing the type of the action
     # (VisionExampleAction) to the constructor.
 
     print "0"
-    ## !!! you'll need to change the action name here to test different actions
-    client = actionlib.SimpleActionClient('blob_action', ram_msgs.msg.VisionExampleAction)
+
+    client = actionlib.SimpleActionClient(action_name, ram_msgs.msg.VisionNavAction)
     print "1"
     # Waits until the action server has started up and started
     # listening for goals.
     print client.wait_for_server()
     print "2"
     # Creates a goal to send to the action server.
-    goal = ram_msgs.msg.VisionExampleGoal(test_goal = False)
-    print "3"
-    # Sends the goal to the action server.
-    client.send_goal(goal, feedback_cb = feedback_callback)
-    print "4"
-    # Waits for the server to finish performing the action.
-    client.wait_for_result()
-    print "5"
-    # Prints out the result of executing the action
-    return client.get_result()
-
-
-def buoy_client():
-    # Creates the SimpleActionClient, passing the type of the action
-    # (VisionExampleAction) to the constructor.
-    print "0"
-    ## !!! you'll need to change the action name here to test different actions
-    client = actionlib.SimpleActionClient('buoy_action', ram_msgs.msg.VisionExampleAction)
-    print "1"
-    # Waits until the action server has started up and started
-    # listening for goals.
-    print client.wait_for_server()
-    print "2"
-    # Creates a goal to send to the action server.
-    goal = ram_msgs.msg.VisionExampleGoal(test_goal = False)
+    goal = ram_msgs.msg.VisionNavGoal(test_goal = False)
     print "3"
     # Sends the goal to the action server.
     client.send_goal(goal, feedback_cb = feedback_callback)
@@ -114,12 +90,12 @@ if __name__ == '__main__':
     rospy.Subscriber(qubo_namespace + "surge" , Float64, surge_callback)
     rospy.Subscriber(qubo_namespace + "sway"  , Float64, sway_callback  )
 
-
-
     # go straight..
 
     surge_pub.publish(50)
 
+    call_action('gate_action')
+    
     rospy.spin()
 
 #    result = vision_client()

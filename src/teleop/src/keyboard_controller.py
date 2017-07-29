@@ -15,7 +15,7 @@ pygame.key.set_repeat(delay, interval)
 
 #really this should be passed in or something but for now if you want to change the name just do it here
 robot_namespace = "qubo/"
-effort = 128
+effort = 50
 
 num_thrusters = 8
 

@@ -7,6 +7,8 @@
 
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <ros/ros.h>
+
 
 class GateAction{
     public:

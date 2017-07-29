@@ -1,6 +1,6 @@
 #include "gate_action.h"
 
-#define FRAME_WIDTH 640
+#define FRAME_WIDTH 480
 
 using namespace cv;
 using namespace std;
@@ -23,24 +23,48 @@ GateAction::~GateAction(){};
 // we just return an int here, the vision node can handle all the action server nonsense, if anyone see's this they should convert the other stuff to this same model
 int GateAction::updateAction(const Mat cframe){
 
+	ROS_ERROR("1");
 
-//sgillen@20171021-11:10 will need to move this to it's own function I think
-Mat dst, cdst;
+	//sgillen@20171021-11:10 will need to move this to it's own function I think
+	Mat dst, cdst;
+	
+	GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
 
-GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
-
+	ROS_ERROR("2");
+	
 	Canny(dst, dst, m_canny_thresh, m_canny_thresh*3, 3);
 
-	cvtColor(dst, cdst, CV_GRAY2BGR);
-	vector<Vec4i> lines;
+	ROS_ERROR("3");
 
+	
+	cvtColor(dst, cdst, CV_GRAY2BGR);
+	vector<Vec2f> lines;
+
+	ROS_ERROR("5");
+
+	//	imshow("window" ,dst);
+	//	waitKey();
+	
 	HoughLines(dst, lines, 1, CV_PI/180, m_hough_thresh, 50, 10 );
 
 
+	
+	ROS_ERROR("6");
+	
+	
 	vector<int> xbin_count; //TODO better name
 
+	for(int i = 0; i < m_num_bins; i++){
+		xbin_count.push_back(0);
+	}
+
+	
 	int bin_size = FRAME_WIDTH/m_num_bins;
 	
+	
+	ROS_ERROR("7");
+	
+
 	cout << "bin size = " << bin_size << endl; 
 		
 	for( size_t i = 0; i < lines.size();i++) {
@@ -53,18 +77,20 @@ GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
 			double x0 = a*rho, y0 = b*rho;
 
 			
-			cout << "x0 =  " << x0 << "  num bins = " << m_num_bins <<  " bin = " << (int) (x0/bin_size)+1 << endl;
+			cout << "x0 =  " << x0 << "  num bins = " << m_num_bins <<  " bin = " << (int) (x0/bin_size) << endl;
+			
+			
 			int bin = (int) x0/bin_size;
+			
+			
 			if(bin > 0){
-				
+				ROS_ERROR("HERE");
 				xbin_count[(int) ((x0/bin_size))]++;
 				
-				pt1.x = cvRound(x0 + 1000*(-b));
-				pt1.y = cvRound(y0 + 1000*(a));
-				pt2.x = cvRound(x0 - 1000*(-b));
-				pt2.y = cvRound(y0 - 1000*(a));
 														
 			}
+
+			ROS_ERROR("HERE@!!!ASDAS");
 		}
 		
 	}
@@ -78,7 +104,9 @@ GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
 			max_i = i;
 		}
 	}
-	
+
+
+	ROS_ERROR("HERE!");
 	int max2 = 0;
 	int max2_i = 0;
 
@@ -91,6 +119,8 @@ GaussianBlur(cframe, dst, Size( m_kernel_size, m_kernel_size ), 0, 0 );
 		}
 	}
 	
+	ROS_ERROR("AHAHAHAH");
+
 	cout << "max1 - " << max_i << endl;
 	cout << "max2 - " << max2_i << endl;
 

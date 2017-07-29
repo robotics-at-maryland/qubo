@@ -4,9 +4,7 @@ using namespace cv;
 using namespace std;
 
 
-BlobAction::BlobAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
-
-	m_as = as;
+BlobAction::BlobAction(){
 
 	// Setup SimpleBlobDetector parameters.
 	SimpleBlobDetector::Params params;
@@ -24,8 +22,8 @@ BlobAction::BlobAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> 
 BlobAction::~BlobAction(){}
 
 
-
-void BlobAction::updateAction(const Mat cframe) {
+//might want to return a point evnetually
+int BlobAction::updateAction(const Mat cframe) {
 	//create Background Subtractor objects
 	vector<KeyPoint> keypoints; // Storage for blobs
 
@@ -51,8 +49,9 @@ void BlobAction::updateAction(const Mat cframe) {
 		feedback.y_offset = cframe.cols/2 - center.y;
 	}
 	else{ //this is a hack
-		feedback.x_offset = -9999;
+		feedback.x_offset = 0;
 	}
+
+	return center.x;
 	
-	m_as->publishFeedback(feedback);	
 }
