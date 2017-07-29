@@ -36,4 +36,6 @@
 
 ** Mechanical
 
-??
+**** TODO Make it easier to close system quickly
+**** TODO prevent wires from binding in tube (if we use them)
+
