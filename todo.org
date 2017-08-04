@@ -21,6 +21,7 @@
 **** TODO Make measurements to see how messed up AHRS gets from
 **** TODO CNN for vision
 **** TODO switch back to TIVA?
+**** TODO Use DMA for Tiva UART
 **** TODO Add voltage/current logging to every rail
 **** TODO Output status to LEDS
 **** TODO Create obstacle course in simulation
@@ -33,6 +34,7 @@
 ** Electronics
 
 **** TODO Modular boards
+**** TODO External Power and safe switch
 
 ** Mechanical
 
