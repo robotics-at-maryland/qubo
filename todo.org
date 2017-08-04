@@ -6,6 +6,7 @@
 **** TODO convert all the vision code to the same version of openCV (2 to make it compatible with libopenCV4tegra)
 **** TODO Make a unified install script
 **** TODO Have tasks/tutorials/something to do for new members
+**** TODO Finish the Wiki
 **** TODO Develop requirements before design
 
 *** Lower Priority Fixes
