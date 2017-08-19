@@ -58,3 +58,6 @@ fi
 
 # Finally, run rosdep to install all the dependencies for our packages.
 rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
+
+# Add no-confirm to apt-get
+# add gazebo install for req msgs
