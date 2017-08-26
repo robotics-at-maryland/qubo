@@ -30,23 +30,20 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 
 	# Finally, update our package lists and then install ROS.
 	apt-get update
-	apt-get install ros-kinetic-desktop
+	apt-get -y install ros-kinetic-desktop
 fi
 
 # Installing additional packages.
-apt-get install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+apt-get -y install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
-apt-get install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
+apt-get -y install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
 
-apt-get install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
+apt-get -y install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
 
+cp "$HOME/.bashrc" "$HOME/.bashrc_old_r@m"
 
 # Setup environment variables for ROS.
-read -p "Do you want to add \"source /opt/ros/kinetic/setup.bash\" to your .bashrc?i [Y/n]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-	echo "source /opt/ros/kinetic/setup.bash" >> "$HOME/.bashrc"
-fi
+echo "source /opt/ros/kinetic/setup.bash" >> "$HOME/.bashrc"
 
 source "$HOME/.bashrc"
 
@@ -59,5 +56,11 @@ fi
 # Finally, run rosdep to install all the dependencies for our packages.
 rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
 
-# Add no-confirm to apt-get
-# add gazebo install for req msgs
+LOC=$(dirname $0)
+bash $LOC/install_uuv_sim.bash
+bash $LOC/install_vimba.bash
+
+echo " --------------- INSTALL FINISHED ---------------"
+echo "The required sources/exports were added to your .bashrc"
+echo "the old file was saved to ~/.bashrc_old_r@m"
+echo " ------------------------------------------------"
