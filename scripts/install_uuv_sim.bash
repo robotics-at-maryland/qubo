@@ -8,8 +8,8 @@ mkdir -p catkin_ws/src/
 cd catkin_ws/src/
 catkin_init_workspace
 
-sudo apt install python-pip
-sudo pip install wstool
+apt -y install python-pip
+pip install wstool
 
 wstool init
 
@@ -32,5 +32,4 @@ git checkout 9078b8890efb9ad4aa18bb1407e5605883d0d272
 #git checkout master
 
 cd ~/catkin_ws
-catkin_make
 catkin_make install
