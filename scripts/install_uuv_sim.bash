@@ -4,10 +4,14 @@
 
 cd ~/
 
-mkdir catkin_ws/
-mkdir catkin_ws/src/
-
+mkdir -p catkin_ws/src/
 cd catkin_ws/src/
+catkin_init_workspace
+
+sudo apt install python-pip
+sudo pip install wstool
+
+wstool init
 
 git clone https://github.com/uuvsimulator/uuv_simulator
 
@@ -23,16 +27,10 @@ echo "export GAZEBO_PLUGIN_PATH=${GAZEBO_PREFIX}/lib:${GAZEBO_PREFIX}/lib/x86_64
 
 source ~/.bashrc
 
-
-sudo apt install python-pip
-sudo pip install wstool
-
-wstool init
-
 cd uuv_simulator
 git checkout 9078b8890efb9ad4aa18bb1407e5605883d0d272
 #git checkout master
 
-cd ../../
+cd ~/catkin_ws
 catkin_make
 catkin_make install
