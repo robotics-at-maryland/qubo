@@ -1,15 +1,20 @@
 #!/bin/bash
 
-#clone the uuv_simulator repo
+if [$# -eq 0 ]; then
+	read -s -p "Enter password: " PASS
+else
+	PASS=$1
+fi
 
+#clone the uuv_simulator repo
 cd ~/
 
 mkdir -p catkin_ws/src/
 cd catkin_ws/src/
 catkin_init_workspace
 
-apt -y install python-pip
-pip install wstool
+echo $PASS | sudo apt -y install python-pip
+echo $PASS | sudo pip install wstool
 
 wstool init
 
