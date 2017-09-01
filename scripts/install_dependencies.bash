@@ -18,22 +18,22 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 
 	# Echo the entry into a new sources list file.
 	# This will also overwrite any already existing file.
-	echo $PASS | sudo sh -c "echo $ROS_SRC_ENTRY > $ROS_SRC_LIST"
+	echo $PASS | sudo -S sh -c "echo $ROS_SRC_ENTRY > $ROS_SRC_LIST"
 
 	# Get the ROS key and add it to apt.
 	wget 'https://raw.githubusercontent.com/ros/rosdistro/master/ros.key' -O - | apt-key add -
 
 	# Finally, update our package lists and then install ROS.
-	echo $PASS | sudo apt-get update
-	echo $PASS | sudo apt-get -y install ros-kinetic-desktop
+	echo $PASS | sudo -S apt-get update
+	echo $PASS | sudo -S apt-get -y install ros-kinetic-desktop
 fi
 
 # Installing additional packages.
-echo $PASS | sudo apt-get -y install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+echo $PASS | sudo -S apt-get -y install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
-echo $PASS | sudo apt-get -y install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
+echo $PASS | sudo -S apt-get -y install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
 
-echo $PASS | sudo apt-get -y install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
+echo $PASS | sudo -S apt-get -y install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
 
 cp "$HOME/.bashrc" "$HOME/.bashrc_old_r@m"
 
@@ -44,17 +44,17 @@ source "$HOME/.bashrc"
 
 # Initialize rosdep if it is not already initialized.
 if [ ! -d /etc/ros/rosdep/ ]; then
-	echo $PASS | sudo rosdep init
+	echo $PASS | sudo -S rosdep init
 	rosdep update
 fi
 
 # Finally, run rosdep to install all the dependencies for our packages.
-echo $PASS | sudo rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
+echo $PASS | sudo -S rosdep install -y -r --reinstall --from-paths $(dirname $0)/../src --rosdistro kinetic
 
 LOC=$(dirname $0)
 bash $LOC/install_uuv_sim.bash $PASS
-# Vimba install needs to be entirely sudo currently
-echo $PASS | sudo bash $LOC/install_vimba.bash
+# Vimba install needs to be entirely sudo -S currently
+echo $PASS | sudo -S bash $LOC/install_vimba.bash
 
 echo " --------------- INSTALL FINISHED ---------------"
 echo "The required sources/exports were added to your .bashrc"
