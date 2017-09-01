@@ -13,7 +13,7 @@ mkdir -p catkin_ws/src/
 cd catkin_ws/src/
 catkin_init_workspace
 
-echo $PASS | sudo -S apt -y install python-pip
+echo $PASS | sudo -S apt -y --allow-unauthenticated install python-pip
 echo $PASS | sudo -S pip install wstool
 
 wstool init

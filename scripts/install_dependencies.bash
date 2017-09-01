@@ -25,15 +25,15 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 
 	# Finally, update our package lists and then install ROS.
 	echo $PASS | sudo -S apt-get update
-	echo $PASS | sudo -S apt-get -y install ros-kinetic-desktop
+	echo $PASS | sudo -S apt-get -y --allow-unauthenticated install ros-kinetic-desktop
 fi
 
 # Installing additional packages.
-echo $PASS | sudo -S apt-get -y install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+echo $PASS | sudo -S apt-get -y --allow-unauthenticated install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
-echo $PASS | sudo -S apt-get -y install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
+echo $PASS | sudo -S apt-get -y --allow-unauthenticated install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
 
-echo $PASS | sudo -S apt-get -y install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
+echo $PASS | sudo -S apt-get -y --allow-unauthenticated install ros-kinetic-gazebo-msgs ros-kinetic-gazebo-plugins ros-kinetic-gazebo-ros ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-effort-controllers ros-kinetic-image-pipeline ros-kinetic-image-common ros-kinetic-perception ros-kinetic-perception-pcl ros-kinetic-robot-state-publisher ros-kinetic-ros-base ros-kinetic-viz python-wstool python-catkin-tools python-catkin-lint ros-kinetic-hector-localization ros-kinetic-joy ros-kinetic-joy-teleop libopencv-dev protobuf-compiler protobuf-c-compiler ros-kinetic-video-stream-opencv
 
 cp "$HOME/.bashrc" "$HOME/.bashrc_old_r@m"
 
