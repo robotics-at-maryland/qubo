@@ -36,4 +36,5 @@ git checkout 9078b8890efb9ad4aa18bb1407e5605883d0d272
 #git checkout master
 
 cd ~/catkin_ws
+catkin_make
 catkin_make install
