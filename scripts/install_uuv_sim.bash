@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [$# -eq 0 ]; then
+if [ $# -eq 0 ]; then
 	read -s -p "Enter password: " PASS
 else
 	PASS=$1
