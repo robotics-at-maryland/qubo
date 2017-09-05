@@ -50,7 +50,7 @@ case $ARCH in
 		exit 1;;
 esac
 
-mv * $LIB_DIR
+cp -r ./* $LIB_DIR
 
 cd "$INSTALL_DIR/Vimba_2_1/VimbaImageTransform/DynamicLib" || exit 1
 
@@ -70,7 +70,7 @@ case $ARCH in
 		exit 1;;
 esac
 
-mv * $LIB_DIR
+cp -r ./* $LIB_DIR
 echo "Libraries installed"
 
 
@@ -78,16 +78,17 @@ cd "../../" || exit 1
 
 echo "Installing header files..."
 
+cd "../VimbaCPP"
 mkdir -p "$INC_DIR/VimbaCPP/Include"
-mv "Include" "$INC_DIR/VimbaCPP"
+cp -r "Include" "$INC_DIR/VimbaCPP"
 
 cd "../VimbaC" || exit 1
 mkdir -p "$INC_DIR/VimbaC/Include"
-mv "Include" "$INC_DIR/VimbaC"
+cp -r "Include" "$INC_DIR/VimbaC"
 
 cd "../VimbaImageTransform" || exit 1
 mkdir -p "$INC_DIR/VimbaImageTransform/Include"
-mv "Include" "$INC_DIR/VimbaImageTransform"
+cp -r "Include" "$INC_DIR/VimbaImageTransform"
 
 echo "Headers installed"
 

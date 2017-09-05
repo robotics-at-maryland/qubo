@@ -102,14 +102,14 @@ if __name__ == '__main__':
     roll_hold = roll
     pitch_hold = pitch
     yaw_hold = yaw
-    sway_hold = sway
 
+    rospy.sleep(10.)
 
     roll_target.publish(roll_hold)
     pitch_target.publish(pitch_hold)
     yaw_target.publish(yaw_hold)
 
-    depth_pub.publish(50)
+    depth_pub.publish(20)
     surge_pub.publish(50)
 
     call_action('gate_action')
