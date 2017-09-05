@@ -78,6 +78,7 @@ cd "../../" || exit 1
 
 echo "Installing header files..."
 
+cd "VimbaCPP"
 mkdir -p "$INC_DIR/VimbaCPP/Include"
 cp -r "Include" "$INC_DIR/VimbaCPP"
 
