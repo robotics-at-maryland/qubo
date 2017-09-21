@@ -77,7 +77,7 @@
 #define configMAX_TASK_NAME_LEN             ( 12 )
 #define configUSE_TRACE_FACILITY            0
 #define configUSE_16_BIT_TICKS              0
-#define configIDLE_SHOULD_YIELD             0
+#define configIDLE_SHOULD_YIELD             1
 #define configUSE_CO_ROUTINES               0
 #define configUSE_MUTEXES                   1
 #define configUSE_RECURSIVE_MUTEXES         1
@@ -104,5 +104,12 @@ to exclude the API function. */
  */
 #define configKERNEL_INTERRUPT_PRIORITY         ( 7 << 5 )    /* Priority 7, or 0xE0 as only the top three bits are implemented.  This is the lowest priority. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY     ( 5 << 5 )  /* Priority 5, or 0xA0 as only the top three bits are implemented. */
+
+/* I added this so we can tell when something isn't configured correctly
+*  a lot of the FreeRTOS libraries call this, if it's defined, and it'll let
+*  us know if something gets misconfigured.  For the actual robot build,
+*  disable this.  - Jeremy
+*/
+/* #define configASSERT( x ) if (( x ) == 0) { taskDISABLE_INTERRUPTS(); for(;;);} */
 
 #endif /* FREERTOS_CONFIG_H */
