@@ -146,7 +146,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     IntDefaultHandler,                      // Hibernate
-    USB0DeviceIntHandler,                   // USB0
+    IntDefaultHandler,                   // USB0
     IntDefaultHandler,                      // PWM Generator 3
     IntDefaultHandler,                      // uDMA Software Transfer
     IntDefaultHandler,                      // uDMA Error
