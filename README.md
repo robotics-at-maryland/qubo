@@ -2,6 +2,8 @@
 
 ## Setup Instructions
 
+**Check out our wiki to get started:** <https://github.com/robotics-at-maryland/qubo/wiki>
+
 Project QUBO currently only supports Ubuntu 16.04.  Any other platforms may not (and probably will not) work correctly.
 
 ### Compilation
