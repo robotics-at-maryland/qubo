@@ -28,8 +28,7 @@ include_directories(
   drivers/dvl/include
   drivers/qscu/include
   drivers/qubobus/include
-  ahrs/include
-  dvl/include
+
   include
 
   )
@@ -86,6 +85,12 @@ set(QSCU_CONTROL_NODE_SRC_FILES
   drivers/qscu/src/QSCU.cpp
   )
 
+set(QSCU_CONTROL_NODE_SRC_FILES
+  drivers/qscu/src/qscu_node.cpp
+  drivers/qscu/src/qscu_node_main.cpp
+  drivers/qscu/src/QSCU.cpp
+  )
+
 ##sg: This does the same as set but it allows us to match everything in the
 #source directory
 file(GLOB QUBOBUS_LIB_FILES
@@ -136,7 +141,6 @@ target_link_libraries(qscu qubobus)
 add_executable(qscu_node ${QSCU_CONTROL_NODE_SRC_FILES})
 target_link_libraries(qscu_node qubobus ${catkin_LIBRARIES})
 add_dependencies(qscu_node ram_msgs_generate_messages_cpp)
-
 
 # catkin_install_python(PROGRAMS src/arduino_node.py
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
