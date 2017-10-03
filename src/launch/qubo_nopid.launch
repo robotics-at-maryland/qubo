@@ -1,0 +1,14 @@
+<!-- this will launch all the things -->
+
+<launch>
+
+  <group>
+  <!-- best way I could find so that we actually pass this argument, still don't love it though -->
+
+  <node name="arduino_node" pkg="vl_qubo" type="arduino_node.py" />
+  
+  <!-- node name="autonomy_node" pkg="autonomy" type="autonomy_node.py" / -->
+
+  </group>
+</launch>
+

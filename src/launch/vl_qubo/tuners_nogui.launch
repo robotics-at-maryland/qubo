@@ -1,0 +1,27 @@
+<!-- Launches Gazebo with a basic Qubo robot spawned in the empty underwater world also spawns a thruster tranlator node. -->
+<launch>
+
+      <!-- spawn the depth and yaw controllers -->
+    <node name="qubo_depth_controller" pkg="controls" type="pid_controller" args="depth 100" >
+      <param name="kp" value="2.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="128.0" />
+      <param name="lower_limit" value="-128.0" />
+      <param name="windup_limit" value="5.0" />
+      <param name="buffer_size" value ="10" />
+    </node>
+ 
+    
+    <node name="qubo_yaw_controller" pkg="controls" type="pid_controller" args="yaw 100" >
+      <param name="kp" value="8.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="128.0" />
+      <param name="lower_limit" value="-128.0" />
+      <param name="windup_limit" value="128.0" />
+      <param name="unwind_angle" value="true" />
+    </node>
+
+    
+</launch>
