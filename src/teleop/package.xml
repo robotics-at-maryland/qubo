@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>teleop</name>
+  <version>0.1.0</version>
+  <description>A package to read the joystick our AUV's use for manual control </description>
+  <author email="software@ram.umd.edu">Robotics @ Maryland</author>
+  <maintainer email="software@ram.umd.edu">Robotics @ Maryland</maintainer>
+
+  <license>GPL</license>
+
+  <url>http://ram.umd.edu</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <build_depend>ram_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+
+
+  <run_depend>ram_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+ 
+
+</package>

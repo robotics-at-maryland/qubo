@@ -1,0 +1,11 @@
+obj/
+*.o
+*.bin
+*.elf
+*~
+*.d
+*.a
+start_openocd.sh
+*GTAGS
+*GRTAGS
+*GPATH

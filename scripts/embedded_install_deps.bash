@@ -7,6 +7,14 @@ flasher_url="https://github.com/utzig/lm4tools.git"
 compiler="/opt/arm-none-eabi/"
 flasher="/opt/lm4tools/"
 
+arch=`uname -m|grep "x86_64"`
+# if machine is 64 bit
+if [ ! -z "$arch" ]; then
+	echo "Your machine is 64 bit, need to install 32 bit multiarch"
+	sudo dpkg --add-architecture i386
+	sudo apt update
+	sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386
+fi
 
 echo "Compiler install path? Enter for default: /opt/arm-none-eabi/"
 read -e compiler_input

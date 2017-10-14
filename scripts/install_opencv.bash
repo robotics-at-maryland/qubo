@@ -10,7 +10,10 @@ SOURCE_DIR=$HOME/src
 INSTALL_DIR=/usr/local
 
 # clone OpenCV to /opt/opencv
-git clone -b '3.2.0' --single-branch --depth 1 https://github.com/opencv/opencv.git $SOURCE_DIR/opencv
+git clone -b '2.4.13.2' --single-branch --depth 1 https://github.com/opencv/opencv.git $SOURCE_DIR/opencv
+
+# clone OpenCV's extra modules
+# git clone -b '3.2.0' --single-branch --depth 1 https://github.com/opencv/opencv_contrib.git $SOURCE_DIR/opencv_contrib
 
 # Add universe if it isn't already there
 if ! grep -q "^deb .*universe" /etc/apt/sources.list /etc/apt/sources.list.d/*; then
@@ -26,7 +29,7 @@ apt install --assume-yes libgtk-3-dev libdc1394-22 libdc1394-22-dev libjpeg-dev 
 # create build dir
 mkdir $SOURCE_DIR/opencv/build
 cd $SOURCE_DIR/opencv/build
-
+set -x
 # Detect if there's a card mounted, then build
 # Most of these flags were pulled from OpenCV's install guide
 if [ -f /etc/nv_tegra_release ]; then
@@ -34,6 +37,7 @@ if [ -f /etc/nv_tegra_release ]; then
 	cmake \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+		# -D OPENCV_EXTRA_MODULES_PATH=$SOURCE_DIR/opencv_contrib/modules \
 		-D BUILD_PNG=OFF \
 		-D BUILD_TIFF=OFF \
 		-D BUILD_TBB=OFF \
@@ -69,7 +73,7 @@ elif [ -f /etc/nvidia0 ]; then
 	# We're not the Jetson, but there's a nvidia card
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR  `# -D OPENCV_EXTRA_MODULES_PATH=$SOURCE_DIR/opencv_contrib/modules` \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_FFMPEG=ON \
@@ -86,19 +90,22 @@ elif [ -f /etc/nvidia0 ]; then
 		-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
 		../
 
-	make -j $(($(nproc)))
+	make -j $(($(nproc) + 1))
 
 else
 	# Not the Jetson, and no GPUs
 	cmake \
 		-D CMAKE_BUILD_TYPE=RELEASE \
 		-D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+		# -D OPENCV_EXTRA_MODULES_PATH=$SOURCE_DIR/opencv_contrib/modules \
 		-D BUILD_EXAMPLES=ON \
 		-D BUILD_opencv_python3=ON \
 		-D WITH_GTK=ON \
 		-D WITH_FFMPEG=ON \
 		-D INSTALL_C_EXAMPLES=ON \
 		../
+
+	make -j $(($(nproc) + 1))
 fi
 
 	# Install it

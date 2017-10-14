@@ -5,20 +5,25 @@ project(controls)
 # Catkin Setup ###############
 ##############################
 
+#find_package(catkin REQUIRED COMPONENTS roscpp)
+
 find_package(catkin
+
   REQUIRED COMPONENTS
   ram_msgs
-  roscpp
+
   tf2_ros
   dynamic_reconfigure
+  roscpp
 )
 
-find_package(Eigen3)
+#find_package(Eigen3)
 
 #find_package(catkin REQUIRED dynamic_reconfigure)
+
 generate_dynamic_reconfigure_options(
-  cfg/pid.cfg
-)
+   cfg/pid.cfg
+ )
 
 
 catkin_package(
@@ -28,7 +33,7 @@ catkin_package(
   cmake_modules
   roscpp
   ram_msgs
-  DEPENDS EIGEN3
+ # DEPENDS EIGEN3
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -43,10 +48,12 @@ include_directories(
 )
 
 
+
 set(PID_CONTROLLER_FILES
   src/pid_controller.cpp
   src/pid_main.cpp
   )
+
 
 ##############################
 # Add Executables ############

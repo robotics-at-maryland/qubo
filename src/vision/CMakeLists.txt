@@ -1,8 +1,25 @@
+# There's an issue with the most recent opencv2 (2.4.13) where it tries to link against opencv_dep_cudart
+# This fixes that
+# It doesn't work on the jetson...
+set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
+
 cmake_minimum_required(VERSION 2.8.3)
 project(vision)
 
-
+# set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
+# find_package(OpenCV 2.4 REQUIRED
+#   #  NO_MODULE
+#   #  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
+#   # NO_DEFAULT_PATH
+#   # COMPONENTS core imgproc highgui opencv_gpu video
+#   )
+# set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
+
+# message(${OpenCV_INCLUDE_DIRS})
+# message(${OpenCV_LIBRARIES})
+# message(${OpenCV_LIBS})
+# message(${OpenCV_DIR})
 
 find_package(catkin
   REQUIRED COMPONENTS
@@ -21,37 +38,31 @@ find_package(catkin
 
   image_transport
 
+  # comment this out to use OpenCV2, cv_bridge pulls in OpenCV3 from ROS
   cv_bridge
 
 
-)
+  )
 
-#we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
-find_package(OpenCV 3 REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-
-#set(VIMBA_INCLUDE_DIRS "/home/sgillen/Vimba_2_1/VimbaCPP/Include/")
-#set(VIMBA_LIBRARY      "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/libVimbaCPP.so")
 
 #include_directories("${MYANALYSE_INCLUDE_DIRS}")
 #target_link_libraries(myapplication "${MYANALYSE_LIBRARY}")
 
-
-#find_library(VimbaCPP NAMES libVimbaCPP.so PATHS "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/")
-#add_library( VimbaCPP SHARED IMPORTED GLOBAL )
-
-#set_target_properties(VimbaCPP PROPERTIES IMPORTED_LOCATION "/home/sgillen/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit")
-
+find_package(OpenCV 3 REQUIRED)
+message(${OpenCV_DIR})
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
 
 #Stuff other packages that depend on us need
 catkin_package(
-   INCLUDE_DIRS
-   LIBRARIES ${PROJECT_NAME}
-   CATKIN_DEPENDS roscpp roslib actionlib_msgs
-)
+  INCLUDE_DIRS
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp roslib actionlib_msgs
+  )
 
+#installed to /usr/local/ by the install script
+set(Vimba_LIBRARIES VimbaCPP VimbaC VimbaImageTransform)
 
 
 ##############################
@@ -59,30 +70,29 @@ catkin_package(
 ##############################
 
 include_directories(
-  ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
   ${VISP_INCLUDE_DIRS}
   include/
 
-#  ${VIMBA_INCLUDE_DIRS}
-  #${HOME}/Vimba_2_1/VimbaCPP/Include/
+  #  ${VIMBA_INCLUDE_DIRS}
 
   )
 
 set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
-  
+
   src/actions/buoy_action.cpp
   src/actions/gate_action.cpp
-
+  src/actions/blob_action.cpp
   )
 
 
 set(SIM_VISION_SRC_FILES
   src/sim_main.cpp
   src/sim_vision_node.cpp
-  
+
   src/actions/buoy_action.cpp
   src/actions/gate_action.cpp
   )
@@ -131,12 +141,12 @@ set(BLOB_FILES
   )
 
 set(EM_FILES
- src/prototypes/em.cpp
- )
+  src/prototypes/em.cpp
+  )
 
 set(GFIT_FILES
   src/prototypes/g_fit.cpp
- )
+  )
 
 set(MBT_FILES
   src/prototypes/mbt.cpp
@@ -152,23 +162,21 @@ set(CASCADE_TEST
 # Add Executables ############
 ##############################
 
-#LINK_DIRECTORIES(${HOME}/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit/)
-
 add_executable(vision_node ${VISION_SRC_FILES})
-target_link_libraries(vision_node ${catkin_LIBRARIES})
 target_link_libraries(vision_node ${OpenCV_LIBRARIES})
+target_link_libraries(vision_node ${catkin_LIBRARIES})
+target_link_libraries(vision_node ${Vimba_LIBRARIES})
 add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
+# add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
+# target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
+# target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
+# add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
-add_executable(gpu_vision_node ${GPU_VISION_SRC_FILES})
-target_link_libraries(gpu_vision_node ${catkin_LIBRARIES})
-target_link_libraries(gpu_vision_node ${OpenCV_LIBRARIES})
-add_dependencies(gpu_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
-
-add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
-target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
-target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
-add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
+# add_executable(sim_vision_node ${SIM_VISION_SRC_FILES})
+# target_link_libraries(sim_vision_node ${OpenCV_LIBRARIES})
+# target_link_libraries(sim_vision_node ${catkin_LIBRARIES})
+# add_dependencies(sim_vision_node ram_msgs_gencpp) #We need these built before we try to build this package
 
 
 #tuners
@@ -185,31 +193,31 @@ add_executable(buoy_tuner ${BUOY_TUNER_FILES})
 target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
 
 
-##below are all basically prototypes
-add_executable(gate_detector ${GATE_FILES})
-target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+# ##below are all basically prototypes
+# add_executable(gate_detector ${GATE_FILES})
+# target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
 
 
-add_executable(segment_test ${SEGMENT_FILES})
-target_link_libraries(segment_test ${OpenCV_LIBRARIES})
+# add_executable(segment_test ${SEGMENT_FILES})
+# target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 
-add_executable(canny_test ${EDGE_FILES})
-target_link_libraries(canny_test ${OpenCV_LIBRARIES})
+# add_executable(canny_test ${EDGE_FILES})
+# target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-add_executable(blob_test ${BLOB_FILES})
-target_link_libraries(blob_test ${OpenCV_LIBRARIES})
+# add_executable(blob_test ${BLOB_FILES})
+# target_link_libraries(blob_test ${OpenCV_LIBRARIES})
 
 # add_executable(em_test ${EM_FILES})
 # target_link_libraries(em_test ${OpenCV_LIBRARIES})
 
-add_executable(gfit_test ${GFIT_FILES})
-target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+# add_executable(gfit_test ${GFIT_FILES})
+# target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
 
-# add_executable(mbt_test ${MBT_FILES})
-# target_link_libraries(mbt_test ${VISP_LIBRARIES})
+# # add_executable(mbt_test ${MBT_FILES})
+# # target_link_libraries(mbt_test ${VISP_LIBRARIES})
 
-add_executable(cascade_test ${CASCADE_TEST})
-target_link_libraries(cascade_test ${OpenCV_LIBS})
+# add_executable(cascade_test ${CASCADE_TEST})
+# target_link_libraries(cascade_test ${OpenCV_LIBRARIES})
 
 
 

@@ -45,7 +45,10 @@ add_message_files(
 
     #Qubo specific messages
     DVL_qubo.msg
-)
+
+    #qubobus messages
+    Status.msg
+    )
 
 ##############################
 # Services##########
