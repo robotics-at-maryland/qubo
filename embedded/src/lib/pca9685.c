@@ -26,13 +26,15 @@
 
 void pca9685_begin(uint32_t device, uint8_t addr) {
   _i2caddr = addr;
-  pca9685_reset(device);
+  //pca9685_reset(device);
+  //uint8_t buffer[] = {0x01};
+  //writeI2C(device, _i2caddr, buffer, 1);//Trying this...
 }
 
 
 void pca9685_reset(uint32_t device) {
-  uint8_t buffer[2] = {PCA9685_MODE1, 0x0};
-  writeI2C(device, _i2caddr, buffer, 2);
+  uint8_t buffer[3] = {0, PCA9685_MODE1, 0x0};
+  writeI2C(device, _i2caddr, buffer, 3);
 }
 
 void pca9685_setPWMFreq(uint32_t device, float freq) {
@@ -54,18 +56,18 @@ void pca9685_setPWMFreq(uint32_t device, float freq) {
 
   readI2C(device, _i2caddr, PCA9685_MODE1, &(buffer[5]), 1);
 
-  buffer[1] = (buffer[5] & 0x7F) | 0x10; // sleep
+  buffer[1] = (buffer[5] & 0x7F) | 0x21; // sleep
   writeI2C(device, _i2caddr, buffer, 6);
 
-  vTaskDelay(5);
-  buffer[1] = buffer[5] | 0xa1;
-  writeI2C(device, _i2caddr, buffer, 2); //  This sets the MODE1 register to turn on auto increment.
+  //vTaskDelay(5);
+  //buffer[1] = buffer[5] | 0xa1;
+  //writeI2C(device, _i2caddr, buffer, 2); //  This sets the MODE1 register to turn on auto increment.
 }
 
 void pca9685_setPWM(uint32_t device, uint8_t num, uint16_t on, uint16_t off) {
 
   #ifdef DEBUG
-  UARTprintf("pca9685: Setting PWM %d -> %d", on, off);
+  UARTprintf("pca9685: Setting PWM %d -> %d\n", on, off);
   #endif
 
   uint8_t buffer[5] = {LED0_ON_L+4*num, on, on>>8, off, off>>8};
