@@ -1,0 +1,16 @@
+<launch>
+   2 
+   3   <group ns="turtlesim1">
+   4     <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+   5   </group>
+   6 
+   7   <group ns="turtlesim2">
+   8     <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+   9   </group>
+  10 
+  11   <node pkg="turtlesim" name="mimic" type="mimic">
+  12     <remap from="input" to="turtlesim1/turtle1"/>
+  13     <remap from="output" to="turtlesim2/turtle1"/>
+  14   </node>
+  15 
+  16 </launch>
