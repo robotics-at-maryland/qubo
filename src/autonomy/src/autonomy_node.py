@@ -115,10 +115,14 @@ if __name__ == '__main__':
 
     #_pub commands output constant thrust in arbitrary units
     #_target commands attempt to match target depth or angle
+
+    #pitch_target: + is pitch-up moment in radians, 0 is neutral position [pi,pi]
+    #roll_target: + is roll with right side dipping (maybe - not sure), 0 is neutral position [-pi,pi]
+    #yaw_target: + is turn left, 0 is neutral position [-pi,pi]
     
     #depth_pub.publish(20)
     #surge_pub.publish(50)
-    depth_target.publish(5)
+    roll_target.publish(1)
     
     call_action('gate_action')
     
