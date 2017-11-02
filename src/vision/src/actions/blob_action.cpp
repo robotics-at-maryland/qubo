@@ -15,7 +15,7 @@ BlobAction::BlobAction(){
 	params.filterByArea = true;
 	params.minArea = 100;
 	// Set up detector with params
-	m_detector = SimpleBlobDetector::create(params);
+	m_detector = new SimpleBlobDetector(params);
 
 }
 
@@ -40,10 +40,10 @@ int BlobAction::updateAction(const Mat cframe) {
 	for(int i = 0; i < keypoints.size(); i++){
 		if(keypoints[i].size > max){
 			max = keypoints[i].size;
-			center = keypoints[i].pt;
+			center = keypoints[i].pt; 
 		}
 	}
-
+	
 	if(center.x){
 		feedback.x_offset = cframe.rows/2 - center.x;
 		feedback.y_offset = cframe.cols/2 - center.y;
@@ -53,5 +53,5 @@ int BlobAction::updateAction(const Mat cframe) {
 	}
 
 	return center.x;
-
+	
 }
