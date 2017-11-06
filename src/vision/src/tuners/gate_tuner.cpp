@@ -61,8 +61,8 @@ int main(int argc, char* argv[]){
 
 
 	//check for the input parameter correctness
-	if(argc != 2){
-		cerr <<"Incorrect input list, usage: rosrun vision gate_tuner <path_to_video_or_camera>" << endl;
+    if(argc != 2){
+        cerr <<"Incorrect input list, usage: rosrun vision gate_tuner <path_to_video_or_camera>" << endl;
 		exit(1);
 	}
 
@@ -75,11 +75,11 @@ int main(int argc, char* argv[]){
 	cout << max_frame << endl;
 
 
-	if(!cap.isOpened()){
-		//error in opening the video input
-		cerr << "Unable to open video file: " << argv[1] << endl;
-		exit(1);
-	}
+    if(!cap.isOpened()){
+        //error in opening the video input
+        cerr << "Unable to open video file: " << argv[1] << endl;
+        exit(1);
+    }
 
 
 
@@ -153,6 +153,7 @@ int main(int argc, char* argv[]){
 					if(bin > 0){
 
 						xbin_count[(int) ((x0/bin_size))]++;
+
 						pt1.x = cvRound(x0 + 1000*(-b));
 						pt1.y = cvRound(y0 + 1000*(a));
 						pt2.x = cvRound(x0 - 1000*(-b));
@@ -160,9 +161,10 @@ int main(int argc, char* argv[]){
 
 						line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
 
-			}
+					}
 
 					else {
+
 
 						pt1.x = cvRound(x0 + 1000*(-b));
 						pt1.y = cvRound(y0 + 1000*(a));
@@ -224,21 +226,21 @@ int main(int argc, char* argv[]){
 
 
 		// for( size_t i = 0; i < lines.size(); i++ )
-		//	{
-		//		Vec4i l = lines[i];
+		// 	{
+		// 		Vec4i l = lines[i];
 
-		//		printf("(%i, %i) (%i, %i) \n", l[0], l[1], l[2], l[3]);
-		//		double theta = atan2((l[0] - l[2]), (l[1] - l[3]));
+		// 		printf("(%i, %i) (%i, %i) \n", l[0], l[1], l[2], l[3]);
+		// 		double theta = atan2((l[0] - l[2]), (l[1] - l[3]));
 
-		//		cout << "theta" << theta  << endl;
+		// 		cout << "theta" << theta  << endl;
 
 
-		//		// range is +- pi
-		//		if ( (abs(theta) < angle_thresh && abs(theta) > -angle_thresh) || (abs(theta) < (3.14 + angle_thresh)  && abs(theta)) > 3.14 - angle_thresh){
-		//			line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
-		//		 }
+		// 		// range is +- pi
+		// 		if ( (abs(theta) < angle_thresh && abs(theta) > -angle_thresh) || (abs(theta) < (3.14 + angle_thresh)  && abs(theta)) > 3.14 - angle_thresh){
+		// 			line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
+		// 		 }
 
-		//	}
+		// 	}
 
 
 		//imshow("source", cframe);

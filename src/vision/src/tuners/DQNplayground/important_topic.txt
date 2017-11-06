@@ -1,0 +1,11 @@
+/qubo_test/camera/camera_image
+sensor_msgs/Image
+
+/qubo_test/camera/camera_image/compressed
+sensor_msgs/CompressedImage
+
+/qubo_test/camera/camera_image/compressedDepth
+sensor_msgs/CompressedImage
+
+/qubo_test/camera/camera_image/theora
+theora_image_transport/Packet

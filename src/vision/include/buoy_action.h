@@ -13,43 +13,29 @@
 #include <tuple>        // std::tuple, std::get, std::tie, std::ignore
 #include <vector>
 
-
-//ros includes
-#include "ros/ros.h"
-#include <ram_msgs/VisionNavAction.h>
-#include <actionlib/server/simple_action_server.h>
-#include <cv_bridge/cv_bridge.h>
-
-
-
-//message includes
-#include "std_msgs/String.h"
-#include  "ram_msgs/bool_bool.h"
-
-
-//#include "vision_node.h"
+#include "vision_node.h"
 
 
 class BuoyAction{
-	public:
-	BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
-	~BuoyAction();
+    public:
+    BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+    ~BuoyAction();
 
-	cv::Mat backgroundSubtract(cv::Mat cframe);
-	std::vector<cv::KeyPoint> detectBuoy(cv::Mat cframe);
+    cv::Mat backgroundSubtract(cv::Mat cframe);
+    std::vector<cv::KeyPoint> detectBuoy(cv::Mat cframe);
 	void updateAction(cv::Mat cframe);
 	bool updateHistory(cv::Mat cframe, std::vector<cv::KeyPoint> keypoints, cv::Point2f center);
-
-	protected:
+    
+    protected:
 
 
 	actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *m_as;
 	cv::Ptr<cv::SimpleBlobDetector> m_detector;
 	cv::Ptr<cv::BackgroundSubtractor> m_pMOG;//MOG Background subtractor
-	std::vector<std::tuple<cv::Point2f, cv::Vec3b, int>> m_history;
+    std::vector<std::tuple<cv::Point2f, cv::Vec3b, int>> m_history;
 	ram_msgs::VisionNavFeedback m_feedback;
 
-
+	
 };
 
 #endif

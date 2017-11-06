@@ -32,11 +32,6 @@
 #include "gate_action.h"
 #include "blob_action.h"
 
-
-//Vimba includes, only needed for the Cameras
-//#include "VimbaCPP.h"
-
-
 class VisionNode{
 
     public:

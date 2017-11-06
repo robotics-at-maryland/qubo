@@ -13,8 +13,8 @@ BuoyAction::BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> 
 	m_as = as;
 
 	//you can decide which version of the subtractor you want to run by commenting in one of these line
-	m_pMOG = createBackgroundSubtractorMOG2(10000, 35, false);
-	// m_pMOG = createBackgroundSubtractorMOG(1000,5,.7,0);
+	m_pMOG = new BackgroundSubtractorMOG2(10000, 35, false);
+	//m_pMOG = bgsegm::createBackgroundSubtractorMOG(1000,5,.7,0);
 
 
 
@@ -27,7 +27,7 @@ BuoyAction::BuoyAction(actionlib::SimpleActionServer<ram_msgs::VisionNavAction> 
 	params.filterByArea = true;
 	params.minArea = 100;
 	// Set up detector with params
-	m_detector = SimpleBlobDetector::create(params);
+	m_detector = new SimpleBlobDetector(params);
 
 }
 
@@ -82,7 +82,7 @@ Mat BuoyAction::backgroundSubtract(const Mat cframe){
 
 
 	//update the background model
-	m_pMOG->apply(cframe, out_frame);
+	(*m_pMOG)(cframe, out_frame);
 
 	if(out_frame.empty()){
 		ROS_ERROR("image was empty");
