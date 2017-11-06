@@ -228,3 +228,6 @@ target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+
+# catkin_install_python(PROGRAMS src/arduino_node.py
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
