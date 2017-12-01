@@ -17,19 +17,33 @@ else:
 
 def process_img(frame):
     red = frame.copy()
-    red[:,:,0] = 0
-    # red[:,:,0] = 0
-    # return frame
+    red[:,:,0] = red[:,:,0] / 2
+    red[:,:,1] = 0
+
+    #Normalize the image
     gray = cv2.cvtColor(red, cv2.COLOR_BGR2GRAY)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+    equ = clahe.apply(gray)
+    # equ = cv2.equalizeHist(gray)
     # thr = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 4)
-    _, thr = cv2.threshold(red[:,:,2], 105, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    # check out opencv find contours
+    _, thr = cv2.threshold(equ, 105, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
     im2, contours, heirarchy = cv2.findContours(thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     c = max(contours, key=cv2.contourArea)
-    eps = 0.005 * cv2.arcLength(c, True)
+    # center using moments
+    # M = cv2.moments(c)
+    # cx = int(M['m10'] / M['m00'])
+    # cy = int(M['m01'] / M['m00'])
+    rect = cv2.minAreaRect(c)
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
+    elip = cv2.fitEllipse(c)
+    cv2.ellipse(equ, elip, (0,0,255), 3)
+    eps = 0.01 * cv2.arcLength(c, True)
     approx = cv2.approxPolyDP(c, eps, True)
-    cv2.drawContours(frame, [approx], -1, (0,255,0), 3)
-    return frame
+    cv2.drawContours(equ, [approx], -1, (0,255,0), 3)
+    # cv2.drawContours(equ, [box], -1, (255,0,0), 3)
+    return equ
 
 while True:
     if not video.isOpened():
