@@ -32,6 +32,20 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     while(ROM_I2CMasterBusy(device));
   }
 
+  else if (length == 2) {
+    // Send first word
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
+    
+    while(ROM_I2CMasterBusy(device));
+  
+    // Send second word
+    ROM_I2CMasterDataPut(device, *(data + 1));
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_FINISH);
+
+    while(ROM_I2CMasterBusy(device));
+    
+  }
+   
   // This will use the interrupt
   else {
     *i2c_write_buffer = (data + 1);
@@ -47,14 +61,13 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     #ifdef DEBUG
     UARTprintf("query_i2c: Init burst write\n");
     #endif
-
+    
     /*
     while(ROM_I2CMasterBusy(device));
-
-    //
+    
     for(uint32_t i = 0; i < (length - 1); i++) {
       // put data into fifo
-      ROM_I2CMasterDataPut(device, *data);
+      ROM_I2CMasterDataPut(device, *(data + 1));
       // Increment pointer
       data++;
       // Send data
