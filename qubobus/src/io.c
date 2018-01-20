@@ -296,7 +296,7 @@ static int safe_io(void *io_host, raw_io_function raw_io, void *data, size_t siz
 }
 
 static uint16_t crc16(uint16_t crc, const void* ptr, size_t bytes) {
-    const char* data = (const char*) ptr;
+    const uint8_t* data = (const uint8_t*) ptr;
     for (; bytes > 0; bytes--, data++)
         crc += *data;
     return crc;

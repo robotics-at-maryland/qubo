@@ -7,6 +7,8 @@ find_package(catkin
   ram_msgs
   )
 
+find_package(Boost REQUIRED)
+
 
 catkin_package(
   LIBRARIES ${PROJECT_NAME}
@@ -25,7 +27,8 @@ include_directories(
   drivers/dvl/include
   drivers/qscu/include
   drivers/qubobus/include
-  
+  ahrs/include
+  dvl/include
   include
 
   )
@@ -67,10 +70,19 @@ set(AHRS_BAUDRATE_SRC_FILES
   drivers/ahrs/src/AHRS.cpp #SG: ditto above
   )
 
-
+set(HARDWARE_NODE_SRC_FILES
+  src/main.cpp
+  src/control_node.cpp
+  drivers/ahrs/src/AHRS.cpp
+  )
 set(QSCU_SRC_FILES
   drivers/qscu/src/QSCU.cpp
   drivers/qscu/src/main.cpp
+  )
+set(QSCU_CONTROL_NODE_SRC_FILES
+  drivers/qscu/src/qscu_node.cpp
+  drivers/qscu/src/qscu_node_main.cpp
+  drivers/qscu/src/QSCU.cpp
   )
 
 ##sg: This does the same as set but it allows us to match everything in the
@@ -119,6 +131,10 @@ target_link_libraries(test_defs qubobus)
 #will probably change this back to a library at some point
 add_executable(qscu ${QSCU_SRC_FILES})
 target_link_libraries(qscu qubobus)
+
+add_executable(qscu_node ${QSCU_CONTROL_NODE_SRC_FILES})
+target_link_libraries(qscu_node qubobus ${catkin_LIBRARIES})
+add_dependencies(qscu_node ram_msgs_generate_messages_cpp)
 
 
 # catkin_install_python(PROGRAMS src/arduino_node.py

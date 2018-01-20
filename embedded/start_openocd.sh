@@ -45,4 +45,4 @@ fi
 
 # And finally start OpenOCD:
 
-openocd --file $CFG_FILE --enable-ioutil
+openocd --file $CFG_FILE #--enable-ioutil
