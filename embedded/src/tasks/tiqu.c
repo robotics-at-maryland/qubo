@@ -24,24 +24,56 @@ bool tiqu_task_init(void){
 static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* buffer){
 
 	// Get the data from the task
+	// Start with the highest message id, and use else-if to check like a switch-case
+
 	if (message->header.message_id >= M_ID_OFFSET_MAX) {
 
+		// If the ID is higher than max, something is wrong
 		return -1;
 	}
 
 	else if (message->header.message_id >= M_ID_OFFSET_DEBUG) {
 
-		return 0;
+		switch (message->header.message_id) {
+		case M_ID_DEBUG_LOG_READ: {
+			break;
+		}
+		case M_ID_DEBUG_LOG_ENABLE: {
+			break;
+		}
+		case M_ID_DEBUG_LOG_DISABLE: {
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	else if (message->header.message_id >= M_ID_OFFSET_DEPTH) {
 
-		return 0;
+		switch (message->header.message_id) {
+
+		case M_ID_DEPTH_STATUS: {
+			break;
+		}
+		case M_ID_DEPTH_MONITOR_ENABLE: {
+			break;
+		}
+		case M_ID_DEPTH_MONITOR_DISABLE: {
+			break;
+		}
+		case M_ID_DEPTH_MONITOR_SET_CONFIG: {
+			break;
+		}
+		case M_ID_DEPTH_MONITOR_GET_CONFIG: {
+			break;
+		}
+		}
 	}
 
 	else if (message->header.message_id >= M_ID_OFFSET_PNEUMATICS) {
 
-		return 0;
+		// There's only one thing to break out here
 	}
 
 	else if (message->header.message_id >= M_ID_OFFSET_THRUSTER) {
@@ -54,56 +86,107 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 						   .error = NULL,
 						   .payload = pvPortMalloc(tThrusterSet.request)};
 
-			*((struct Thruster_Set*)q_msg.payload) = *((struct Thruster_Set*)message->payload);
+				*((struct Thruster_Set*)q_msg.payload) = *((struct Thruster_Set*)message->payload);
 
-			/* Send it to the task */
-			if ( xQueueSend(thruster_queue, (void*)&q_msg,
-							((struct UART_Queue*)state->io_host)->transfer_timeout) != pdPASS) {
-				return -1;
-			}
-			/* Notify the task */
-			xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
+				/* Send it to the task */
+				if ( xQueueSend(thruster_queue, (void*)&q_msg,
+								((struct UART_Queue*)state->io_host)->transfer_timeout) != pdPASS) {
+					return -1;
+				}
+				/* Notify the task */
+				xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
 				/* create response */
 				q_msg.payload = NULL;
+			}
+			}
 		}
+
+		else if (message->header.message_id >= M_ID_OFFSET_POWER) {
+
+			switch (message->header.message_id) {
+			case M_ID_POWER_STATUS: {
+				break;
+			}
+			case M_ID_POWER_RAIL_ENABLE: {
+				break;
+			}
+			case M_ID_POWER_RAIL_DISABLE: {
+				break;
+			}
+			case M_ID_POWER_MONITOR_ENABLE: {
+				break;
+			}
+			case M_ID_POWER_MONITOR_DISABLE: {
+				break;
+			}
+			case M_ID_POWER_MONITOR_SET_CONFIG: {
+				break;
+			}
+			case M_ID_POWER_MONITOR_GET_CONFIG: {
+				break;
+			}
+			}
 		}
-	}
 
-	else if (message->header.message_id >= M_ID_OFFSET_POWER) {
+		else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
 
-		return 0;
-	}
+			switch (message->header.message_id) {
+			case M_ID_BATTERY_STATUS: {
 
-	else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
+			}
+			case M_ID_BATTERY_SHUTDOWN: {
+				break;
+			}
+			case M_ID_BATTERY_MONITOR_ENABLE: {
+				break;
+			}
+			case M_ID_BATTERY_MONITOR_DISABLE: {
+				break;
+			}
+			case M_ID_BATTERY_MONITOR_SET_CONFIG: {
+				break;
+			}
+			case M_ID_BATTERY_MONITOR_GET_CONFIG: {
+				break;
+			}
+			}
+		}
 
-		return 0;
-	}
+		else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
 
-	else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
+			switch (message->header.message_id) {
+			case M_ID_SAFETY_STATUS: {
+				break;
+			}
+			case M_ID_SAFETY_SET_SAFE: {
+				break;
+			}
+			case M_ID_SAFETY_SET_UNSAFE: {
+				break;
+			}
+			}
+		}
 
-		return 0;
-	}
+		else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
 
-	else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
+			// Notify using the ID of the request, so tasks know what to do
+			xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
+			if(xQueueReceive(embedded_queue, (void*)&q_msg,
+							 ((struct UART_Queue*)state->io_host)->transfer_timeout ) != pdPASS) {
+				return -1;
 
-		// Notify using the ID of the request, so tasks know what to do
-		xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
-		if(xQueueReceive(embedded_queue, (void*)&q_msg,
-						 ((struct UART_Queue*)state->io_host)->transfer_timeout ) != pdPASS) {
+			}
+		}
+
+		else if (message->header.message_id >= M_ID_OFFSET_CORE) {
+			// There should only be errors from this thing
 			return -1;
-
 		}
-	}
 
-	else if (message->header.message_id >= M_ID_OFFSET_CORE) {
-
-		return 0;
-	}
-
-	else if (message->header.message_id >= M_ID_OFFSET_MIN) {
-
-		return 0;
-	}
+		else if (message->header.message_id >= M_ID_OFFSET_MIN) {
+			// If we get here, something is wrong.
+			return -1;
+		}
 
 	// Now write it
 	Message response;
@@ -212,4 +295,3 @@ static void tiqu_task(void *params){
 	}
 
 }
-
