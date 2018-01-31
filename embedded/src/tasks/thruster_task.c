@@ -1,4 +1,4 @@
-#include "tasks/include/esc_task.h"
+#include "tasks/include/thruster_task.h"
 #include "lib/include/printfloat.h"
 #include <stdio.h>
 
@@ -37,8 +37,7 @@ static void esc_test_task(void *params) {
       *i2c0_write_buffer = *i2c0_write_buffer + 1;
       // Send the data
       ROM_I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
-      
-      
+
+
   }
 }
-

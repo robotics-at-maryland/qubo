@@ -1,5 +1,5 @@
-#ifndef _ESC_TEST_H_
-#define _ESC_TEST_H_
+#ifndef _THRUSTER_TEST_H_
+#define _THRUSTER_TEST_H_
 
 #include <FreeRTOS.h>
 #include <task.h>
