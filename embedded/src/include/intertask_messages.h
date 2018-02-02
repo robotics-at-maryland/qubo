@@ -15,6 +15,7 @@
 #define _INTERTASK_MESSAGES_H_
 
 #include <FreeRTOS.h>
+#include <stream_buffers.h>
 #include <queue.h>
 #include <semphr.h>
 
