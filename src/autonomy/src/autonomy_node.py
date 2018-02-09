@@ -102,27 +102,37 @@ if __name__ == '__main__':
     roll = 0
     pitch = 0
     yaw = 0
+    surge = 0
+    sway = 0
+    depth = 0
     
     roll_hold = roll
     pitch_hold = pitch
     yaw_hold = yaw
+    surge_hold = surge
+    sway_hold = sway
+    depth_hold = depth
 
     rospy.sleep(10.)
 
-    roll_target.publish(roll_hold)
-    pitch_target.publish(pitch_hold)
-    yaw_target.publish(yaw_hold)
+    #roll_target.publish(roll_hold)
+    #pitch_target.publish(pitch_hold)
+    #yaw_target.publish(yaw_hold)
+    #surge_target.publish(surge_hold)
+    #sway_target.publish(sway_hold)
+    # depth_target.publish(depth_hold)
 
     #_pub commands output constant thrust in arbitrary units
     #_target commands attempt to match target depth or angle
 
+    #depth_target: + is down, , - is go up (not sure of units)
     #pitch_target: + is pitch-up moment in radians, 0 is neutral position [pi,pi]
     #roll_target: + is roll with right side dipping (maybe - not sure), 0 is neutral position [-pi,pi]
     #yaw_target: + is turn left, 0 is neutral position [-pi,pi]
-    
-    #depth_pub.publish(20)
-    #surge_pub.publish(50)
-    roll_target.publish(1)
+    #surge_target: + is move backwards, not sure of units because robot never stops and also doesn't move in a straight line
+    #sway_target: + is move to the right, not sure of units because robot never stops 
+
+    depth_pub.publish(10)
     
     call_action('gate_action')
     

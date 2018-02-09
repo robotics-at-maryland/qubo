@@ -10,6 +10,9 @@
 
 #include <boost/circular_buffer.hpp>
 
+//include service with boolean request and response
+#include "ram_msgs/bool_bool.h"
+
 #define PI 3.14159
 
 
@@ -19,6 +22,9 @@ class PIDController {
     ~PIDController();
 
 	void update();
+
+    //service prototype
+    bool toggleController(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 	
     protected:
     
@@ -70,7 +76,9 @@ class PIDController {
 
     void configCallback(controls::TestConfig &config, uint32_t level);
 
-	
+    //toggle controller on/off (default on)
+    bool dof_active = true;
+    ros::ServiceServer toggle_test;
 };
 
 

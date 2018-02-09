@@ -48,11 +48,12 @@ PIDController::PIDController(NodeHandle n, NodeHandle np,  string control_topic)
 	//m_f =
 	m_server.setCallback( boost::bind(&PIDController::configCallback, this, _1, _2));
 	
-    
+	//register service
+	toggle_test = n.advertiseService("toggle_test", &PIDController::toggleController, this);
+	
 }
 
 PIDController::~PIDController(){}
-
 
 void PIDController::update() {
 	//update our commanded and measured depth.
@@ -124,7 +125,9 @@ void PIDController::update() {
 	}
 
 	//publish the final result
-	m_command_pub.publish(m_command_msg);
+	if(dof_active){
+	  m_command_pub.publish(m_command_msg);
+	}
 	
 }
 
@@ -151,6 +154,12 @@ void PIDController::configCallback(controls::TestConfig &config, uint32_t level)
 
 void PIDController::targetCallback(const std_msgs::Float64::ConstPtr& msg) {
 	m_target = msg->data;
+}
+
+bool PIDController::toggleController(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res) {
+        dof_active = req.request;
+        res.response = req.request;
+	return true;
 }
 
 

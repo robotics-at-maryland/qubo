@@ -41,6 +41,7 @@ int main(int argc, char* argv[]){
 
 	Rate rate(stoi(freq)); //rate object to sleep the right amount of time between calls to update
 	
+	
 	while(1){
 		node.update();
 		rate.sleep(); //this will sleep at a rate 1/argv[2]
