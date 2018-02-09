@@ -9,7 +9,7 @@
 extern struct UART_Queue uart0_queue;
 static char buffer[QUBOBUS_MAX_PAYLOAD_LENGTH];
 // This is where a message received from a queue will be put.
-static QMsg q_msg = {.transaction = NULL, .error =  NULL, .payload = NULL};
+void* payload;
 
 bool tiqu_task_init(void){
 	if ( xTaskCreate(tiqu_task, (const portCHAR *) "Tiva Qubobus", 1024, NULL,
@@ -23,6 +23,8 @@ bool tiqu_task_init(void){
 // Handles requests received from the bus
 static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* buffer){
 
+	Transaction *transaction = NULL;
+	Error *error = NULL;
 	// Get the data from the task
 	// Start with the highest message id, and use else-if to check like a switch-case
 
@@ -81,78 +83,75 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		switch (message->header.message_id) {
 
 		case M_ID_THRUSTER_SET: {
+
 			/* create the message */
-			q_msg = (QMsg){.transaction = &tThrusterSet,
-						   .error = NULL,
-						   .payload = pvPortMalloc(tThrusterSet.request)};
+			struct Thruster_Set thruster_set = (struct Thruster_Set) message->payload;
 
-				*((struct Thruster_Set*)q_msg.payload) = *((struct Thruster_Set*)message->payload);
+			/* send it to the task*/
+			if ( xMessageBufferSend(thruster_message_buffer,
+									&thruster_set,
+									sizeof(thruster_set),
+									pdMS_TO_TICKS(10)) == 0) {
+				error = &eThrusterUnreachable;
+			}
 
-				/* Send it to the task */
-				if ( xQueueSend(thruster_queue, (void*)&q_msg,
-								((struct UART_Queue*)state->io_host)->transfer_timeout) != pdPASS) {
-					return -1;
-				}
-				/* Notify the task */
-				xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
-				/* create response */
-				q_msg.payload = NULL;
-			}
-			}
+			transaction = &tThrusterSet;
 		}
-
-		else if (message->header.message_id >= M_ID_OFFSET_POWER) {
-
-			switch (message->header.message_id) {
-			case M_ID_POWER_STATUS: {
-				break;
-			}
-			case M_ID_POWER_RAIL_ENABLE: {
-				break;
-			}
-			case M_ID_POWER_RAIL_DISABLE: {
-				break;
-			}
-			case M_ID_POWER_MONITOR_ENABLE: {
-				break;
-			}
-			case M_ID_POWER_MONITOR_DISABLE: {
-				break;
-			}
-			case M_ID_POWER_MONITOR_SET_CONFIG: {
-				break;
-			}
-			case M_ID_POWER_MONITOR_GET_CONFIG: {
-				break;
-			}
-			}
 		}
+	}
 
-		else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
+	else if (message->header.message_id >= M_ID_OFFSET_POWER) {
 
-			switch (message->header.message_id) {
-			case M_ID_BATTERY_STATUS: {
-
-			}
-			case M_ID_BATTERY_SHUTDOWN: {
-				break;
-			}
-			case M_ID_BATTERY_MONITOR_ENABLE: {
-				break;
-			}
-			case M_ID_BATTERY_MONITOR_DISABLE: {
-				break;
-			}
-			case M_ID_BATTERY_MONITOR_SET_CONFIG: {
-				break;
-			}
-			case M_ID_BATTERY_MONITOR_GET_CONFIG: {
-				break;
-			}
-			}
+		switch (message->header.message_id) {
+		case M_ID_POWER_STATUS: {
+			break;
 		}
+		case M_ID_POWER_RAIL_ENABLE: {
+			break;
+		}
+		case M_ID_POWER_RAIL_DISABLE: {
+			break;
+		}
+		case M_ID_POWER_MONITOR_ENABLE: {
+			break;
+		}
+		case M_ID_POWER_MONITOR_DISABLE: {
+			break;
+		}
+		case M_ID_POWER_MONITOR_SET_CONFIG: {
+			break;
+		}
+		case M_ID_POWER_MONITOR_GET_CONFIG: {
+			break;
+		}
+		}
+	}
 
-		else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
+	else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
+
+		switch (message->header.message_id) {
+		case M_ID_BATTERY_STATUS: {
+
+		}
+		case M_ID_BATTERY_SHUTDOWN: {
+			break;
+		}
+		case M_ID_BATTERY_MONITOR_ENABLE: {
+			break;
+		}
+		case M_ID_BATTERY_MONITOR_DISABLE: {
+			break;
+		}
+		case M_ID_BATTERY_MONITOR_SET_CONFIG: {
+			break;
+		}
+		case M_ID_BATTERY_MONITOR_GET_CONFIG: {
+			break;
+		}
+		}
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
 
 			switch (message->header.message_id) {
 			case M_ID_SAFETY_STATUS: {
@@ -190,10 +189,10 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 
 	// Now write it
 	Message response;
-	if ( q_msg.transaction != NULL){
-		response = create_response(q_msg.transaction, q_msg.payload);
-	} else if ( q_msg.error != NULL) {
-		response = create_error(q_msg.error, q_msg.payload);
+	if (transaction != NULL){
+		response = create_response(transaction, payload);
+	} else if (error != NULL) {
+		response = create_error(error, payload);
 	} else {
 		// Something went wrong, just give up
 		return -1;

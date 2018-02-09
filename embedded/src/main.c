@@ -121,9 +121,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName
 // Called when a tick interrupt happens
 // Can be used to confirm tick interrupt happening
 void vApplicationTickHook(void) {
-	#ifdef DEBUG
+    #ifdef DEBUG
   //UARTprintf("\nTick interrupt\n");
-	#endif
+    #endif
 }
 
 
@@ -159,7 +159,7 @@ int main() {
   uart1_mutex = xSemaphoreCreateMutex();
   rgb_mutex = xSemaphoreCreateMutex();
 
-    
+
 
 
   // Initialize the UART Queue for UART0.
@@ -169,38 +169,38 @@ int main() {
   INIT_TASK_QUEUES();
 
 
-  
-  i2c0_address = pvPortMalloc(sizeof(uint32_t));
-  i2c0_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+
+  i2c0_address      = pvPortMalloc(sizeof(uint32_t));
+  i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
   i2c0_write_buffer = pvPortMalloc(sizeof(uint8_t*));
-  i2c0_read_count = pvPortMalloc(sizeof(uint32_t));
-  i2c0_write_count = pvPortMalloc(sizeof(uint32_t));
-  i2c0_int_state = pvPortMalloc(sizeof(uint16_t));
+  i2c0_read_count   = pvPortMalloc(sizeof(uint32_t));
+  i2c0_write_count  = pvPortMalloc(sizeof(uint32_t));
+  i2c0_int_state    = pvPortMalloc(sizeof(uint16_t));
 
-  i2c1_address = pvPortMalloc(sizeof(uint32_t));
-  i2c1_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c1_address      = pvPortMalloc(sizeof(uint32_t));
+  i2c1_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
   i2c1_write_buffer = pvPortMalloc(sizeof(uint8_t*));
-  i2c1_read_count = pvPortMalloc(sizeof(uint32_t));
-  i2c1_write_count = pvPortMalloc(sizeof(uint32_t));
-  i2c1_int_state = pvPortMalloc(sizeof(uint16_t));
+  i2c1_read_count   = pvPortMalloc(sizeof(uint32_t));
+  i2c1_write_count  = pvPortMalloc(sizeof(uint32_t));
+  i2c1_int_state    = pvPortMalloc(sizeof(uint16_t));
 
-  i2c2_address = pvPortMalloc(sizeof(uint32_t));
-  i2c2_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c2_address      = pvPortMalloc(sizeof(uint32_t));
+  i2c2_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
   i2c2_write_buffer = pvPortMalloc(sizeof(uint8_t*));
-  i2c2_read_count = pvPortMalloc(sizeof(uint32_t));
-  i2c2_write_count = pvPortMalloc(sizeof(uint32_t));
-  i2c2_int_state = pvPortMalloc(sizeof(uint16_t));
+  i2c2_read_count   = pvPortMalloc(sizeof(uint32_t));
+  i2c2_write_count  = pvPortMalloc(sizeof(uint32_t));
+  i2c2_int_state    = pvPortMalloc(sizeof(uint16_t));
 
-  i2c3_address = pvPortMalloc(sizeof(uint32_t));
-  i2c3_read_buffer = pvPortMalloc(sizeof(uint8_t*));
+  i2c3_address      = pvPortMalloc(sizeof(uint32_t));
+  i2c3_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
   i2c3_write_buffer = pvPortMalloc(sizeof(uint8_t*));
-  i2c3_read_count = pvPortMalloc(sizeof(uint32_t));
-  i2c3_write_count = pvPortMalloc(sizeof(uint32_t));
-  i2c3_int_state = pvPortMalloc(sizeof(uint16_t));
+  i2c3_read_count   = pvPortMalloc(sizeof(uint32_t));
+  i2c3_write_count  = pvPortMalloc(sizeof(uint32_t));
+  i2c3_int_state    = pvPortMalloc(sizeof(uint16_t));
 
 #ifdef DEBUG
   UARTprintf("Datastructures allocated\n");
-  #endif
+#endif
 
   // -----------------------------------------------------------------------
   // Start FreeRTOS tasks
@@ -212,12 +212,12 @@ int main() {
   }
 */
   /*
-	if ( example_blink_init() ) {
+    if ( example_blink_init() ) {
     while(1){}
-	}
+    }
   */
   if ( tiqu_task_init() ) {
-	  while(1){}
+    while(1){}
   }
 
   if (qubobus_test_init() ){

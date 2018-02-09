@@ -25,8 +25,9 @@
 
 #include "lib/include/uart_queue.h"
 #include "lib/include/rgb.h"
-#include "include/task_handles.h"
-#include "include/task_queues.h"
+#include "lib/include/intertask_messages.h"
+// #include "include/task_handles.h"
+// #include "include/task_queues.h"
 
 extern struct Depth_Status depth_status;
 
