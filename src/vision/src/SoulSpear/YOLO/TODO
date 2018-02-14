@@ -1,0 +1,5 @@
+implement the model (TINY YOLO--minimum FLOT needed)
+implement several loss
+implement custom dataset
+transfer learning from the official .weight .cfg file
+implement a ros wrapper

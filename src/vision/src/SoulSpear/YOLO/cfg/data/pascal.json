@@ -1,0 +1,8 @@
+{
+  "train" : "~/VOCdevkit/voc_train.txt",
+  "valid" : "~/VOCdevkit/2007_test.txt",
+  "test" : "~/VOCdevkit/2007_test.txt",
+  "class_names" : "~/VOCdevkit/voc.names",
+  "name" : "pascal",
+  "description": "pascol voc brenchmark"
+}

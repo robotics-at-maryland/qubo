@@ -1,0 +1,42 @@
+{
+    "model" : {
+      "width": 416,
+      "height": 416,
+      "num_classes": 20,
+      "anchors" : [1.3221, 1.73145, 3.19275, 4.00944, 5.05587, 8.09892, 9.47112, 4.84053, 11.2364, 10.0071]
+    },
+
+    "checkpoint":{
+      "root" : "~/SoulSpear/YOLO/checkpoint/YOLOv2",
+      "path" : "~/SoulSpear/YOLO/checkpoint/YOLOv2/cp.pth.tar",
+      "best" : "~/SoulSpear/YOLO/checkpoint/YOLOv2/best.pth.tar"
+    },
+
+    "tensorboard":{
+      "root" : "~/SoulSpear/YOLO/summary/YOLOv2"
+    },
+
+    "trans":{
+      "path" : "./weight/YOLOv2",
+      "save_last" : true
+    },
+
+    "train" : {
+      "batch_size" : 8,
+      "max_batches" : 40000,
+      "learning_rate": 0.000125,
+      "momentum": 0.9,
+      "decay": 0.0005,
+      "steps": [-1,500,40000,60000],
+      "scales": [0.1,10,0.1,0.1],
+
+      "save_interval" : 1,
+      "summary_interval" : 10
+    },
+
+    "threshold" :{
+      "conf_thresh" : 0.25,
+      "nms_thresh" : 0.4,
+      "iou_thresh" : 0.5
+    }
+}
