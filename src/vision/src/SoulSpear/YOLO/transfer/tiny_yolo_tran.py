@@ -8,15 +8,15 @@ def load_weights( model, path, save_last=True ):
     buf = np.fromfile(path, dtype=np.float32)
     start = 4
 
-    start = load_conv_bn( buf, start, model.cnn[0], self.cnn[1] )
-    start = load_conv_bn( buf, start, model.cnn[4], self.cnn[5] )
-    start = load_conv_bn( buf, start, model.cnn[8], self.cnn[9] )
-    start = load_conv_bn( buf, start, model.cnn[12], self.cnn[13] )
-    start = load_conv_bn( buf, start, model.cnn[16], self.cnn[17] )
-    start = load_conv_bn( buf, start, model.cnn[20], self.cnn[21] )
+    start = load_conv_bn( buf, start, model.cnn[0], model.cnn[1] )
+    start = load_conv_bn( buf, start, model.cnn[4], model.cnn[5] )
+    start = load_conv_bn( buf, start, model.cnn[8], model.cnn[9] )
+    start = load_conv_bn( buf, start, model.cnn[12], model.cnn[13] )
+    start = load_conv_bn( buf, start, model.cnn[16], model.cnn[17] )
+    start = load_conv_bn( buf, start, model.cnn[20], model.cnn[21] )
 
-    start = load_conv_bn( buf, start, model.cnn[24], self.cnn[25] )
-    start = load_conv_bn( buf, start, model.cnn[27], self.cnn[28] )
+    start = load_conv_bn( buf, start, model.cnn[24], model.cnn[25] )
+    start = load_conv_bn( buf, start, model.cnn[27], model.cnn[28] )
 
     if save_last:
         start = load_conv( buf, start, model.cnn[30] )
