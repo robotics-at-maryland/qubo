@@ -1,8 +1,5 @@
 
-from __future__ import print_function
-
-
-
+from __future__ import print_function, absolute_import 
 import sys
 
 
@@ -183,36 +180,36 @@ def detect_skvideo( path, name= None ):
     if use_cuda:model.cuda()
     videogen = skvideo.io.vreader( str( path ) )
 
-    plt.ion()
-    fig, ax = plt.subplots( 1,1, figsize = ( 16, 9 ) )
-    plt.axis( 'off' )
-    plt.tight_layout()
+    #plt.ion()
+    #fig, ax = plt.subplots( 1,1, figsize = ( 16, 9 ) )
+    #plt.axis( 'off' )
+    #plt.tight_layout()
 
-    frame = next( videogen )
-    sized = resize(frame, (model.width, model.height), preserve_range=True)
+    #frame = next( videogen )
+    #sized = resize(frame, (model.width, model.height), preserve_range=True)
 
-    win = ax.imshow( frame )
+    #win = ax.imshow( frame )
 
     timer.tic()
     for frame in videogen:
         print('load frame ', timer.tac())
-        print('background ', timer.tac())
-        win.set_data(frame)
-        print('set frame ',timer.tac())
-        sized = resize(frame, (model.width, model.height), preserve_range=True)
+        #print('background ', timer.tac())
+        #win.set_data(frame)
+        #print('set frame ',timer.tac())
+        sized = resize(frame, (model.width, model.height) , preserve_range=True)
         print('resize', timer.tac())
         boxes = do_detect(model, sized, conf_thresh, nms_thresh, use_cuda )
         print('detect box', timer.tac())
-        RecList, TextList= plot_boxes_plt( frame, boxes, ax, savename = None, class_names = class_names )
-        print('plot boxes', timer.tac())
-        plt.draw()
-        print('draw', timer.tac() )
-        plt.pause( 1/FRAME_RATE )
-        print('pause', timer.tac() )
-        list( map( lambda x: x.remove(), RecList) )
-        list( map( lambda x: x.remove(), TextList) )
+        #RecList, TextList= plot_boxes_plt( frame, boxes, ax, savename = None, class_names = class_names )
+        #print('plot boxes', timer.tac())
+        #plt.draw()
+        #print('draw', timer.tac() )
+        #plt.pause( 1/FRAME_RATE )
+        #print('pause', timer.tac() )
+        #list( map( lambda x: x.remove(), RecList) )
+        #list( map( lambda x: x.remove(), TextList) )
         #reset( RecList, TextList )
-        print('reset ', timer.tac() )
+        #print('reset ', timer.tac() )
 
     '''         RUN TIME DATA
         load frame  0.0036106109619140625

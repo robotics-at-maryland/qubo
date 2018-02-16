@@ -1,4 +1,4 @@
-
+from __future__ import unicode_literals
 import sys
 import os
 import time
@@ -10,6 +10,8 @@ from torch.autograd import Variable
 
 import struct # get_image_size
 import imghdr # get_image_size
+
+if sys.version_info[0] == 2: str = unicode
 
 def sigmoid(x):
     return 1.0/(math.exp(-x)+1.)
@@ -348,7 +350,7 @@ def read_truths_args(lab_path, min_box_scale):
     return np.array(new_truths)
 
 def load_class_names(class_names_proxy):
-    if isinstance(class_names_proxy, str):
+    if isinstance(class_names_proxy, str) :
         class_names_proxy = os.path.expanduser(class_names_proxy)
         with open(class_names_proxy, 'r') as fp:
             lines = fp.readlines()
@@ -356,7 +358,7 @@ def load_class_names(class_names_proxy):
     elif isinstance(class_names_proxy, list):
         return class_names_proxy
     else:
-        raise ValueError("unknown class_names type: {}".format(str(type(class_names))))
+        raise ValueError("unknown class_names type: {}".format(str(type(class_names_proxy))))
 
 def image2torch(img):
     width = img.width
@@ -495,6 +497,17 @@ def get_image_size(fname):
         else:
             return
         return width, height
+
+def crop( img, res_x, res_y, mode='central' ):
+    width, height, channel = img.shape
+    x_f, y_f,x_r,y_r = width//res_x, height//res_y, width%res_x, height%res_y
+    l_x = x_r//2
+    l_y = y_r//2
+    newimg = np.zeros( x_f*y_f, res_x, res_y, channel )
+    for i in range(x_f):
+        for j in range(y_f):
+            newimg[(i+1)*j] = img[i*res_x+l_x: (i+1)*res+l_x, j*res_y+l_y: (j+1)*res_y+l_y]
+    return newimg
 
 def logging(message):
     print('%s %s' % (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), message))
