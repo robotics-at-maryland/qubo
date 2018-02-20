@@ -18,6 +18,7 @@
 #include <queue.h>
 #include <task.h>
 #include <semphr.h>
+#include <stream_buffer.h>
 
 // Tiva
 #include <stdbool.h>
@@ -58,7 +59,7 @@
 
 #include "include/task_handles.h"
 #include "include/task_queues.h"
-#include "tasks/include/qubobus_test.h"
+/* #include "tasks/include/qubobus_test.h" */
 
 
 SemaphoreHandle_t i2c0_mutex;
@@ -101,8 +102,12 @@ volatile uint16_t *i2c3_int_state;
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
 
+MessageBufferHandle_t thruster_message_buffer;
+
 DECLARE_TASK_HANDLES;
 DECLARE_TASK_QUEUES;
+
+INIT_MESSAGE_BUFFERS();
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -220,9 +225,9 @@ int main() {
     while(1){}
   }
 
-  if (qubobus_test_init() ){
-    while(1){}
-  }
+  /* if (qubobus_test_init() ){ */
+  /*   while(1){} */
+  /* } */
   /*
     if ( read_uart0_init() ) {
     while(1){}

@@ -85,7 +85,7 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		case M_ID_THRUSTER_SET: {
 
 			/* create the message */
-			struct Thruster_Set thruster_set = (struct Thruster_Set) message->payload;
+			struct Thruster_Set* thruster_set = (struct Thruster_Set*) message->payload;
 
 			/* send it to the task*/
 			if ( xMessageBufferSend(thruster_message_buffer,
@@ -166,26 +166,27 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 			}
 		}
 
-		else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
 
-			// Notify using the ID of the request, so tasks know what to do
-			xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite);
-			if(xQueueReceive(embedded_queue, (void*)&q_msg,
-							 ((struct UART_Queue*)state->io_host)->transfer_timeout ) != pdPASS) {
-				return -1;
+	else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
 
-			}
-		}
+		// Notify using the ID of the request, so tasks know what to do
+		/* xTaskNotify(qubobus_test_handle, message->header.message_id, eSetValueWithOverwrite); */
+		/* if(xQueueReceive(embedded_queue, (void*)&q_msg, */
+		/*				 ((struct UART_Queue*)state->io_host)->transfer_timeout ) != pdPASS) { */
+		return -1;
 
-		else if (message->header.message_id >= M_ID_OFFSET_CORE) {
-			// There should only be errors from this thing
-			return -1;
-		}
+	}
 
-		else if (message->header.message_id >= M_ID_OFFSET_MIN) {
-			// If we get here, something is wrong.
-			return -1;
-		}
+
+	else if (message->header.message_id >= M_ID_OFFSET_CORE) {
+		// There should only be errors from this thing
+		return -1;
+	}
+
+	else if (message->header.message_id >= M_ID_OFFSET_MIN) {
+		// If we get here, something is wrong.
+		return -1;
+	}
 
 	// Now write it
 	Message response;
@@ -206,22 +207,24 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 	return 0;
 }
 
+
 static uint8_t handle_error(IO_State *state, Message *message, const uint8_t* buffer){
 	switch ( message->header.message_id ) {
 	case E_ID_CHECKSUM: {
 		// When we get a checksum error, we re-transmit the message
 		Message response;
-		if( q_msg.transaction != NULL ){
-			response = create_response(q_msg.transaction, q_msg.payload);
-		} else if ( q_msg.error != NULL ){
-			response = create_error( q_msg.error, q_msg.payload);
-		} else {
-			return -1;
-		}
-		if ( write_message( state, &response ) ){
-			return -1;
-		}
+		/* if( q_msg.transaction != NULL ){ */
+		/*	response = create_response(q_msg.transaction, q_msg.payload); */
+		/* } else if ( q_msg.error != NULL ){ */
+		/*	response = create_error( q_msg.error, q_msg.payload); */
+		/* } else { */
+		/*	return -1; */
+		/* } */
+		/* if ( write_message( state, &response ) ){ */
+		/*	return -1; */
+		/* } */
 		return 0;
+
 	}
 	default: {
 		return -1;
@@ -267,10 +270,6 @@ static void tiqu_task(void *params){
 			}
 			case MT_REQUEST: {
 
-				// we free here so that the previous message can hang around so we
-				// can re-transmit it in case of a checksum error
-				vPortFree(q_msg.payload);
-				q_msg.payload = NULL;
 				if (handle_request(&state, &message, buffer)){
 					goto reconnect;
 				}

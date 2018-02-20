@@ -9,11 +9,15 @@
 // FreeRTOS
 #include <FreeRTOS.h>
 #include <task.h>
+#include <message_buffer.h>
 
-#include "lib/include/intertask_messages.h"
+#include "include/intertask_messages.h"
 
 // Hardware libraries
 #include "lib/include/pca9685.h"
+
+// Qubobus
+#include "qubobus.h"
 
 // which bus on the Tiva the PCA9685 is connected to
 #define I2C_BUS 0
