@@ -18,7 +18,7 @@
 #include <queue.h>
 #include <task.h>
 #include <semphr.h>
-#include <stream_buffer.h>
+#include <message_buffer.h>
 
 // Tiva
 #include <stdbool.h>
@@ -126,9 +126,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName
 // Called when a tick interrupt happens
 // Can be used to confirm tick interrupt happening
 void vApplicationTickHook(void) {
-    #ifdef DEBUG
+#ifdef DEBUG
   //UARTprintf("\nTick interrupt\n");
-    #endif
+#endif
 }
 
 
@@ -211,11 +211,11 @@ int main() {
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
 
-/*
-  if ( i2c_test_init() ) {
-  while(1){}
-  }
-*/
+  /*
+    if ( i2c_test_init() ) {
+    while(1){}
+    }
+  */
   /*
     if ( example_blink_init() ) {
     while(1){}

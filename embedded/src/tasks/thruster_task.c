@@ -26,7 +26,8 @@ static void esc_test_task(void *params) {
                           sizeof(thruster_set), portMAX_DELAY);
 
     for (int i = 0; i < 8; i++) {
-
+      // Don't know what the scale here is...
+      pca9685_setPWMFreq(I2C_BUS, thruster_set.throttle[i]);
     }
 
   }

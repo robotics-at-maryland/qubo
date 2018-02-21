@@ -23,8 +23,9 @@ bool tiqu_task_init(void){
 // Handles requests received from the bus
 static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* buffer){
 
-	Transaction *transaction = NULL;
-	Error *error = NULL;
+	Transaction transaction;
+	Error error;
+	Message response;
 	// Get the data from the task
 	// Start with the highest message id, and use else-if to check like a switch-case
 
@@ -92,10 +93,9 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 									&thruster_set,
 									sizeof(thruster_set),
 									pdMS_TO_TICKS(10)) == 0) {
-				error = &eThrusterUnreachable;
+				error = eThrusterUnreachable;
 			}
-
-			transaction = &tThrusterSet;
+			transaction = tThrusterSet;
 		}
 		}
 	}
@@ -188,17 +188,6 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		return -1;
 	}
 
-	// Now write it
-	Message response;
-	if (transaction != NULL){
-		response = create_response(transaction, payload);
-	} else if (error != NULL) {
-		response = create_error(error, payload);
-	} else {
-		// Something went wrong, just give up
-		return -1;
-	}
-
 	if ( write_message( state, &response)){
 		blink_rgb(RED_LED, 1);
 		return -1;
@@ -213,16 +202,7 @@ static uint8_t handle_error(IO_State *state, Message *message, const uint8_t* bu
 	case E_ID_CHECKSUM: {
 		// When we get a checksum error, we re-transmit the message
 		Message response;
-		/* if( q_msg.transaction != NULL ){ */
-		/*	response = create_response(q_msg.transaction, q_msg.payload); */
-		/* } else if ( q_msg.error != NULL ){ */
-		/*	response = create_error( q_msg.error, q_msg.payload); */
-		/* } else { */
-		/*	return -1; */
-		/* } */
-		/* if ( write_message( state, &response ) ){ */
-		/*	return -1; */
-		/* } */
+
 		return 0;
 
 	}
