@@ -1,0 +1,10 @@
+-DPART_TM4C123GH6PM
+-DTARGET_IS_TM4C123_RB2
+-Dgcc
+-std=c99
+-pedantic
+-IFreeRTOS/Source/include/
+-IFreeRTOS/Source/portable/GCC/ARM_CM4F/
+-Idrivers/
+-Isrc/
+-Iqubobus/include/
