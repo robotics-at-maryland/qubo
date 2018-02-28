@@ -72,6 +72,9 @@ if __name__ == '__main__':
     
     rospy.init_node('autonomy_node')
 
+    # rospy.wait_for_service('depth_toggle')
+    toggle_test = rospy.ServiceProxy('depth_toggle', ram_msgs.srv.bool_bool)
+
     qubo_namespace = '/qubo/'
 
     #we publish commands
@@ -132,6 +135,7 @@ if __name__ == '__main__':
     #surge_target: + is move backwards, not sure of units because robot never stops and also doesn't move in a straight line
     #sway_target: + is move to the right, not sure of units because robot never stops 
 
+    toggle_test(0)
     depth_pub.publish(10)
     
     call_action('gate_action')

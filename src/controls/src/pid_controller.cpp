@@ -49,7 +49,7 @@ PIDController::PIDController(NodeHandle n, NodeHandle np,  string control_topic)
 	m_server.setCallback( boost::bind(&PIDController::configCallback, this, _1, _2));
 	
 	//register service
-	toggle_test = n.advertiseService("toggle_test", &PIDController::toggleController, this);
+	toggle_test = n.advertiseService(control_topic + "_toggle", &PIDController::toggleController, this);
 	
 }
 
