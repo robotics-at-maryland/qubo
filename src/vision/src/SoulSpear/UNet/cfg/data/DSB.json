@@ -1,0 +1,7 @@
+{
+  "train" : "~/DSB2018/data/train.csv",
+  "valid" : "~/DSB2018/data/valid.csv",
+  "test" : "~/DSB2018/data/test.csv",
+  "name" : "DSB2018",
+  "description": "Data Science Bowl 2018, nuclei segmentation"
+}

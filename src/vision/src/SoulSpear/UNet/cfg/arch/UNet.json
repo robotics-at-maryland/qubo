@@ -1,0 +1,35 @@
+{
+    "model" : {
+      "num_mask": 1,
+      "width" : 128,
+      "height" : 128
+    },
+
+    "checkpoint":{
+      "root" : "~/SoulSpear/UNet/checkpoint/UNet",
+      "path" : "~/SoulSpear/UNet/checkpoint/UNet/cp.pth.tar",
+      "best" : "~/SoulSpear/UNet/checkpoint/UNet/best.pth.tar"
+    },
+
+    "tensorboard":{
+      "root" : "~/SoulSpear/UNet/summary/UNet"
+    },
+
+    "train" : {
+      "batch_size" : 32,
+      "max_batches" : 40000,
+      "learning_rate": 0.01,
+      "momentum": 0.9,
+      "decay": 0.0005,
+      "steps": [-1,500,40000,60000],
+      "scales": [0.1,10,0.1,0.1],
+
+      "save_interval" : 10,
+      "summary_interval" : 1,
+      "valid_interval" : 10
+    },
+
+    "threshold" :{
+      "mask_threshold" : 0.8
+    }
+}
