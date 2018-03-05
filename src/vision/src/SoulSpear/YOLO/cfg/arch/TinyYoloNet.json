@@ -27,11 +27,11 @@
       "learning_rate": 0.00025,
       "momentum": 0.9,
       "decay": 0.0005,
-      "steps": [-1,100,20000,30000],
+      "steps": [-1,400,50000,70000],
       "scales": [0.1,10,0.1,0.1],
 
       "save_interval" : 1,
-      "summary_interval" : 10
+      "summary_interval" : 50
     },
 
     "threshold" :{

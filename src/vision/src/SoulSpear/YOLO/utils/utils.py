@@ -506,7 +506,7 @@ def crop( img, res_x, res_y, mode='central' ):
     newimg = np.zeros( x_f*y_f, res_x, res_y, channel )
     for i in range(x_f):
         for j in range(y_f):
-            newimg[(i+1)*j] = img[i*res_x+l_x: (i+1)*res+l_x, j*res_y+l_y: (j+1)*res_y+l_y]
+            newimg[ i*y_f+j ] = img[i*res_x+l_x: (i+1)*res+l_x, j*res_y+l_y: (j+1)*res_y+l_y]
     return newimg
 
 def logging(message):

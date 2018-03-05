@@ -4,8 +4,6 @@ import torch.nn.functional as F
 from .loss.region_loss import RegionLoss
 from .layers import Route, Reorg, conv
 
-# support route shortcut and reorg
-
 __all__ = ['YOLOv2']
 
 
@@ -26,7 +24,6 @@ class YOLOv2(nn.Module):
         self.erudite = 0
 
         self.base_cnn = nn.Sequential(
-
             conv( 3, 32, kernel_size=3, stride=1, padding=1),
             nn.MaxPool2d(2,stride=2),
 
@@ -49,7 +46,6 @@ class YOLOv2(nn.Module):
             conv( 512, 256, kernel_size=1, stride=1, padding=0),
             conv( 256, 512, kernel_size=3, stride=1, padding=1),
             )
-
 
         self.downsample = nn.MaxPool2d(2,stride=2)
         self.lr_cnn = nn.Sequential(
