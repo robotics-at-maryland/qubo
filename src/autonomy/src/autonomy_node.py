@@ -133,10 +133,22 @@ if __name__ == '__main__':
     #roll_target: + is roll with right side dipping (maybe - not sure), 0 is neutral position [-pi,pi]
     #yaw_target: + is turn left, 0 is neutral position [-pi,pi]
     #surge_target: + is move backwards, not sure of units because robot never stops and also doesn't move in a straight line
-    #sway_target: + is move to the right, not sure of units because robot never stops 
+    #sway_target: + is move to the right, not sure of units because robot never stops
 
+    #to turn a controller off, create a ServiceProxy line as shown above, and then turn off using service_name(0) and on using service_name(1)
+    #the controller must be turned off for *_publish commands to work
+
+    print "turning depth controller off"
+    
     toggle_test(0)
     depth_pub.publish(10)
+
+    rospy.sleep(10.)
+
+    print "turning depth controller back on"
+
+    depth_pub.publish(0)
+    toggle_test(1)
     
     call_action('gate_action')
     
