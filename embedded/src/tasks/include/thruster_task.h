@@ -26,8 +26,8 @@
 // Frequency of the PWM on the PCA9685.  It's a float.
 #define PWM_FREQ 1600.0
 
-bool esc_test_init();
+bool thruster_task_init();
 
-static void esc_test_task(void *params);
+static void thruster_task(void *params);
 
 #endif

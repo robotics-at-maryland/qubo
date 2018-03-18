@@ -31,6 +31,8 @@
 // #include "include/task_queues.h"
 
 extern struct Depth_Status depth_status;
+#define ERROR_FLAG 0x01
+#define TRANSACTION_FLAG 0x02
 
 /**
  * Creates the task used to communicate across the UART using Qubobus

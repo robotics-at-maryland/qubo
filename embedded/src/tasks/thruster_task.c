@@ -2,15 +2,15 @@
 #include "lib/include/printfloat.h"
 #include <stdio.h>
 
-bool esc_test_init() {
-  if ( xTaskCreate(esc_test_task, (const portCHAR *)"Thruster", 256, NULL,
+bool thruster_task_init() {
+  if ( xTaskCreate(thruster_task, (const portCHAR *)"Thruster", 256, NULL,
                    tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
   }
   return false;
 }
 
-static void esc_test_task(void *params) {
+static void thruster_task(void *params) {
 
 #ifdef DEBUG
   UARTprintf("Starting ESC task\n");

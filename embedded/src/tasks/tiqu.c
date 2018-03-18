@@ -26,15 +26,19 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 	Transaction transaction;
 	Error error;
 	Message response;
+	uint8_t flag = 0;
+
 	// Get the data from the task
 	// Start with the highest message id, and use else-if to check like a switch-case
 
+	// Maximum offset value.  Nothing should be higher than this
 	if (message->header.message_id >= M_ID_OFFSET_MAX) {
 
 		// If the ID is higher than max, something is wrong
 		return -1;
 	}
 
+	// Debug offset, mostly things concerned with logging
 	else if (message->header.message_id >= M_ID_OFFSET_DEBUG) {
 
 		switch (message->header.message_id) {
@@ -52,6 +56,7 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		}
 	}
 
+	// Depth offset, used for reading/setting the depth monitor
 	else if (message->header.message_id >= M_ID_OFFSET_DEPTH) {
 
 		switch (message->header.message_id) {
@@ -74,11 +79,13 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		}
 	}
 
+	// Pneumatics offset.  Currently not implemented in hardware
 	else if (message->header.message_id >= M_ID_OFFSET_PNEUMATICS) {
 
 		// There's only one thing to break out here
 	}
 
+	// Thruster offset, For setting/getting thruster values
 	else if (message->header.message_id >= M_ID_OFFSET_THRUSTER) {
 
 		switch (message->header.message_id) {
@@ -94,12 +101,15 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 									sizeof(thruster_set),
 									pdMS_TO_TICKS(10)) == 0) {
 				error = eThrusterUnreachable;
+				flag = ERROR_FLAG;
 			}
 			transaction = tThrusterSet;
+			flag = TRANSACTION_FLAG;
 		}
 		}
 	}
 
+	// Power offset.  Used to set the monitor/get status
 	else if (message->header.message_id >= M_ID_OFFSET_POWER) {
 
 		switch (message->header.message_id) {
@@ -127,6 +137,7 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		}
 	}
 
+	// Battery offset, used to enable monitor and get status
 	else if (message->header.message_id >= M_ID_OFFSET_BATTERY) {
 
 		switch (message->header.message_id) {
@@ -151,22 +162,23 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		}
 	}
 
+	// Safety offset.  Used for enabling/reading the safety
 	else if (message->header.message_id >= M_ID_OFFSET_SAFETY) {
 
-			switch (message->header.message_id) {
-			case M_ID_SAFETY_STATUS: {
-				break;
-			}
-			case M_ID_SAFETY_SET_SAFE: {
-				break;
-			}
-			case M_ID_SAFETY_SET_UNSAFE: {
-				break;
-			}
-			}
+		switch (message->header.message_id) {
+		case M_ID_SAFETY_STATUS: {
+			break;
 		}
+		case M_ID_SAFETY_SET_SAFE: {
+			break;
+		}
+		case M_ID_SAFETY_SET_UNSAFE: {
+			break;
+		}
+		}
+	}
 
-
+	// Embedded offset.  Used for things involving the embedded system as a whole
 	else if (message->header.message_id >= M_ID_OFFSET_EMBEDDED) {
 
 		// Notify using the ID of the request, so tasks know what to do
@@ -177,15 +189,32 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 
 	}
 
-
+	// Core offset.  Used for things that involve the qubobus core protocol
 	else if (message->header.message_id >= M_ID_OFFSET_CORE) {
 		// There should only be errors from this thing
 		return -1;
 	}
 
+	// Minimum offset, we shouldn't see this
 	else if (message->header.message_id >= M_ID_OFFSET_MIN) {
 		// If we get here, something is wrong.
 		return -1;
+	}
+	// did we get something back, or was there an error?
+	switch (flag) {
+	case ERROR_FLAG: {
+		response = create_error(&error, payload);
+		break;
+	}
+	case TRANSACTION_FLAG: {
+		response = create_response(&transaction, payload);
+		break;
+	}
+	default: {
+		// Bad message, send back the protocol error
+		response = create_error(&eProtocol, &response);
+		break;
+	}
 	}
 
 	if ( write_message( state, &response)){
@@ -222,7 +251,7 @@ static void tiqu_task(void *params){
 		// This is where we jump to if something goes wrong on the bus
 		reconnect:
 		// wait for the bus to connect
-		while( wait_connect( &state, buffer )); /* {blink_rgb(RED_LED | GREEN_LED, 1);} */
+		while( wait_connect( &state, buffer ))  {blink_rgb(RED_LED, 1);}
 		blink_rgb(GREEN_LED, 1);
 
 		for(;;){
@@ -256,7 +285,7 @@ static void tiqu_task(void *params){
 				break;
 			}
 			case MT_RESPONSE: {
-
+				goto reconnect;
 			}
 			case MT_ERROR: {
 
