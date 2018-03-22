@@ -25,10 +25,11 @@ static void thruster_task(void *params) {
     xMessageBufferReceive(thruster_message_buffer, (void*)&thruster_set,
                           sizeof(thruster_set), portMAX_DELAY);
 
-    for (int i = 0; i < 8; i++) {
-      // Don't know what the scale here is...
-      pca9685_setPWMFreq(I2C_BUS, thruster_set.throttle[i]);
-    }
+    blink_rgb(GREEN_LED, 1);
+    // Don't know what the scale here is...
+    uint16_t val = thruster_set.throttle * 4096;
+    pca9685_setPWM(I2C_BUS, thruster_set.thruster_id,  val, 4096 - val);
+
 
   }
 }

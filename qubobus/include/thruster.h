@@ -27,7 +27,8 @@ enum {
 };
 
 struct Thruster_Set {
-    float throttle[8];
+    float throttle;
+    uint8_t thruster_id;
 };
 
 struct Thruster_Status_Request {

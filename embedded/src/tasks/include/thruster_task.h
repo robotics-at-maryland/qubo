@@ -15,6 +15,7 @@
 
 // Hardware libraries
 #include "lib/include/pca9685.h"
+#include "lib/include/rgb.h"
 
 // Qubobus
 #include "qubobus.h"

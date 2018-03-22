@@ -37,7 +37,7 @@ class QSCUNode {
 	protected:
 
 	// This is a class to hold messages passed in a queue to the timer which controls the bus
-	// I didn't want to just pass void* around like we do on the Tiva, so I'm using boost
+	// I didn't want to just pass void* around like we do on the Tiva, so I'm using shared ptrs
 	class QMsg {
 		public:
 
@@ -89,12 +89,12 @@ class QSCUNode {
 
 	// We need these so we can store the last message that was sent on the bus
 	// to calculate the value we need to give the thrusters
-	float m_yaw_command = 0;
-	float m_pitch_command = 0;
-	float m_roll_command = 0;
-	float m_depth_command = 0;
-	float m_surge_command = 0;
-	float m_sway_command = 0;
+	float m_yaw_command		= 0;
+	float m_pitch_command	= 0;
+	float m_roll_command	= 0;
+	float m_depth_command	= 0;
+	float m_surge_command	= 0;
+	float m_sway_command	= 0;
 
 	ros::Timer qubobus_thruster_loop;
 	void QubobusThrusterCallback(const ros::TimerEvent&);

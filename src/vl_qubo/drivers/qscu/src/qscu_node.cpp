@@ -14,12 +14,12 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	/**
 	 * This stuff is almost exactly the same as it is in the Gazebo node
 	 */
-	string roll_topic = qubo_namespace + "roll";
-    string pitch_topic = qubo_namespace + "pitch";
-	string yaw_topic = qubo_namespace + "yaw";
-	string depth_topic = qubo_namespace + "depth"; //sometimes called heave
-	string surge_topic = qubo_namespace + "surge"; //"forward" translational motion
-	string sway_topic = qubo_namespace + "sway";   //"sideways" translational motion
+	string roll_topic	= qubo_namespace + "roll";
+	string pitch_topic	= qubo_namespace + "pitch";
+	string yaw_topic	= qubo_namespace + "yaw";
+	string depth_topic	= qubo_namespace + "depth"; //sometimes called heave
+	string surge_topic	= qubo_namespace + "surge"; //"forward" translational motion
+	string sway_topic	= qubo_namespace + "sway";   //"sideways" translational motion
 
 	m_roll_sub  = n.subscribe(roll_topic  + "_cmd", 1000, &QSCUNode::rollCallback, this);
 	m_pitch_sub = n.subscribe(pitch_topic + "_cmd", 1000, &QSCUNode::pitchCallback, this);
@@ -41,7 +41,7 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 
 	qubobus_loop.start();
 	qubobus_incoming_loop.start();
-	qubobus_status_loop.start();
+	// qubobus_status_loop.start();
 }
 
 QSCUNode::~QSCUNode(){
@@ -79,7 +79,7 @@ void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
 }
 
-void QSCUNode::QubobusCallback(const ros::TimerEvent& event){ 
+void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 
 	if ( !qscu.isOpen() ) {
 		try {
