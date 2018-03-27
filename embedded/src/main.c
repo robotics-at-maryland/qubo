@@ -160,13 +160,12 @@ int main() {
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
   // -----------------------------------------------------------------------
 
-  i2c0_mutex = xSemaphoreCreateMutex();
-  i2c1_mutex = xSemaphoreCreateMutex();
-  i2c2_mutex = xSemaphoreCreateMutex();
-  i2c3_mutex = xSemaphoreCreateMutex();
-
+  i2c0_mutex  = xSemaphoreCreateMutex();
+  i2c1_mutex  = xSemaphoreCreateMutex();
+  i2c2_mutex  = xSemaphoreCreateMutex();
+  i2c3_mutex  = xSemaphoreCreateMutex();
   uart1_mutex = xSemaphoreCreateMutex();
-  rgb_mutex = xSemaphoreCreateMutex();
+  rgb_mutex   = xSemaphoreCreateMutex();
 
 
 
@@ -177,8 +176,7 @@ int main() {
 
   /* INIT_TASK_QUEUES(); */
 
-  /* INIT_MESSAGE_BUFFERS(); */
-
+  thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set));
 
   i2c0_address      = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));

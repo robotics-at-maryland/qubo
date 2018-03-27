@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 import rospy
 import cmd
 from std_msgs.msg import Float32
@@ -8,7 +9,7 @@ qubo_namespace = '/qubo/'
 class EmbeddedController(cmd.Cmd):
 
     def __init__(self):
-        super(self.__class__, self).__init__()
+        super(EmbeddedController, self).__init__()
         rospy.init_node('embedded_controller')
         self.r = rospy.Rate(10)
 

@@ -20,9 +20,9 @@
 
 extern MessageBufferHandle_t thruster_message_buffer;
 
-#define INIT_MESSAGE_BUFFERS() do {										\
-		thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set)); \
-	} while (0)
+// #define INIT_MESSAGE_BUFFERS() do {										\
+//		thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set)); \
+//	} while (0)
 
 
 #endif

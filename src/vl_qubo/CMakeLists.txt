@@ -5,6 +5,7 @@ find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   ram_msgs
+  rospy
   )
 
 find_package(Boost REQUIRED)
