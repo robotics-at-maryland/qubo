@@ -1,5 +1,5 @@
 <!-- Runs the QSCU alongside the interactive control script -->
 <launch>
   <node name="QSCU" pkg="vl_qubo" type="qscu_node" required="true" />
-  <!-- <node name="control_script" pkg="vl_qubo" type="embedded_control.py"/> -->
+  <node name="control_script" pkg="vl_qubo" type="embedded_control.py" />
 </launch>
