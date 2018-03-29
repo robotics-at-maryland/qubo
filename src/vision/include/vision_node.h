@@ -28,85 +28,85 @@
 #include "sensor_msgs/Image.h"
 
 //our actions/tuner actions
-#include "buoy_action.h"
-#include "gate_action.h"
-#include "blob_action.h"
+// #include "buoy_action.h"
+// #include "gate_action.h"
+// #include "blob_action.h"
 
-class VisionNode{
+	class VisionNode{
 
-    public:
-
-
-    //you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
-    VisionNode(ros::NodeHandle n, ros::NodeHandle np,  std::string feed);
-    ~VisionNode();
-    void update(); //this will just pull the next image in
+		public:
 
 
-    //all service prototypes should go below, you also need to add a service variable for it in here and actually register
-    //it in the constructor
-    //=================================================================================================================
+		//you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
+		VisionNode(ros::NodeHandle n, ros::NodeHandle np,  std::string feed);
+		~VisionNode();
+		void update(); //this will just pull the next image in
 
 
-    bool serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+		//all service prototypes should go below, you also need to add a service variable for it in here and actually register
+		//it in the constructor
+		//=================================================================================================================
 
 
-    //sg: put action definitions here
-    //=================================================================================================================
+		bool serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
 
-    static void testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction>*as);
 
-    void findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
-    void findGate(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
-    void findBlob(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+		//sg: put action definitions here
+		//=================================================================================================================
 
-    protected:
+		// static void testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction>*as);
 
-    //camera stuff
-    //======================================================================
-    AVT::VmbAPI::CameraPtr m_gige_camera;
-	AVT::VmbAPI::FramePtr m_frame_p;
-	void getVmbFrame(cv::Mat& cv_frame);
-    long m_width, m_height;
-    VmbInt64_t m_pixel_format;
-	double m_fps;
+		// void findBuoy(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+		// void findGate(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
+		// void findBlob(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as);
 
-	class FrameObserver : virtual public AVT::VmbAPI::IFrameObserver {
-        public:
-        FrameObserver(AVT::VmbAPI::CameraPtr& camera);
-        virtual void FrameReceived(const AVT::VmbAPI::FramePtr frame);
-		virtual AVT::VmbAPI::FramePtr GetFrame();
 		protected:
-		std::queue<AVT::VmbAPI::FramePtr> m_q_frame;
+
+		//camera stuff
+		//======================================================================
+		AVT::VmbAPI::CameraPtr m_gige_camera;
+		AVT::VmbAPI::FramePtr m_frame_p;
+		void getVmbFrame(cv::Mat& cv_frame);
+		long m_width, m_height;
+		VmbInt64_t m_pixel_format;
+		double m_fps;
+
+		class FrameObserver : virtual public AVT::VmbAPI::IFrameObserver {
+			public:
+			FrameObserver(AVT::VmbAPI::CameraPtr& camera);
+			virtual void FrameReceived(const AVT::VmbAPI::FramePtr frame);
+			virtual AVT::VmbAPI::FramePtr GetFrame();
+			protected:
+			std::queue<AVT::VmbAPI::FramePtr> m_q_frame;
+		};
+		AVT::VmbAPI::IFrameObserverPtr m_observer;
+
+		// This is a wrapper for the Vimba error functions
+		// call a function in it and give it an error message to print
+		// if the function fails
+		// it also returns the error code, so you can still fail if you need to
+		static int vmb_err(const int func_call, const std::string err_msg);
+
+		cv::VideoCapture m_cap;
+		cv::Mat m_img;
+
+
+		cv::VideoWriter m_output_video;
+
+		//declare a service object for your service below
+		//======================================================================
+		ros::ServiceServer m_test_srv;
+
+
+		//declare an action server object for your action here
+		//======================================================================
+		//the VisionNavAction name here comes from the .action file in qubo/ram_msgs/action.
+		//the build system appends the word Action to whatever the file name is in the ram_msgs directory
+		// actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
+		// actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
+		// actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_blob_server;
+
 	};
-    AVT::VmbAPI::IFrameObserverPtr m_observer;
-
-	// This is a wrapper for the Vimba error functions
-	// call a function in it and give it an error message to print
-	// if the function fails
-	// it also returns the error code, so you can still fail if you need to
-    static int vmb_err(const int func_call, const std::string err_msg);
-
-    cv::VideoCapture m_cap;
-    cv::Mat m_img;
-
-
-    cv::VideoWriter m_output_video;
-
-    //declare a service object for your service below
-    //======================================================================
-    ros::ServiceServer m_test_srv;
-
-
-    //declare an action server object for your action here
-    //======================================================================
-    //the VisionNavAction name here comes from the .action file in qubo/ram_msgs/action.
-    //the build system appends the word Action to whatever the file name is in the ram_msgs directory
-    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
-    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
-    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_blob_server;
-
-};
 
 
 #endif

@@ -38,7 +38,7 @@ find_package(catkin
 
   image_transport
 
-  # cv_bridge
+  cv_bridge
 
   # packages for pytorch
   # torch
@@ -97,9 +97,9 @@ set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
 
-  src/actions/buoy_action.cpp
-  src/actions/gate_action.cpp
-  src/actions/blob_action.cpp
+  # src/actions/buoy_action.cpp
+  # src/actions/gate_action.cpp
+  # src/actions/blob_action.cpp
   )
 
 
@@ -202,8 +202,8 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 # add_executable(blob_tuner ${BLOB_TUNER_FILES})
 # target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
-add_executable(gate_tuner ${GATE_TUNER_FILES})
-target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
+# add_executable(gate_tuner ${GATE_TUNER_FILES})
+# target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
 
 # add_executable(buoy_tuner ${BUOY_TUNER_FILES})
 # target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})

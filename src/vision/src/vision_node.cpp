@@ -15,9 +15,9 @@ int VisionNode::vmb_err(const int func_call, const string err_msg) {
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
-	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
-		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
-		m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
+// :	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
+//	m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
+//	m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
 
 {
 
@@ -45,12 +45,12 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		// We need to height, width and pixel format of the camera to convert the images to something OpenCV likes
 		FeaturePtr feat;
 		// if(!vmb_err(m_gige_camera->GetFeatureByName("GVSPAdjustPacketSize", feat), "Error getting packet feature")){
-		// 	if(!vmb_err(feat->RunCommand(), "Error running packet command")){
-		// 		bool done = false;
-		// 		while (!done) {
-		// 			if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
-		// 		}
-		// 	}
+		//	if(!vmb_err(feat->RunCommand(), "Error running packet command")){
+		//		bool done = false;
+		//		while (!done) {
+		//			if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
+		//		}
+		//	}
 		// }
 		if(!vmb_err(m_gige_camera->GetFeatureByName( "Width", feat), ("Error getting the camera width" ))){
 			VmbInt64_t width;
@@ -149,10 +149,12 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 	//start your action servers here
 	//------------------------------------------------------------------------------
-	m_buoy_server.start();
-	m_gate_server.start();
+	/*
+	  m_buoy_server.start();
+	  m_gate_server.start();
 	m_blob_server.start();
 	ROS_INFO("servers started");
+	*/
 
 }
 
@@ -227,7 +229,7 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	// VmbFrameStatusType status;
 	// vmb_frame->GetReceiveStatus(status);
 	// if(status != VmbFrameStatusComplete) {
-	// 	ROS_ERROR("Malformed frame received, code %i", status);
+	//	ROS_ERROR("Malformed frame received, code %i", status);
 	// }
 	VmbUint32_t size;
 	vmb_frame->GetImageSize(size);
@@ -258,9 +260,9 @@ bool VisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_b
 
 
 
-//There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet.
+/* //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet.
 //=================================================================================================================
-void VisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
+	void VisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	//    goal->test_feedback = 5;
 	ROS_ERROR("You called the action well done!");
 	as->setSucceeded();
@@ -293,17 +295,17 @@ void VisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionli
 
 
 void VisionNode::findBlob(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
-	
+
 	BlobAction action = BlobAction();
 	ram_msgs::VisionNavFeedback feedback;
 	feedback.y_offset = 0;
-	
+
 	while(true){
 		ROS_ERROR("updating action");
 		feedback.x_offset = action.updateAction(m_img);
 		as->publishFeedback(feedback);
-		
+
 	}
 
 	as->setSucceeded();
-}
+}*/
