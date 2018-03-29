@@ -8,7 +8,7 @@ project(vision)
 
 # set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
-find_package(OpenCV 2.4 REQUIRED
+find_package(OpenCV REQUIRED
 #  NO_MODULE
 #  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
 # NO_DEFAULT_PATH
@@ -97,10 +97,10 @@ set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
 
-  # src/actions/buoy_action.cpp
-  # src/actions/gate_action.cpp
-  # src/actions/blob_action.cpp
-  )
+# src/actions/buoy_action.cpp
+ # src/actions/gate_action.cpp
+ # src/actions/blob_action.cpp
+ )
 
 
 set(SIM_VISION_SRC_FILES
