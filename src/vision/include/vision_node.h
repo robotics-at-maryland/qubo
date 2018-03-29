@@ -6,6 +6,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/video.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 //Vimba includes
 #include <VimbaCPP/Include/VimbaCPP.h>
