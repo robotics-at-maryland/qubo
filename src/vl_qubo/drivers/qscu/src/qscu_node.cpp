@@ -15,7 +15,7 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	 * This stuff is almost exactly the same as it is in the Gazebo node
 	 */
 	string roll_topic = qubo_namespace + "roll";
-    string pitch_topic = qubo_namespace + "pitch";
+  string pitch_topic = qubo_namespace + "pitch";
 	string yaw_topic = qubo_namespace + "yaw";
 	string depth_topic = qubo_namespace + "depth"; //sometimes called heave
 	string surge_topic = qubo_namespace + "surge"; //"forward" translational motion
@@ -54,6 +54,14 @@ void QSCUNode::update(){
 
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
+  // update the actual commands from the buffer, so these don't get changed in the middle of running
+  m_yaw_command = m_yaw_command_buffer;
+  m_pitch_command = m_pitch_command_buffer;
+  m_roll_command = m_roll_command_buffer;
+  m_depth_command = m_depth_command_buffer;
+  m_surge_command = m_surge_command_buffer;
+  m_sway_command = m_sway_command_buffer;
+
 	// Calculate the values for the thrusters we need to change
 	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
 	m_thruster_speeds[1] = +m_yaw_command + m_surge_command + m_sway_command;
@@ -79,7 +87,7 @@ void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
 }
 
-void QSCUNode::QubobusCallback(const ros::TimerEvent& event){ 
+void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 
 	if ( !qscu.isOpen() ) {
 		try {
@@ -135,25 +143,25 @@ void QSCUNode::QubobusStatusCallback(const ros::TimerEvent& event){
 
 void QSCUNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
 	// Store the last command
-	m_yaw_command = (float) msg->data;
+	m_yaw_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::pitchCallback(const std_msgs::Float64::ConstPtr& msg){
-	m_pitch_command = (float) msg->data;
+	m_pitch_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::rollCallback(const std_msgs::Float64::ConstPtr& msg){
-	m_roll_command = (float) msg->data;
+	m_roll_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
-	m_pitch_command = (float) msg->data;
+	m_pitch_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::surgeCallback(const std_msgs::Float64::ConstPtr& msg){
-	m_surge_command = (float) msg->data;
+	m_surge_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::swayCallback(const std_msgs::Float64::ConstPtr& msg){
-	m_sway_command = (float) msg->data;
+	m_sway_command_buffer = (float) msg->data;
 }
