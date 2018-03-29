@@ -113,23 +113,5 @@
 		// actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
 		// actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
 		// actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_blob_server;
-
-    cv::VideoWriter m_output_video;
-
-    //declare a service object for your service below
-    //======================================================================
-    ros::ServiceServer m_test_srv;
-
-
-    //declare an action server object for your action here
-    //======================================================================
-    //the VisionNavAction name here comes from the .action file in qubo/ram_msgs/action.
-    //the build system appends the word Action to whatever the file name is in the ram_msgs directory
-    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
-    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
-    actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_blob_server;
 };
-
-
-
 #endif
