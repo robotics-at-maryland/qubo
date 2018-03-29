@@ -38,7 +38,7 @@ find_package(catkin
 
   image_transport
 
-  # cv_bridge
+  cv_bridge
 
 
   )
@@ -73,9 +73,9 @@ set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
 
-  src/actions/buoy_action.cpp
-  src/actions/gate_action.cpp
-  src/actions/blob_action.cpp
+ # src/actions/buoy_action.cpp
+ # src/actions/gate_action.cpp
+ # src/actions/blob_action.cpp
   )
 
 

@@ -6,6 +6,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/video.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 //Vimba includes
 #include <VimbaCPP/Include/VimbaCPP.h>
@@ -42,13 +43,22 @@ class VisionNode{
     ~VisionNode();
     void update(); //this will just pull the next image in
 
-
     //all service prototypes should go below, you also need to add a service variable for it in here and actually register
     //it in the constructor
     //=================================================================================================================
 
 
     bool serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+
+    //Image transport to publish image msgs from the camera
+    image_transport::ImageTransport it;
+   
+
+    /**************************************************************
+     * Publishers and the messages they use                       *
+     **************************************************************/
+    image_transport::Publisher image_pub;
+    sensor_msgs::ImagePtr image_msg;
 
 
     //sg: put action definitions here
@@ -105,8 +115,8 @@ class VisionNode{
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_buoy_server;
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_gate_server;
     actionlib::SimpleActionServer<ram_msgs::VisionNavAction> m_blob_server;
-
 };
+
 
 
 #endif

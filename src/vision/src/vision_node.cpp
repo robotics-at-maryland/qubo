@@ -17,8 +17,8 @@ int VisionNode::vmb_err(const int func_call, const string err_msg) {
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
 		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
-		m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
-
+		m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false),
+		it(n)
 {
 
 	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
@@ -82,6 +82,9 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		m_observer = IFrameObserverPtr(new FrameObserver(m_gige_camera));
 		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 5, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
+
+		image_pub = it.advertise("mako_feed", 1000);		
+		image_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", m_img).toImageMsg();
 
 	} else {
 
@@ -171,7 +174,7 @@ void VisionNode::update(){
 	// Use the mako if its present
 	if (m_gige_camera != nullptr){
 		getVmbFrame(m_img);
-	} else {
+		} else {
 		m_cap >> m_img;
 	}
 	//if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
@@ -182,6 +185,8 @@ void VisionNode::update(){
 		return;
 	}
 
+	image_pub.publish(image_msg);
+	
 	//if the user didn't specify a directory this will not be open
 	if(m_output_video.isOpened()){
 		m_output_video << m_img;
