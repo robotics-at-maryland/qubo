@@ -92,7 +92,7 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 
 		case M_ID_THRUSTER_SET: {
 
-			blink_rgb(BLUE_LED, 1);
+			/* blink_rgb(BLUE_LED, 1); */
 			/* create the message */
 			struct Thruster_Set* thruster_set = (struct Thruster_Set*) message->payload;
 
@@ -274,6 +274,7 @@ static void tiqu_task(void *params){
 				// respond to the keepalive message
 				message = create_keep_alive();
 				if ( write_message( &state, &message ) != 0){
+					blink_rgb(BLUE_LED, 1);
 					goto reconnect;
 				}
 				break;
