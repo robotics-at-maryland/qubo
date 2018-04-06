@@ -8,7 +8,7 @@ project(vision)
 
 # set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
-find_package(OpenCV REQUIRED
+find_package(OpenCV 3 REQUIRED
 #  NO_MODULE
 #  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
 # NO_DEFAULT_PATH
