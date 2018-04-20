@@ -54,6 +54,9 @@ void QSCUNode::update(){
 
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
+	if (!thruster_update) {
+		return;
+	}
 	// Calculate the values for the thrusters we need to change
 	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
 	m_thruster_speeds[1] = +m_yaw_command + m_surge_command + m_sway_command;
@@ -77,6 +80,8 @@ void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 		q_msg.reply = nullptr;
 		m_outgoing.push(q_msg);
 	}
+
+	thruster_update = false;
 
 }
 
@@ -137,24 +142,30 @@ void QSCUNode::QubobusStatusCallback(const ros::TimerEvent& event){
 void QSCUNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
 	// Store the last command
 	m_yaw_command = (float) msg->data;
+	thruster_update = true;
 }
 
 void QSCUNode::pitchCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_pitch_command = (float) msg->data;
+	thruster_update = true;
 }
 
 void QSCUNode::rollCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_roll_command = (float) msg->data;
+	thruster_update = true;
 }
 
 void QSCUNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_pitch_command = (float) msg->data;
+	thruster_update = true;
 }
 
 void QSCUNode::surgeCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_surge_command = (float) msg->data;
+	thruster_update = true;
 }
 
 void QSCUNode::swayCallback(const std_msgs::Float64::ConstPtr& msg){
 	m_sway_command = (float) msg->data;
+	thruster_update = true;
 }

@@ -9,6 +9,7 @@
 // FreeRTOS
 #include <FreeRTOS.h>
 #include <task.h>
+#include <semphr.h>
 #include <message_buffer.h>
 
 #include "include/intertask_messages.h"

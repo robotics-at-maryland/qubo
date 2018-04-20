@@ -30,27 +30,39 @@ class EmbeddedController(cmd.Cmd):
 
     def do_yaw(self, thrust):
         """publish the given [thrust] to the yaw topic"""
-        self.yaw.publish(thrust)
+        if thrust == '':
+            return
+        self.yaw.publish(float(thrust))
 
     def do_pitch(self, thrust):
         """publish the given [thrust] to the pitch topic"""
-        self.pitch.publish(thrust)
+        if thrust == '':
+            return
+        self.pitch.publish(float(thrust))
 
     def do_roll(self, thrust):
         """publish the given [thrust] to the roll topic"""
-        self.roll.publish(thrust)
+        if thrust == '':
+            return
+        self.roll.publish(float(thrust))
 
     def do_depth(self, thrust):
         """publish the given [thrust] to the depth topic"""
-        self.depth.publish(thrust)
+        if thrust == '':
+            return
+        self.depth.publish(float(thrust))
 
     def do_surge(self, thrust):
         """publish the given [thrust] to the surge topic"""
-        self.surge.publish(thrust)
+        if thrust == '':
+            return
+        self.surge.publish(float(thrust))
 
     def do_sway(self, thrust):
         """publish the given [thrust] to the sway topic"""
-        self.sway.publish(thrust)
+        if thrust == '':
+            return
+        self.sway.publish(float(thrust))
 
     def do_exit(self, *args):
         sys.exit()

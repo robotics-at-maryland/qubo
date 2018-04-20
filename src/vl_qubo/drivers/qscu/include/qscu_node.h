@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
+#include <boost/optional.hpp>
 #include <queue>
 
 // No idea what this is
@@ -95,6 +96,7 @@ class QSCUNode {
 	float m_depth_command	= 0;
 	float m_surge_command	= 0;
 	float m_sway_command	= 0;
+	bool thruster_update    = false;
 
 	ros::Timer qubobus_thruster_loop;
 	void QubobusThrusterCallback(const ros::TimerEvent&);
