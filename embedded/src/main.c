@@ -150,7 +150,7 @@ int main() {
   configureUART();
   configureGPIO();
   configureI2C();
-  USB_serial_configure();
+  /* USB_serial_configure(); */
 
   // Master enable interrupts
   ROM_IntMasterEnable();
@@ -176,7 +176,7 @@ int main() {
 
   /* INIT_TASK_QUEUES(); */
 
-  thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set));
+  thruster_message_buffer = xMessageBufferCreate(8 * sizeof(struct Thruster_Set));
 
   i2c0_address      = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
@@ -215,11 +215,9 @@ int main() {
   // Start FreeRTOS tasks
   // -----------------------------------------------------------------------
 
-  /*
-    if ( i2c_test_init() ) {
-    while(1){}
-    }
-  */
+  /* if ( i2c_test_init() ) { */
+  /*   while(1){} */
+  /* } */
   /*
     if ( example_blink_init() ) {
     while(1){}

@@ -105,6 +105,7 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 			qscu.sendMessage(&msg.type, msg.payload.get(), msg.reply.get());
 			m_incoming.push(msg);
 			m_outgoing.pop();
+			ROS_ERROR("Wrote data");
 		}
 	} catch ( const QSCUException ex ) {
 		ROS_ERROR("Error reading the embedded system status");

@@ -22,9 +22,9 @@
 #include "qubobus.h"
 
 // which bus on the Tiva the PCA9685 is connected to
-#define I2C_BUS 0
+#define I2C_BUS I2C0_BASE
 // I2C address of the PCA9685
-#define PCA_ADDR 0b1111111
+#define PCA_ADDR 0b1110000
 // Frequency of the PWM on the PCA9685.  It's a float.
 #define PWM_FREQ 1600.0
 
