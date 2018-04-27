@@ -92,15 +92,19 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 
 		case M_ID_THRUSTER_SET: {
 
-			/* blink_rgb(BLUE_LED, 1); */
 			/* create the message */
 			struct Thruster_Set* thruster_set = (struct Thruster_Set*) message->payload;
 
 			/* send it to the task*/
-			if ( xMessageBufferSend(thruster_message_buffer,
-									&thruster_set,
-									sizeof(thruster_set),
-									pdMS_TO_TICKS(10)) == 0) {
+			if (
+				/* xMessageBufferSend(thruster_message_buffer, */
+				/*				   (void*) thruster_set, */
+				/*					sizeof(thruster_set), */
+				/*					pdMS_TO_TICKS(10)) == 0 */
+				xQueueSend(thruster_message_buffer,
+						   (void*) thruster_set,
+								   pdMS_TO_TICKS(10)) == 0
+				) {
 				error = eThrusterUnreachable;
 				flag = ERROR_FLAG;
 			}

@@ -25,13 +25,15 @@ static void thruster_task(void *params) {
   struct Thruster_Set thruster_set;
   for (;;) {
     // wait indefinitely for something to come over the buffer
-    xMessageBufferReceive(thruster_message_buffer, (void*)&thruster_set,
-                          sizeof(thruster_set), portMAX_DELAY);
+    /* xMessageBufferReceive(thruster_message_buffer, (void*)&thruster_set, */
+    /*                       sizeof(thruster_set), portMAX_DELAY); */
+    xQueueReceive(thruster_message_buffer, (void*)&thruster_set,
+                  portMAX_DELAY);
 
     /* blink_rgb(GREEN_LED | RED_LED, 1); */
     // Don't know what the scale here is...
-    uint16_t val = thruster_set.throttle * 4096;
-    pca9685_setPWM(I2C_BUS, thruster_set.thruster_id,  0, val);
+    uint16_t val = (uint16_t)(thruster_set.throttle * 2048);
+    pca9685_setPWM(I2C_BUS, thruster_set.thruster_id,  0, 2048 + val);
 
 
   }

@@ -176,7 +176,8 @@ int main() {
 
   /* INIT_TASK_QUEUES(); */
 
-  thruster_message_buffer = xMessageBufferCreate(8 * sizeof(struct Thruster_Set));
+  /* thruster_message_buffer = xMessageBufferCreate(8 * sizeof(struct Thruster_Set)); */
+  thruster_message_buffer = xQueueCreate(8, sizeof(struct Thruster_Set));
 
   i2c0_address      = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
