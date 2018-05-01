@@ -18,10 +18,10 @@ static void thruster_task(void *params) {
 
   /* blink_rgb(BLUE_LED | RED_LED,  1); */
 
-  pca9685_begin(I2C_BUS, PCA_ADDR);
-  pca9685_setPWMFreq(I2C_BUS, PWM_FREQ);
+  /* pca9685_begin(I2C_BUS, PCA_ADDR); */
+  /* pca9685_setPWMFreq(I2C_BUS, PWM_FREQ); */
 
-  blink_rgb(BLUE_LED, 1);
+  /* blink_rgb(BLUE_LED, 1); */
   struct Thruster_Set thruster_set;
   for (;;) {
     // wait indefinitely for something to come over the buffer
@@ -31,9 +31,7 @@ static void thruster_task(void *params) {
                   portMAX_DELAY);
 
     /* blink_rgb(GREEN_LED | RED_LED, 1); */
-    // Don't know what the scale here is...
-    uint16_t val = (uint16_t)(thruster_set.throttle * 2048);
-    pca9685_setPWM(I2C_BUS, thruster_set.thruster_id,  0, 2048 + val);
+    pca9685_setPWM(I2C_BUS, thruster_set.thruster_id,  0, THRUSTER_SCALE(thruster_set.throttle));
 
 
   }
