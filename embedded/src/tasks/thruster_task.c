@@ -18,8 +18,8 @@ static void thruster_task(void *params) {
 
   /* blink_rgb(BLUE_LED | RED_LED,  1); */
 
-  /* pca9685_begin(I2C_BUS, PCA_ADDR); */
-  /* pca9685_setPWMFreq(I2C_BUS, PWM_FREQ); */
+  pca9685_begin(I2C_BUS, PCA_ADDR);
+  pca9685_setPWMFreq(I2C_BUS, PWM_FREQ);
 
   /* blink_rgb(BLUE_LED, 1); */
   struct Thruster_Set thruster_set;

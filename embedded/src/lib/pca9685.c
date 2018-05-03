@@ -50,10 +50,14 @@ void pca9685_setPWMFreq(uint32_t device, float freq) {
     //Serial.print("Final pre-scale: "); Serial.println(prescale);
   #endif
 
-  uint8_t buffer1[2] = {PCA9685_MODE1, 0x21};
-  uint8_t buffer2[2] = {PCA9685_PRESCALE, floor(prescaleval + 0.5)};  
-  writeI2C(device, _i2caddr, buffer1, 2);
-  writeI2C(device, _i2caddr, buffer2, 2);
+  uint8_t mode[2] = {PCA9685_MODE1, 0x21};
+  uint8_t prescale[2] = {PCA9685_PRESCALE, floor(prescaleval + 0.5)};
+
+  mode[1] |= 0x10;
+  writeI2C(device, _i2caddr, mode, 2);
+  writeI2C(device, _i2caddr, prescale, 2);
+  mode [1] &= ~0x10;
+  writeI2C(device, _i2caddr, mode, 2);
 }
 
 void pca9685_setPWM(uint32_t device, uint8_t num, uint16_t on, uint16_t off) {

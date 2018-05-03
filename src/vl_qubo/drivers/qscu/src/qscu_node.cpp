@@ -68,7 +68,6 @@ void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 	m_thruster_speeds[6] = (-m_pitch_command - m_roll_command) + m_depth_command;
 	m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
 
-	ROS_ERROR("Thrusters");
 	// Create the message and add it to the queue
 	for (uint8_t i = 0; i < 8; i++) {
 		QMsg q_msg;
@@ -105,7 +104,6 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 			qscu.sendMessage(&msg.type, msg.payload.get(), msg.reply.get());
 			m_incoming.push(msg);
 			m_outgoing.pop();
-			ROS_ERROR("Wrote data");
 		}
 	} catch ( const QSCUException ex ) {
 		ROS_ERROR("Error reading the embedded system status");
