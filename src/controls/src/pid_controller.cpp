@@ -6,6 +6,7 @@
 
 
 #include "pid_controller.h"
+#include <ros/console.h>
 
 using namespace std;
 using namespace ros;
@@ -73,11 +74,14 @@ void PIDController::update() {
 	if(m_unwind_angle){
 		//makes sure we always take the smallest way around the circle
 		if(m_error > PI){
-			m_error = 2*PI - m_error;
+		  // m_error = 2*PI - m_error;
+		  m_error = m_error - 2*PI;
 		}else if(m_error < -PI){
 			m_error = 2*PI + m_error;
 		}
 	}
+
+	ROS_ERROR("Target: %f, Current: %f, Error: %f, Unwind: %d", m_target, m_current, m_error, m_unwind_angle);
 
 	//add the newest error term to our buffer of terms so we can take the average
 	m_error_buf.push_back(m_error);

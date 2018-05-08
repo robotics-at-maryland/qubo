@@ -1,0 +1,30 @@
+<!-- Launches Gazebo with a basic Qubo robot spawned in the empty underwater world also spawns a thruster tranlator node. -->
+<launch>
+    <!-- Launch Gazebo with the empty underwater world -->
+    <include file="$(find qubo_launch)/gazebo/empty_underwater_world.launch" />
+    
+    <!-- Spawn basic Qubo robot into the world -->
+    <include file="$(find qubo_launch)/gazebo/spawn_basic_qubo.launch">
+        <arg name="namespace" value="qubo_test"/>
+    </include>
+
+    <!-- spawn the thruster translator -->
+    <node name="qubo_thruster_node" pkg="vl_qubo_gazebo" type="qubo_gazebo_hardware_node" />
+
+    
+      <!-- spawn the depth and yaw controllers -->
+    <node name="qubo_yaw_controller" pkg="controls" type="pid_controller" args="yaw 100" >
+      <param name="kp" value="2.0" />
+      <param name="ki" value="0.0" />
+      <param name="kd" value="0.0" />
+      <param name="upper_limit" value="10.0" />
+      <param name="lower_limit" value="-10.0" />
+      <param name="windup_limit" value="10.0" />
+      <param name="angular_variable" value="true" />
+    </node>
+    
+    <!-- spawn thing that let's us reconfigure parameters -->
+    <node name="reconfigure_node" pkg="rqt_reconfigure" type="rqt_reconfigure" />
+
+    <node name="plot_node" pkg="rqt_plot" type="rqt_plot" />
+</launch>
