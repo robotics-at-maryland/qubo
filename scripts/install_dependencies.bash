@@ -5,26 +5,27 @@ read -s -p "Enter password: " PASS
 
 # Install ROS if it is not already installed.
 if [ ! -d /opt/ros/kinetic/ ]; then
-	# This part very closely follows the instructions from:
-	#   http://wiki.ros.org/kinetic/Installation/Ubuntu
-	ROS_DISTRO='kinetic'
+    # This part very closely follows the instructions from:
+    #   http://wiki.ros.org/kinetic/Installation/Ubuntu
+    ROS_DISTRO='kinetic'
 
-	# The "codename" for this Ubuntu release (lucid, trusty, etc.).
-	UBUNTU_CODENAME=`lsb_release -sc`
-	# The entry for the ROS sources list we will create.
-	ROS_SRC_ENTRY="deb http://packages.ros.org/ros/ubuntu $UBUNTU_CODENAME main"
-	# The filepath for the ROS sources list we will create.
-	ROS_SRC_LIST="/etc/apt/sources.list.d/ros-latest.list"
+    # The "codename" for this Ubuntu release (lucid, trusty, etc.).
+    UBUNTU_CODENAME=`lsb_release -sc`
+    # The entry for the ROS sources list we will create.
+    ROS_SRC_ENTRY="deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
+    # The filepath for the ROS sources list we will create.
+    ROS_SRC_LIST="/etc/apt/sources.list.d/ros-latest.list"
 
-	# Echo the entry into a new sources list file.
-	# This will also overwrite any already existing file.
-	echo "$PASS" | sudo -S sh -c "echo $ROS_SRC_ENTRY > $ROS_SRC_LIST"
+    # Echo the entry into a new sources list file.
+    # This will also overwrite any already existing file.
+    echo "$PASS" | sudo -S sh -c "echo $ROS_SRC_ENTRY > $ROS_SRC_LIST"
 
-	# Get the ROS key and add it to apt.
-	echo "$PASS" | sudo -S wget 'https://raw.githubusercontent.com/ros/rosdistro/master/ros.key' -O - | apt-key add -
-	# Finally, update our package lists and then install ROS.
-	echo "$PASS" | sudo -S apt-get update
-	echo "$PASS" | sudo -S apt-get -y --allow-unauthenticated install ros-kinetic-desktop
+    # Get the ROS key and add it to apt.
+    # echo "$PASS" | sudo -S wget 'https://raw.githubusercontent.com/ros/rosdistro/master/ros.key' -O - | apt-key add -
+    echo "$PASS" | sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+    # Finally, update our package lists and then install ROS.
+    echo "$PASS" | sudo -S apt-get update
+    echo "$PASS" | sudo -S apt-get -y ros-kinetic-desktop-full
 fi
 
 # Installing additional packages.
@@ -43,8 +44,8 @@ source "$HOME/.bashrc"
 
 # Initialize rosdep if it is not already initialized.
 if [ ! -d /etc/ros/rosdep/ ]; then
-	echo "$PASS" | sudo -S rosdep init
-	rosdep update
+    echo "$PASS" | sudo -S rosdep init
+    rosdep update
 fi
 
 # Finally, run rosdep to install all the dependencies for our packages.
