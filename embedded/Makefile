@@ -87,7 +87,7 @@ QUBOBUS_SRC = qubobus/src/
 ##########################################################################
 
 # Object files for FreeRTOS
-FREERTOS_OBJS = queue.o list.o tasks.o
+FREERTOS_OBJS = queue.o list.o tasks.o stream_buffer.o
 # The following o. files are only necessary if
 # certain options are enabled in FreeRTOSConfig.h
 #FREERTOS_OBJS += timers.o

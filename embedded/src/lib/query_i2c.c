@@ -25,11 +25,34 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
   ROM_I2CMasterDataPut(device, *data);
 
   if ( length == 1 ) {
+    // So the sceduler doesn't interrupt here
+    taskENTER_CRITICAL();
+
     // Send byte
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
 
     // Wait to finish transferring
     while(ROM_I2CMasterBusy(device));
+
+    taskEXIT_CRITICAL();
+  }
+
+  else if (length == 2) {
+    // So the sceduler doesn't interrupt here
+    taskENTER_CRITICAL();
+
+    // Send first word
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
+
+    while(ROM_I2CMasterBusy(device));
+
+    // Send second word
+    ROM_I2CMasterDataPut(device, *(data + 1));
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_FINISH);
+
+    while(ROM_I2CMasterBusy(device));
+
+    taskEXIT_CRITICAL();
   }
 
   // This will use the interrupt
@@ -51,10 +74,9 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     /*
     while(ROM_I2CMasterBusy(device));
 
-    //
     for(uint32_t i = 0; i < (length - 1); i++) {
       // put data into fifo
-      ROM_I2CMasterDataPut(device, *data);
+      ROM_I2CMasterDataPut(device, *(data + 1));
       // Increment pointer
       data++;
       // Send data

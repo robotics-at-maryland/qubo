@@ -13,7 +13,7 @@ find_package(catkin
 
     ram_msgs
 
-)
+    )
 
 catkin_package(
     INCLUDE_DIRS include
@@ -70,8 +70,8 @@ set(SENSOR_BOARD_SRC_FILES
 
 #### OLD TEAMS CODE ####
 set(LCDSHOW_SRC_FILES
-		drivers/src/lcdshow.c
-		drivers/src/sensorapi.c
+        drivers/src/lcdshow.c
+        drivers/src/sensorapi.c
 
 )
 ### END OF OLD TEAMS CODE ###

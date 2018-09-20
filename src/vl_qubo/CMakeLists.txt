@@ -5,6 +5,7 @@ find_package(catkin
   REQUIRED COMPONENTS
   roscpp
   ram_msgs
+  rospy
   )
 
 
@@ -71,6 +72,12 @@ set(AHRS_BAUDRATE_SRC_FILES
 set(QSCU_SRC_FILES
   drivers/qscu/src/QSCU.cpp
   drivers/qscu/src/main.cpp
+  )
+
+set(QSCU_CONTROL_NODE_SRC_FILES
+  drivers/qscu/src/qscu_node.cpp
+  drivers/qscu/src/qscu_node_main.cpp
+  drivers/qscu/src/QSCU.cpp
   )
 
 set(QSCU_CONTROL_NODE_SRC_FILES
