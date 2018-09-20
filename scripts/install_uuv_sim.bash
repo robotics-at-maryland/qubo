@@ -6,6 +6,7 @@ else
     PASS=$1
 fi
 
+source "$HOME/.bashrc"
 echo $PASS | sudo -S apt -y install python-pip
 echo $PASS | sudo -S pip install wstool
 
