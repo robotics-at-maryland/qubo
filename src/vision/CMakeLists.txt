@@ -196,8 +196,8 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 
 #tuners
-# add_executable(canny_tuner ${CANNY_TUNER_FILES})
-# target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+ add_executable(canny_tuner ${CANNY_TUNER_FILES})
+ target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
 # add_executable(blob_tuner ${BLOB_TUNER_FILES})
 # target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
