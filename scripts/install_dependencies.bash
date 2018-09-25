@@ -25,7 +25,7 @@ if [ ! -d /opt/ros/kinetic/ ]; then
     echo "$PASS" | sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
     # Finally, update our package lists and then install ROS.
     echo "$PASS" | sudo -S apt-get update
-    echo "$PASS" | sudo -S apt-get -y ros-kinetic-desktop-full
+    echo "$PASS" | sudo -S apt-get -y install ros-kinetic-desktop-full
 fi
 
 # Installing additional packages.
