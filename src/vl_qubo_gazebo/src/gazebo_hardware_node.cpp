@@ -56,8 +56,8 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	m_depth_pub = n.advertise<std_msgs::Float64>(depth_topic, 1000);
 
 	//two more degrees of freedom
-	//m_surge_pub = n.advertise<std_msgs::Float64>(surge_topic, 1000);
-	//m_sway_pub = n.advertise<std_msgs::Float64>(sway_topic, 1000);
+	m_surge_pub = n.advertise<std_msgs::Float64>(surge_topic, 1000);
+	m_sway_pub = n.advertise<std_msgs::Float64>(sway_topic, 1000);
 
 		
 	//register the thruster topics, we have 8
@@ -167,8 +167,17 @@ void GazeboHardwareNode::orientCallback(const nav_msgs::Odometry::ConstPtr &msg)
 	tf::Quaternion q(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
 	tf::Matrix3x3 m(q);
 	std_msgs::Float64 roll, pitch, yaw;
+	std_msgs::Float64 v_x, v_z, v_y;
 	m.getRPY(roll.data, pitch.data, yaw.data); //roll pitch and yaw are populated
-	
+
+	v_x.data = msg->twist.twist.linear.x;
+	v_y.data = msg->twist.twist.linear.y;
+	v_z.data = msg->twist.twist.linear.z;
+
+	//surge is x direction velocity
+	//sway is y direction velocity
+	m_surge_pub.publish(v_x);
+	m_sway_pub.publish(v_y);
 	
 	//m_orient_pub.publish(*msg);
 	m_roll_pub.publish(roll);
