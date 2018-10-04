@@ -26,7 +26,7 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
     
 	//set up all publishers and subscribers
 	string input_pose = gazebo_namespace + "pose_gt";
-    m_orient_sub = n.subscribe(input_pose, 1000, &GazeboHardwareNode::orientCallback, this);
+	m_orient_sub = n.subscribe(input_pose, 1000, &GazeboHardwareNode::orientCallback, this);
 
 	//pressure sub, pressure comes in as Kilo pascals we're going to convert that to meters
 	//giving us the data we publish over the depth topic. see update for that conversion
@@ -54,6 +54,10 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
 	m_pitch_pub = n.advertise<std_msgs::Float64>(pitch_topic, 1000);
 	m_yaw_pub   = n.advertise<std_msgs::Float64>(yaw_topic, 1000);
 	m_depth_pub = n.advertise<std_msgs::Float64>(depth_topic, 1000);
+
+	//two more degrees of freedom
+	//m_surge_pub = n.advertise<std_msgs::Float64>(surge_topic, 1000);
+	//m_sway_pub = n.advertise<std_msgs::Float64>(sway_topic, 1000);
 
 		
 	//register the thruster topics, we have 8

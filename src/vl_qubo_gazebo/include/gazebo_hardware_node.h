@@ -80,6 +80,12 @@ class GazeboHardwareNode{
 
 	std_msgs::Float64 m_depth; 
 	ros::Publisher  m_depth_pub;
+
+	//ros::Publisher m_surge_pub;
+	//std_msgs::Float64 m_surge_msg;
+
+	//ros::Publisher m_sway_pub;
+	//std_msgs::Float64 m_sway_msg;
 	
     //thruster pubs
     std::vector<uuv_gazebo_ros_plugins_msgs::FloatStamped> m_thruster_commands;
