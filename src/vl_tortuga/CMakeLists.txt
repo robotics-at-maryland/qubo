@@ -101,7 +101,6 @@ add_executable(lcdshow ${LCDSHOW_SRC_FILES})
 target_link_libraries(lcdshow ${catkin_LIBRARIES})
 
 add_executable(sensor_board_node ${SENSOR_BOARD_SRC_FILES})
-add_dependencies(sensor_board_node ram_msgs_generate_messages_cpp)
 target_link_libraries(sensor_board_node ${catkin_LIBRARIES})
 add_dependencies(sensor_board_node ram_msgs_generate_messages_cpp)
 

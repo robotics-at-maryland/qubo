@@ -8,8 +8,6 @@ find_package(catkin
   rospy
   )
 
-find_package(Boost REQUIRED)
-
 
 catkin_package(
   LIBRARIES ${PROJECT_NAME}
@@ -70,15 +68,12 @@ set(AHRS_BAUDRATE_SRC_FILES
   drivers/ahrs/src/AHRS.cpp #SG: ditto above
   )
 
-set(HARDWARE_NODE_SRC_FILES
-  src/main.cpp
-  src/control_node.cpp
-  drivers/ahrs/src/AHRS.cpp
-  )
+
 set(QSCU_SRC_FILES
   drivers/qscu/src/QSCU.cpp
   drivers/qscu/src/main.cpp
   )
+
 set(QSCU_CONTROL_NODE_SRC_FILES
   drivers/qscu/src/qscu_node.cpp
   drivers/qscu/src/qscu_node_main.cpp
