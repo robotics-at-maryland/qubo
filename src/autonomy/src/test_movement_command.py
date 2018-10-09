@@ -92,6 +92,7 @@ if __name__ == '__main__':
 
     # rospy.wait_for_service('depth_toggle')
     toggle_test = rospy.ServiceProxy('depth_toggle', ram_msgs.srv.bool_bool)
+    pos_vel_test = rospy.ServiceProxy('pos_vel_toggle', ram_msgs.srv.bool_bool)
 
     qubo_namespace = '/qubo/'
 
@@ -152,6 +153,9 @@ if __name__ == '__main__':
     #yaw_target: + is turn left, 0 is neutral position [-pi,pi]
     #surge_target: + is move backwards, not sure of units because robot never stops and also doesn't move in a straight line
     #sway_target: + is move to the right, not sure of units because robot never stops
+
+    #to control surge and sway with velocity (default), use pos_vel_test(0)
+    #to control surge and sway with position, use pos_vel_test(1)
     
     print("testing move function")
 

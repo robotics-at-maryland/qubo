@@ -20,6 +20,9 @@
 //uuv includes
 #include "uuv_gazebo_ros_plugins_msgs/FloatStamped.h"
 
+//service includes
+#include "ram_msgs/bool_bool.h"
+
 #define NUM_THRUSTERS 8
 
 class GazeboHardwareNode{
@@ -96,7 +99,11 @@ class GazeboHardwareNode{
     //for now I'm only going to populate the orientation parameters..
        
     ros::Subscriber m_orient_sub;
-	void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
+    void orientCallback(const nav_msgs::Odometry::ConstPtr& msg);
+
+    //service to switch between position and velocity parameters
+    bool togglePosVel(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
+    bool ss_pos = false;
 	
 };
 

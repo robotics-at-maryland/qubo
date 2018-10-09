@@ -168,16 +168,26 @@ void GazeboHardwareNode::orientCallback(const nav_msgs::Odometry::ConstPtr &msg)
 	tf::Matrix3x3 m(q);
 	std_msgs::Float64 roll, pitch, yaw;
 	std_msgs::Float64 v_x, v_z, v_y;
+	std_msgs::Float64 pos_x, pos_y, pos_z;
 	m.getRPY(roll.data, pitch.data, yaw.data); //roll pitch and yaw are populated
 
 	v_x.data = msg->twist.twist.linear.x;
 	v_y.data = msg->twist.twist.linear.y;
 	v_z.data = msg->twist.twist.linear.z;
 
+	pos_x.data = msg->pose.pose.position.x;
+	pos_y.data = msg->pose.pose.position.y;
+	pos_z.data = msg->pose.pose.position.z;
+
+	if (!ss_pos) {
 	//surge is x direction velocity
 	//sway is y direction velocity
-	m_surge_pub.publish(v_x);
-	m_sway_pub.publish(v_y);
+	  m_surge_pub.publish(v_x);
+	  m_sway_pub.publish(v_y);
+	} else {
+	  m_surge_pub.publish(pos_x);
+	  m_sway_pub.publish(pos_y);
+	}
 	
 	//m_orient_pub.publish(*msg);
 	m_roll_pub.publish(roll);
@@ -203,4 +213,10 @@ void GazeboHardwareNode::pressureCallback(const sensor_msgs::FluidPressure::Cons
 	m_depth.data = 1000*(msg->fluid_pressure - SURFACE_PRESSURE)/(WATER_DENSITY*GRAVITY);
 	m_depth_pub.publish(m_depth);
 	
+}
+
+bool GazeboHardwareNode::togglePosVel(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res) {
+  ss_pos = req.request;
+  res.response = req.request;
+  return true;
 }
