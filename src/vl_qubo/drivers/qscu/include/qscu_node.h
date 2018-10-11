@@ -88,6 +88,15 @@ class QSCUNode {
 	ros::Subscriber m_sway_sub;
 	void swayCallback(const std_msgs::Float64::ConstPtr& msg);
 
+  // The callbacks will write into the buffer, and the actual commands get these buffer's value
+  // only after a loop of qscu's thruster message being sent
+	float m_yaw_command_buffer = 0;
+	float m_pitch_command_buffer = 0;
+	float m_roll_command_buffer = 0;
+	float m_depth_command_buffer = 0;
+	float m_surge_command_buffer = 0;
+	float m_sway_command_buffer = 0;
+
 	// We need these so we can store the last message that was sent on the bus
 	// to calculate the value we need to give the thrusters
 	float m_yaw_command		= 0;
