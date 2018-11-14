@@ -11,13 +11,14 @@
     <!-- spawn the thruster translator -->
     <node name="qubo_thruster_node" pkg="vl_qubo_gazebo" type="qubo_gazebo_hardware_node" />
     
-    <node name="qubo_surge_controller" pkg="controls" type="pid_controller" args="surge 100" >
-      <param name="kp" value="-2.0" />
+    <node name="qubo_roll_controller" pkg="controls" type="pid_controller" args="roll 100" >
+      <param name="kp" value="1.0" />
       <param name="ki" value="0.0" />
       <param name="kd" value="0.0" />
       <param name="upper_limit" value="10.0" />
       <param name="lower_limit" value="-10.0" />
       <param name="windup_limit" value="10.0" />
+      <param name="angular_variable" value="true"/>
     </node>
       
     <!-- spawn thing that let's us reconfigure parameters -->

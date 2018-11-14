@@ -50,7 +50,7 @@
       <param name="upper_limit" value="10.0" />
       <param name="lower_limit" value="-10.0" />
       <param name="windup_limit" value="10.0" />
-      <param name="unwind_angle" value="true"/>
+      <param name="angular_variable" value="true"/>
     </node>
       
     <node name="qubo_pitch_controller" pkg="controls" type="pid_controller" args="pitch 100" >
@@ -60,7 +60,7 @@
       <param name="upper_limit" value="10.0.0" />
       <param name="lower_limit" value="-10.0.0" />
       <param name="windup_limit" value="10.0.0" />
-      <param name="unwind_angle" value="true" />
+      <param name="angular_variable" value="true" />
     </node>
       
     <node name="qubo_yaw_controller" pkg="controls" type="pid_controller" args="yaw 100" >
@@ -70,7 +70,7 @@
       <param name="upper_limit" value="10.0" />
       <param name="lower_limit" value="-10.0" />
       <param name="windup_limit" value="10.0" />
-      <param name="unwind_angle" value="true" />
+      <param name="angular_variable" value="true" />
     </node>
 
     

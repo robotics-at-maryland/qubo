@@ -104,6 +104,7 @@ class GazeboHardwareNode{
     //service to switch between position and velocity parameters
     bool togglePosVel(ram_msgs::bool_bool::Request &req, ram_msgs::bool_bool::Response &res);
     bool ss_pos = false;
+    ros::ServiceServer toggle_pos_vel;
 	
 };
 

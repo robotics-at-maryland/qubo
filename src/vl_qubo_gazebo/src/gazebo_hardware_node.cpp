@@ -21,6 +21,10 @@ GazeboHardwareNode::GazeboHardwareNode(ros::NodeHandle n, string node_name, stri
     string gazebo_namespace = "/gazebo_qubo/";
 	string cont_namespace = "/qubo/"; //may merge controller and gazebo namespaces
 	string qubo_namespace = "/qubo/";
+
+	//service
+	toggle_pos_vel = n.advertiseService("toggle_pos_vel", &GazeboHardwareNode::togglePosVel, this);
+
 	
 	//topic names, change them here if you need to
     

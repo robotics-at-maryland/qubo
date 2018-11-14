@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     # rospy.wait_for_service('depth_toggle')
     toggle_test = rospy.ServiceProxy('depth_toggle', ram_msgs.srv.bool_bool)
-    pos_vel_test = rospy.ServiceProxy('pos_vel_toggle', ram_msgs.srv.bool_bool)
+    pos_vel_test = rospy.ServiceProxy('toggle_pos_vel', ram_msgs.srv.bool_bool)
 
     qubo_namespace = '/qubo/'
 
@@ -157,11 +157,9 @@ if __name__ == '__main__':
     #to control surge and sway with velocity (default), use pos_vel_test(0)
     #to control surge and sway with position, use pos_vel_test(1)
     
-    print("testing move function")
-
-    move_time(5, 10, 0)
-
-    print("done moving")
+    rospy.sleep(1.)
+    print("switching to position control")
+    pos_vel_test(1)
     
     #to turn a controller off, create a ServiceProxy line as shown above, and then turn off using service_name(0) and on using service_name(1)
     #the controller must be turned off for *_publish commands to work
