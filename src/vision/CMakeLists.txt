@@ -8,7 +8,7 @@ project(vision)
 
 # set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
-find_package(OpenCV REQUIRED
+find_package(OpenCV 3 REQUIRED
 #  NO_MODULE
 #  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
 # NO_DEFAULT_PATH
@@ -196,8 +196,8 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 
 #tuners
-# add_executable(canny_tuner ${CANNY_TUNER_FILES})
-# target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+ add_executable(canny_tuner ${CANNY_TUNER_FILES})
+ target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
 
 # add_executable(blob_tuner ${BLOB_TUNER_FILES})
 # target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
