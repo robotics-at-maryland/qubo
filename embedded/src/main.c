@@ -229,10 +229,11 @@ int main() {
     while(1){}
   }
 
+/*
   if (thruster_task_init()) {
     while(1){}
   }
-
+*/
   /* if (qubobus_test_init() ){ */
   /*   while(1){} */
   /* } */
