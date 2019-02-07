@@ -25,7 +25,7 @@ PIDController::PIDController(NodeHandle n, NodeHandle np,  string control_topic)
 	np.param<double>("lower_limit", m_lower_limit, -1000.0);
 	np.param<double>("windup_limit", m_windup_limit, 1000.0);
 	np.param<bool>("angular_variable" , m_unwind_angle, false);
-	np.param<int>("buffer_size", buf_size, 1);
+	np.param<int>("buffer_size", buf_size, 5);
 
 	m_error_buf.resize(buf_size);
 
