@@ -94,7 +94,6 @@ void PIDController::update() {
 
 	m_error = sum/m_error_buf.size();
 	
-
 	
 	//------------------------------------------------------------------------------
 	//compute the integral and limit it if it's too big 
@@ -112,8 +111,6 @@ void PIDController::update() {
 	//derivative term
 	//------------------------------------------------------------------------------
 	m_error_derivative = (m_error - m_prev_error)/dt.toSec();//smoothing is done by averaging the error, which we've already done 
-
-
 	
 	//sum everything weighted by the given gains.
 	//------------------------------------------------------------------------------
@@ -132,7 +129,9 @@ void PIDController::update() {
 	if(dof_active){
 	  m_command_pub.publish(m_command_msg);
 	}
-	
+
+	m_prev_error = m_error;	
+
 }
 
 void PIDController::sensorCallback(const std_msgs::Float64::ConstPtr& msg) {

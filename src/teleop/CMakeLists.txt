@@ -9,14 +9,14 @@ project(teleop)
 find_package(catkin
   REQUIRED COMPONENTS
     roscpp
-    image_transport 
+    image_transport
 
-)
+    )
 
 catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS roscpp
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp
 )
 
 

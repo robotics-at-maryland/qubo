@@ -1,12 +1,13 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then
-	read -s -p "Enter password: " PASS
+    read -s -p "Enter password: " PASS
 else
-	PASS=$1
+    PASS=$1
 fi
 
-echo $PASS | sudo -S apt -y --allow-unauthenticated install python-pip
+source "$HOME/.bashrc"
+echo $PASS | sudo -S apt -y install python-pip
 echo $PASS | sudo -S pip install wstool
 
 
