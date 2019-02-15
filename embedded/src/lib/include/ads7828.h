@@ -36,27 +36,33 @@
 
 // These will be OR'd together to form a COMMAND BYTE
 // SD Options
-static const uint8_t DIFFERENTIAL  = 0 << 7; // SD = 0
-static const uint8_t SINGLE_ENDED = 1 << 7; // SD = 1
+#define DIFFERENTIAL 0x00 // SD = 0
+#define SINGLE_ENDED 0x80 // SD = 1
 
 // PD Options
-static const uint8_t REFERENCE_OFF = 0 << 3; // PD1 = 0
-static const uint8_t REFERENCE_ON = 1 << 3; // PD1 = 1
-static const uint8_t ADC_OFF = 0 << 2; // PD0 = 0
-static const uint8_t ADC_ON = 1 << 2; // PD0 = 1
+#define REFERENCE_OFF 	0x00 // PD1 = 0
+#define REFERENCE_ON  	0x08 // PD1 = 1
+#define ADC_OFF 	0x00 // PD0 = 0
+#define ADC_ON 		0x04 // PD0 = 1
 
 /*
- * ADDRESS BYTE: | 1 | 0 | 0 | 1 | 0 | A0 | A1 | R/W |
+ * ADDRESS BYTE: | 1 | 0 | 0 | 1 | 0 | A1 | A0 | R/W |
  * The 5 MSB's are factory hard-coded to 10010, 
  * A1 and A0 are set by two pins on the ADC and must be addressed
- * in the byte accordingly. 
+ * in the byte accordingly. (On the power board, A1 and A0 are connected
+ * to GND, corresponding to 0 0)
+ * R/W is controlled by the I2C library
  */ 
 
-static const uint8_t DEFAULT_ADDRESS = 0x48
+#define DEFAULT_ADDRESS 0x48 // | A1 | A0 | = | 0 | 0 | 
  
 void ads7828_begin(uint32_t device, uint8_t addr);
+uint8_t ads7828_setChannel(uint8_t channel);
 uint16_t ads7828_readChannel(uint32_t device, uint8_t channel);
 
-static uint8_t _i2caddr;
+static uint8_t _i2caddr = DEFAULT_ADDRESS;
+static uint8_t _settings = (SINGLE_ENDED | REFERENCE_ON | ADC_ON); 
+static uint8_t _command_byte;
+static const uint8_t _se_channels[8] = {0x00, 0x40, 0x10, 0x50, 0x20, 0x60, 0x30, 0x70};
 
 #endif

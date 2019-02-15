@@ -7,7 +7,8 @@
 #include "lib/include/printfloat.h"
 
 bool bme280_task_init() {
-  if ( xTaskCreate(bme280_task_loop, (const portCHAR *)"BME280 Task", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+ 
+if ( xTaskCreate(bme280_task_loop, (const portCHAR *)"BME280 Task", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
   }
   return false;
