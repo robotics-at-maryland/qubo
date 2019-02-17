@@ -57,7 +57,6 @@
 #define DEFAULT_ADDRESS 0x48 // | A1 | A0 | = | 0 | 0 | 
  
 void ads7828_begin(uint32_t device, uint8_t addr);
-uint8_t ads7828_setChannel(uint8_t channel);
 uint16_t ads7828_readChannel(uint32_t device, uint8_t channel);
 
 static uint8_t _i2caddr = DEFAULT_ADDRESS;

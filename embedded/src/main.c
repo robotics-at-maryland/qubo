@@ -225,9 +225,12 @@ int main() {
   */
 
   /* blink_rgb(BLUE_LED, 1); */
-  if ( tiqu_task_init() ) {
+/*  if ( tiqu_task_init() ) {
     while(1){}
   }
+*/
+
+  ads7828_task_init();   
 
 /*
   if (thruster_task_init()) {
@@ -248,11 +251,11 @@ int main() {
     while(1){}
     }
   */
-  /*
+  /* 
     if ( bme280_task_init()){
     while(1){}
     }
-  */
+ */ 
 
   /*
     if ( example_uart_init() ) {
