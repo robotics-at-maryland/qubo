@@ -6,6 +6,7 @@ find_package(catkin
   roscpp
   ram_msgs
   rospy
+  uuv_gazebo_ros_plugins_msgs
   )
 
 
@@ -36,6 +37,13 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 SET(CMAKE_C++_CREATE_SHARED_LIBRARY 1)
 
 #SG: currently unused, eventually we'll add a wrapper with a main and build them together.
+
+set(HARDWARE_NODE_SRC_FILES
+  
+  src/hardware_node.cpp
+  src/hardware_node_main.cpp
+  )
+
 set(AHRS_SRC_FILES
 
   src/ahrs_main.cpp
@@ -106,6 +114,8 @@ set(DEF_TEST_FILES
 # Add Executables ############
 ##############################
 
+add_executable(qubo_hardware_node ${HARDWARE_NODE_SRC_FILES})
+target_link_libraries(qubo_hardware_node ${catkin_LIBRARIES})
 
 add_executable(ahrs_config ${AHRS_CONFIG_SRC_FILES})
 #target_link_libraries(ahrs_config ${PROJECT_NAME})
