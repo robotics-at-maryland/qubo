@@ -104,7 +104,6 @@ int main(int argc, char*argv[]) {
 	std::vector<double> xs;
 	std::vector<double> ys;
 	std::vector<double> zs;
-	//circ_pub.publish();
 	  
         waitKey(0);
         for(size_t i = 0; i < circles.size(); i++) {
