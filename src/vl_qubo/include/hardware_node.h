@@ -10,9 +10,6 @@
 
 #include "tf/tf.h"
 
-//uuv includes
-#include "uuv_gazebo_ros_plugins_msgs/FloatStamped.h"
-
 #define NUM_THRUSTERS 8
 
 class HardwareNode{
@@ -54,6 +51,6 @@ class HardwareNode{
     void swayCallback(const std_msgs::Float64::ConstPtr& msg);
 
   //thrusters
-    std::vector<uuv_gazebo_ros_plugins_msgs::FloatStamped> m_thruster_commands;
+    std::vector<std_msgs::Float64> m_thruster_commands;
     std::vector<ros::Publisher> m_thruster_pubs;
 };

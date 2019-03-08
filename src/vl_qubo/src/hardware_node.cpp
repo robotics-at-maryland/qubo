@@ -26,7 +26,7 @@ HardwareNode::HardwareNode(ros::NodeHandle n, string node_name)
   m_sway_sub  = n.subscribe(sway_topic  + "_cmd", 1000, &HardwareNode::swayCallback, this);
 
   //register the thruster topics, we have 8
-  string t_topic =  hn_namespace + "thrusters";
+  string t_topic;
             
   for(int i = 0; i < NUM_THRUSTERS; i++){
         m_thruster_commands[i].data = 0;
@@ -35,7 +35,7 @@ HardwareNode::HardwareNode(ros::NodeHandle n, string node_name)
         t_topic += to_string(i);
 		t_topic += "/input";
 		
-        m_thruster_pubs[i] = n.advertise<uuv_gazebo_ros_plugins_msgs::FloatStamped>(t_topic, 1000);
+        m_thruster_pubs[i] = n.advertise<std_msgs::Float64>(t_topic, 1000);
         cout << t_topic << endl;
 
     }

@@ -3,8 +3,6 @@
 
 // ros
 #include "ros/ros.h"
-#include "sensor_msgs/Imu.h" // Probably don't need this one
-#include "nav_msgs/Odometry.h"
 #include "std_msgs/Float64.h"
 
 // Custom messages
@@ -70,41 +68,51 @@ class QSCUNode {
 	 **************************************************************/
 	std::vector<float> m_thruster_speeds;
 
-	ros::Subscriber m_yaw_sub;
-	void yawCallback(const std_msgs::Float64::ConstPtr& msg);
+	ros::Subscriber m_thruster_zero;
+	void thrusterZeroCallback(const std_msgs::Float64::ConstPtr& msg);
 
-	ros::Subscriber m_pitch_sub;
-	void pitchCallback(const std_msgs::Float64::ConstPtr& msg);
+	ros::Subscriber m_thruster_one;
+	void thrusterOneCallback(const std_msgs::Float64::ConstPtr& msg);
 
-	ros::Subscriber m_roll_sub;
-	void rollCallback(const std_msgs::Float64::ConstPtr& msg);
+	ros::Subscriber m_thruster_two;
+	void thrusterTwoCallback(const std_msgs::Float64::ConstPtr& msg);
 
-	ros::Subscriber m_depth_sub;
-	void depthCallback(const std_msgs::Float64::ConstPtr& msg);
+	ros::Subscriber m_thruster_three;
+	void thrusterThreeCallback(const std_msgs::Float64::ConstPtr& msg);
 
-	ros::Subscriber m_surge_sub;
-	void surgeCallback(const std_msgs::Float64::ConstPtr& msg);
+	ros::Subscriber m_thruster_four;
+	void thrusterFourCallback(const std_msgs::Float64::ConstPtr& msg);
 
-	ros::Subscriber m_sway_sub;
-	void swayCallback(const std_msgs::Float64::ConstPtr& msg);
+	ros::Subscriber m_thruster_five;
+	void thrusterFiveCallback(const std_msgs::Float64::ConstPtr& msg);
+
+	ros::Subscriber m_thruster_six;
+	void thrusterSixCallback(const std_msgs::Float64::ConstPtr& msg);
+
+	ros::Subscriber m_thruster_seven;
+	void thrusterSevenCallback(const std_msgs::Float64::ConstPtr& msg);
+
+        
 
   // The callbacks will write into the buffer, and the actual commands get these buffer's value
   // only after a loop of qscu's thruster message being sent
-	float m_yaw_command_buffer = 0;
-	float m_pitch_command_buffer = 0;
-	float m_roll_command_buffer = 0;
-	float m_depth_command_buffer = 0;
-	float m_surge_command_buffer = 0;
-	float m_sway_command_buffer = 0;
+	float m_thruster_zero_buffer = 0;
+	float m_thruster_one_buffer = 0;
+	float m_thruster_two_buffer = 0;
+	float m_thruster_three_buffer = 0;
+	float m_thruster_four_buffer = 0;
+	float m_thruster_five_buffer = 0;
+	float m_thruster_six_buffer = 0;
+	float m_thruster_seven_buffer= 0;
 
 	// We need these so we can store the last message that was sent on the bus
 	// to calculate the value we need to give the thrusters
-	float m_yaw_command		= 0;
-	float m_pitch_command	= 0;
-	float m_roll_command	= 0;
-	float m_depth_command	= 0;
-	float m_surge_command	= 0;
-	float m_sway_command	= 0;
+	//float m_yaw_command		= 0;
+	//float m_pitch_command	= 0;
+	//float m_roll_command	= 0;
+	//float m_depth_command	= 0;
+	//float m_surge_command	= 0;
+	//float m_sway_command	= 0;
 	bool thruster_update    = false;
 
 	ros::Timer qubobus_thruster_loop;

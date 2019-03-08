@@ -1,0 +1,10 @@
+<!-- Launches Gazebo with a basic Qubo robot spawned in the empty underwater world also spawns a thruster tranlator node. -->
+<launch>
+
+    <!-- spawn the thruster translator -->
+    <node name="qubo_thruster_node" pkg="vl_qubo" type="qubo_hardware_node" />
+
+    <!-- QSCU launched -->
+    <node name="QSCU" pkg="vl_qubo" type="qscu_node" />
+    
+</launch>

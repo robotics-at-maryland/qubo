@@ -6,7 +6,6 @@ find_package(catkin
   roscpp
   ram_msgs
   rospy
-  uuv_gazebo_ros_plugins_msgs
   )
 
 
