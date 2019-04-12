@@ -2,22 +2,23 @@
 Robotics at Maryland's repository for building [FreeRTOS](http://www.freertos.org/) along with
 Tivaware libraries on the [TM4C123GXL](http://www.ti.com/tool/ek-tm4c123gxl)
 
-FreeRTOS version: v8.2.3  
+FreeRTOS version: v8.2.3
 Tivaware version: 2.1.3.156
 
 ##Prerequisites
+
 To build the project you need the [GNU ARM Embedded Toolchain](https://launchpad.net/gcc-arm-embedded)
 
 To flash to the MCU you can use [LM4Tools](https://github.com/utzig/lm4tools)
-
+**This script should be rewritten:** The arm toolchain is just downloaded from launchpad, instead we should be adding the ppa to the system, and installing it with apt.  This way, we can actually use it on different archs (like the Jetson), since there are builds for arm, etc
 To install both of these automatically run `../scripts/embedded_install_deps.bash`
 
 It may be necessary to install ia32-libs if you're on a 64 bit system.
-`sudo apt install ia32-libs`  
-Or on 16.04:   
-`sudo dpkg --add-architecture i386`  
-`sudo apt update`  
-`sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386`  
+`sudo apt install ia32-libs`
+Or on 16.04:
+`sudo dpkg --add-architecture i386`
+`sudo apt update`
+`sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386`
 
 ##Drivers
 [Tivaware drivers](http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html)(_EK-TM4C123GXL_)
@@ -50,7 +51,7 @@ mkdir qubo/embedded/obj/interrupts/
 ##Flash
 ##Run `make flash` to flash the `image.bin` file onto the chip while you're in the `embedded/` directory.
 
-Don't do this ^^^ 
+Don't do this ^^^
 
 run this instead sudo /opt/lm4flash/lm4flash/lm4flash image.bin
 or wherever you put your flash tool
