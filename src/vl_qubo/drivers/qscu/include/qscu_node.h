@@ -19,6 +19,7 @@
 #include <boost/variant.hpp>
 #include <boost/optional.hpp>
 #include <queue>
+#include <utility>
 
 // No idea what this is
 #include "tf/tf.h"
@@ -26,6 +27,7 @@
 #include "QSCU.h"
 #include "qubobus.h"
 #include "io.h"
+
 
 class QSCUNode {
 
@@ -46,6 +48,7 @@ class QSCUNode {
 		Transaction type;
 		std::shared_ptr<void> payload;
 		std::shared_ptr<void> reply;
+		const bool operator<(const QMsg& obj) const;
 	};
 
 	std::string m_node_name;
@@ -54,8 +57,15 @@ class QSCUNode {
 
 	ros::Timer qubobus_loop;
 	ros::Timer qubobus_incoming_loop;
-	std::queue<QMsg> m_outgoing;
+
+	const int	THRUSTER_PRIORITY = 127;
+	const int	STATUS_PRIORITY	  = 0;
+
+	// bool QMsgCompare(std::pair<int, QMsg> p1, std::pair<int, QMsg> p2);
+	// , std::vector<std::pair<int, QMsg>, decltype(QMsgCompare)>
+	std::priority_queue<std::pair<int, QMsg>> m_outgoing;
 	std::queue<QMsg> m_incoming;
+
 	void QubobusCallback(const ros::TimerEvent&);
 	void QubobusIncomingCallback(const ros::TimerEvent&);
 

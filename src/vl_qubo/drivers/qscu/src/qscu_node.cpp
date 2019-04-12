@@ -2,6 +2,14 @@
 
 using namespace std;
 
+const bool QSCUNode::QMsg::operator<(const QMsg& obj) const {
+	return false;
+}
+
+// bool QSCUNode::QMsgCompare(std::pair<int, QMsg> p1, std::pair<int, QMsg> p2) {
+//	return p1.first < p2.first;
+// }
+
 QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	:m_node_name(node_name), qscu(device_file, B115200) {
 
@@ -34,10 +42,10 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	 * Creates a Timer object, which will trigger every `Duration` amount of time
 	 * to allow us to have a bit more accuracy in the time between updates on Qubobus
 	 */
-	qubobus_loop = n.createTimer(ros::Duration(0.05), &QSCUNode::QubobusCallback, this);
-	qubobus_incoming_loop = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
+	qubobus_loop		   = n.createTimer(ros::Duration(0.01), &QSCUNode::QubobusCallback, this);
+	qubobus_incoming_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
-	qubobus_thruster_loop = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
+	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
 
 	qubobus_loop.start();
 	qubobus_incoming_loop.start();
@@ -55,12 +63,12 @@ void QSCUNode::update(){
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
   // update the actual commands from the buffer, so these don't get changed in the middle of running
-	m_yaw_command = m_yaw_command_buffer;
+	m_yaw_command	= m_yaw_command_buffer;
 	m_pitch_command = m_pitch_command_buffer;
-	m_roll_command = m_roll_command_buffer;
+	m_roll_command	= m_roll_command_buffer;
 	m_depth_command = m_depth_command_buffer;
 	m_surge_command = m_surge_command_buffer;
-	m_sway_command = m_sway_command_buffer;
+	m_sway_command	= m_sway_command_buffer;
 
 	// Calculate the values for the thrusters we need to change
 	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
@@ -82,44 +90,12 @@ void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 					.thruster_id = i,
 					});
 		q_msg.reply = nullptr;
-		m_outgoing.push(q_msg);
+		m_outgoing.push(make_pair(THRUSTER_PRIORITY, q_msg));
 	}
 
 	thruster_update = false;
+	ROS_ERROR("Sending message");
 
-}
-
-void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
-
-	if ( !qscu.isOpen() ) {
-		try {
-			qscu.openDevice();
-		} catch ( const QSCUException ex ) {
-			ROS_ERROR("Unable to connect to the embedded system at the specified location");
-			ROS_ERROR("=> %s", ex.what() );
-			return;
-		}
-	}
-
-	try {
-		if (m_outgoing.empty()) {
-			qscu.keepAlive();
-		} else {
-			QMsg msg = m_outgoing.front();
-			qscu.sendMessage(&msg.type, msg.payload.get(), msg.reply.get());
-			m_incoming.push(msg);
-			m_outgoing.pop();
-		}
-	} catch ( const QSCUException ex ) {
-		ROS_ERROR("Error reading the embedded system status");
-		ROS_ERROR("=> %s", ex.what() );
-		try {
-			qscu.connect();
-		} catch ( const QSCUException ex ) {
-			ROS_ERROR("Unable to connect to the Tiva");
-		}
-		return;
-	}
 }
 
 void QSCUNode::QubobusIncomingCallback(const ros::TimerEvent& event){
@@ -140,7 +116,46 @@ void QSCUNode::QubobusStatusCallback(const ros::TimerEvent& event){
 	q_msg.type = tEmbeddedStatus;
 	q_msg.payload = nullptr;
 	q_msg.reply = std::make_shared<struct Embedded_Status>();
-	m_outgoing.push(q_msg);
+	m_outgoing.push(make_pair(STATUS_PRIORITY, q_msg));
+}
+
+void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
+
+	if ( !qscu.isOpen() ) {
+		try {
+			qscu.openDevice();
+		} catch ( const QSCUException& ex ) {
+			ROS_ERROR("Unable to connect to the embedded system at the specified location");
+			ROS_ERROR("=> %s", ex.what() );
+			return;
+		}
+	}
+
+	try {
+		if (m_outgoing.empty()) {
+			qscu.keepAlive();
+		} else {
+			// Try to clear the buffer of messages
+			// Don't know what to do when there are too many messages
+			while (!m_outgoing.empty()){
+				QMsg msg = m_outgoing.top().second;
+				// struct Thruster_Set* test = (struct Thruster_Set*) msg.payload.get();
+				// ROS_ERROR("out: %f", test->throttle);
+				qscu.sendMessage(&msg.type, msg.payload.get(), msg.reply.get());
+				m_incoming.push(msg);
+				m_outgoing.pop();
+			}
+		}
+	} catch ( const QSCUException& ex ) {
+		ROS_ERROR("Error reading the embedded system status");
+		ROS_ERROR("=> %s", ex.what() );
+		try {
+			qscu.connect();
+		} catch ( const QSCUException& ex ) {
+			ROS_ERROR("Unable to connect to the Tiva");
+		}
+		return;
+	}
 }
 
 void QSCUNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){

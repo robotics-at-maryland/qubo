@@ -104,7 +104,8 @@ volatile uint16_t *i2c3_int_state;
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
 
-MessageBufferHandle_t thruster_message_buffer;
+/* MessageBufferHandle_t thruster_message_buffer; */
+QueueHandle_t thruster_message_buffer;
 
 /* DECLARE_TASK_HANDLES; */
 /* DECLARE_TASK_QUEUES; */
@@ -176,7 +177,8 @@ int main() {
 
   /* INIT_TASK_QUEUES(); */
 
-  thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set));
+  /* thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set)); */
+  thruster_message_buffer = xQueueCreate(8, sizeof(struct Thruster_Set));
 
   i2c0_address      = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));

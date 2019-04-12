@@ -10,7 +10,8 @@ qubo_namespace = '/qubo/'
 class EmbeddedController(cmd.Cmd):
 
     def __init__(self):
-        super(EmbeddedController, self).__init__()
+        # super(EmbeddedController, self).__init__()
+        cmd.Cmd.__init__(self)
         rospy.init_node('embedded_controller')
         self.r = rospy.Rate(10)
 

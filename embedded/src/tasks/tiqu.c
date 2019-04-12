@@ -96,6 +96,9 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 			struct Thruster_Set* thruster_set = (struct Thruster_Set*) message->payload;
 
 			/* send it to the task*/
+			if(thruster_set->throttle > 0.5) {
+				blink_rgb(BLUE_LED, 1);
+			}
 			if (
 				/* xMessageBufferSend(thruster_message_buffer, */
 				/*				   (void*) thruster_set, */
@@ -103,7 +106,7 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 				/*					pdMS_TO_TICKS(10)) == 0 */
 				xQueueSend(thruster_message_buffer,
 						   (void*) thruster_set,
-								   pdMS_TO_TICKS(10)) == 0
+						   pdMS_TO_TICKS(10)) == 0
 				) {
 				error = eThrusterUnreachable;
 				flag = ERROR_FLAG;
