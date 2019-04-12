@@ -46,8 +46,6 @@
 #define ALLLED_OFF_L 0xFC
 #define ALLLED_OFF_H 0xFD
 
-
-
 void pca9685_begin(uint32_t device, uint8_t addr);
 void pca9685_reset(uint32_t device);
 void pca9685_setPWMFreq(uint32_t device, float freq);

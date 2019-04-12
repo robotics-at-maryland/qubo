@@ -201,7 +201,6 @@ $(OBJDIR)%.o: $(FREERTOS_PORT_SRC)%.c $(DEP_FRTOS_CONFIG)
 $(OBJDIR)%.o: $(QUBOBUS_SRC)%.c $(INC_QUBOBUS)*
 	$(CC) $(CFLAG) $(CFLAGS) $(INC_FLAGS) $< $(OFLAG) $@
 
-
 # Cleanup directives:
 
 clean_obj :

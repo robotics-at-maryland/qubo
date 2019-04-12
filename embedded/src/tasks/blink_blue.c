@@ -8,8 +8,7 @@
 
 static void blink_blue_task(void* params) {
 
-  for (;;) {
-
+  while(true) { 
     blink_rgb(BLUE_LED, 1);
     vTaskDelay(1000 / portTICK_RATE_MS);
   }

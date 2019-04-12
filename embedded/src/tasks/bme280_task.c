@@ -3,11 +3,13 @@
  * kmonte@umd.edu
  * R@M 2017
  */
+
 #include "tasks/include/bme280_task.h"
 #include "lib/include/printfloat.h"
 
 bool bme280_task_init() {
-  if ( xTaskCreate(bme280_task_loop, (const portCHAR *)"BME280 Task", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+ 
+if ( xTaskCreate(bme280_task_loop, (const portCHAR *)"BME280 Task", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
     return true;
   }
   return false;
@@ -39,9 +41,6 @@ static void bme280_task_loop(void *params) {
   float a = 3;
   //ftoa(a, string, 5);
   //ROM_I2CMasterSlaveAddrSet(I2C0_BASE, 0x3C, false);
-
-
-
 
     a = bme280_readTemperature(I2C0_BASE);
     write_uart_wrapper(NULL, &a, sizeof(a));
