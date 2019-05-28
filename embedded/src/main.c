@@ -106,6 +106,7 @@ volatile struct UART_Queue uart1_queue;
 
 /* MessageBufferHandle_t thruster_message_buffer; */
 QueueHandle_t thruster_message_buffer;
+QueueHandle_t ads_message_buffer;
 
 /* DECLARE_TASK_HANDLES; */
 /* DECLARE_TASK_QUEUES; */
@@ -232,13 +233,13 @@ int main() {
   }
 */
 
-  ads7828_task_init();   
+  ads7828_task_init();
 
-/*
-  if (thruster_task_init()) {
+  /*
+    if (thruster_task_init()) {
     while(1){}
-  }
-*/
+    }
+  */
   /* if (qubobus_test_init() ){ */
   /*   while(1){} */
   /* } */
@@ -253,11 +254,11 @@ int main() {
     while(1){}
     }
   */
-  /* 
+  /*
     if ( bme280_task_init()){
     while(1){}
     }
- */ 
+  */
 
   /*
     if ( example_uart_init() ) {

@@ -114,6 +114,11 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 			transaction = tThrusterSet;
 			flag = TRANSACTION_FLAG;
 		}
+		case M_ID_THRUSTER_STATUS: {
+			struct Thruster_Status_Request* thruster_status_request =
+				(struct Thruster_Status_Request*) message->payload;
+			// Now what do we do?
+		}
 		}
 	}
 
