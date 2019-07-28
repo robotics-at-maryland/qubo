@@ -23,6 +23,7 @@
 // These are instantiated in "main.c"
 extern QueueHandle_t thruster_message_buffer;
 extern QueueHandle_t ads_message_buffer;
+extern QueueHandle_t depth_message_buffer;
 
 // Macro to use in "main.c" so that everything gets created in one line
 // #define INIT_MESSAGE_BUFFERS() do {                                  \

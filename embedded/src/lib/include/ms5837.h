@@ -75,6 +75,13 @@ void ms5837_setFluidDensity(uint32_t device, float density);
   */
 void ms5837_read(uint32_t device);
 
+/** Stripped down version of ms5837_read().  Does not read D2, convert D2, or 
+  *	run calculate()
+  */
+void ms5837_readPressureNoCalculate(uint32_t device);
+
+void ms5837_simplePressureCalculate(void);
+
 /** This function loads the datasheet test case values to verify that
   *  calculations are working correctly. No example checksum is provided
   *  so the checksum test may fail.
