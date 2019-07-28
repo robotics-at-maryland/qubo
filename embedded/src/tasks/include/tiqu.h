@@ -35,7 +35,7 @@ extern struct Depth_Status depth_status;
 #define TRANSACTION_FLAG 0x02
 
 /**
- * Creates the task used to communicate across the UART using Qubobus
+ * Creates the task used to communicate across the UART using Qubobus.
  * data is transmitted through queues between the other tasks, and then
  * sent across the bus here
  * @return  0 on success

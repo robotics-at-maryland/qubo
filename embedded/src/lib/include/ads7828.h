@@ -4,7 +4,7 @@
  * R@M 2018
  *
  * Nate Renegar
- * nrenegar@cs.umd.edu
+ * nrenegar@umd.edu
  * R@M 2019  
  * 
  * Source: https://github.com/4-20ma/i2c_adc_ads7828/
