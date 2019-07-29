@@ -13,7 +13,10 @@
 #include "tasks/include/i2c_test.h"
 #include "tasks/include/tiqu.h"
 #include "tasks/include/thruster_task.h"
+#include "tasks/include/depth_task.h"
+#include "tasks/include/ads7828_task.h"
 #include "lib/include/usb_serial.h"
+
 
 // FreeRTOS
 #include <FreeRTOS.h>
@@ -104,15 +107,11 @@ volatile uint16_t *i2c3_int_state;
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
 
-
-/* DECLARE_TASK_HANDLES; */
-
-
-/* DECLARE_TASK_QUEUES; */
 /* MessageBufferHandle_t thruster_message_buffer; */
 QueueHandle_t thruster_message_buffer;
-QueueHandle_t ads_message_buffer;
-QueueHandle_t depth_message_buffer;
+
+/* DECLARE_TASK_HANDLES; */
+/* DECLARE_TASK_QUEUES; */
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -230,22 +229,24 @@ int main() {
     }
   */
 
+  /* blink_rgb(BLUE_LED, 1); */
   if ( tiqu_task_init() ) {
-    blink_rgb(RED_LED, 1);
     while(1){}
   }
 
 
-  /* if (ads7828_task_init()) { */
-  /*   blink_rgb(RED_LED, 1); */
-  /*   while(1){} */
-  /* } */
+  if ( ads7828_task_init() ) {
+	while(1){}
+  }
 
 
-  if (thruster_task_init()) {
-    blink_rgb(RED_LED, 1);
+  if ( thruster_task_init() ) {
     while(1){}
   }
+
+  if ( depth_task_init() ) {
+	while(1){}
+  } 
 
   /* if (qubobus_test_init() ){ */
   /*   while(1){} */
@@ -261,11 +262,11 @@ int main() {
     while(1){}
     }
   */
-  /*
+  /* 
     if ( bme280_task_init()){
     while(1){}
     }
- */
+ */ 
 
   /*
     if ( example_uart_init() ) {

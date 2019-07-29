@@ -17,8 +17,6 @@
 // Hardware Libraries
 #include "lib/include/ms5837.h"
 
-// Use the 3.3 V bus on the tiva
-#define I2C_BUS I2C1_BASE
 // Model of the MS5837 sensor
 #define SENSOR_MODEL MS5837_30BA
 bool depth_task_init();

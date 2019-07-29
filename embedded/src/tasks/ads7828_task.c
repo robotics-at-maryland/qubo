@@ -41,7 +41,7 @@ static void ads7828_task_loop(void *params) {
 	for (;;) {
 		poll = ads7828_readChannel(I2C0_BASE, 0);		
 
-		vTaskDelay(xDelay250ms);
+//		vTaskDelay(xDelay250ms);
 	}
 }
 
