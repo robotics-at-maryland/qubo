@@ -104,11 +104,15 @@ volatile uint16_t *i2c3_int_state;
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
 
-/* MessageBufferHandle_t thruster_message_buffer; */
-QueueHandle_t thruster_message_buffer;
 
 /* DECLARE_TASK_HANDLES; */
+
+
 /* DECLARE_TASK_QUEUES; */
+/* MessageBufferHandle_t thruster_message_buffer; */
+QueueHandle_t thruster_message_buffer;
+QueueHandle_t ads_message_buffer;
+QueueHandle_t depth_message_buffer;
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -232,10 +236,10 @@ int main() {
   }
 
 
-  if (ads7828_task_init()) {
-    blink_rgb(RED_LED, 1);
-    while(1){}
-  }
+  /* if (ads7828_task_init()) { */
+  /*   blink_rgb(RED_LED, 1); */
+  /*   while(1){} */
+  /* } */
 
 
   if (thruster_task_init()) {

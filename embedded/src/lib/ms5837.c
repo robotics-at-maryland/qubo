@@ -8,12 +8,12 @@
 #include "lib/include/ms5837.h"
 
 void ms5837_init(uint32_t device) {
-	// Reset the MS5837, per datasheet
+  // Reset the MS5837, per datasheet
   // Just use one byte of the buffer here, reuse it down below
   uint8_t reg;
   uint8_t buffer[2];
   reg = MS5837_RESET;
-  writeI2C(device, MS5837_ADDR, &reg, 1, false);
+  writeI2C(device, MS5837_ADDR, &reg, 1);
 
 	// Wait for reset to complete
   vTaskDelay(10 / portTICK_RATE_MS);
@@ -22,7 +22,7 @@ void ms5837_init(uint32_t device) {
   for( uint8_t i = 0; i < 8; i++ ) {
     reg = MS5837_PROM_READ+i*2;
 
-    queryI2C(device, MS5837_ADDR, &reg, 1, buffer, 2);
+    readI2C(device, MS5837_ADDR, &reg, buffer, 2);
 
     // Not sure which should be first
     C[i] = (buffer[0] << 8) | buffer[1];
@@ -52,36 +52,56 @@ void ms5837_read(uint32_t device) {
   uint8_t reg = MS5837_CONVERT_D1_8192;
 
 	// Request D1 conversion
-  writeI2C(device, MS5837_ADDR, &reg, 1, false);
+  writeI2C(device, MS5837_ADDR, &reg, 1);
 
   vTaskDelay(20 / portTICK_RATE_MS); // Max conversion time per datasheet
 
   reg = MS5837_ADC_READ;
   uint8_t buffer[3];
 
-  queryI2C(device, MS5837_ADDR, &reg, 1, buffer, 3);
+  readI2C(device, MS5837_ADDR, &reg, buffer, 3);
 
-	D1 = 0;
-	D1 = buffer[0];
+  D1 = 0;
+  D1 = buffer[0];
   D1 = (D1 << 8) | buffer[1];
-	D1 = (D1 << 8) | buffer[2];
+  D1 = (D1 << 8) | buffer[2];
 
   reg = MS5837_CONVERT_D2_8192;
 
-  writeI2C(device, MS5837_ADDR, &reg, 1, false);
+  writeI2C(device, MS5837_ADDR, &reg, 1);
 
   // Max conversion time per datasheet
   vTaskDelay(20 / portTICK_RATE_MS);
 
   reg = MS5837_ADC_READ;
-  queryI2C(device, MS5837_ADDR, &reg, 1, buffer, 3);
+  readI2C(device, MS5837_ADDR, &reg, buffer, 3);
 
-	D2 = 0;
-	D2 = buffer[0];
+  D2 = 0;
+  D2 = buffer[0];
   D2 = (D2 << 8) | buffer[1];
-	D2 = (D2 << 8) | buffer[2];
+  D2 = (D2 << 8) | buffer[2];
 
-	calculate();
+  calculate();
+}
+
+void ms5837_readPressureNoCalculate(uint32_t device) {
+
+  uint8_t reg = MS5837_CONVERT_D1_8192;
+
+	// Request D1 conversion
+  writeI2C(device, MS5837_ADDR, &reg, 1);
+
+  vTaskDelay(20 / portTICK_RATE_MS); // Max conversion time per datasheet
+
+  reg = MS5837_ADC_READ;
+  uint8_t buffer[3];
+
+  readI2C(device, MS5837_ADDR, &reg, buffer, 3);
+
+  D1 = 0;
+  D1 = buffer[0];
+  D1 = (D1 << 8) | buffer[1];
+  D1 = (D1 << 8) | buffer[2];
 }
 
 void ms5837_readTestCase(uint32_t device) {
@@ -195,6 +215,26 @@ static void calculate() {
 		P = (((D1*SENS2)/2097152l-OFF2)/8192l)/10;
 	}
 }
+
+void ms5837_simplePressureCalculate() {
+	// Calculate first order pressure without temperature compensation
+	// Trading off accuracy for speed
+
+	int64_t SENS = 0;
+	int64_t OFF = 0;
+
+	// Terms called
+	if ( _model == MS5837_02BA ) {
+		SENS = (int64_t)(C[1])*65536l;
+		OFF = (int64_t)(C[2])*131072l;
+		P = (D1*SENS/(2097152l)-OFF)/(32768l);
+	} else {
+		SENS = (int64_t)(C[1])*32768l;
+		OFF = (int64_t)(C[2])*65536l;
+		P = (D1*SENS/(2097152l)-OFF)/(8192l);
+	}
+}
+
 
 static uint8_t crc4(uint16_t *n_prom) {
 	uint16_t n_rem = 0;

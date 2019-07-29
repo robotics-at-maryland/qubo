@@ -12,9 +12,9 @@ bool thruster_task_init() {
 
 static void thruster_task(void *params) {
 
-#ifdef DEBUG
+  #ifdef DEBUG
   UARTprintf("Starting ESC task\n");
-#endif
+  #endif
 
   /* blink_rgb(BLUE_LED | RED_LED,  1); */
 
@@ -35,4 +35,4 @@ static void thruster_task(void *params) {
 
 
   }
-  }
+}

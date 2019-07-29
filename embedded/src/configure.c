@@ -115,16 +115,23 @@ void configureGPIO(void) {
   #endif
 }
 
+/*				SCL SDA
+ *  I2C0: 5.0 V PB2 PB3 
+ *  I2C1: 3.3 V PA6 PA7
+ *  I2C2: 5.0 V PE4 PE5 
+ *  I2C3: 5.0 V PD0 PD1 
+ */
 void configureI2C(void) {
   //
   // Enable the peripherals used by this example.
   //
   ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C3);
+//  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C3); Not using bus 3
+  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C1);
 
   ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
-
+//  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD); Bus 3 on GPIO bank D
+  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA); // I2C 1 on GPIO bank A 
 
   //
   // Configure the pin muxing for I2C0 functions on port B2 and B3.
@@ -134,30 +141,43 @@ void configureI2C(void) {
   ROM_GPIOPinConfigure(GPIO_PB2_I2C0SCL);
   ROM_GPIOPinConfigure(GPIO_PB3_I2C0SDA);
 
-  ROM_GPIOPinConfigure(GPIO_PD0_I2C3SCL);
-  ROM_GPIOPinConfigure(GPIO_PD1_I2C3SDA);
+  ROM_GPIOPinConfigure(GPIO_PA6_I2C1SCL);
+  ROM_GPIOPinConfigure(GPIO_PA7_I2C1SDA);
+
+//  ROM_GPIOPinConfigure(GPIO_PD0_I2C3SCL);
+//  ROM_GPIOPinConfigure(GPIO_PD1_I2C3SDA);
 
 
   // Select the I2C function for these pins.
   ROM_GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_2);
   ROM_GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_3);
 
-  ROM_GPIOPinTypeI2CSCL(GPIO_PORTD_BASE, GPIO_PIN_0);
-  ROM_GPIOPinTypeI2C(GPIO_PORTD_BASE, GPIO_PIN_1);
+  ROM_GPIOPinTypeI2CSCL(GPIO_PORTA_BASE, GPIO_PIN_6);
+  ROM_GPIOPinTypeI2C(GPIO_PORTA_BASE, GPIO_PIN_7);
+
+//  ROM_GPIOPinTypeI2CSCL(GPIO_PORTD_BASE, GPIO_PIN_0);
+//  ROM_GPIOPinTypeI2C(GPIO_PORTD_BASE, GPIO_PIN_1);
+
+
 
 
   //
   // Initialize the I2C master.
   //
   ROM_I2CMasterInitExpClk(I2C0_BASE, ROM_SysCtlClockGet(), false);
-  ROM_I2CMasterInitExpClk(I2C3_BASE, ROM_SysCtlClockGet(), false);
+
+  ROM_I2CMasterInitExpClk(I2C1_BASE, ROM_SysCtlClockGet(), false);
+//  ROM_I2CMasterInitExpClk(I2C3_BASE, ROM_SysCtlClockGet(), false);
 
   //
   // Enable interrupts for Arbitration Lost, Stop, NAK, CLock lLow Timeout and Data
   ROM_I2CMasterIntEnableEx(I2C0_BASE, (I2C_MASTER_INT_ARB_LOST |
                                    I2C_MASTER_INT_STOP | I2C_MASTER_INT_NACK |
                                    I2C_MASTER_INT_TIMEOUT | I2C_MASTER_INT_DATA));
-  ROM_I2CMasterIntEnableEx(I2C3_BASE, (I2C_MASTER_INT_ARB_LOST |
+//  ROM_I2CMasterIntEnableEx(I2C3_BASE, (I2C_MASTER_INT_ARB_LOST |
+//                                   I2C_MASTER_INT_STOP | I2C_MASTER_INT_NACK |
+//                                   I2C_MASTER_INT_TIMEOUT | I2C_MASTER_INT_DATA));
+  ROM_I2CMasterIntEnableEx(I2C1_BASE, (I2C_MASTER_INT_ARB_LOST |
                                    I2C_MASTER_INT_STOP | I2C_MASTER_INT_NACK |
                                    I2C_MASTER_INT_TIMEOUT | I2C_MASTER_INT_DATA));
 
@@ -167,7 +187,8 @@ void configureI2C(void) {
   // Enable the I2C interrupt.
   //
   ROM_IntEnable(INT_I2C0);
-  ROM_IntEnable(INT_I2C3);
+  ROM_IntEnable(INT_I2C1);
+//  ROM_IntEnable(INT_I2C3);
 
 
 
