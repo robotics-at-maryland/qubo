@@ -58,7 +58,7 @@ void configureUART(void)
   #endif
 
 
-
+  /*
   // -----------------------------------------------------------
   // UART1:
 
@@ -98,7 +98,7 @@ void configureUART(void)
   #ifdef DEBUG
   UARTprintf("UART1 configured\n");
   #endif
-
+  */
 }
 
 void configureGPIO(void) {
@@ -116,10 +116,10 @@ void configureGPIO(void) {
 }
 
 /*				SCL SDA
- *  I2C0: 5.0 V PB2 PB3 
+ *  I2C0: 5.0 V PB2 PB3
  *  I2C1: 3.3 V PA6 PA7
- *  I2C2: 5.0 V PE4 PE5 
- *  I2C3: 5.0 V PD0 PD1 
+ *  I2C2: 5.0 V PE4 PE5
+ *  I2C3: 5.0 V PD0 PD1
  */
 void configureI2C(void) {
   //
@@ -131,7 +131,7 @@ void configureI2C(void) {
 
   ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 //  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD); Bus 3 on GPIO bank D
-  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA); // I2C 1 on GPIO bank A 
+  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA); // I2C 1 on GPIO bank A
 
   //
   // Configure the pin muxing for I2C0 functions on port B2 and B3.

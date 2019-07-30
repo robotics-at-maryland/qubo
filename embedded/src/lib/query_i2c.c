@@ -197,46 +197,46 @@ static void assign_vars(uint32_t device) {
   switch(device) {
   case I2C0_BASE:
     {
-      i2c_mutex = &i2c0_mutex;
-      i2c_address = i2c0_address;
-      i2c_read_buffer = i2c0_read_buffer;
+      i2c_mutex        = &i2c0_mutex;
+      i2c_address      = i2c0_address;
+      i2c_read_buffer  = i2c0_read_buffer;
       i2c_write_buffer = i2c0_write_buffer;
-      i2c_read_count = i2c0_read_count;
-      i2c_write_count = i2c0_write_count;
-      i2c_int_state = i2c0_int_state;
+      i2c_read_count   = i2c0_read_count;
+      i2c_write_count  = i2c0_write_count;
+      i2c_int_state    = i2c0_int_state;
       break;
     }
   case I2C1_BASE:
     {
-      i2c_mutex = &i2c1_mutex;
-      i2c_address = i2c1_address;
-      i2c_read_buffer = i2c1_read_buffer;
+      i2c_mutex        = &i2c1_mutex;
+      i2c_address      = i2c1_address;
+      i2c_read_buffer  = i2c1_read_buffer;
       i2c_write_buffer = i2c1_write_buffer;
-      i2c_read_count = i2c1_read_count;
-      i2c_write_count = i2c1_write_count;
-      i2c_int_state = i2c1_int_state;
+      i2c_read_count   = i2c1_read_count;
+      i2c_write_count  = i2c1_write_count;
+      i2c_int_state    = i2c1_int_state;
       break;
     }
   case I2C2_BASE:
     {
-      i2c_mutex = &i2c2_mutex;
-      i2c_address = i2c2_address;
-      i2c_read_buffer = i2c2_read_buffer;
+      i2c_mutex        = &i2c2_mutex;
+      i2c_address      = i2c2_address;
+      i2c_read_buffer  = i2c2_read_buffer;
       i2c_write_buffer = i2c2_write_buffer;
-      i2c_read_count = i2c2_read_count;
-      i2c_write_count = i2c2_write_count;
-      i2c_int_state = i2c2_int_state;
+      i2c_read_count   = i2c2_read_count;
+      i2c_write_count  = i2c2_write_count;
+      i2c_int_state    = i2c2_int_state;
       break;
     }
   case I2C3_BASE:
     {
-      i2c_mutex = &i2c3_mutex;
-      i2c_address = i2c3_address;
-      i2c_read_buffer = i2c3_read_buffer;
+      i2c_mutex        = &i2c3_mutex;
+      i2c_address      = i2c3_address;
+      i2c_read_buffer  = i2c3_read_buffer;
       i2c_write_buffer = i2c3_write_buffer;
-      i2c_read_count = i2c3_read_count;
-      i2c_write_count = i2c3_write_count;
-      i2c_int_state = i2c3_int_state;
+      i2c_read_count   = i2c3_read_count;
+      i2c_write_count  = i2c3_write_count;
+      i2c_int_state    = i2c3_int_state;
       break;
     }
   }

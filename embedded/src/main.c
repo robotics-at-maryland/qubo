@@ -229,24 +229,27 @@ int main() {
     }
   */
 
-  /* blink_rgb(BLUE_LED, 1); */
   if ( tiqu_task_init() ) {
+    blink_rgb(RED_LED, 1);
     while(1){}
   }
 
 
   if ( ads7828_task_init() ) {
-	while(1){}
+    blink_rgb(RED_LED, 1);
+    while(1){}
   }
 
 
   if ( thruster_task_init() ) {
+    blink_rgb(RED_LED, 1);
     while(1){}
   }
 
   if ( depth_task_init() ) {
-	while(1){}
-  } 
+    blink_rgb(RED_LED, 1);
+    while(1){}
+  }
 
   /* if (qubobus_test_init() ){ */
   /*   while(1){} */
@@ -262,11 +265,11 @@ int main() {
     while(1){}
     }
   */
-  /* 
+  /*
     if ( bme280_task_init()){
     while(1){}
     }
- */ 
+ */
 
   /*
     if ( example_uart_init() ) {

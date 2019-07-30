@@ -51,10 +51,10 @@ uint32_t *i2c_write_count;
 uint16_t *i2c_int_state;
 
 // Mutex on I2C bus, declared extern so it exists for all classes using this lib
-SemaphoreHandle_t i2c0_mutex;
-SemaphoreHandle_t i2c1_mutex;
-SemaphoreHandle_t i2c2_mutex;
-SemaphoreHandle_t i2c3_mutex;
+extern SemaphoreHandle_t i2c0_mutex;
+extern SemaphoreHandle_t i2c1_mutex;
+extern SemaphoreHandle_t i2c2_mutex;
+extern SemaphoreHandle_t i2c3_mutex;
 
 volatile uint32_t *i2c0_address;
 volatile uint8_t **i2c0_read_buffer;
