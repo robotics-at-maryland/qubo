@@ -46,9 +46,11 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	qubobus_incoming_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
 	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
+	qubobus_depth_loop  = n.createTimer(ros::Duration(5), &QSCUNode::QubobusDepthCallback, this);
 
 	qubobus_loop.start();
 	qubobus_incoming_loop.start();
+	qubobus_depth_loop.start();
 	// qubobus_status_loop.start();
 }
 
@@ -118,6 +120,15 @@ void QSCUNode::QubobusStatusCallback(const ros::TimerEvent& event){
 	q_msg.reply = std::make_shared<struct Embedded_Status>();
 	m_outgoing.push(make_pair(STATUS_PRIORITY, q_msg));
 }
+
+void QSCUNode::QubobusDepthCallback(const ros::TimerEvent& event){
+	QMsg q_msg;
+	q_msg.type = tDepthStatus;
+	q_msg.payload = nullptr;
+	q_msg.reply = std::make_shared<struct Depth_Status>();
+	m_outgoing.push(make_pair(THRUSTER_PRIORITY, q_msg));
+}
+
 
 void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 

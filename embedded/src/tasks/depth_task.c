@@ -36,6 +36,6 @@ static void depth_task(void *params) {
 
         ms5837_read(I2C1_BASE);
         depth = ms5837_depth(I2C1_BASE);
-
+		xQueueSend(depth_message_buffer, (void *) &depth, pdMS_TO_TICKS(10));
     }
 }

@@ -58,6 +58,7 @@ class QSCUNode {
 	ros::Timer qubobus_loop;
 	ros::Timer qubobus_incoming_loop;
 
+
 	const int	THRUSTER_PRIORITY = 127;
 	const int	STATUS_PRIORITY	  = 0;
 
@@ -119,6 +120,9 @@ class QSCUNode {
 
 	ros::Timer qubobus_thruster_loop;
 	void QubobusThrusterCallback(const ros::TimerEvent&);
+
+	ros::Timer qubobus_depth_loop;
+	void QubobusDepthCallback(const ros::TimerEvent&);
 
 	ros::Timer qubobus_status_loop;
 	void QubobusStatusCallback(const ros::TimerEvent&);
