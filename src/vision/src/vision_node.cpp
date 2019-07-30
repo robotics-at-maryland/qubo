@@ -5,6 +5,8 @@ using namespace std;
 using namespace ros;
 using namespace AVT::VmbAPI;
 
+
+
 int VisionNode::vmb_err(const int func_call, const string err_msg) {
 	if (func_call != VmbErrorSuccess){
 		ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
@@ -15,11 +17,13 @@ int VisionNode::vmb_err(const int func_call, const string err_msg) {
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video
 VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
- : it(n)
+
 // m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
 //	m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
 //	m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
 {
+  image_transport::ImageTransport it(n);
+
 
 	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
 	//this could give us problems if we pass something like "0followed_by_string" but just don't do that.
@@ -84,7 +88,6 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
 
 		image_pub = it.advertise("mako_feed", 1000);		
-		image_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", m_img).toImageMsg();
 
 	} else {
 
@@ -103,6 +106,11 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		m_width = m_cap.get(CV_CAP_PROP_FRAME_WIDTH);
 		m_height = m_cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 		m_fps = m_cap.get(CV_CAP_PROP_FPS);
+
+		m_img = cv::Mat (m_height, m_width, CV_8UC3);
+
+		image_pub = it.advertise("mako_feed", 1000);
+		image_sub = it.subscribe("mako_feed", 1000, &VisionNode::imageCallback, this);
 	}
 
 
@@ -171,6 +179,17 @@ VisionNode::~VisionNode(){
 	m_vimba_sys.Shutdown();
 }
 
+void VisionNode::imageCallback(const sensor_msgs::ImageConstPtr& msg){
+  if (m_output_video.isOpened()){
+    try {
+      m_output_video << (cv_bridge::toCvShare(msg,"bgr8")->image);
+    }
+    catch (cv_bridge::Exception& e){
+      ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+    }
+  }
+}
+
 void VisionNode::update(){
 
 	// Use the mako if its present
@@ -186,13 +205,14 @@ void VisionNode::update(){
 		ROS_ERROR("Empty Frame");
 		return;
 	}
+	image_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", m_img).toImageMsg();
 
 	image_pub.publish(image_msg);
 	
 	//if the user didn't specify a directory this will not be open
-	if(m_output_video.isOpened()){
+	/*if(m_output_video.isOpened()){
 		m_output_video << m_img;
-	}
+		}*/
 
 	spinOnce();
 }

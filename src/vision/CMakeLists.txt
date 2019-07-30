@@ -31,7 +31,7 @@ find_package(catkin
 
   rospy
   std_msgs
-  message_generation
+
 
   actionlib_msgs
   actionlib
@@ -52,32 +52,28 @@ find_package(catkin
 ## Declare ROS messages, services and actions ##
 ################################################
 
+
 add_service_files(
-  # DIRECTORY srv
+  #DIRECTORY srv
   FILES
   GYM_Apply_Action.srv
   GYM_Req_Observe.srv
   GYM_Req_Reset.srv
 )
 
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  sensor_msgs
-
-)
 
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
+     
 
 #Stuff other packages that depend on us need
 catkin_package(
    INCLUDE_DIRS
    LIBRARIES ${PROJECT_NAME}
-   CATKIN_DEPENDS roscpp roslib actionlib_msgs
+   CATKIN_DEPENDS roscpp roslib actionlib_msgs 
 )
 
 set(Vimba_LIBRARIES VimbaCPP VimbaC VimbaImageTransform)
@@ -198,6 +194,8 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 #tuners
  add_executable(canny_tuner ${CANNY_TUNER_FILES})
  target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+ target_link_libraries(canny_tuner ${catkin_LIBRARIES})
+
 
 # add_executable(blob_tuner ${BLOB_TUNER_FILES})
 # target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
@@ -237,6 +235,7 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 
 
+
 ##############################
 # Installable Targets ########
 ##############################
@@ -244,6 +243,7 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+
 
 # catkin_install_python(PROGRAMS src/arduino_node.py
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

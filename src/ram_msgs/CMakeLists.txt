@@ -43,6 +43,9 @@ add_message_files(
     Sim_Led.msg
     Led.msg
 
+    #Message for buoy locations/size
+    Buoys.msg
+    
     #Qubo specific messages
     DVL_qubo.msg
 
