@@ -183,7 +183,7 @@ int main() {
 
   /* thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set)); */
   thruster_message_buffer = xQueueCreate(8, sizeof(struct Thruster_Set));
-  depth_message_buffer = xQueueCreate(4, sizeof(float));
+  depth_message_buffer = xQueueCreate(1, sizeof(struct Depth_Status));
 
   i2c0_address      = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));

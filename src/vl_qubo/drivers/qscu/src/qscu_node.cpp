@@ -46,7 +46,7 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	qubobus_incoming_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
 	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
-	qubobus_depth_loop  = n.createTimer(ros::Duration(5), &QSCUNode::QubobusDepthCallback, this);
+	qubobus_depth_loop  = n.createTimer(ros::Duration(1), &QSCUNode::QubobusDepthCallback, this);
 
 	qubobus_loop.start();
 	qubobus_incoming_loop.start();
@@ -107,6 +107,10 @@ void QSCUNode::QubobusIncomingCallback(const ros::TimerEvent& event){
 			std::shared_ptr<struct Embedded_Status> e_s =
 				std::static_pointer_cast<struct Embedded_Status>(msg.reply);
 			ROS_ERROR("Uptime: %i, Mem: %f", e_s->uptime, e_s->mem_capacity);
+		} else if(msg.type.id == tDepthStatus.id) {
+			std::shared_ptr<struct Depth_Status> d_s = 
+				std::static_pointer_cast<struct Depth_Status>(msg.reply);
+			ROS_ERROR("Depth Reading: %f", d_s->depth_m);
 		}
 
 		m_incoming.pop();

@@ -107,10 +107,10 @@ float ms5837_altitude(uint32_t device);
 
 
 // Private
-static uint16_t C[8];
-static uint32_t D1, D2;
-static int32_t TEMP;
-static int32_t P;
+volatile static uint16_t C[8];
+volatile static uint32_t D1, D2;
+volatile static int32_t TEMP;
+volatile static int32_t P;
 static uint8_t _model;
 
 static float fluidDensity = 1029;

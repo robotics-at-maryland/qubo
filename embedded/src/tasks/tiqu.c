@@ -13,7 +13,7 @@ void* payload;
 
 bool tiqu_task_init(void){
 	if ( xTaskCreate(tiqu_task, (const portCHAR *) "Tiva Qubobus", 1024, NULL,
-					 tskIDLE_PRIORITY + 2, NULL) != pdTRUE) {
+					 tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
 		return true;
 	}
 	return false;
@@ -62,12 +62,12 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		switch (message->header.message_id) {
 
 		case M_ID_DEPTH_STATUS: {
-			struct Depth_Status depth_status;
-			xQueueReceive(depth_message_buffer, &(depth_status.depth_m), pdMS_TO_TICKS(40));
-			depth_status.warning_level = 0;
+			volatile struct Depth_Status *depth_status;
+			xQueuePeek(depth_message_buffer, payload, pdMS_TO_TICKS(40));
+			depth_status = payload;
+			depth_status->depth_m = 5.0;	
 			flag = TRANSACTION_FLAG;
 			transaction = tDepthStatus;
-			payload = (void *) &depth_status;	
 		}
 		case M_ID_DEPTH_MONITOR_ENABLE: {
 			break;

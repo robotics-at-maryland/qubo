@@ -8,7 +8,7 @@
 
 bool depth_task_init() {
     if ( xTaskCreate(depth_task, (const portCHAR *)"Depth", 128, NULL,
-                     tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+                     tskIDLE_PRIORITY + 2, NULL) != pdTRUE) {
     return true;
   }
   return false;
@@ -16,7 +16,7 @@ bool depth_task_init() {
 
 
 static void depth_task(void *params) {
-    float depth;
+	volatile struct Depth_Status depth_status = {0, 0};
 
     ms5837_init(I2C1_BASE);
     ms5837_setModel(SENSOR_MODEL);
@@ -27,15 +27,17 @@ static void depth_task(void *params) {
         // Try using if having speed issues. This only reads and calculates
         // first order pressure without temperature compensation
 
-        /* ms5837_readPressureNoCalculate(I2C1_BASE); */
-        /* ms5837_simplePressureCalculate(); */
-        /* depth = ms5837_depth(I2C1_BASE); */
+ /*     ms5837_readPressureNoCalculate(I2C1_BASE); 
+        ms5837_simplePressureCalculate(); 
+        depth_status.depth_m = ms5837_depth(I2C1_BASE); */
 
         // This calculates depth from second order pressure with
         // temperature compensation
 
         ms5837_read(I2C1_BASE);
-        depth = ms5837_depth(I2C1_BASE);
-		xQueueSend(depth_message_buffer, (void *) &depth, pdMS_TO_TICKS(10));
+        depth_status.depth_m = ms5837_altitude(I2C1_BASE);
+		xQueueOverwrite(depth_message_buffer, (void *) &depth_status);
+
+//		vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
