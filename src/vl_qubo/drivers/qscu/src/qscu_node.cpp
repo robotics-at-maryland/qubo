@@ -64,7 +64,7 @@ void QSCUNode::update(){
 
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
-	if (thruster_update) {
+	if (!thruster_update) {
 		// update the actual commands from the buffer, so these don't get changed in the middle of running
 		m_yaw_command	= m_yaw_command_buffer;
 		m_pitch_command = m_pitch_command_buffer;
@@ -85,16 +85,22 @@ void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 		m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
 
 		// Create the message and add it to the queue
+		QMsg q_msg;
+		q_msg.type = tThrusterSet;
+		auto tmp = std::make_shared<struct Thruster_Set>();
 		for (uint8_t i = 0; i < 8; i++) {
-			QMsg q_msg;
-			q_msg.type = tThrusterSet;
-			q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
-					.throttle = m_thruster_speeds[i],
-						.thruster_id = i,
-						});
-			q_msg.reply = nullptr;
-			m_outgoing.push(make_pair(THRUSTER_PRIORITY, q_msg));
+			tmp->throttle[i] = m_thruster_speeds[i];
 		}
+		q_msg.payload = tmp;
+		q_msg.reply = nullptr;
+		m_outgoing.push(make_pair(THRUSTER_PRIORITY, q_msg));
+		//	QMsg q_msg;
+		//	q_msg.type = tThrusterSet;
+		//	q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+		//			.throttle = m_thruster_speeds[i],
+		//				.thruster_id = i,
+		//				});
+		// }
 
 		thruster_update = false;
 		ROS_ERROR("Sending message");

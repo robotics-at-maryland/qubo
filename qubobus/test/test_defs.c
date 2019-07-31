@@ -4,7 +4,7 @@
 
 #include <qubobus.h>
 
-#if QUBOBUS_PROTOCOL_VERSION != 3
+#if QUBOBUS_PROTOCOL_VERSION != 4
 #error Update me with new message defs!
 #endif
 
@@ -14,20 +14,20 @@ int message(const char *name, const char *suffix, uint16_t type, size_t size);
 int transact(Transaction const *t);
 int error(Error const *t);
 
-int main() { 
+int main() {
     int success = 1;
     /* Tests for protocol-wide messages */
     success &= message(
             "Announce Message", "",
-            MT_ANNOUNCE, 
+            MT_ANNOUNCE,
             EMPTY);
     success &= message(
             "Protocol Message", "",
-            MT_PROTOCOL, 
+            MT_PROTOCOL,
             sizeof(struct Protocol_Info));
     success &= message(
             "Keepalive Message", "",
-            MT_KEEPALIVE, 
+            MT_KEEPALIVE,
             EMPTY);
 
     /* Tests involving the protocol error messages. */
@@ -114,7 +114,7 @@ int transact(Transaction const *t) {
     if (!IS_MESSAGE_ID(t->id)) {
         printf("ERROR: IMPROPER DATA TYPE ID!\n");
         return 0;
-    } 
+    }
     /* If there was a type definition collision, error out. */
     if (types[t->id]) {
         printf("ERROR: DATA TYPE ID REUSED!\n");
@@ -136,7 +136,7 @@ int error(Error const *e) {
     if (!IS_MESSAGE_ID(e->id)) {
         printf("ERROR: IMPROPER ERROR TYPE ID!\n");
         return 0;
-    } 
+    }
     /* If there was a type definition collision, error out. */
     if (types[e->id]) {
         printf("ERROR: ERROR TYPE ID REUSED!\n");
@@ -147,4 +147,3 @@ int error(Error const *e) {
     /* Defer to the main message definition checker for printing. */
     return message(e->name, "", MT_ERROR, e->size);
 }
-

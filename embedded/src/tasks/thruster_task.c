@@ -31,7 +31,9 @@ static void thruster_task(void *params) {
                   portMAX_DELAY);
 
     /* blink_rgb(GREEN_LED | RED_LED, 1); */
-    pca9685_setPWM(I2C_BUS, thruster_set.thruster_id,  10, THRUSTER_SCALE(thruster_set.throttle));
+    for (uint8_t i = 0; i < 8; i++) {
+      pca9685_setPWM(I2C_BUS, i,  10, THRUSTER_SCALE(thruster_set.throttle[i]));
+    }
 
 
   }

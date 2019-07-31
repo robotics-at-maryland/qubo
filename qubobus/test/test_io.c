@@ -5,7 +5,7 @@
 #include <qubobus.h>
 #include <io.h>
 
-#if QUBOBUS_PROTOCOL_VERSION != 3
+#if QUBOBUS_PROTOCOL_VERSION != 4
 #error Update me with new message defs!
 #endif
 
