@@ -35,7 +35,7 @@ static void depth_task(void *params) {
         // temperature compensation
 
         ms5837_read(I2C1_BASE);
-        depth_status.depth_m = ms5837_altitude(I2C1_BASE);
+        depth_status.depth_m = ms5837_depth(I2C1_BASE);
         xQueueOverwrite(depth_message_buffer, (void *) &depth_status);
 
         vTaskDelay(pdMS_TO_TICKS(100));

@@ -62,10 +62,9 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 		switch (message->header.message_id) {
 
 		case M_ID_DEPTH_STATUS: {
-			volatile struct Depth_Status *depth_status;
-			xQueuePeek(depth_message_buffer, payload, pdMS_TO_TICKS(40));
-			depth_status = payload;
-			depth_status->depth_m = 5.0;	
+			xQueuePeek(depth_message_buffer, (void*) buffer, pdMS_TO_TICKS(40));
+			/* depth_status = payload; */
+			payload = (void*) buffer;
 			flag = TRANSACTION_FLAG;
 			transaction = tDepthStatus;
 		}

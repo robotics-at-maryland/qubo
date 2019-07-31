@@ -42,7 +42,7 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	 * Creates a Timer object, which will trigger every `Duration` amount of time
 	 * to allow us to have a bit more accuracy in the time between updates on Qubobus
 	 */
-	qubobus_loop		   = n.createTimer(ros::Duration(0.01), &QSCUNode::QubobusCallback, this);
+	qubobus_loop		   = n.createTimer(ros::Duration(0.35), &QSCUNode::QubobusCallback, this);
 	qubobus_incoming_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
 	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
@@ -64,39 +64,41 @@ void QSCUNode::update(){
 
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
-  // update the actual commands from the buffer, so these don't get changed in the middle of running
-	m_yaw_command	= m_yaw_command_buffer;
-	m_pitch_command = m_pitch_command_buffer;
-	m_roll_command	= m_roll_command_buffer;
-	m_depth_command = m_depth_command_buffer;
-	m_surge_command = m_surge_command_buffer;
-	m_sway_command	= m_sway_command_buffer;
+	if (thruster_update) {
+		// update the actual commands from the buffer, so these don't get changed in the middle of running
+		m_yaw_command	= m_yaw_command_buffer;
+		m_pitch_command = m_pitch_command_buffer;
+		m_roll_command	= m_roll_command_buffer;
+		m_depth_command = m_depth_command_buffer;
+		m_surge_command = m_surge_command_buffer;
+		m_sway_command	= m_sway_command_buffer;
 
-	// Calculate the values for the thrusters we need to change
-	m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
-	m_thruster_speeds[1] = +m_yaw_command + m_surge_command + m_sway_command;
-	m_thruster_speeds[2] = +m_yaw_command + m_surge_command - m_sway_command;
-	m_thruster_speeds[3] = -m_yaw_command + m_surge_command + m_sway_command;
+		// Calculate the values for the thrusters we need to change
+		m_thruster_speeds[0] = -m_yaw_command + m_surge_command - m_sway_command;
+		m_thruster_speeds[1] = +m_yaw_command + m_surge_command + m_sway_command;
+		m_thruster_speeds[2] = +m_yaw_command + m_surge_command - m_sway_command;
+		m_thruster_speeds[3] = -m_yaw_command + m_surge_command + m_sway_command;
 
-	m_thruster_speeds[4] = ( m_pitch_command + m_roll_command) + m_depth_command;
-	m_thruster_speeds[5] = ( m_pitch_command - m_roll_command) + m_depth_command;
-	m_thruster_speeds[6] = (-m_pitch_command - m_roll_command) + m_depth_command;
-	m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
+		m_thruster_speeds[4] = ( m_pitch_command + m_roll_command) + m_depth_command;
+		m_thruster_speeds[5] = ( m_pitch_command - m_roll_command) + m_depth_command;
+		m_thruster_speeds[6] = (-m_pitch_command - m_roll_command) + m_depth_command;
+		m_thruster_speeds[7] = (-m_pitch_command + m_roll_command) + m_depth_command;
 
-	// Create the message and add it to the queue
-	for (uint8_t i = 0; i < 8; i++) {
-		QMsg q_msg;
-		q_msg.type = tThrusterSet;
-		q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
-				.throttle = m_thruster_speeds[i],
-					.thruster_id = i,
-					});
-		q_msg.reply = nullptr;
-		m_outgoing.push(make_pair(THRUSTER_PRIORITY, q_msg));
+		// Create the message and add it to the queue
+		for (uint8_t i = 0; i < 8; i++) {
+			QMsg q_msg;
+			q_msg.type = tThrusterSet;
+			q_msg.payload = std::make_shared<struct Thruster_Set>( (struct Thruster_Set) {
+					.throttle = m_thruster_speeds[i],
+						.thruster_id = i,
+						});
+			q_msg.reply = nullptr;
+			m_outgoing.push(make_pair(THRUSTER_PRIORITY, q_msg));
+		}
+
+		thruster_update = false;
+		ROS_ERROR("Sending message");
 	}
-
-	thruster_update = false;
-	ROS_ERROR("Sending message");
 
 }
 
@@ -108,7 +110,7 @@ void QSCUNode::QubobusIncomingCallback(const ros::TimerEvent& event){
 				std::static_pointer_cast<struct Embedded_Status>(msg.reply);
 			ROS_ERROR("Uptime: %i, Mem: %f", e_s->uptime, e_s->mem_capacity);
 		} else if(msg.type.id == tDepthStatus.id) {
-			std::shared_ptr<struct Depth_Status> d_s = 
+			std::shared_ptr<struct Depth_Status> d_s =
 				std::static_pointer_cast<struct Depth_Status>(msg.reply);
 			ROS_ERROR("Depth Reading: %f", d_s->depth_m);
 		}
@@ -175,25 +177,31 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 
 void QSCUNode::yawCallback(const std_msgs::Float64::ConstPtr& msg){
 	// Store the last command
+	thruster_update = true;
 	m_yaw_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::pitchCallback(const std_msgs::Float64::ConstPtr& msg){
+	thruster_update = true;
 	m_pitch_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::rollCallback(const std_msgs::Float64::ConstPtr& msg){
+	thruster_update = true;
 	m_roll_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::depthCallback(const std_msgs::Float64::ConstPtr& msg){
+	thruster_update = true;
 	m_pitch_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::surgeCallback(const std_msgs::Float64::ConstPtr& msg){
+	thruster_update = true;
 	m_surge_command_buffer = (float) msg->data;
 }
 
 void QSCUNode::swayCallback(const std_msgs::Float64::ConstPtr& msg){
+	thruster_update = true;
 	m_sway_command_buffer = (float) msg->data;
 }
