@@ -237,10 +237,10 @@ int main() {
   }
 
 
-  if ( ads7828_task_init() ) {
-    blink_rgb(RED_LED, 1);
-    while(1){}
-  }
+  /* if ( ads7828_task_init() ) { */
+  /*   blink_rgb(RED_LED, 1); */
+  /*   while(1){} */
+  /* } */
 
 
   if ( thruster_task_init() ) {

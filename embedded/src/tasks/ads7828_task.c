@@ -30,7 +30,6 @@ bool ads7828_task_init() {
 }
 
 static void ads7828_task_loop(void *params) {
-	const TickType_t xDelay250ms = pdMS_TO_TICKS(250);
 	uint16_t poll = 0x0000;
 
 	ads7828_begin(I2C0_BASE, DEFAULT_ADDRESS);
@@ -42,6 +41,6 @@ static void ads7828_task_loop(void *params) {
 	for (;;) {
 		poll = ads7828_readChannel(I2C0_BASE, 0);
 
-//		vTaskDelay(xDelay250ms);
+		vTaskDelay(pdMS_TO_TICKS(250));
 	}
 }

@@ -66,8 +66,9 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
 
     // Initiate burst send
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
+    ROM_I2CMasterIntEnable(device);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     UARTprintf("query_i2c: Init burst write\n");
     #endif
 
@@ -146,13 +147,14 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     UARTprintf("query_i2c: STATE_READ set\n");
     #endif
 
-		
-    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
 
-   	/* 
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
+    ROM_I2CMasterIntEnable(device);
+
+    /*
     // Initiate burst read
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
-	
+
     // Wait to finish reading
     while(ROM_I2CMasterBusy(device));
 
@@ -172,7 +174,7 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
 
     while(ROM_I2CMasterBusy(device));
-   	*/ 
+    */
     #ifdef DEBUG
     UARTprintf("query_i2c: Test\n");
     #endif
