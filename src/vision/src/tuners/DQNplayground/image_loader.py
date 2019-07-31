@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 #CV2 format B G R [H W C]
 #Torch format [C H W]

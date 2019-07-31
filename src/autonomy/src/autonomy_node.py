@@ -10,7 +10,7 @@ import actionlib
 # Brings in the messages used by the vision action, including the
 # goal message and the result message.
 import ram_msgs.msg
-
+import ram_msgs.srv
 
 def roll_callback(msg):
     #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
@@ -50,26 +50,26 @@ def call_action(action_name):
 
     print "0"
 
-    client = actionlib.SimpleActionClient(action_name, ram_msgs.msg.VisionNavAction)
+    # client = actionlib.SimpleActionClient(action_name, ram_msgs.msg.VisionExampleAction)
     print "1"
     # Waits until the action server has started up and started
     # listening for goals.
-    print client.wait_for_server()
+    # print client.wait_for_server()
     print "2"
     # Creates a goal to send to the action server.
-    goal = ram_msgs.msg.VisionNavGoal(test_goal = False)
+    # goal = ram_msgs.srv.VisionNav(test_goal = False)
     print "3"
     # Sends the goal to the action server.
-    client.send_goal(goal, feedback_cb = feedback_callback)
+    # client.send_goal(goal, feedback_cb = feedback_callback)
     print "4"
     # Waits for the server to finish performing the action.
-    client.wait_for_result()
+    # client.wait_for_result()
     print "5"
     # Prints out the result of executing the action
-    return client.get_result()
+    # return client.get_result()
 
 if __name__ == '__main__':
-
+    
     rospy.init_node('autonomy_node')
 
     qubo_namespace = '/qubo/'
@@ -99,6 +99,10 @@ if __name__ == '__main__':
 
     # go straight..
 
+    roll = 0
+    pitch = 0
+    yaw = 0
+    
     roll_hold = roll
     pitch_hold = pitch
     yaw_hold = yaw
@@ -109,12 +113,19 @@ if __name__ == '__main__':
     pitch_target.publish(pitch_hold)
     yaw_target.publish(yaw_hold)
 
-    depth_pub.publish(20)
-    surge_pub.publish(50)
+    #_pub commands output constant thrust in arbitrary units
+    #_target commands attempt to match target depth or angle
 
+    #pitch_target: + is pitch-up moment in radians, 0 is neutral position [pi,pi]
+    #roll_target: + is roll with right side dipping (maybe - not sure), 0 is neutral position [-pi,pi]
+    #yaw_target: + is turn left, 0 is neutral position [-pi,pi]
+    
+    #depth_pub.publish(20)
+    #surge_pub.publish(50)
+    roll_target.publish(1)
+    
     call_action('gate_action')
-
+    
     rospy.spin()
-
 
 #    result = vision_client()

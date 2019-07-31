@@ -35,3 +35,4 @@ packages/CMakeLists.txt
 *.img
 *.elf
 *.swp
+*.tar

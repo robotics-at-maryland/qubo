@@ -1,0 +1,4 @@
+bool verify
+---
+sensor_msgs/Image IMAGE
+int64 location

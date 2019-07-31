@@ -40,8 +40,32 @@ find_package(catkin
 
   # cv_bridge
 
+  # packages for pytorch
+  # torch
+  # torchvision
+  # package for openai gym
+  # gym
 
   )
+
+################################################
+## Declare ROS messages, services and actions ##
+################################################
+
+add_service_files(
+  # DIRECTORY srv
+  FILES
+  GYM_Apply_Action.srv
+  GYM_Req_Observe.srv
+  GYM_Req_Reset.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  sensor_msgs
+
+)
 
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 
@@ -178,8 +202,8 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 # add_executable(blob_tuner ${BLOB_TUNER_FILES})
 # target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
 
-# add_executable(gate_tuner ${GATE_TUNER_FILES})
-# target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
+add_executable(gate_tuner ${GATE_TUNER_FILES})
+target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
 
 # add_executable(buoy_tuner ${BUOY_TUNER_FILES})
 # target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
@@ -220,3 +244,6 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+
+# catkin_install_python(PROGRAMS src/arduino_node.py
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

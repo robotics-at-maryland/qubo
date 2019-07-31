@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import torch
 from torchvision import transforms, datasets
 
