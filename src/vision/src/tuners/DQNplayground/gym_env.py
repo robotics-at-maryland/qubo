@@ -2,15 +2,18 @@
 
 from __future__ import print_function
 import rospy
-import gym
+
+import gym # openai gym
+
 from std_msgs.msg import String, Float32, UInt8MultiArray, Bool
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
 from vision.srv import *
+#GYM_Apply_Action, GYM_Req_Observe, GYM_Req_Reset
+
 import cv2
 import numpy as np
 import thread
-#GYM_Apply_Action, GYM_Req_Observe, GYM_Req_Reset
 
 """
 'Bool', 'Byte', 'ByteMultiArray', 'Char', 'ColorRGBA',
@@ -24,48 +27,39 @@ import thread
   'UInt64MultiArray', 'UInt8', 'UInt8MultiArray'
 """
 
-# Game play component
-# https://github.com/Sentdex/pygta5/blob/
-# Citation: Box Of Hats (https://github.com/Box-Of-Hats )
-
-#import win32api as wapi
-#import time
-
-keyList = ["\b"]
-for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ 123456789,.'$/\\":
-    keyList.append(char)
-
 class gym_env_you(object):
-    def __init__(self,name=None):
+    def __init__( self, name = None ):
         self.name = name
-        #self.transforms = transforms
+
         rospy.wait_for_service('req_screen')
-        self.observe_screen_req = rospy.ServiceProxy('req_screen', GYM_Req_Observe )#AddTwoInts)
+        self.observe_screen_req = rospy.ServiceProxy('req_screen', GYM_Req_Observe )
         rospy.wait_for_service('apply_action')
-        self.apply_action_req = rospy.ServiceProxy('apply_action', GYM_Apply_Action )#AddTwoInts)
+        self.apply_action_req = rospy.ServiceProxy('apply_action', GYM_Apply_Action )
         rospy.wait_for_service('reset_env')
-        self.reset_req = rospy.ServiceProxy('reset_env', GYM_Req_Reset )#AddTwoInts)
+        self.reset_req = rospy.ServiceProxy('reset_env', GYM_Req_Reset )
+
         self.last_screen = 0
         self.screen_width = 600 # this is based on the code from gym
 
         self.name = name if not name == None else 'you'
-        rospy.init_node(self.name,anonymous=True)
+        rospy.init_node( self.name, anonymous = True )
 
         self.bridge = CvBridge()
 
-    def observe_state(self,**args):
+    def observe_state( self, **args ):
 
         try:
             resq1 = self.observe_screen_req(True)
             try:
+                # encoding could be specified in the later work
                 screen = self.bridge.imgmsg_to_cv2(resq1.IMAGE, desired_encoding="passthrough")
             except CvBridgeError as e:
                 print(e)
 
             cart_location = resq1.location
-
+            screen = screen.transpose(2,0,1) # to match the formate in pytorch
             screen = screen[:, 160:320]
-            view_width = 320
+            view_width = 160
 
             if cart_location < view_width // 2:
                 slice_range = slice(view_width)
@@ -74,7 +68,8 @@ class gym_env_you(object):
             else:
                 slice_range = slice(cart_location - view_width // 2,
                             cart_location + view_width // 2)
-                            # Strip off the edges, so that we have a square image centered on a cart
+            # Strip off the edges, so that we have a square image centered on a cart
+
             screen = screen[:, :, slice_range]
             # Convert to float, rescare, convert to torch tensor
             # (this doesn't require a copy)
@@ -82,12 +77,13 @@ class gym_env_you(object):
             state = screen - self.last_screen
             self.last_screen = screen
 
+            #print(state.shape) #to monitor what is transport back
             return state
 
         except rospy.ServiceException, e:
             print( "Service call failed: %s"%e )
 
-    def apply_action( self,action ):
+    def apply_action( self, action ):
         try:
             resq1 = self.apply_action_req( action )
             return resq1.reward, resq1.done
@@ -113,7 +109,7 @@ class gym_env_world(object):
 
         # communicate with client
         self.action_service = rospy.Service( 'apply_action', GYM_Apply_Action, self.apply_action )
-        self.observe_service = rospy.Service( 'req_screen',GYM_Req_Observe,self.observe_screen )
+        self.observe_service = rospy.Service( 'req_screen', GYM_Req_Observe, self.observe_screen )
         #self.action_sub = rospy.Subscriber("apply_action", Float32, self.apply_action() )
         self.reset_service = rospy.Service( 'reset_env', GYM_Req_Reset, self.reset_env )
         #s = rospy.Service('add_two_ints', AddTwoInts, handle_add_two_ints)
@@ -126,11 +122,11 @@ class gym_env_world(object):
         self.screen = None
         self.stop_rendering = False
 
-        thread.start_new_thread( self.self_rendering, ('world', ) )
+        thread.start_new_thread( self.self_rendering, ( 'world', ) )
 
     def self_rendering(self,threadingname):
         while not self.stop_rendering:
-            self.screen = self.env.render(mode='rgb_array')#.transpose( (2, 0, 1) )
+            self.screen = self.env.render( mode = 'rgb_array' )
 
     def reset_env(self,req):
         if req.verify is True:
@@ -145,15 +141,14 @@ class gym_env_world(object):
         return int(self.env.state[0] * scale + self.screen_width / 2.0)  # MIDDLE OF CART
 
     def observe_screen(self,req):
-
-        #self.env.render(mode='rgb_array',close=True)
+        # grap the lastest screen from self.screen created by self_rendering()
+        # Or it would be a segmentation error(Openai gym issue)
         screen = self.screen.copy()
         try:
             screen = self.bridge.cv2_to_imgmsg( screen, encoding="passthrough" )
         except CvBridgeError as e:
             print(e)
 
-        print('type',type(screen))
         self.vision_pub.publish(screen)
         resp = GYM_Req_ObserveResponse()
         resp.IMAGE = screen
@@ -161,7 +156,7 @@ class gym_env_world(object):
         return resp
 
     def apply_action(self,req):
-        _, reward, done, _ = self.env.step( req.action ) # [0, 0])
+        _, reward, done, _ = self.env.step( req.action )
         print("action: ", req.action)
         print( "apply_action reward", reward )
         resp = GYM_Apply_ActionResponse()
@@ -169,38 +164,12 @@ class gym_env_world(object):
         resp.done = done
         return resp
 
-    #def __del__(self):
-    #    self.stop_rendering = True
-    #    print('close the world')
+    def __del__(self):
+        self.stop_rendering = True
+        self.env.render(close=True)
+        self.env.close()
+        print('close the world')
 
-# the key check and keys_to_output only work for windows
-"""
-def key_check():
-    keys = []
-    for key in keyList:
-        if wapi.GetAsyncKeyState(ord(key)):
-            keys.append(key)
-    return keys
-
-def keys_to_output(keys):
-    '''
-    Convert keys to a ...multi-hot... array
-    [A,W,D] boolean values.
-    '''
-    #output = [0,0]
-    output = None
-    if 'A' in keys:
-        output = 0
-        #output[0] = 1
-    elif 'D' in keys:
-        output = 1
-        #output[1] = 1
-    else:
-        pass
-        #output[1] = 1
-
-    return output
-"""
 if __name__ == "__main__":
     gym_env_you('you1')
     gym_env_world('world')

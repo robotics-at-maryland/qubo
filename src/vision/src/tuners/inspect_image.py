@@ -17,14 +17,15 @@ else:
     camera = cv2.VideoCapture(args["video"])
 
 # from http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
-# press ctrl + c to close the window
+# press ctrl + c or e to close the window
+
+print 'press e to destroy all the window'
 while True:
     grabbed,frame=camera.read()
-    if args.get("video") and not grabbed:
-        break
+    if args.get("video") and not grabbed: break
     cv2.imshow("frame",frame)
-    if cv2.waitKey(1) and False:
-        break
+    if cv2.waitKey(1) == ord('e'): break
 
+# smoothly exit
 cap.release()
 cv2.destrotAllWindows()

@@ -8,7 +8,7 @@ project(vision)
 
 # set(OpenCV_INCLUDE_DIRS /usr/local/include /usr/local/include/opencv)
 #Find stuff we need
-find_package(OpenCV 2.4 REQUIRED
+find_package(OpenCV 3 REQUIRED
 #  NO_MODULE
 #  PATHS /usr/local/ ${CMAKE_PREFIX_PATH}
 # NO_DEFAULT_PATH
@@ -31,17 +31,42 @@ find_package(catkin
 
   rospy
   std_msgs
-  message_generation
+
 
   actionlib_msgs
   actionlib
-
+  sensor_msgs
   image_transport
+  message_generation
+  cv_bridge
 
-  # cv_bridge
-
+  # packages for pytorch
+  # torch
+  # torchvision
+  # package for openai gym
+  # gym
 
   )
+
+################################################
+## Declare ROS messages, services and actions ##
+################################################
+
+
+add_service_files(
+  DIRECTORY srv
+  FILES
+  GYM_Apply_Action.srv
+  GYM_Req_Observe.srv
+  GYM_Req_Reset.srv
+  Gate_Detection.srv
+)
+
+
+generate_messages(DEPENDENCIES
+  std_msgs
+  sensor_msgs
+)
 
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 
@@ -49,11 +74,12 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 #find_package(OpenCV REQUIRED COMPONENTS core imgproc highgui opencv_gpu video)
 
+
 #Stuff other packages that depend on us need
 catkin_package(
    INCLUDE_DIRS
    LIBRARIES ${PROJECT_NAME}
-   CATKIN_DEPENDS roscpp roslib actionlib_msgs
+   CATKIN_DEPENDS roscpp roslib actionlib_msgs message_runtime std_msgs sensor_msgs
 )
 
 set(Vimba_LIBRARIES VimbaCPP VimbaC VimbaImageTransform)
@@ -73,10 +99,10 @@ set(VISION_SRC_FILES
   src/main.cpp
   src/vision_node.cpp
 
-  src/actions/buoy_action.cpp
-  src/actions/gate_action.cpp
-  src/actions/blob_action.cpp
-  )
+# src/actions/buoy_action.cpp
+ # src/actions/gate_action.cpp
+ # src/actions/blob_action.cpp
+ )
 
 
 set(SIM_VISION_SRC_FILES
@@ -172,51 +198,59 @@ add_dependencies(vision_node ram_msgs_gencpp) #We need these built before we try
 
 
 #tuners
-# add_executable(canny_tuner ${CANNY_TUNER_FILES})
-# target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
-
-# add_executable(blob_tuner ${BLOB_TUNER_FILES})
-# target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
-
-# add_executable(gate_tuner ${GATE_TUNER_FILES})
-# target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
-
-# add_executable(buoy_tuner ${BUOY_TUNER_FILES})
-# target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
+ add_executable(canny_tuner ${CANNY_TUNER_FILES})
+ target_link_libraries(canny_tuner ${OpenCV_LIBRARIES})
+ target_link_libraries(canny_tuner ${catkin_LIBRARIES})
+ add_dependencies(canny_tuner ram_msgs_gencpp) #We need these built before we try to build this package
 
 
-# ##below are all basically prototypes
-# add_executable(gate_detector ${GATE_FILES})
-# target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
+ # add_executable(blob_tuner ${BLOB_TUNER_FILES})
+ # target_link_libraries(blob_tuner ${OpenCV_LIBRARIES})
+
+ # add_executable(gate_tuner ${GATE_TUNER_FILES})
+ # target_link_libraries(gate_tuner ${OpenCV_LIBRARIES})
+
+ # add_executable(buoy_tuner ${BUOY_TUNER_FILES})
+ # target_link_libraries(buoy_tuner ${OpenCV_LIBRARIES})
 
 
-# add_executable(segment_test ${SEGMENT_FILES})
-# target_link_libraries(segment_test ${OpenCV_LIBRARIES})
-
-# add_executable(canny_test ${EDGE_FILES})
-# target_link_libraries(canny_test ${OpenCV_LIBRARIES})
-
-# add_executable(blob_test ${BLOB_FILES})
-# target_link_libraries(blob_test ${OpenCV_LIBRARIES})
-
-# add_executable(em_test ${EM_FILES})
-# target_link_libraries(em_test ${OpenCV_LIBRARIES})
-
-# add_executable(gfit_test ${GFIT_FILES})
-# target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
-
-# # add_executable(mbt_test ${MBT_FILES})
-# # target_link_libraries(mbt_test ${VISP_LIBRARIES})
-
-# add_executable(cascade_test ${CASCADE_TEST})
-# target_link_libraries(cascade_test ${OpenCV_LIBRARIES})
+ # ##below are all basically prototypes
+ # add_executable(gate_detector ${GATE_FILES})
+ # target_link_libraries(gate_detector ${OpenCV_LIBRARIES})
 
 
+ # add_executable(segment_test ${SEGMENT_FILES})
+ # target_link_libraries(segment_test ${OpenCV_LIBRARIES})
 
-##############################
-# Installable Targets ########
-##############################
+ # add_executable(canny_test ${EDGE_FILES})
+ # target_link_libraries(canny_test ${OpenCV_LIBRARIES})
 
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
+ # add_executable(blob_test ${BLOB_FILES})
+ # target_link_libraries(blob_test ${OpenCV_LIBRARIES})
+
+ # add_executable(em_test ${EM_FILES})
+ # target_link_libraries(em_test ${OpenCV_LIBRARIES})
+
+ # add_executable(gfit_test ${GFIT_FILES})
+ # target_link_libraries(gfit_test ${OpenCV_LIBRARIES})
+
+ # # add_executable(mbt_test ${MBT_FILES})
+ # # target_link_libraries(mbt_test ${VISP_LIBRARIES})
+
+ # add_executable(cascade_test ${CASCADE_TEST})
+ # target_link_libraries(cascade_test ${OpenCV_LIBRARIES})
+
+
+
+
+ ##############################
+ # Installable Targets ########
+ ##############################
+
+ install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   )
+
+
+ # catkin_install_python(PROGRAMS src/arduino_node.py
+ #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

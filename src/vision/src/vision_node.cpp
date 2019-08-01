@@ -5,6 +5,8 @@ using namespace std;
 using namespace ros;
 using namespace AVT::VmbAPI;
 
+
+
 int VisionNode::vmb_err(const int func_call, const string err_msg) {
 	if (func_call != VmbErrorSuccess){
 		ROS_ERROR("%s, code: %i", err_msg.c_str(), func_call);
@@ -14,12 +16,14 @@ int VisionNode::vmb_err(const int func_call, const string err_msg) {
 }
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video
-VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
-	:	m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
-		m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
-		m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
+VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed, string feed_name)
 
+// m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
+//	m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
+//	m_blob_server(n, "blob_action", boost::bind(&VisionNode::findBlob, this, _1, &m_blob_server), false)
 {
+  image_transport::ImageTransport it(n);
+
 
 	// isdigit makes sure checks if we're dealing with a number (like if want to open the default camera by passing a 0). If we are we convert our string to an int (VideoCapture won't correctly open the camera with the string in this case);
 	//this could give us problems if we pass something like "0followed_by_string" but just don't do that.
@@ -45,12 +49,12 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		// We need to height, width and pixel format of the camera to convert the images to something OpenCV likes
 		FeaturePtr feat;
 		// if(!vmb_err(m_gige_camera->GetFeatureByName("GVSPAdjustPacketSize", feat), "Error getting packet feature")){
-		// 	if(!vmb_err(feat->RunCommand(), "Error running packet command")){
-		// 		bool done = false;
-		// 		while (!done) {
-		// 			if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
-		// 		}
-		// 	}
+		//	if(!vmb_err(feat->RunCommand(), "Error running packet command")){
+		//		bool done = false;
+		//		while (!done) {
+		//			if( vmb_err(feat->IsCommandDone(done), "Error getting command status") ) { break; }
+		//		}
+		//	}
 		// }
 		if(!vmb_err(m_gige_camera->GetFeatureByName( "Width", feat), ("Error getting the camera width" ))){
 			VmbInt64_t width;
@@ -83,7 +87,9 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 5, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
 
-	} else {
+		image_pub = it.advertise(feed_name, 1000);		
+
+	} else if(atoi(feed.c_str()) != -1) {
 
 		if(isdigit(feed.c_str()[0])){
 			m_cap = cv::VideoCapture(atoi(feed.c_str()));
@@ -100,6 +106,11 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		m_width = m_cap.get(CV_CAP_PROP_FRAME_WIDTH);
 		m_height = m_cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 		m_fps = m_cap.get(CV_CAP_PROP_FPS);
+
+		m_img = cv::Mat (m_height, m_width, CV_8UC3);
+
+		image_pub = it.advertise(feed_name, 1000);
+		image_sub = it.subscribe(feed_name, 1000, &VisionNode::imageCallback, this);
 	}
 
 
@@ -149,10 +160,12 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 	//start your action servers here
 	//------------------------------------------------------------------------------
-	m_buoy_server.start();
-	m_gate_server.start();
+	/*
+	  m_buoy_server.start();
+	  m_gate_server.start();
 	m_blob_server.start();
 	ROS_INFO("servers started");
+	*/
 
 }
 
@@ -166,12 +179,23 @@ VisionNode::~VisionNode(){
 	m_vimba_sys.Shutdown();
 }
 
+void VisionNode::imageCallback(const sensor_msgs::ImageConstPtr& msg){
+  if (m_output_video.isOpened()){
+    try {
+      m_output_video << (cv_bridge::toCvShare(msg,"bgr8")->image);
+    }
+    catch (cv_bridge::Exception& e){
+      ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+    }
+  }
+}
+
 void VisionNode::update(){
 
 	// Use the mako if its present
 	if (m_gige_camera != nullptr){
 		getVmbFrame(m_img);
-	} else {
+		} else {
 		m_cap >> m_img;
 	}
 	//if one of our frames was empty it means we ran out of footage, should only happen with test feeds or if a camera breaks I guess
@@ -181,11 +205,14 @@ void VisionNode::update(){
 		ROS_ERROR("Empty Frame");
 		return;
 	}
+	image_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", m_img).toImageMsg();
 
+	image_pub.publish(image_msg);
+	
 	//if the user didn't specify a directory this will not be open
-	if(m_output_video.isOpened()){
+	/*if(m_output_video.isOpened()){
 		m_output_video << m_img;
-	}
+		}*/
 
 	spinOnce();
 }
@@ -227,7 +254,7 @@ void VisionNode::getVmbFrame(cv::Mat& cv_frame){
 	// VmbFrameStatusType status;
 	// vmb_frame->GetReceiveStatus(status);
 	// if(status != VmbFrameStatusComplete) {
-	// 	ROS_ERROR("Malformed frame received, code %i", status);
+	//	ROS_ERROR("Malformed frame received, code %i", status);
 	// }
 	VmbUint32_t size;
 	vmb_frame->GetImageSize(size);
@@ -258,9 +285,9 @@ bool VisionNode::serviceTest(ram_msgs::bool_bool::Request &req, ram_msgs::bool_b
 
 
 
-//There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet.
+/* //There are the definitions for all of our actionlib actions, may be moved to it's own class not sure yet.
 //=================================================================================================================
-void VisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
+	void VisionNode::testExecute(const ram_msgs::VisionNavGoalConstPtr& goal, actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
 	//    goal->test_feedback = 5;
 	ROS_ERROR("You called the action well done!");
 	as->setSucceeded();
@@ -293,17 +320,17 @@ void VisionNode::findGate(const ram_msgs::VisionNavGoalConstPtr& goal,  actionli
 
 
 void VisionNode::findBlob(const ram_msgs::VisionNavGoalConstPtr& goal,  actionlib::SimpleActionServer<ram_msgs::VisionNavAction> *as){
-	
+
 	BlobAction action = BlobAction();
 	ram_msgs::VisionNavFeedback feedback;
 	feedback.y_offset = 0;
-	
+
 	while(true){
 		ROS_ERROR("updating action");
 		feedback.x_offset = action.updateAction(m_img);
 		as->publishFeedback(feedback);
-		
+
 	}
 
 	as->setSucceeded();
-}
+}*/

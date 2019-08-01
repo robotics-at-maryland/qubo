@@ -23,6 +23,7 @@
   <build_depend>ram_drivers</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>nav_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
   
   <!-- sg: required by actionlib (if you couldn't guess) --> 
   <build_depend>actionlib</build_depend>
@@ -53,10 +54,8 @@
   <run_depend>message_generation</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
-
+  <run_depend>message_runtime</run_depend>
+  <run_depend>sensor_msgs</run_depend>
   <run_depend>VISP></run_depend>
-    
-
-
 
 </package>
