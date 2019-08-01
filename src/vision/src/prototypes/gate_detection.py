@@ -46,5 +46,6 @@ if lines is not None:
     cv2.line(image, (right, 0), (right, 1000), (0, 0, 255), 3)
     cv2.line(image, ((left + right)/2, 0), ((left + right)/2, 1000), (0, 255, 0), 3)
 
+print(image.shape)
 cv2.imshow('lines', image)
 cv2.waitKey(0)

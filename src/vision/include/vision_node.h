@@ -39,7 +39,7 @@
 
 
 		//you need to pass in a node handle and a camera feed, which should be a file path either to a physical device or to a video file
-		VisionNode(ros::NodeHandle n, ros::NodeHandle np,  std::string feed);
+		VisionNode(ros::NodeHandle n, ros::NodeHandle np, std::string feed, std::string feed_name);
 		~VisionNode();
 		void update(); //this will just pull the next image in
 		void imageCallback(const sensor_msgs::ImageConstPtr& msg); //For Subscriber

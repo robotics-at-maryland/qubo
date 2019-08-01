@@ -16,7 +16,7 @@ int VisionNode::vmb_err(const int func_call, const string err_msg) {
 }
 
 //you need to pass in a node handle, and a camera feed, which should be a file path either to a physical device or to a video
-VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
+VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed, string feed_name)
 
 // m_buoy_server(n, "buoy_action", boost::bind(&VisionNode::findBuoy, this, _1, &m_buoy_server), false),
 //	m_gate_server(n, "gate_action", boost::bind(&VisionNode::findGate, this, _1, &m_gate_server), false),
@@ -87,9 +87,9 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 		vmb_err(m_gige_camera->StartContinuousImageAcquisition( 5, IFrameObserverPtr(m_observer)), "Error starting continuous image acquisition");
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
 
-		image_pub = it.advertise("mako_feed", 1000);		
+		image_pub = it.advertise(feed_name, 1000);		
 
-	} else {
+	} else if(atoi(feed.c_str()) != -1) {
 
 		if(isdigit(feed.c_str()[0])){
 			m_cap = cv::VideoCapture(atoi(feed.c_str()));
@@ -109,8 +109,8 @@ VisionNode::VisionNode(NodeHandle n, NodeHandle np, string feed)
 
 		m_img = cv::Mat (m_height, m_width, CV_8UC3);
 
-		image_pub = it.advertise("mako_feed", 1000);
-		image_sub = it.subscribe("mako_feed", 1000, &VisionNode::imageCallback, this);
+		image_pub = it.advertise(feed_name, 1000);
+		image_sub = it.subscribe(feed_name, 1000, &VisionNode::imageCallback, this);
 	}
 
 

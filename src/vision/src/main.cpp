@@ -16,12 +16,16 @@ int main(int argc, char** argv){
 	ros::init(argc,argv, "vision_node");
 	ros::NodeHandle n;
 	ros::NodeHandle np("~");
+	ros::NodeHandle hull_n;
+	ros::NodeHandle hull_np("~");
 
-	VisionNode node(n,np,argv[1]); //argv[1] should be the topic the camera is published on
+	VisionNode mako_node(n,np,argv[1], "mako_feed"); //argv[1] should be the topic the camera is published on
+	VisionNode hull_node(hull_n,hull_np,argv[2], "hull_feed");
 
 	ros::Rate r(10); //not 10 hz
 	while(ros::ok()){
-		node.update();
+		mako_node.update();
+		hull_node.update();
 		r.sleep(); //you update this time in the second argument to the VisionNode constructor
 	}
 

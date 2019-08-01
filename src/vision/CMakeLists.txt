@@ -35,9 +35,9 @@ find_package(catkin
 
   actionlib_msgs
   actionlib
-
+  sensor_msgs
   image_transport
-
+  message_generation
   cv_bridge
 
   # packages for pytorch
@@ -54,13 +54,19 @@ find_package(catkin
 
 
 add_service_files(
-  #DIRECTORY srv
+  DIRECTORY srv
   FILES
   GYM_Apply_Action.srv
   GYM_Req_Observe.srv
   GYM_Req_Reset.srv
+  Gate_Detection.srv
 )
 
+
+generate_messages(DEPENDENCIES
+  std_msgs
+  sensor_msgs
+)
 
 #we found putting this later fixed the problem of some people's machines forgetting where OpenCV lives
 
@@ -73,7 +79,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 catkin_package(
    INCLUDE_DIRS
    LIBRARIES ${PROJECT_NAME}
-   CATKIN_DEPENDS roscpp roslib actionlib_msgs
+   CATKIN_DEPENDS roscpp roslib actionlib_msgs message_runtime std_msgs sensor_msgs
 )
 
 set(Vimba_LIBRARIES VimbaCPP VimbaC VimbaImageTransform)
