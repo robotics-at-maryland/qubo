@@ -4,7 +4,7 @@
 
 bool thruster_task_init() {
   if ( xTaskCreate(thruster_task, (const portCHAR *)"Thruster", 256, NULL,
-                   tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+                   tskIDLE_PRIORITY + 2, NULL) != pdTRUE) {
     return true;
   }
   return false;
@@ -18,8 +18,8 @@ static void thruster_task(void *params) {
 
   /* blink_rgb(BLUE_LED | RED_LED,  1); */
 
-  pca9685_begin(I2C_BUS, PCA_ADDR);
-  pca9685_setPWMFreq(I2C_BUS, PWM_FREQ);
+  pca9685_begin(THRUSTER_I2C_BUS, PCA_ADDR);
+  pca9685_setPWMFreq(THRUSTER_I2C_BUS, PWM_FREQ);
 
   /* blink_rgb(BLUE_LED, 1); */
   struct Thruster_Set thruster_set;
@@ -30,9 +30,8 @@ static void thruster_task(void *params) {
     xQueueReceive(thruster_message_buffer, (void*)&thruster_set,
                   portMAX_DELAY);
 
-    /* blink_rgb(GREEN_LED | RED_LED, 1); */
     for (uint8_t i = 0; i < 8; i++) {
-      pca9685_setPWM(I2C_BUS, i,  10, THRUSTER_SCALE(thruster_set.throttle[i]));
+      pca9685_setPWM(THRUSTER_I2C_BUS, i,  10, THRUSTER_SCALE(thruster_set.throttle[i]));
     }
 
 

@@ -10,13 +10,15 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
 
   assign_vars(device);
 
+  // This works, but might not be optimal
   // If the i2c bus is busy, yield task and then try again
-  while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) {
-    #ifdef DEBUG
-    UARTprintf("query_i2c: Semaphore busy\n");
-    #endif
-    taskYIELD();
-  }
+  /* while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) { */
+  /*   #ifdef DEBUG */
+  /*   UARTprintf("query_i2c: Semaphore busy\n"); */
+  /*   #endif */
+  /*   taskYIELD(); */
+  /* } */
+  xSemaphoreTake(*i2c_mutex, portMAX_DELAY);
 
   // Set address
   ROM_I2CMasterSlaveAddrSet(device, addr, false);
@@ -60,9 +62,9 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     *i2c_write_buffer = (data + 1);
     *i2c_write_count = (length - 1);
     *i2c_int_state = STATE_WRITE;
-    #ifdef DEBUG
+#ifdef DEBUG
     UARTprintf("query_i2c: Setting STATE_WRITE\n");
-    #endif
+#endif
 
     // Initiate burst send
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_START);
@@ -70,12 +72,12 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
 
 #ifdef DEBUG
     UARTprintf("query_i2c: Init burst write\n");
-    #endif
+#endif
 
     /*
-    while(ROM_I2CMasterBusy(device));
+      while(ROM_I2CMasterBusy(device));
 
-    for(uint32_t i = 0; i < (length - 1); i++) {
+      for(uint32_t i = 0; i < (length - 1); i++) {
       // put data into fifo
       ROM_I2CMasterDataPut(device, *(data + 1));
       // Increment pointer
@@ -84,7 +86,7 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
       ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_SEND_CONT);
       // Wait till done transferring
       while(ROM_I2CMasterBusy(device));
-    }
+      }
     */
   }
   // Don't return until done
@@ -100,10 +102,12 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
 
   assign_vars(device);
 
+  // this works, but might not be optimal
   // If the i2c bus is busy, yield task and then try again
-  while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) {
-    taskYIELD();
-  }
+  /* while (xSemaphoreTake(*i2c_mutex, 0) == pdFALSE) { */
+  /*   taskYIELD(); */
+  /* } */
+  xSemaphoreTake(*i2c_mutex, portMAX_DELAY);
 
   //specify that we are writing (a register address) to the
   //slave device
@@ -112,16 +116,16 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
   //specify register to be read
   ROM_I2CMasterDataPut(device, reg);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   UARTprintf("query_i2c: Write register\n");
-  #endif
+#endif
 
   //send control byte and register address byte to slave device
   ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   UARTprintf("query_i2c: wrote register\n");
-  #endif
+#endif
 
   //wait for MCU to finish transaction
   while(ROM_I2CMasterBusy(device));
@@ -143,9 +147,9 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     *i2c_read_buffer = data;
     *i2c_read_count = length;
     *i2c_int_state = STATE_READ;
-    #ifdef DEBUG
+#ifdef DEBUG
     UARTprintf("query_i2c: STATE_READ set\n");
-    #endif
+#endif
 
 
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_START);
@@ -159,12 +163,12 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
     while(ROM_I2CMasterBusy(device));
 
     for(uint32_t i = 0; i < (length - 1); i++) {
-      // Set the buffer with recieved byte
-      *data = ROM_I2CMasterDataGet(device);
-      // Increment pointer
-      data++;
-      // Receive data
-      ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
+    // Set the buffer with recieved byte
+    *data = ROM_I2CMasterDataGet(device);
+    // Increment pointer
+    data++;
+    // Receive data
+    ROM_I2CMasterControl(device, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
     }
 
     // Read last byte
@@ -175,21 +179,21 @@ void readI2C(uint32_t device, uint8_t addr, uint8_t reg, uint8_t *data, uint32_t
 
     while(ROM_I2CMasterBusy(device));
     */
-    #ifdef DEBUG
+#ifdef DEBUG
     UARTprintf("query_i2c: Test\n");
-    #endif
+#endif
   }
 
   while(*i2c_int_state != STATE_IDLE) {
     vTaskDelay(250);
   }
 
-  #ifdef DEBUG
-  UARTprintf("query_i2c: Not in idle anymore\n");
-  #endif
+#ifdef DEBUG
+    UARTprintf("query_i2c: Not in idle anymore\n");
+#endif
 
-  // Give back semaphore
-  xSemaphoreGive(*i2c_mutex);
+    // Give back semaphore
+    xSemaphoreGive(*i2c_mutex);
 }
 
 /*

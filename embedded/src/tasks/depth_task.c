@@ -8,7 +8,7 @@
 
 bool depth_task_init() {
     if ( xTaskCreate(depth_task, (const portCHAR *)"Depth", 128, NULL,
-                     tskIDLE_PRIORITY + 1, NULL) != pdTRUE) {
+                     tskIDLE_PRIORITY + 3, NULL) != pdTRUE) {
         return true;
   }
   return false;
@@ -38,6 +38,6 @@ static void depth_task(void *params) {
         depth_status.depth_m = ms5837_depth(I2C1_BASE);
         xQueueOverwrite(depth_message_buffer, (void *) &depth_status);
 
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(200));
     }
 }

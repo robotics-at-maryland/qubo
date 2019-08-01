@@ -18,8 +18,10 @@
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
 #include <boost/optional.hpp>
+#include <boost/circular_buffer.hpp>
 #include <queue>
 #include <utility>
+#include <chrono>
 
 // No idea what this is
 #include "tf/tf.h"
@@ -62,8 +64,12 @@ class QSCUNode {
 	const int	THRUSTER_PRIORITY = 127;
 	const int	STATUS_PRIORITY	  = 0;
 
+	const std::chrono::milliseconds KEEPALIVE_SEND_PERIOD;
+	std::chrono::time_point<std::chrono::steady_clock> m_last_keepalive_sent_time;
+
 	// bool QMsgCompare(std::pair<int, QMsg> p1, std::pair<int, QMsg> p2);
 	// , std::vector<std::pair<int, QMsg>, decltype(QMsgCompare)>
+	// We should change these to be circular buffers
 	std::priority_queue<std::pair<int, QMsg>> m_outgoing;
 	std::queue<QMsg> m_incoming;
 

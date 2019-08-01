@@ -104,9 +104,8 @@ static uint8_t handle_request(IO_State *state, Message *message, const uint8_t* 
 				/*				   (void*) thruster_set, */
 				/*					sizeof(thruster_set), */
 				/*					pdMS_TO_TICKS(10)) == 0 */
-				xQueueSend(thruster_message_buffer,
-						   (void*) thruster_set,
-						   pdMS_TO_TICKS(10)) == 0
+				xQueueOverwrite(thruster_message_buffer,
+								(void*) thruster_set) == 0
 				) {
 				error = eThrusterUnreachable;
 				flag = ERROR_FLAG;

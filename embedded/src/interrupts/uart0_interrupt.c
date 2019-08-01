@@ -19,18 +19,18 @@
 
 // Handle an interrupt triggered for UART0
 void UART0IntHandler(void) {
-    volatile struct UART_Queue *queue = &uart0_queue;
+    static struct UART_Queue *queue = &uart0_queue;
 
-	uint32_t status = ROM_UARTIntStatus(queue->hardware_base_address, true);
-
-	if( status & (UART_INT_RX | UART_INT_RT) ){
-        empty_rx_buffer(queue);
-	}
-
-	if( status & UART_INT_TX ){
-        fill_tx_buffer(queue);
-	}
-
+    uint32_t status = ROM_UARTIntStatus(queue->hardware_base_address, true);
     ROM_UARTIntClear(queue->hardware_base_address, ( UART_INT_TX | UART_INT_RX | UART_INT_RT));
+
+    if( status & (UART_INT_RX | UART_INT_RT) ){
+        empty_rx_buffer(queue);
+    }
+
+    if( status & UART_INT_TX ){
+        fill_tx_buffer(queue);
+    }
+
 
 }

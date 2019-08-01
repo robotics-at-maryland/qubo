@@ -11,7 +11,7 @@ const bool QSCUNode::QMsg::operator<(const QMsg& obj) const {
 // }
 
 QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
-	:m_node_name(node_name), qscu(device_file, B115200) {
+	:m_node_name(node_name), qscu(device_file, B115200), KEEPALIVE_SEND_PERIOD(1000) {
 
 	string qubo_namespace = "/qubo/";
 
@@ -45,7 +45,7 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	qubobus_loop		   = n.createTimer(ros::Duration(0.35), &QSCUNode::QubobusCallback, this);
 	qubobus_incoming_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
-	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
+	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.3), &QSCUNode::QubobusThrusterCallback, this);
 	qubobus_depth_loop  = n.createTimer(ros::Duration(1), &QSCUNode::QubobusDepthCallback, this);
 
 	qubobus_loop.start();
@@ -156,7 +156,11 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 
 	try {
 		if (m_outgoing.empty()) {
-			qscu.keepAlive();
+			// We only want to send a keepalive every so often
+			if ((m_last_keepalive_sent_time + KEEPALIVE_SEND_PERIOD) < std::chrono::steady_clock::now()) {
+				qscu.keepAlive();
+				m_last_keepalive_sent_time = std::chrono::steady_clock::now();
+			}
 		} else {
 			// Try to clear the buffer of messages
 			// Don't know what to do when there are too many messages
