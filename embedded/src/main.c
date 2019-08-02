@@ -248,10 +248,10 @@ int main() {
     while(1){}
   }
 
-  if ( depth_task_init() ) {
-    blink_rgb(RED_LED, 1);
-    while(1){}
-  }
+  /* if ( depth_task_init() ) { */
+  /*   blink_rgb(RED_LED, 1); */
+  /*   while(1){} */
+  /* } */
 
   /* if (qubobus_test_init() ){ */
   /*   while(1){} */

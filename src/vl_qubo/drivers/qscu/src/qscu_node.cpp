@@ -46,11 +46,11 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	qubobus_incoming_loop  = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
 	qubobus_thruster_loop  = n.createTimer(ros::Duration(0.3), &QSCUNode::QubobusThrusterCallback, this);
-	qubobus_depth_loop  = n.createTimer(ros::Duration(1), &QSCUNode::QubobusDepthCallback, this);
+	// qubobus_depth_loop  = n.createTimer(ros::Duration(4), &QSCUNode::QubobusDepthCallback, this);
 
 	qubobus_loop.start();
 	qubobus_incoming_loop.start();
-	qubobus_depth_loop.start();
+	// qubobus_depth_loop.start();
 	// qubobus_status_loop.start();
 }
 
@@ -64,7 +64,7 @@ void QSCUNode::update(){
 
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
-	if (!thruster_update) {
+	if (!thruster_update || thruster_update) {
 		// update the actual commands from the buffer, so these don't get changed in the middle of running
 		m_yaw_command	= m_yaw_command_buffer;
 		m_pitch_command = m_pitch_command_buffer;

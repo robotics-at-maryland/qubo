@@ -21,6 +21,10 @@ static void thruster_task(void *params) {
   pca9685_begin(THRUSTER_I2C_BUS, PCA_ADDR);
   pca9685_setPWMFreq(THRUSTER_I2C_BUS, PWM_FREQ);
 
+  for (uint8_t i = 0; i < 8; i++) {
+    pca9685_setPWM(THRUSTER_I2C_BUS, i,  10, THRUSTER_SCALE(0) - 15);
+  }
+
   /* blink_rgb(BLUE_LED, 1); */
   struct Thruster_Set thruster_set;
   for (;;) {
@@ -31,7 +35,7 @@ static void thruster_task(void *params) {
                   portMAX_DELAY);
 
     for (uint8_t i = 0; i < 8; i++) {
-      pca9685_setPWM(THRUSTER_I2C_BUS, i,  10, THRUSTER_SCALE(thruster_set.throttle[i]));
+      pca9685_setPWM(THRUSTER_I2C_BUS, i,  10, THRUSTER_SCALE(thruster_set.throttle[i]) - 15);
     }
 
 
