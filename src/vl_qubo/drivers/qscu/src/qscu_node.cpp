@@ -11,7 +11,7 @@ const bool QSCUNode::QMsg::operator<(const QMsg& obj) const {
 // }
 
 QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
-	:m_node_name(node_name), qscu(device_file, B115200), KEEPALIVE_SEND_PERIOD(1000) {
+	:m_node_name(node_name), qscu(device_file, B115200), KEEPALIVE_SEND_PERIOD(400) {
 
 	string qubo_namespace = "/qubo/";
 
@@ -64,7 +64,7 @@ void QSCUNode::update(){
 
 void QSCUNode::QubobusThrusterCallback(const ros::TimerEvent& event){
 
-	if (!thruster_update || thruster_update) {
+	if (/* !thruster_update || */ thruster_update) {
 		// update the actual commands from the buffer, so these don't get changed in the middle of running
 		m_yaw_command	= m_yaw_command_buffer;
 		m_pitch_command = m_pitch_command_buffer;
@@ -158,6 +158,7 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 		if (m_outgoing.empty()) {
 			// We only want to send a keepalive every so often
 			if ((m_last_keepalive_sent_time + KEEPALIVE_SEND_PERIOD) < std::chrono::steady_clock::now()) {
+				ROS_ERROR("SENDING KEEP");
 				qscu.keepAlive();
 				m_last_keepalive_sent_time = std::chrono::steady_clock::now();
 			}
