@@ -48,12 +48,7 @@ mkdir qubo/embedded/obj/lib/
 mkdir qubo/embedded/obj/interrupts/
 
 ## Flash
-## Run `make flash` to flash the `image.bin` file onto the chip while you're in the `embedded/` directory.
-
-Don't do this ^^^ 
-
-run this instead sudo /opt/lm4flash/lm4flash/lm4flash image.bin
-or wherever you put your flash tool
+Run `make flash` to flash the `image.bin` file onto the chip while you're in the `embedded/` directory.
 
 TODO standardize this process, everyone seems to have different ideas as to how to get this tool to work
 
