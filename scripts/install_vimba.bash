@@ -23,9 +23,9 @@ if [[ $(uname -m) =~ .*aarch64.* ]]; then
 	SDK_VER=$SDK_ARM
 fi
 
-echo "Downloading Vimba..."
-curl -o "$INSTALL_DIR/vimba.tgz" $SDK_VER
-echo "Vimba downloaded"
+#echo "Downloading Vimba..."
+#curl -o "$INSTALL_DIR/vimba.tgz" $SDK_VER
+#echo "Vimba downloaded"
 
 cd "$INSTALL_DIR" || exit 1
 
