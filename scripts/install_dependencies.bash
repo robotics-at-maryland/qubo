@@ -29,7 +29,7 @@ if [ ! -d /opt/ros/kinetic/ ]; then
 fi
 
 # Installing additional packages.
-echo "$PASS" | sudo -S apt-get -y install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins --allow-unauthenticated #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
+echo "$PASS" | sudo -S apt-get -y --allow-unauthenticated install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
 # Installing dependencies for the embedded tool-chain
 echo "$PASS" | sudo -S apt-get -y install curl flex bison texinfo libelf-dev autoconf build-essential libncurses5-dev libusb-1.0-0-dev
 
