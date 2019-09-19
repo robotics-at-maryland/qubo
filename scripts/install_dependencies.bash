@@ -20,6 +20,8 @@ if [ ! -d /opt/ros/kinetic/ ]; then
     # This will also overwrite any already existing file.
     echo "$PASS" | sudo -S sh -c "echo $ROS_SRC_ENTRY > $ROS_SRC_LIST"
 
+
+
     # Get the ROS key and add it to apt.
     # echo "$PASS" | sudo -S wget 'https://raw.githubusercontent.com/ros/rosdistro/master/ros.key' -O - | apt-key add -
     echo "$PASS" | sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
@@ -27,6 +29,8 @@ if [ ! -d /opt/ros/kinetic/ ]; then
     echo "$PASS" | sudo -S apt-get update
     echo "$PASS" | sudo -S apt-get -y install ros-kinetic-desktop-full
 fi
+
+--alow-unauthenticated
 
 # Installing additional packages.
 echo "$PASS" | sudo -S apt-get -y install doxygen ros-kinetic-uwsim ros-kinetic-underwater-vehicle-dynamics  ros-kinetic-robot-localization libopencv-dev gazebo7 ros-kinetic-gazebo-ros ros-kinetic-gazebo-plugins #if we change ros-kinetic-desktop to ros-kinetic-desktop-full we can remove the uwsim bit
