@@ -7,7 +7,7 @@ import sys
 qubo_namespace = '/qubo/'
 
 
-class EmbeddedController(cmd.Cmd):
+class EmbeddedController(cmd.Cmd, object):
 
     def __init__(self):
         super(EmbeddedController, self).__init__()
