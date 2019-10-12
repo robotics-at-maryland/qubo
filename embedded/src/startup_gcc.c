@@ -107,10 +107,10 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // GPIO Port C
     IntDefaultHandler,                      // GPIO Port D
     IntDefaultHandler,                      // GPIO Port E
-    UART0IntHandler,                      // UART0 Rx and Tx
-    UART1IntHandler,                      // UART1 Rx and Tx
+    UART0IntHandler,                        // UART0 Rx and Tx
+    UART1IntHandler,                        // UART1 Rx and Tx
     IntDefaultHandler,                      // SSI0 Rx and Tx
-    I2C0IntHandler,                      // I2C0 Master and Slave
+    I2C0IntHandler,                         // I2C0 Master and Slave
     IntDefaultHandler,                      // PWM Fault
     IntDefaultHandler,                      // PWM Generator 0
     IntDefaultHandler,                      // PWM Generator 1
@@ -146,7 +146,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     IntDefaultHandler,                      // Hibernate
-    IntDefaultHandler,                   // USB0
+    IntDefaultHandler,   	                // USB0
     IntDefaultHandler,                      // PWM Generator 3
     IntDefaultHandler,                      // uDMA Software Transfer
     IntDefaultHandler,                      // uDMA Error
@@ -171,7 +171,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     IntDefaultHandler,                      // I2C2 Master and Slave
-    IntDefaultHandler,                      // I2C3 Master and Slave
+    I2C3IntHandler,  	                    // I2C3 Master and Slave
     IntDefaultHandler,                      // Timer 4 subtimer A
     IntDefaultHandler,                      // Timer 4 subtimer B
     0,                                      // Reserved
@@ -266,9 +266,7 @@ extern uint32_t _ebss;
 // application.
 //
 //*****************************************************************************
-void
-ResetISR(void)
-{
+void ResetISR(void) {
     uint32_t *pui32Src, *pui32Dest;
 
     //
@@ -320,9 +318,7 @@ ResetISR(void)
 // by a debugger.
 //
 //*****************************************************************************
-static void
-NmiSR(void)
-{
+static void NmiSR(void) {
     //
     // Enter an infinite loop.
     //
@@ -338,9 +334,7 @@ NmiSR(void)
 // for examination by a debugger.
 //
 //*****************************************************************************
-static void
-FaultISR(void)
-{
+static void FaultISR(void) {
     //
     // Enter an infinite loop.
     //
@@ -356,8 +350,7 @@ FaultISR(void)
 // for examination by a debugger.
 //
 //*****************************************************************************
-static void
-IntDefaultHandler(void)
+static void IntDefaultHandler(void)
 {
     //
     // Go into an infinite loop.

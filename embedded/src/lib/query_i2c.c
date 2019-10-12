@@ -32,7 +32,7 @@ void writeI2C(uint32_t device, uint8_t addr, uint8_t *data, uint32_t length) {
     ROM_I2CMasterControl(device, I2C_MASTER_CMD_SINGLE_SEND);
 
     // Wait to finish transferring
-    while(ROM_I2CMasterBusy(device));
+    while(ROM_I2CMasterBusy(device)) {}
 
     taskEXIT_CRITICAL();
   }

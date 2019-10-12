@@ -162,14 +162,11 @@ void configureI2C(void) {
                                    I2C_MASTER_INT_TIMEOUT | I2C_MASTER_INT_DATA));
 
 
-
   //
   // Enable the I2C interrupt.
   //
   ROM_IntEnable(INT_I2C0);
   ROM_IntEnable(INT_I2C3);
-
-
 
   #ifdef DEBUG
   UARTprintf("I2C configured\n");

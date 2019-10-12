@@ -104,7 +104,7 @@ volatile uint16_t *i2c3_int_state;
 volatile struct UART_Queue uart0_queue;
 volatile struct UART_Queue uart1_queue;
 
-MessageBufferHandle_t thruster_message_buffer;
+QueueHandle_t thruster_message_buffer;
 
 /* DECLARE_TASK_HANDLES; */
 /* DECLARE_TASK_QUEUES; */
@@ -150,11 +150,11 @@ int main() {
   configureUART();
   configureGPIO();
   configureI2C();
+
   /* USB_serial_configure(); */
 
   // Master enable interrupts
   ROM_IntMasterEnable();
-
 
   // -----------------------------------------------------------------------
   // Allocate FreeRTOS data structures for tasks, these are automatically made in heap
@@ -168,15 +168,13 @@ int main() {
   rgb_mutex   = xSemaphoreCreateMutex();
 
 
-
-
   // Initialize the UART Queue for UART0.
   INIT_UART_QUEUE(uart0_queue, 256, 256, INT_UART0, UART0_BASE, pdMS_TO_TICKS(1000));
   INIT_UART_QUEUE(uart1_queue, 256, 256, INT_UART1, UART1_BASE, pdMS_TO_TICKS(1000));
 
   /* INIT_TASK_QUEUES(); */
 
-  thruster_message_buffer = xMessageBufferCreate(sizeof(struct Thruster_Set));
+  thruster_message_buffer = xQueueCreate(1, sizeof(struct Thruster_Set));
 
   i2c0_address      = pvPortMalloc(sizeof(uint32_t));
   i2c0_read_buffer  = pvPortMalloc(sizeof(uint8_t*));
@@ -224,14 +222,14 @@ int main() {
     }
   */
 
-  /* blink_rgb(BLUE_LED, 1); */
-  if ( tiqu_task_init() ) {
-    while(1){}
-  }
-
   if (thruster_task_init()) {
     while(1){}
-  }
+  } 
+
+  if (tiqu_task_init()) {
+    while(1){}
+  } 
+
 
   /* if (qubobus_test_init() ){ */
   /*   while(1){} */
@@ -262,6 +260,6 @@ int main() {
   vTaskStartScheduler();
 
   while(1){
-    blink_rgb(RED_LED, 1);
+    blink_rgb(BLUE_LED, 1);
   }
 }

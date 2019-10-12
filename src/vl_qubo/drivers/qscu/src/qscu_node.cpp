@@ -37,10 +37,11 @@ QSCUNode::QSCUNode(ros::NodeHandle n, string node_name, string device_file)
 	qubobus_loop = n.createTimer(ros::Duration(0.05), &QSCUNode::QubobusCallback, this);
 	qubobus_incoming_loop = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusIncomingCallback, this);
 	// qubobus_status_loop = n.createTimer(ros::Duration(5), &QSCUNode::QubobusStatusCallback, this);
-	qubobus_thruster_loop = n.createTimer(ros::Duration(0.1), &QSCUNode::QubobusThrusterCallback, this);
+	qubobus_thruster_loop = n.createTimer(ros::Duration(1), &QSCUNode::QubobusThrusterCallback, this);
 
 	qubobus_loop.start();
 	qubobus_incoming_loop.start();
+    qubobus_thruster_loop.start();
 	// qubobus_status_loop.start();
 }
 
@@ -106,6 +107,7 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 			qscu.keepAlive();
 		} else {
 			QMsg msg = m_outgoing.front();
+			ROS_ERROR("Sending message: %s", msg.type.name);
 			qscu.sendMessage(&msg.type, msg.payload.get(), msg.reply.get());
 			m_incoming.push(msg);
 			m_outgoing.pop();
@@ -125,6 +127,7 @@ void QSCUNode::QubobusCallback(const ros::TimerEvent& event){
 void QSCUNode::QubobusIncomingCallback(const ros::TimerEvent& event){
 	while (!m_incoming.empty()) {
 		QMsg msg = m_incoming.front();
+		ROS_ERROR("Received message type: %s", msg.type.name);
 		if (msg.type.id == tEmbeddedStatus.id){
 			std::shared_ptr<struct Embedded_Status> e_s =
 				std::static_pointer_cast<struct Embedded_Status>(msg.reply);
