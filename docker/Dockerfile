@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
 	libusb-1.0-0-dev \
 	protobuf-compiler \
 	protobuf-c-compiler \
+	sudo \ 
 	texinfo
 
 # ROS packages
